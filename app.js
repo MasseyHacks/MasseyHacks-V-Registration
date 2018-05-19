@@ -1,0 +1,43 @@
+require('dotenv').load();
+
+var express = require('express');
+
+var bodyParser      = require('body-parser');
+var methodOverride  = require('method-override');
+var morgan          = require('morgan');
+var cookieParser    = require('cookie-parser');
+
+var mongoose        = require('mongoose');
+var port            = process.env.PORT || 3000;
+var database        = process.env.DATABASE || "mongodb://localhost:27017";
+database = process.env.MONGO_URL || database;
+
+var app = express();
+mongoose.connect(database);
+
+app.use(express.static('/app/client'));
+
+app.post("/auth", function (req, res) {
+
+});
+
+app.get("/", function(req,res){
+
+    res.sendFile(__dirname + "/app/client/index.html");
+
+});
+
+/*
+var apiRouter = express.Router();
+require('./app/server/routes/api')(apiRouter);
+app.use('/api', apiRouter);*/
+
+var authRouter = express.Router();
+require('./app/server/routes/auth')(authRouter);
+app.use('/auth', authRouter);
+
+require('./app/server/routes')(app);
+
+app.listen(port, function(){
+    console.log('listening on *:' + port);
+});

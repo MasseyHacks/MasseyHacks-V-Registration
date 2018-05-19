@@ -4,7 +4,14 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "express": "^4.16.3"
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.1",
+    "method-override": "^2.3.10",
+    "mongoose": "^5.1.1",
+    "morgan": "^1.9.0",
+    "validator": "^10.2.0"
   },
   "devDependencies": {},
   "scripts": {
