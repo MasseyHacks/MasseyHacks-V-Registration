@@ -2,8 +2,7 @@ var jwt       = require('jsonwebtoken');
 var validator = require('validator');
 var express = require('express');
 
-//var SettingsController = require('../controllers/SettingsController');
-//var UserController = require('../controllers/UserController');
+var UserController = require('../controllers/UserController');
 
 module.exports = function(router) {
     router.use(express.json());
@@ -12,13 +11,17 @@ module.exports = function(router) {
         var username = req.body.username;
         var password = req.body.password;
 
-        console.log("lol dis boi connected" + req.body.username);
+        console.log("lol dis boi connected " + req.body.username);
 
         if (username == password) {
-            return "Lol";
+            res.end("Lol dis ur token");
         }
         else {
-            return "bro wtf?";
+            res.end("Error: Incorrect username or password");
         }
     });
+
+    router.get('/', function (req, res) {
+        res.end("lol, what are you doing here?");
+    })
 };
