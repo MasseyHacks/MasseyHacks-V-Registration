@@ -9,7 +9,7 @@ var shuffleSeed = require('shuffle-seed');
 var UserController = {};
 
 var u = new User();
-u.email = "lol@hemadil.com";
+u.email = "lol@hemaddil.com";
 u.password = User.generateHash("lol");
 u.save(function (err) {
     if (err) {
@@ -19,7 +19,7 @@ u.save(function (err) {
     }
 });
 
-User.findOne({email:"lol@hemadil.com"}, 'password', function (err, user) {
+User.findOne({email:"lol@hemaddil.com"}, '+password', function (err, user) {
     console.log(user);
 })
 
