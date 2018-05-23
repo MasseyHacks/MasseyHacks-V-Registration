@@ -30,7 +30,7 @@ a:hover {
 h1 {
     font-size: 4em;
     text-align:center;
-    margin: 30px;
+    margin: 10px;
 }
 h3{
     font-size: 3.5em;
@@ -41,7 +41,7 @@ h4{
 }
 p {
     font-size: 1.2em;
-    line-height: 1.4em;
+    line-height: 1.2em;
 }
 
 
@@ -298,7 +298,7 @@ p {
     position: relative;
 }
 .cover-content p {
-    font-size: 1.6em;
+    font-size: 1.2em;
     font-family: 'LatoLight', sans-serif;
 }
 

@@ -2,9 +2,15 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
     validator = require('validator'),
     jwt = require('jsonwebtoken');
-JWT_SECRET = process.env.JWT_SECRET;
+JWT_SECRET = 'lol'; //process.env.JWT_SECRET;
 
 var schema = new mongoose.Schema({
+
+    username: {
+        type: String,
+        required: true
+    },
+
     email: {
         type: String,
         required: true,
@@ -27,7 +33,7 @@ schema.methods.checkPassword = function (password) {
 
 schema.methods.generateAuthToken = function () {
     return jwt.sign({id: this._id, type: 'authentication'}, JWT_SECRET, {
-        expiresInMinutes: 10080,
+        //expiresInMinutes: 10080
     });
 };
 

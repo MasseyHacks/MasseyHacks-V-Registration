@@ -8,16 +8,34 @@ module.exports = function(router) {
     router.use(express.json());
 
     router.post('/login', function (req, res) {
-        var username = req.body.username;
+        var email = req.body.email;
         var password = req.body.password;
+        var token = req.body.token;
 
-        console.log("lol dis boi connected " + req.body.username);
+        console.log("lol dis boi connected " + req.body.email);
 
-        if (username == password) {
-            res.end("Lol dis ur token");
-        }
-        else {
-            res.end("Error: Incorrect username or password");
+        
+        if (token) {
+            UserController.loginWithToken(token, function (err, token, user) {
+                if (err || !user) {
+                    return res.json({error: "Error: Invalid Token"});
+                }
+                return res.json({
+                    token: token,
+                    user: user
+                });
+            })
+        } else {
+            UserController.loginWithPassword(email, password, function (err, token, user) {
+                if (err || !user) {
+                    console.log(err);
+                    return res.json({error: "Error: Incorrect email or password"});
+                }
+                return res.json({
+                    token: token,
+                    user: user
+                });
+            })
         }
     });
 
