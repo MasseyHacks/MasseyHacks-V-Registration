@@ -2,6 +2,7 @@ var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
     validator = require('validator'),
     jwt = require('jsonwebtoken');
+
 JWT_SECRET = 'lol'; //process.env.JWT_SECRET;
 
 var schema = new mongoose.Schema({
@@ -24,6 +25,42 @@ var schema = new mongoose.Schema({
         type: String,
         required: true,
         select: false
+    },
+
+    kills: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    deaths: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    rank: {
+        type: Number,
+        require: true,
+        default: 1
+    },
+
+    matches: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    money: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    actions: {
+        type: Array,
+        required: true,
+        default: []
     }
 });
 
@@ -33,7 +70,7 @@ schema.methods.checkPassword = function (password) {
 
 schema.methods.generateAuthToken = function () {
     return jwt.sign({id: this._id, type: 'authentication'}, JWT_SECRET, {
-        //expiresInMinutes: 10080
+        expiresIn: 60 * 10080
     });
 };
 

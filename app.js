@@ -17,11 +17,9 @@ mongoose.connect(database);
 
 app.use(express.static('app/client/'));
 
-
-/*
 var apiRouter = express.Router();
 require('./app/server/routes/api')(apiRouter);
-app.use('/api', apiRouter);*/
+app.use('/api', apiRouter);
 
 var authRouter = express.Router();
 require('./app/server/routes/auth')(authRouter);

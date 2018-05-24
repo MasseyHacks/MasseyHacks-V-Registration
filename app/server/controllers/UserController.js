@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var User = require('../models/User');
+
 var request = require('request');
 
 var validator = require('validator');
@@ -119,6 +120,12 @@ UserController.loginWithPassword = function(email, password, callback){
 
 UserController.createUser("karl@gmail.com", "karl", "karlzhu", function (lol) {
     console.log(lol);
+});
+
+
+User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":1527173174}}}, {new: true}, function (err, user) {
+
+    console.log(user.actions[0].caption);
 });
 
 
