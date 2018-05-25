@@ -35,6 +35,7 @@ UserController.createUser = function (email, username, password, callback) {
 
     User.findOneByEmail(email).exec(function (err, user) {
 
+
         if (err) {
             return callback(err);
         }
@@ -44,18 +45,28 @@ UserController.createUser = function (email, username, password, callback) {
                 message: 'An account for this email already exists.'
             });
         } else {
-            var u = new User();
-            u.email = email;
-            u.username = username;
-            u.password = User.generateHash(password);
-            u.save(function (err) {
-                if (err) {
-                    console.log("Error: Something went wrong...");
-                    return callback(err);
-                } else {
-                    var token = u.generateAuthToken();
-                    return callback(null, {token: token});
+
+            User.findOneByUsername(username).exec(function (err, usr) {
+                if (usr) {
+                    return callback({
+                        message: 'An account for this username already exists.'
+                    });
                 }
+
+                var u = new User();
+                u.email = email;
+                u.username = username;
+                u.password = User.generateHash(password);
+                u.save(function (err) {
+                    if (err) {
+                        console.log("Error: Something went wrong...");
+                        return callback(err);
+                    } else {
+                        var token = u.generateAuthToken();
+                        return callback(null, token, user);
+                    }
+                });
+
             });
         }
     });
@@ -118,14 +129,15 @@ UserController.loginWithPassword = function(email, password, callback){
 
 
 
-UserController.createUser("karl@gmail.com", "karl", "karlzhu", function (lol) {
+UserController.createUser("karl@gsmaissl.com", "karlz", "karlzhu", function (lol) {
     console.log(lol);
 });
 
 
-User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":1527173174}}}, {new: true}, function (err, user) {
-
-    console.log(user.actions[0].caption);
+User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":Date.now(), "type":"INFO"}}}, {new: true}, function (err, user) {
+    if (user) {
+        console.log(user.actions[0].caption);
+    }
 });
 
 

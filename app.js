@@ -10,7 +10,6 @@ var cookieParser    = require('cookie-parser');
 var mongoose        = require('mongoose');
 var port            = process.env.PORT || 3005;
 var database        = process.env.DATABASE || "mongodb://localhost:27017";
-database = process.env.MONGO_URL || database;
 
 var app = express();
 mongoose.connect(database);

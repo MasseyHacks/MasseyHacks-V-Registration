@@ -1,9 +1,11 @@
+require('dotenv').config({path: '../../../.env'});
+
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
     validator = require('validator'),
     jwt = require('jsonwebtoken');
 
-JWT_SECRET = 'lol'; //process.env.JWT_SECRET;
+JWT_SECRET = process.env.JWT_SECRET;
 
 var schema = new mongoose.Schema({
 
@@ -61,6 +63,14 @@ var schema = new mongoose.Schema({
         type: Array,
         required: true,
         default: []
+    },
+
+    skin: {
+        type: String,
+        enum: {
+            values: 'HENNING PENGUIN'.split(' ')
+        },
+        default: 'PENGUIN'
     }
 });
 
@@ -102,6 +112,13 @@ schema.statics.getByToken = function (token, callback) {
         this.findOne({_id: payload.id}, callback);
     }.bind(this));
 };
+
+schema.statics.findOneByUsername = function (username) {
+    return this.findOne({
+        username:  username
+    });
+};
+
 
 schema.statics.findOneByEmail = function (email) {
     return this.findOne({

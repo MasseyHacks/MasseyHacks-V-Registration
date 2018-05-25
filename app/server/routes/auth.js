@@ -7,6 +7,41 @@ var UserController = require('../controllers/UserController');
 module.exports = function(router) {
     router.use(express.json());
 
+    router.post('/register', function (req, res) {
+        var email = req.body.email;
+        var password = req.body.password;
+        var username = req.body.username;
+
+        console.log("lol dis boi connected " + req.body.email);
+
+        if (!email) {
+            return res.json({error: "Error: No email provided"});
+        }
+
+        if (!password) {
+            return res.json({error: "Error: No password provided"});
+        }
+
+        if (!username) {
+            return res.json({error: "Error: No username provided"});
+        }
+
+        UserController.createUser(email, password, username, function (err, token, user) {
+                if (err || !user) {
+                    if (err) {
+                        return res.json(err);
+                    } else {
+                        return res.json({error: "Error: Unable to process request"});
+                    }
+                }
+                return res.json({
+                    token: token,
+                    user: user
+                });
+        })
+
+    });
+
     router.post('/login', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
