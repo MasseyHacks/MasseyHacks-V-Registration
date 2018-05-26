@@ -26,7 +26,7 @@ module.exports = function(router) {
             return res.json({error: "Error: No username provided"});
         }
 
-        UserController.createUser(email, password, username, function (err, token, user) {
+        UserController.createUser(email, username, password, function (err, token, user) {
                 if (err || !user) {
                     if (err) {
                         return res.json(err);
