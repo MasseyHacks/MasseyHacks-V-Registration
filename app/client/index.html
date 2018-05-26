@@ -32,7 +32,6 @@
 
     <script defer src = "js/index.js" type = "text/javascript"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.20.1/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -53,7 +52,7 @@
 
                     </div>
 
-                    <p>Username</p>
+                    <p style="margin-top: 0">Username</p>
                     <input id="usernameRegister" type="text" style="width: 100%">
 
                     <p>Email</p>
@@ -98,8 +97,8 @@
                         <ul class="nav navbar-nav" id="navleft">
                             <li><a href="#" class="js-navbar-link scrollLink navobject">Download</a></li>
                             <li><a href="#" class="js-navbar-link scrollLink navobject">Statistics</a></li>
-                            <li><a data-toggle="modal" data-target="#registerModal">Register</a></li>
-                            <li><a data-toggle="modal" data-target="#loginModal">Login</a></li>
+                            <li><a id="registerButtonA">Register</a></li>
+                            <li><a id="loginButtonA">Login</a></li>
                         </ul>
                     </div>
                 </div>
@@ -110,8 +109,8 @@
                 <ul class="overlay-list">
                     <li><a href="#" class="js-navbar-link scrollLink overlayLink">Download</a></li>
                     <li><a href="#" class="js-navbar-link scrollLink overlayLink">Statistics</a></li>
-                    <li><a href="/register">Register</a></li>
-                    <li><a href="/login">Login</a></li>
+                    <li><a id="registerButtonB">Register</a></li>
+                    <li><a id="loginButtonB">Login</a></li>
                 </ul>
             </div>
 

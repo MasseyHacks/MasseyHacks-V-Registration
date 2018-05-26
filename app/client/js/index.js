@@ -21,6 +21,26 @@ $(document).ready(function () {
         toggleOverlay();
     });
 
+    $('#registerButtonA').click(function () {
+        clearRegister();
+        $('#registerModal').modal('show');
+    });
+
+    $('#registerButtonB').click(function () {
+        clearRegister();
+        $('#registerModal').modal('show');
+    });
+
+    function clearRegister() {
+        $("#usernameRegister").val("");
+        $("#emailRegister").val("");
+        $("#password1Register").val("");
+        $("#password2sRegister").val("");
+
+        $("#registerError").html("");
+        $("#registerError").hide();
+    }
+
     $('#submitRegister').click(function () {
        var username = $("#usernameRegister").val();
        var email = $("#emailRegister").val();
@@ -37,7 +57,7 @@ $(document).ready(function () {
 
            $.ajax({
                type: "POST",
-               url:'https://rastera.xyz/auth/register',
+               url:'https://authentication.rastera.xyz/register', //'http://localhost:3005/auth/register',
                contentType: "application/json; charset=utf-8",
                dataType: "json",
                data: JSON.stringify({
@@ -47,9 +67,15 @@ $(document).ready(function () {
                }),
                success: function (data) {
 
-                   if (data.contains("Error")) {
+                   console.log(data);
+
+                   if (data['error'] != null) {
                        $("#registerError").show();
-                       $("#registerError").html(console.log(data));
+                       $("#registerError").html(data['error']);
+                   } else {
+                       $('#registerModal').modal('hide')
+                       swal("Success!", "Welcome to HUBG!", "success");
+                       console.log("lol gg");
                    }
                }
            })

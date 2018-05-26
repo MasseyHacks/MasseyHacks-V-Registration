@@ -13,22 +13,22 @@ UserController.createUser = function (email, username, password, callback) {
 
     if (typeof email !== "string" || !validator.isEmail(email)){
         return callback({
-            message: "Incorrect email format"
+            error: "Error: Incorrect email format"
         });
     }
 
     if (email.includes('"') || username.includes('"')) {
         return callback({
-            message: "Invalid Characters"
+            error: "Error: Invalid Characters"
         });
     }
 
     if (!password || password.length < 6){
-        return callback({ message: "Password must be 6 or more characters."}, false);
+        return callback({ error: "Error: Password must be 6 or more characters."}, false);
     }
 
     if (email.length > 50 || username.length > 20) {
-        return callback({ message: "Bro ur username too long bro"});
+        return callback({ error: "Error: Bro ur username too long bro"});
     }
 
     email = email.toLowerCase();
@@ -42,14 +42,14 @@ UserController.createUser = function (email, username, password, callback) {
 
         if (user) {
             return callback({
-                message: 'An account for this email already exists.'
+                error: 'Error: An account for this email already exists.'
             });
         } else {
 
             User.findOneByUsername(username).exec(function (err, usr) {
                 if (usr) {
                     return callback({
-                        message: 'An account for this username already exists.'
+                        error: 'Error: An account for this username already exists.'
                     });
                 }
 
@@ -63,7 +63,11 @@ UserController.createUser = function (email, username, password, callback) {
                         return callback(err);
                     } else {
                         var token = u.generateAuthToken();
-                        return callback(null, token, user);
+
+                        u = u.toJSON();
+                        delete u.password;
+
+                        return callback(null, token, u);
                     }
                 });
 
@@ -86,13 +90,13 @@ UserController.loginWithPassword = function(email, password, callback){
 
     if (!password || password.length === 0){
         return callback({
-            message: 'Please enter a password'
+            error: 'Error: Please enter a password'
         });
     }
 
     if (!validator.isEmail(email)){
         return callback({
-            message: 'Incorrect email or password'
+            error: 'Error: Incorrect email or password'
         });
     }
 
@@ -105,14 +109,14 @@ UserController.loginWithPassword = function(email, password, callback){
             }
             if (!user) {
                 return callback({
-                    message: "Incorrect email or password"
+                    error: "Error: Incorrect email or password"
                 });
             }
 
             if (!user.checkPassword(password)) {
 
                 return callback({
-                    message: "Incorrect email or password"
+                    error: "Error: Incorrect email or password"
                 });
             }
 

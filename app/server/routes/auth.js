@@ -28,6 +28,9 @@ module.exports = function(router) {
 
         UserController.createUser(email, username, password, function (err, token, user) {
                 if (err || !user) {
+                    if (err) {
+                        return res.json(err);
+                    }
                     return res.json({error: "Error: Unable to process request"});
                 }
                 return res.json({
