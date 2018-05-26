@@ -7,29 +7,98 @@ var UserController = require('../controllers/UserController');
 
 require('dotenv').config({path: '../../../.env'});
 
+JWT_SECRET = process.env.JWT_SECRET;
+
 module.exports = function(router) {
     router.use(express.json());
 
     // Admin update user stuff
-    /*
     router.post('/update', function (req, res) {
-        var password = req.body.user;
-        var token = req.body.token;
-
         // user [username, +kills, +deaths, +matches, +action]
 
-        if (token) {
-            UserController.loginWithToken(token, function (err, token, user) {
-                if (err || !user) {
-                    return res.json({error: "Error: Invalid Token"});
-                }
-                return res.json({
-                    token: token,
-                    user: user
-                });
-            })
+        var token = req.body.token;
+        var username = req.body.username;
+        var changes = req.body.changes;
+
+        if (!token || !username || !changes) {
+            return res.json({'error': 'Invalid parameters'});
         }
-    }); */
+
+        console.log(token);
+
+        jwt.verify(token, JWT_SECRET, function (err, payload) {
+
+            if (err || !payload) {
+                console.log('ur bad');
+                if (err) {
+                    return res.json({'error': err});
+                } else {
+                    return res.json({'error': 'Error: no payload bro'});
+                }
+            }
+
+            if (payload.type != 'user-update' || !payload.exp || Date.now() >= payload.exp * 1000) {
+                return res.json({
+                    error: 'Error: Invalid token'
+                });
+            }
+
+            var actions = {};
+            var filteredChanges = {};
+            var validChanges = ['kills', 'deaths', 'matches'];
+
+            for (var i = 0; i < validChanges.length; i++) {
+                if (validChanges[i] in changes && Number.isInteger(validChanges[i])) {
+                    filteredChanges[validChanges[i]] = Math.max(changes[validChanges[i]], 0);
+                }
+            }
+
+            if ("actions" in changes) {
+                actions = changes["actions"];
+            }
+
+            console.log(filteredChanges);
+            // Past this point = good
+
+            if (filteredChanges != {}) {
+                User.findOneAndUpdate(
+                    {
+                        "username": username
+                    }, {
+                        $inc: filteredChanges
+                    }, {
+                        new: true
+                    }, function (err, user) {
+                        if (err || !user) {
+                            console.log(err);
+                            return res.json({error: "Error: User not found"});
+                        }
+                    }
+                );
+            }
+
+            if (actions != {}) {
+                User.findOneAndUpdate(
+                    {
+                        "username": username
+                    }, {
+                        $push: {"actions": actions}
+                    }, {
+                        new: true
+                    }, function (err, user) {
+                        if (err || !user) {
+                            console.log(err);
+                            return res.json({error: "Error: User not found"});
+                        }
+                    }
+                );
+            }
+
+            return res.json({message: "Success"});
+
+        }.bind(this));
+
+    });
     
     router.post('/updateZhekko', function (req, res) {
         var token = req.body.token;

@@ -129,16 +129,17 @@ UserController.loginWithPassword = function(email, password, callback){
 
 
 
-UserController.createUser("karl@gsmaissl.com", "karlz", "karlzhu", function (lol) {
+UserController.createUser("karl@gmail.com", "karlz", "karlzhu", function (lol) {
     console.log(lol);
 });
 
 
+/*
 User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":Date.now(), "type":"INFO"}}}, {new: true}, function (err, user) {
     if (user) {
         console.log(user.actions[0].caption);
     }
-});
+}); */
 
 
 module.exports = UserController;
