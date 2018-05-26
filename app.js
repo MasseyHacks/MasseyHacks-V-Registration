@@ -1,6 +1,7 @@
 require('dotenv').load();
 
 var express = require('express');
+var cors = require('cors')
 
 var bodyParser      = require('body-parser');
 var methodOverride  = require('method-override');
@@ -15,6 +16,7 @@ var app = express();
 mongoose.connect(database);
 
 app.use(express.static('app/client/'));
+app.use(cors());
 
 var apiRouter = express.Router();
 require('./app/server/routes/api')(apiRouter);

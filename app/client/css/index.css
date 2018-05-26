@@ -59,6 +59,25 @@ p {
     border-color: white !important;
 }
 
+.btn-danger {
+    width: 150px;
+    background-color: white;
+    color: red !important;
+    border-color: red !important;
+    transition: all 0.3s ease 0s;
+}
+.btn-danger:hover {
+    background-color: red !important;
+    color: white !important;
+    border-color: red !important;
+}
+.btn-danger:active {
+    background-color: red !important;
+    color: white !important;
+    border-color: red !important;
+}
+
+
 .btn {
     width: 150px;
     background-color: white;

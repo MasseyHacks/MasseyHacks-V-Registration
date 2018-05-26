@@ -46,12 +46,11 @@ $(document).ready(function () {
                    password: password1
                }),
                success: function (data) {
-                   console.log(data);
-               },
-               failure: function (data) {
-                   $("#registerError").show();
-                   $("#registerError").html(console.log(data));
 
+                   if (data.contains("Error")) {
+                       $("#registerError").show();
+                       $("#registerError").html(console.log(data));
+                   }
                }
            })
 
