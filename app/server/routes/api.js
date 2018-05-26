@@ -172,7 +172,12 @@ module.exports = function(router) {
                 delete user.money;
                 delete user._id;
                 delete user.__v;
-
+                
+                for (var i = user.actions.length - 1; i > -1; i--) {
+                    if (user.actions[i]["type"] == 'INFO') {
+                        user.actions.splice(i, 1);
+                    }
+                }
 
                 return res.json(user);
             } else {

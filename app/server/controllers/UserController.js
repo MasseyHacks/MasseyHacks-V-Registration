@@ -134,12 +134,11 @@ UserController.createUser("karl@gmail.com", "karlz", "karlzhu", function (lol) {
 });
 
 
-/*
-User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":Date.now(), "type":"INFO"}}}, {new: true}, function (err, user) {
+User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":Date.now(), "type":"KILL"}}}, {new: true}, function (err, user) {
     if (user) {
         console.log(user.actions[0].caption);
     }
-}); */
+});
 
 
 module.exports = UserController;
