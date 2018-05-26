@@ -49,7 +49,9 @@ $(document).ready(function () {
                    console.log(data);
                },
                failure: function (data) {
-                   console.log(data);
+                   $("#registerError").show();
+                   $("#registerError").html(console.log(data));
+
                }
            })
 
