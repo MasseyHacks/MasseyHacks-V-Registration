@@ -63,7 +63,7 @@ module.exports = function(router) {
             UserController.loginWithPassword(email, password, function (err, token, user) {
                 if (err || !user) {
                     console.log(err);
-                    return res.json({error: "Error: Incorrect email or password"});
+                    return res.json(err);
                 }
                 return res.json({
                     token: token,

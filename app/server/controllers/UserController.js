@@ -86,6 +86,29 @@ UserController.loginWithToken = function(token, callback){
     });
 };
 
+function login(err, user) {
+    if (err) {
+        return callback(err);
+    }
+    if (!user) {
+        return callback({
+            error: "Error: Incorrect email or password"
+        });
+    }
+
+    if (!user.checkPassword(password)) {
+
+        return callback({
+            error: "Error: Incorrect username or password"
+        });
+    }
+
+    // yo dope nice login here's a token for your troubles
+    var token = user.generateAuthToken();
+
+    return callback(null, token, user);
+}
+
 UserController.loginWithPassword = function(email, password, callback){
 
     if (!password || password.length === 0){
@@ -94,29 +117,31 @@ UserController.loginWithPassword = function(email, password, callback){
         });
     }
 
-    User.findOne({
-        $or : [{"username" : email}, {"email" : email}]}, function(err, user){
-        if (err) {
-            return callback(err);
-        }
-        if (!user) {
-            return callback({
-                error: "Error: Incorrect credentials"
-            });
-        }
+    User
+        .findOne({$or : [{email : email}, {username : email}]})
+        .select('+password')
+        .exec(function (err, user) {
+            if (err) {
+                return callback(err);
+            }
+            if (!user) {
+                return callback({
+                    error: "Error: Incorrect credentials"
+                });
+            }
 
-        if (!user.checkPassword(password)) {
+            if (!user.checkPassword(password)) {
 
-            return callback({
-                error: "Error: Incorrect credentials"
-            });
-        }
+                return callback({
+                    error: "Error: Incorrect credentials"
+                });
+            }
 
-        // yo dope nice login here's a token for your troubles
-        var token = user.generateAuthToken();
+            // yo dope nice login here's a token for your troubles
+            var token = user.generateAuthToken();
 
-        return callback(null, token, user);
-    });
+            return callback(null, token, user);
+        });
 
 };
 
