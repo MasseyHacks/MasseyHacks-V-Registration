@@ -17,9 +17,9 @@ UserController.createUser = function (email, username, password, callback) {
         });
     }
 
-    if (email.includes('"') || username.includes('"')) {
+    if (email.includes('"') || username.includes('"') || username.include('@')) {
         return callback({
-            error: "Error: Invalid Characters"
+            error: "Error: Username contains invalid Characters"
         });
     }
 
@@ -46,7 +46,7 @@ UserController.createUser = function (email, username, password, callback) {
             });
         } else {
 
-            User.findOneByUsername(username).exec(function (err, usr) {
+            User.findOne({$or : [{username : username}, {email : username.toLowerCase()}]}).exec(function (err, usr) {
                 if (usr) {
                     return callback({
                         error: 'Error: An account for this username already exists.'

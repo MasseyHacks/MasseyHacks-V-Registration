@@ -57,7 +57,7 @@ $(document).ready(function () {
 
            $.ajax({
                type: "POST",
-               url:'https://authentication.rastera.xyz/register', //'http://localhost:3005/auth/register',
+               url:'/auth/register', //'http://localhost:3005/auth/register',
                contentType: "application/json; charset=utf-8",
                dataType: "json",
                data: JSON.stringify({
