@@ -86,6 +86,29 @@ UserController.loginWithToken = function(token, callback){
     });
 };
 
+function login(err, user, callback) {
+    if (err) {
+        return callback(err);
+    }
+    if (!user) {
+        return callback({
+            error: "Error: Incorrect credentials"
+        });
+    }
+
+    if (!user.checkPassword(password)) {
+
+        return callback({
+            error: "Error: Incorrect credentails"
+        });
+    }
+
+    // yo dope nice login here's a token for your troubles
+    var token = user.generateAuthToken();
+
+    return callback(null, token, user);
+}
+
 UserController.loginWithPassword = function(email, password, callback){
 
     if (!password || password.length === 0){
@@ -95,40 +118,20 @@ UserController.loginWithPassword = function(email, password, callback){
     }
 
     if (!validator.isEmail(email)){
-        return callback({
-            error: 'Error: Incorrect email or password'
+
+        User.findOne({"username" : email}, function(err, user){
+            return login(err, user, callback);
         });
+
     }
 
     User
         .findOneByEmail(email)
         .select('+password')
-        .exec(function(err, user){
-            if (err) {
-                return callback(err);
-            }
-            if (!user) {
-                return callback({
-                    error: "Error: Incorrect email or password"
-                });
-            }
-
-            if (!user.checkPassword(password)) {
-
-                return callback({
-                    error: "Error: Incorrect email or password"
-                });
-            }
-
-            // yo dope nice login here's a token for your troubles
-            var token = user.generateAuthToken();
-
-            if (user.volunteer == true) {
-                UserController.addToLog(user.email + " successfully logged in with password", callback);
-            }
-
-            return callback(null, token, user);
+        .exec(function (err, user) {
+            return login(err, user, callback);
         });
+
 };
 
 
