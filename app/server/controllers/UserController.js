@@ -17,7 +17,7 @@ UserController.createUser = function (email, username, password, callback) {
         });
     }
 
-    if (email.includes('"') || username.includes('"') || username.include('@')) {
+    if (email.includes('"') || username.includes('"') || username.includes('@')) {
         return callback({
             error: "Error: Username contains invalid Characters"
         });
