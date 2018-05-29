@@ -5,12 +5,75 @@ var express = require('express');
 var User = require('../models/User');
 var UserController = require('../controllers/UserController');
 
+var fs = require('fs');
+var shopData = JSON.parse(fs.readFileSync('./app/client/shop.json', 'utf8'));
+
+
 require('dotenv').config({path: '../../../.env'});
 
 JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = function(router) {
     router.use(express.json());
+
+    router.post('/shopItem', function (req, res) {
+
+        var token = req.body.token;
+        var type = req.body.type;
+        var item = req.body.item;
+
+        if (!token || !type || !item) {
+            return res.json({'error': 'Invalid parameters'});
+        }
+
+        User.getByToken(token, function (err, user) {
+
+            if (err || !user) {
+                console.log(err);
+                return res.json({error: "Error: User not found"});
+            }
+
+            var itemJSON = shopData[item];
+
+            if (type == 'buy') {
+                if (user.money - itemJSON['cost'] < 0) {
+                    return res.json({error: "Error: Insufficient funds!"})
+                }
+
+                if (user.skins.indexOf(item) != -1) {
+                    return res.json({error: "Error: Item already purchased!"})
+                }
+
+                user.money -= itemJSON.cost;
+                user.skins.push(item);
+            } else if (type == 'use') {
+                if (user.skins.indexOf(item) != -1) {
+                    user.skin = item;
+                } else {
+                    return res.json({error: "Error: Item not unlocked"});
+                }
+            } else {
+                return res.json({error: "Error: Command not found"});
+            }
+
+            User.findOneAndUpdate(
+                {
+                    "_id" : user._id
+                }, {
+                    $set: user
+                }, {
+                    new: true
+                }, function (err, user) {
+                    if (err || !user) {
+                        console.log(err);
+                        return res.json({error: "Error: Unknown error occurred"});
+                    }
+
+                    return res.json({success: "ok"});
+                }
+            );
+        });
+    });
 
     // Admin update user stuff
     router.post('/update', function (req, res) {
