@@ -27,6 +27,10 @@ UserController.createUser = function (email, username, password, callback) {
         return callback({ error: "Error: Password must be 6 or more characters."}, false);
     }
 
+    if (password == "Password123") {
+        return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
+    }
+
     if (email.length > 50 || username.length > 20) {
         return callback({ error: "Error: Bro ur username too long bro"});
     }

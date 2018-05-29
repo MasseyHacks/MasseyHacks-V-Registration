@@ -65,6 +65,13 @@ var schema = new mongoose.Schema({
         default: []
     },
 
+    skins: {
+        type: Array,
+        required: true,
+        default: []
+    },
+
+
     skin: {
         type: String,
         enum: {

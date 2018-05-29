@@ -154,6 +154,12 @@ module.exports = function(router) {
         // [username, +zhekko]
     });
 
+
+    router.get('/shop', function (req, res) {
+        res.sendfile('./app/client/shop.json')
+    });
+
+
     router.get('/data/:username', function (req, res) {
         var username = req.params.username;
 
