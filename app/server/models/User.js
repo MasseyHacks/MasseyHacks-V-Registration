@@ -68,15 +68,12 @@ var schema = new mongoose.Schema({
     skins: {
         type: Array,
         required: true,
-        default: []
+        default: ['PENGUIN']
     },
 
 
     skin: {
         type: String,
-        enum: {
-            values: 'HENNING PENGUIN'.split(' ')
-        },
         default: 'PENGUIN'
     }
 });
