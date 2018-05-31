@@ -75,7 +75,6 @@ module.exports = function(router) {
         res.sendfile('./app/client/shop.json')
     });
 
-
     router.get('/data/:username', function (req, res) {
         var username = req.params.username;
 

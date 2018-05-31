@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var User = require('../models/User');
+var jwt       = require('jsonwebtoken');
 
 var request = require('request');
 
