@@ -71,7 +71,7 @@ UserController.sendMessage = function (token, message, callback) {
     })
 };
 
-UserController.giveToken = function (token, username, sender, amount, callback) {
+UserController.giveZhekko = function (token, username, sender, amount, callback) {
     if (!token || !username || !sender || !amount || amount <= 0) {
         return callback({'error': 'Invalid parameters'});
     }
