@@ -21,7 +21,7 @@ function purgeMessageQueue() {
     if (messageQueue.length > 10) {
         messageQueue = messageQueue.slice(messageQueue.length - 10, messageQueue.length);
     } else if (messageQueue.length > 0) {
-        messageQueue = messageQueue.shift();
+        messageQueue.shift();
     }
 }
 
