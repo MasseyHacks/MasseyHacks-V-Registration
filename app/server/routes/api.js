@@ -5,10 +5,6 @@ var express = require('express');
 var User = require('../models/User');
 var UserController = require('../controllers/UserController');
 
-var fs = require('fs');
-var shopData = JSON.parse(fs.readFileSync('./app/client/shop.json', 'utf8'));
-
-
 require('dotenv').config({path: '../../../.env'});
 
 JWT_SECRET = process.env.JWT_SECRET;
@@ -16,63 +12,33 @@ JWT_SECRET = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+    router.get('/messages/:token', function (req, res) {
+        var token = req.params.token;
+
+        UserController.getMessages(token, function (response) {
+            res.json(response);
+        })
+    });
+
+    router.post('/chat', function (req, res) {
+        var token = req.body.token;
+        var messsage = req.body.message;
+
+        UserController.sendMessage(token, messsage, function (response) {
+            return res.json(response);
+        })
+    });
+
     router.post('/shopItem', function (req, res) {
 
         var token = req.body.token;
         var type = req.body.type;
         var item = req.body.item;
 
-        if (!token || !type || !item) {
-            return res.json({'error': 'Invalid parameters'});
-        }
-
-        User.getByToken(token, function (err, user) {
-
-            if (err || !user) {
-                console.log(err);
-                return res.json({error: "Error: User not found"});
-            }
-
-            var itemJSON = shopData[item];
-
-            if (type == 'buy') {
-                if (user.money - itemJSON['cost'] < 0) {
-                    return res.json({error: "Error: Insufficient funds!"})
-                }
-
-                if (user.skins.indexOf(item) != -1) {
-                    return res.json({error: "Error: Item already purchased!"})
-                }
-
-                user.money -= itemJSON.cost;
-                user.skins.push(item);
-            } else if (type == 'use') {
-                if (user.skins.indexOf(item) != -1) {
-                    user.skin = item;
-                } else {
-                    return res.json({error: "Error: Item not unlocked"});
-                }
-            } else {
-                return res.json({error: "Error: Command not found"});
-            }
-
-            User.findOneAndUpdate(
-                {
-                    "_id" : user._id
-                }, {
-                    $set: user
-                }, {
-                    new: true
-                }, function (err, user) {
-                    if (err || !user) {
-                        console.log(err);
-                        return res.json({error: "Error: Unknown error occurred"});
-                    }
-
-                    return res.json({success: "ok"});
-                }
-            );
+        UserController.shopAction(token, type, item, function (response) {
+            return res.json(response);
         });
+
     });
 
     // Admin update user stuff
@@ -87,79 +53,9 @@ module.exports = function(router) {
             return res.json({'error': 'Invalid parameters'});
         }
 
-        console.log(token);
-
-        jwt.verify(token, JWT_SECRET, function (err, payload) {
-
-            if (err || !payload) {
-                console.log('ur bad');
-                if (err) {
-                    return res.json({'error': err});
-                } else {
-                    return res.json({'error': 'Error: no payload bro'});
-                }
-            }
-
-            if (payload.type != 'user-update' || !payload.exp || Date.now() >= payload.exp * 1000) {
-                return res.json({
-                    error: 'Error: Invalid token'
-                });
-            }
-
-            var actions = {};
-            var filteredChanges = {};
-            var validChanges = ['kills', 'deaths', 'matches'];
-
-            for (var i = 0; i < validChanges.length; i++) {
-                if (validChanges[i] in changes && Number.isInteger(validChanges[i])) {
-                    filteredChanges[validChanges[i]] = Math.max(changes[validChanges[i]], 0);
-                }
-            }
-
-            if ("actions" in changes) {
-                actions = changes["actions"];
-            }
-
-            console.log(filteredChanges);
-            // Past this point = good
-
-            if (filteredChanges != {}) {
-                User.findOneAndUpdate(
-                    {
-                        "username": username
-                    }, {
-                        $inc: filteredChanges
-                    }, {
-                        new: true
-                    }, function (err, user) {
-                        if (err || !user) {
-                            console.log(err);
-                            return res.json({error: "Error: User not found"});
-                        }
-                    }
-                );
-            }
-
-            if (actions != {}) {
-                User.findOneAndUpdate(
-                    {
-                        "username": username
-                    }, {
-                        $push: {"actions": actions}
-                    }, {
-                        new: true
-                    }, function (err, user) {
-                        if (err || !user) {
-                            console.log(err);
-                            return res.json({error: "Error: User not found"});
-                        }
-                    }
-                );
-            }
-
-            return res.json({message: "Success"});
-
-        }.bind(this));
+        UserController.updateProfile(token, username, changes, function (response) {
+            return res.json(response);
+        })
 
     });
     
@@ -169,52 +65,9 @@ module.exports = function(router) {
         var sender = req.body.sender;
         var amount = req.body.amount;
 
-        if (!token || !username || !sender || !amount || amount <= 0) {
-            return res.json({'error': 'Invalid parameters'});
-        }
-
-        jwt.verify(token, JWT_SECRET, function (err, payload) {
-            if (err || !payload) {
-                console.log('ur bad');
-                return res.json({'error': err});
-            }
-
-            if (payload.type != 'zhekko' || !payload.exp || Date.now() >= payload.exp * 1000) {
-                return res.json({
-                    error: 'Error: Invalid token'
-                });
-            }
-
-            // Past this point = good
-
-            User.findOneAndUpdate(
-                {
-                    "username": username
-                }, {
-                    $push: {
-                        'actions': {
-                            "caption": sender + " sent you " + amount + " Zhekkos!",
-                            "date":Date.now(),
-                            "type":"INFO"
-                        }
-                    },
-                    $inc: {
-                        'money' : amount
-                    }
-                }, {
-                    new: true
-                }, function (err, user) {
-                    if (err || !user) {
-                        return res.json({error: "Error: User not found"});
-                    }
-
-                    return res.json({message: "Success"});
-                }
-            );
-
-        }.bind(this));
-
-        // [username, +zhekko]
+        UserController.giveZhekko(token, username, sender, amount, function (response) {
+            return res.json(response);
+        })
     });
 
 
