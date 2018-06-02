@@ -47,8 +47,12 @@ UserController.getMessages = function (token, callback) {
 };
 
 UserController.sendMessage = function (token, message, callback) {
-    if (!token || !message || message.length > 100) {
+    if (!token || !message) {
         return callback({'error': 'Invalid parameters'});
+    }
+
+    if (message.length > 100) {
+        return callback({'error': 'Disconnected from server: Message too long bro...'});
     }
 
     User.getByToken(token, function (err, user) {
@@ -58,7 +62,7 @@ UserController.sendMessage = function (token, message, callback) {
 
         if (token in messageLimiter) {
             if (messageLimiter[token] > messageCap) {
-                return callback({'error' : 'Message limit reached'});
+                return callback({'error' : 'Disconnected from server: Message limit reached'});
             }
 
             messageLimiter[token]++;
@@ -321,7 +325,7 @@ UserController.createUser = function (email, username, password, callback) {
 
 UserController.loginWithToken = function(token, callback){
     User.getByToken(token, function(err, user){
-        if (!user || !user.active) {
+        if (!user) {
             return callback(err, token, null);
         }
 
