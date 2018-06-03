@@ -12,7 +12,8 @@ generateAuthToken = function (type, name, expire) {
 
 var stdin = process.openStdin();
 
-console.log("type name expire");
+console.log("RASTERA DEV | CERTIFICATE AUTHORITY");
+console.log("[type] [name] [expire]");
 
 stdin.addListener("data", function(d) {
 

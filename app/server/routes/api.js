@@ -5,9 +5,17 @@ var express = require('express');
 var User = require('../models/User');
 var UserController = require('../controllers/UserController');
 
+var onlineUsers = [];
+
+setInterval(function () {
+    onlineUsers = [];
+}, 30000);
+
+
 require('dotenv').config({path: '../../../.env'});
 
 JWT_SECRET = process.env.JWT_SECRET;
+
 
 module.exports = function(router) {
     router.use(express.json());
@@ -118,7 +126,14 @@ module.exports = function(router) {
         }
 
         User.getByToken(token, function (err, user) {
-            return res.json({user: user});
+
+            if (user) {
+                if (onlineUsers.indexOf(user.username) == -1) {
+                    onlineUsers.push(user.username);
+                }
+            }
+
+            return res.json({user: user, online : onlineUsers.length});
         });
     });
 
