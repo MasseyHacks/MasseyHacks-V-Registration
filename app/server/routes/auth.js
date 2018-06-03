@@ -2,10 +2,64 @@ var jwt       = require('jsonwebtoken');
 var validator = require('validator');
 var express = require('express');
 
+var User = require('../models/User');
 var UserController = require('../controllers/UserController');
+
+JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = function(router) {
     router.use(express.json());
+
+    // Types of tokens:
+    // authentication
+    // game-auth
+    // user-update
+    // zhekko
+
+    router.get('/checkGameAuth/:token', function (req, res) {
+
+        var token = req.params.token;
+
+        if (!token) {
+            return res.json({message: 'false'});
+        }
+
+        jwt.verify(token, JWT_SECRET, function (err, payload) {
+            if (err || !payload || payload.type != 'game-auth' || !payload.exp || Date.now() >= payload.exp * 1000) {
+                return res.json({message: 'false'});
+            } else {
+                return res.json({message: 'true'});
+            }
+        }.bind(this))
+
+    });
+
+    router.get('/getGameAuth/:token/:server', function (req, res) {
+
+        var token = req.params.token;
+        var server = req.params.server;
+
+        if (!token || !server) {
+            return res.json({error: "Error: Invalid Token"});
+        }
+
+        User.getByToken(token, function (err, user) {
+
+            if (err || !user) {
+                if (err) {
+                    return res.json(err);
+                }
+
+                return res.json({"error" : "Auth Error"});
+            }
+
+            return res.json(jwt.sign({type: "game-auth", username: user.username, server: server}, JWT_SECRET, {
+                expiresIn: 360
+            }));
+
+        });
+    });
+
 
     router.post('/register', function (req, res) {
         var email = req.body.email;
