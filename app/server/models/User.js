@@ -41,12 +41,6 @@ var schema = new mongoose.Schema({
         default: 0
     },
 
-    rank: {
-        type: Number,
-        require: true,
-        default: 1
-    },
-
     matches: {
         type: Number,
         required: true,

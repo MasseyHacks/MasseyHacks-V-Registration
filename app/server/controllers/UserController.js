@@ -325,9 +325,11 @@ UserController.createUser = function (email, username, password, callback) {
 
 UserController.loginWithToken = function(token, callback){
     User.getByToken(token, function(err, user){
-        if (!user) {
-            return callback(err, token, null);
+        if (!user || err) {
+            return callback(err, null, null);
         }
+
+        var token = user.generateAuthToken();
 
         return callback(err, token, user);
     });

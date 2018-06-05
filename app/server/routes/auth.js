@@ -102,10 +102,16 @@ module.exports = function(router) {
 
         console.log("lol dis boi connected " + req.body.email);
 
-        
         if (token) {
+
+            console.log(token);
+
             UserController.loginWithToken(token, function (err, token, user) {
-                if (err || !user) {
+                if (err || !user || !token) {
+                    if (err) {
+                        console.log(err);
+                    }
+
                     return res.json({error: "Error: Invalid Token"});
                 }
                 return res.json({
