@@ -20,6 +20,10 @@ JWT_SECRET = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+    router.get('/version', function (req, res) {
+        res.sendfile('./app/client/version.json');
+    });
+
     router.get('/messages/:token', function (req, res) {
         var token = req.params.token;
 

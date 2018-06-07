@@ -341,14 +341,14 @@ function login(err, user) {
     }
     if (!user) {
         return callback({
-            error: "Error: Incorrect email or password"
+            error: "Error: Incorrect credentials"
         });
     }
 
     if (!user.checkPassword(password)) {
 
         return callback({
-            error: "Error: Incorrect username or password"
+            error: "Error: Incorrect credentials"
         });
     }
 
@@ -376,10 +376,7 @@ UserController.loginWithPassword = function(email, password, callback){
         .findOne({$or : [{email : email.toLowerCase()}, {username : email}]})
         .select('+password')
         .exec(function (err, user) {
-            if (err) {
-                return callback(err);
-            }
-            if (!user) {
+            if (err || !user) {
                 return callback({
                     error: "Error: Incorrect credentials"
                 });
