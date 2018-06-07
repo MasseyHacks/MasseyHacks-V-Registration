@@ -13,7 +13,7 @@ module.exports = function(app) {
     });
 
     app.get('*', function(req, res){
-        res.end('lol what are you doing here?');
+        res.json({'error' : 'lol what are you doing here?'});
     });
 
 };

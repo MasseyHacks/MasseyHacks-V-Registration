@@ -306,7 +306,7 @@ UserController.createUser = function (email, username, password, callback) {
                 u.password = User.generateHash(password);
                 u.save(function (err) {
                     if (err) {
-                        console.log("Error: Something went wrong...");
+                        console.log(err);
                         return callback(err);
                     } else {
                         var token = u.generateAuthToken();

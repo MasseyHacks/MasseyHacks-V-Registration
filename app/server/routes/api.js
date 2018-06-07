@@ -142,6 +142,6 @@ module.exports = function(router) {
     });
 
     router.get('/', function (req, res) {
-        res.end("lol, what are you doing here?");
+        res.json({'error' : 'lol what are you doing here?'});
     })
 };

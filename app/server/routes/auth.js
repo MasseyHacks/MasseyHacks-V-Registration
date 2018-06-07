@@ -21,14 +21,14 @@ module.exports = function(router) {
         var token = req.params.token;
 
         if (!token) {
-            return res.json({message: 'false'});
+            return res.json({message: false});
         }
 
         jwt.verify(token, JWT_SECRET, function (err, payload) {
             if (err || !payload || payload.type != 'game-auth' || !payload.exp || Date.now() >= payload.exp * 1000) {
-                return res.json({message: 'false'});
+                return res.json({message: false});
             } else {
-                return res.json({message: 'true'});
+                return res.json({message: true, username : payload.username, server : payload.server});
             }
         }.bind(this))
 
@@ -40,7 +40,7 @@ module.exports = function(router) {
         var server = req.params.server;
 
         if (!token || !server) {
-            return res.json({error: "Error: Invalid Token"});
+            return res.json({error: "error: Invalid Token"});
         }
 
         User.getByToken(token, function (err, user) {
@@ -53,9 +53,9 @@ module.exports = function(router) {
                 return res.json({"error" : "Auth Error"});
             }
 
-            return res.json(jwt.sign({type: "game-auth", username: user.username, server: server}, JWT_SECRET, {
+            return res.json({"token":jwt.sign({type: "game-auth", username: user.username, server: server}, JWT_SECRET, {
                 expiresIn: 360
-            }));
+            })});
 
         });
     });
@@ -134,6 +134,6 @@ module.exports = function(router) {
     });
 
     router.get('/', function (req, res) {
-        res.end("lol, what are you doing here?");
+        res.json({'error' : 'lol what are you doing here?'});
     })
 };
