@@ -70,11 +70,103 @@ UserController.sendMessage = function (token, message, callback) {
             messageLimiter[token] = 1;
         }
 
+        UserController.processCommand(user, message);
+
         messageQueue.push({'message' : '[' + user.username + '] ' + message, 'time' : Date.now()});
 
         return callback({'messages': messageQueue});
     })
 };
+
+/*
+
+UserController.processCommand = function (user, message) {
+    message = message.split(" ");
+    console.log(message);
+
+    var username = user.username;
+
+    if (message[0].charAt(0) == '>') {
+        switch (message[0]) {
+            case ">transfer":
+
+                if (message.length != 3) {
+                    messageQueue.push({'message' : '[System] Invalid parameters! [>transfer <name> <amount>] -> @' + username, 'time' : Date.now()});
+                } else {
+                    try {
+                        UserController.giveZhekkoInternal(message[1], user, message[2], function (msg) {
+                            if (msg.contains("error")) {
+                                messageQueue.push({'message' : '[System] '+ msg['error'] +' [>transfer <name> <amount>] -> @' + username, 'time' : Date.now()});
+                            } else {
+                                messageQueue.push({
+                                })
+                            }
+                        })
+                    }
+                }
+
+                console.log(message);
+                break;
+            default:
+                messageQueue.push({'message' : '[System] Unknown command -> @' + username, 'time' : Date.now()});
+
+        }
+    }
+};
+
+
+UserController.giveZhekkoInternal = function (username, sender, amount, callback) {
+    if (sender.money - amount < 0) {
+        return callback({'error': 'Insufficient funds!'});
+    }
+
+    if (!username || !sender || !amount || amount <= 0) {
+        return callback({'error': 'Invalid parameters'});
+    }
+
+    User.findOneAndUpdate(
+        {
+            "username": username
+        }, {
+            $push: {
+                'actions': {
+                    "caption": sender.username + " sent you " + amount + " Zhekkos!",
+                    "date":Date.now(),
+                    "type":"INFO"
+                }
+            },
+            $inc: {
+                'money' : amount
+            }
+        }, {
+            new: true
+        }, function (err, user) {
+            if (err || !user) {
+                return callback({error: "Error: User not found"});
+            }
+        }
+    );
+
+    User.findOneAndUpdate(
+        {
+            "username": sender.username
+        }, {
+            $dec: {
+                'money' : amount
+            }
+        }, {
+            new: true
+        }, function (err, user) {
+            if (err || !user) {
+                return callback({error: "Error: User not found"});
+            }
+
+            return callback({message: "Success"});
+        }
+    );
+
+};*/
+
 
 UserController.giveZhekko = function (token, username, sender, amount, callback) {
     if (!token || !username || !sender || !amount || amount <= 0) {
@@ -123,7 +215,7 @@ UserController.giveZhekko = function (token, username, sender, amount, callback)
     }.bind(this));  
 };
 
-UserController.updateProfile = function (token, user, changes, callback) {
+UserController.updateProfile = function (token, username, changes, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
 
         if (err || !payload) {
