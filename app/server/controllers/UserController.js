@@ -238,7 +238,7 @@ UserController.updateProfile = function (token, username, changes, callback) {
         var validChanges = ['kills', 'deaths', 'matches'];
 
         for (var i = 0; i < validChanges.length; i++) {
-            if (validChanges[i] in changes && Number.isInteger(validChanges[i])) {
+            if (validChanges[i] in changes && Number.isInteger(changes[validChanges[i]])) {
                 filteredChanges[validChanges[i]] = Math.max(changes[validChanges[i]], 0);
             }
         }
