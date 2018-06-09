@@ -267,7 +267,7 @@ UserController.updateProfile = function (token, username, changes, callback) {
             );
         }
 
-        if (actions != {}) {
+        if (actions.length > 0) {
             User.findOneAndUpdate(
                 {
                     "username": username
