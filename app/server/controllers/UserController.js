@@ -193,7 +193,7 @@ UserController.giveZhekko = function (token, username, sender, amount, callback)
             }, {
                 $push: {
                     'actions': {
-                        "caption": sender + " sent you " + amount + " Zhekkos!",
+                        "caption": sender + " sent you " + amount + " Zhekkos! (via" + payload.name + ")",
                         "date":Date.now(),
                         "type":"INFO"
                     }
@@ -233,6 +233,7 @@ UserController.updateProfile = function (token, username, changes, callback) {
             });
         }
 
+        var zhekkosAwarded = -1;
         var actions = [];
         var filteredChanges = {};
         var validChanges = ['kills', 'deaths', 'matches'];
@@ -249,8 +250,10 @@ UserController.updateProfile = function (token, username, changes, callback) {
 
 
         if ("kills" in filteredChanges) {
+            zhekkosAwarded = parseInt(Math.random() * 10) + 1;
+
             actions.push({
-                "caption" : "Awarded " + (parseInt(Math.random() * 10) + 1) + " Zhekkos for kill!",
+                "caption" : "Awarded " + zhekkosAwarded + " Zhekkos for kill!",
                 "type" : "INFO",
                 "date" : Date.now()
             });
@@ -259,6 +262,26 @@ UserController.updateProfile = function (token, username, changes, callback) {
         console.log(filteredChanges);
         console.log(actions);
         // Past this point = good
+
+        if (zhekkosAwarded > 0) {
+            User.findOneAndUpdate(
+                {
+                    "username": username
+                }, {
+                    $inc: {
+                        "money" : zhekkosAwarded
+                    }
+                }, {
+                    new: true
+                }, function (err, user) {
+                    if (err || !user) {
+                        console.log(err);
+                        return callback({error: "Error: User not found"});
+                    }
+                }
+            );
+        }
+
 
         if (filteredChanges != {}) {
             User.findOneAndUpdate(
