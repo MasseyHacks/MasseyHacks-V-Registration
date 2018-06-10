@@ -20,6 +20,12 @@ JWT_SECRET = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+
+    router.get('/gameAddress', function (req, res) {
+        res.sendfile('./app/client/gameserver.json');
+    });
+
+
     router.get('/version', function (req, res) {
         res.sendfile('./app/client/version.json');
     });

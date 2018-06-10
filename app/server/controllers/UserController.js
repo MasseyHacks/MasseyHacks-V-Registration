@@ -233,7 +233,7 @@ UserController.updateProfile = function (token, username, changes, callback) {
             });
         }
 
-        var actions = {};
+        var actions = [];
         var filteredChanges = {};
         var validChanges = ['kills', 'deaths', 'matches'];
 
@@ -244,12 +244,12 @@ UserController.updateProfile = function (token, username, changes, callback) {
         }
 
         if ("actions" in changes) {
-            actions = changes["actions"];
+            actions.push(changes["actions"]);
         }
 
 
         if ("kills" in filteredChanges) {
-            actions.add({
+            actions.push({
                 "caption" : "Awarded " + (parseInt(Math.random() * 10) + 1) + "Zhekkos for kill!",
                 "type" : "INFO",
                 "date" : Date.now()
