@@ -35,9 +35,6 @@
 
 <body>
 
-
-
-
 <div class="container">
 
     <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -76,9 +73,13 @@
 
 <div id="cover" class="wrapper">
 
-    <!--
-    <div id="particles-js"></div>
-    -->
+    <div class="overlay" style="visibility: hidden">
+        <ul class="overlay-list">
+            <li><a href="#" class="js-navbar-link scrollLink overlayLink">Download</a></li>
+            <li><a id="registerButtonB">Register</a></li>
+            <li><a id="loginButtonB">Login</a></li>
+        </ul>
+    </div>
 
     <nav class="navbar navbar-inverse navbar-fixed-top" id="mainnav" style="height: 50px;">
         <div class="container-fluid">
@@ -109,18 +110,10 @@
         </div>
     </nav>
 
+
     <!-- Cover -->
     <section id="header" class="slide changeable parallax-window" style="height: 100vh;background: rgba(1, 10, 19, 0.6);" data-bleed="0" data-position-y="0px" data-parallax="scroll" data-image-src="images/penguin.JPG">
         <div class="inner-container">
-
-            <div class="overlay" style="visibility: hidden">
-                <ul class="overlay-list">
-                    <li><a href="#" class="js-navbar-link scrollLink overlayLink">Download</a></li>
-                    <li><a id="registerButtonB">Register</a></li>
-                    <li><a id="loginButtonB">Login</a></li>
-                </ul>
-            </div>
-
 
             <div id="spacer"></div>
             <div class="cover-content">

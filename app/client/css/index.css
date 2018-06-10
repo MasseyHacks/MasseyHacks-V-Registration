@@ -187,7 +187,7 @@ p {
 .overlay {
     z-index: 400;
     background-color: #0A1939;
-    background: rgba(10, 25, 57, 0.8);
+    background: rgba(1, 1, 1, 0.7);
     height: 100%;
     width: 100%;
 
