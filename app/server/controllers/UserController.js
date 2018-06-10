@@ -250,7 +250,7 @@ UserController.updateProfile = function (token, username, changes, callback) {
 
         if ("kills" in filteredChanges) {
             actions.push({
-                "caption" : "Awarded " + (parseInt(Math.random() * 10) + 1) + "Zhekkos for kill!",
+                "caption" : "Awarded " + (parseInt(Math.random() * 10) + 1) + " Zhekkos for kill!",
                 "type" : "INFO",
                 "date" : Date.now()
             });
@@ -277,12 +277,12 @@ UserController.updateProfile = function (token, username, changes, callback) {
             );
         }
 
-        if (actions.size > 0) {
+        for (var i = 0; i < actions.size; i++) {
             User.findOneAndUpdate(
                 {
                     "username": username
                 }, {
-                    $push: {"actions": actions}
+                    $push: {"actions": actions[i]}
                 }, {
                     new: true
                 }, function (err, user) {
