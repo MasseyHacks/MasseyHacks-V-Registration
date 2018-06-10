@@ -21,6 +21,23 @@ $(document).ready(function () {
         toggleOverlay();
     });
 
+    $('#downloadA').click(function () {
+        swal("lol", "did you actually think we finished the game?","error");
+    });
+
+    $('#downloadB').click(function () {
+        swal("lol", "did you actually think we finished the game?","error");
+    });
+
+    $('#downloadbtn').click(function () {
+        swal("lol", "did you actually think we finished the game?","error");
+    });
+
+    $('#registerbtn').click(function () {
+        clearRegister();
+        $('#registerModal').modal('show');
+    });
+
     $('#registerButtonA').click(function () {
         clearRegister();
         $('#registerModal').modal('show');
