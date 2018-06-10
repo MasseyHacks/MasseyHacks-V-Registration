@@ -277,7 +277,8 @@ UserController.updateProfile = function (token, username, changes, callback) {
             );
         }
 
-        for (var i = 0; i < actions.size; i++) {
+        for (var i = 0; i < actions.length; i++) {
+
             User.findOneAndUpdate(
                 {
                     "username": username
@@ -290,6 +291,8 @@ UserController.updateProfile = function (token, username, changes, callback) {
                         console.log(err);
                         return callback({error: "Error: User not found"});
                     }
+
+                    console.log(user);
                 }
             );
         }
