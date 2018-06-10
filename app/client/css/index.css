@@ -143,13 +143,18 @@ p {
     text-decoration: none;
 }
 
+.parallax-window {
+    min-height: 50vh;
+    background: transparent;
+}
+
 #mainnav {
     z-index: 500;
     font-family: LatoThin;
-    background-color: #0A1939;
+    /*background-color: #0A1939;*/
     border-color: transparent;
-    background: rgb(151, 160, 230);
-    background: rgba(49, 60, 75, 0);
+    /*background: rgb(151, 160, 230);*/
+    background: rgba(1, 10, 19, 0);
 }
 
 
@@ -253,6 +258,7 @@ p {
     padding-bottom: 2%;
 }
 
+/*
 #header {
     height: 100vh;
     display: block;
@@ -262,7 +268,7 @@ p {
     padding-right: 0%;
     padding-top: 0%;
     padding-bottom: 0%;
-}
+} */
 .inner-container {
     padding-left: 0%;
     padding-right: 0%;
@@ -307,7 +313,7 @@ p {
 
 
 #spacer {
-    min-height: 100px;
+    min-height: 300px;
     height: 50vh;
 }
 #outer-social {
@@ -319,7 +325,8 @@ p {
     top: 80%;
     position: relative;
 }
-.cover-content p {
+.cover-content {
+    color: white;
     font-size: 1.2em;
     font-family: 'LatoLight', sans-serif;
 }
