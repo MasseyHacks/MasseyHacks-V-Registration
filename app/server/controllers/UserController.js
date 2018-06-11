@@ -193,7 +193,7 @@ UserController.giveZhekko = function (token, username, sender, amount, callback)
             }, {
                 $push: {
                     'actions': {
-                        "caption": sender + " sent you " + amount + " Zhekkos! (via" + payload.name + ")",
+                        "caption": sender + " sent you " + amount + " Zhekkos! (via " + payload.name + ")",
                         "date":Date.now(),
                         "type":"INFO"
                     }
