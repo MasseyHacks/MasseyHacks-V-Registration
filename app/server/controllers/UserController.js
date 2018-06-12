@@ -78,8 +78,6 @@ UserController.sendMessage = function (token, message, callback) {
     })
 };
 
-/*
-
 UserController.processCommand = function (user, message) {
     message = message.split(" ");
     console.log(message);
@@ -98,8 +96,7 @@ UserController.processCommand = function (user, message) {
                             if (msg.contains("error")) {
                                 messageQueue.push({'message' : '[System] '+ msg['error'] +' [>transfer <name> <amount>] -> @' + username, 'time' : Date.now()});
                             } else {
-                                messageQueue.push({
-                                })
+                                messageQueue.push({'message': '[System] Success! ' + message[2] + ' Zhekkos transferred from @' + username + ' to @' + message[1] +  '!', 'time' : Date.now()});
                             }
                         })
                     }
@@ -117,11 +114,11 @@ UserController.processCommand = function (user, message) {
 
 UserController.giveZhekkoInternal = function (username, sender, amount, callback) {
     if (sender.money - amount < 0) {
-        return callback({'error': 'Insufficient funds!'});
+        return callback({'error': 'Insufficient funds! @' + sender});
     }
 
     if (!username || !sender || !amount || amount <= 0) {
-        return callback({'error': 'Invalid parameters'});
+        return callback({'error': 'Invalid parameters! @' + sender});
     }
 
     User.findOneAndUpdate(
@@ -142,7 +139,7 @@ UserController.giveZhekkoInternal = function (username, sender, amount, callback
             new: true
         }, function (err, user) {
             if (err || !user) {
-                return callback({error: "Error: User not found"});
+                return callback({error: "Error: User " + user + " not found"});
             }
         }
     );
@@ -158,14 +155,13 @@ UserController.giveZhekkoInternal = function (username, sender, amount, callback
             new: true
         }, function (err, user) {
             if (err || !user) {
-                return callback({error: "Error: User not found"});
+                return callback({error: "Error: User " + sender.username + " not found"});
             }
 
             return callback({message: "Success"});
         }
     );
-
-};*/
+};
 
 
 UserController.giveZhekko = function (token, username, sender, amount, callback) {
