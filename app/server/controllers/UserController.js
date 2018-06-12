@@ -99,6 +99,8 @@ UserController.processCommand = function (user, message) {
                                 messageQueue.push({'message': '[System] Success! ' + message[2] + ' Zhekkos transferred from @' + username + ' to @' + message[1] +  '!', 'time' : Date.now()});
                             }
                         })
+                    } catch (e) {
+                        messageQueue.push({'message': '[System] Unknown error @' + username, 'time' : Date.now()});
                     }
                 }
 
