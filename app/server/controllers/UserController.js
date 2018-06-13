@@ -41,7 +41,7 @@ UserController.getMessages = function (token, callback) {
             return callback({'error' : 'Invalid token'});
         }
 
-        return callback({'messages':messageQueue});
+        return callback({'messages':messageQueue.reverse()});
     })
 
 };
