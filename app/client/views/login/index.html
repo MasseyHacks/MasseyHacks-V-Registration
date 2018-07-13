@@ -50,23 +50,50 @@
 
                     </div>
 
-                    <p class="field-caption">Email</p>
-                    <input id="emailLogin" type="email" placeholder="hacker@hackermail.io" class="login-field">
+                    <div id="login-core">
+                        <p class="field-caption">Email</p>
+                        <input id="email-login" type="email" placeholder="hacker@hackermail.io" class="login-field">
 
-                    <p class="field-caption">Password</p>
-                    <input id="passwordLogin" type="password" placeholder="Shhh... super secret" class="login-field">
+                        <p class="field-caption">Password</p>
+                        <input id="password-login" type="password" placeholder="Shhh... super secret" class="login-field">
 
-                    <br>
-                    <br>
+                        <br>
+                        <br>
 
-                    <button id="login" type="button" class="btn btn-default loginPageButton">Login</button>
-                    <button id="register" type="button" class="btn btn-default loginPageButton">Register</button>
+                        <button id="login-submit" type="button" class="btn btn-default loginPageButton">Login</button>
+                        <button id="register-switch" type="button" class="btn btn-default loginPageButton">Register</button>
+                    </div>
+
+                    <div id="register-core" hidden="true">
+                        <p class="field-caption">First Name</p>
+                        <input id="first-name-register" type="email" placeholder="Master" class="login-field">
+
+
+                        <p class="field-caption">Last Name</p>
+                        <input id="last-name-register" type="email" placeholder="Hax0r" class="login-field">
+
+
+                        <p class="field-caption">Email</p>
+                        <input id="email-register" type="email" placeholder="hacker@hackermail.io" class="login-field">
+
+                        <p class="field-caption">Password</p>
+                        <input id="password-register-1" type="password" placeholder="Shhh... super secret" class="login-field">
+
+                        <p class="field-caption">Password (Confirm)</p>
+                        <input id="password-register-2" type="password" placeholder="Shhh... super secret" class="login-field">
+
+                        <br>
+                        <br>
+
+
+                        <button id="register-submit" type="button" class="btn btn-default loginPageButton">Register</button>
+                        <button id="login-switch" type="button" class="btn btn-default loginPageButton">Have an account? Login</button>
+                    </div>
 
                     <br>
 
                     <p><a href="javascript: swal('lol that sucks for you')">Forget your password?</a></p>
             </div>
-
 
         </div>
     </div>

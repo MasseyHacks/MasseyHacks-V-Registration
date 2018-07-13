@@ -93,7 +93,7 @@
     #login-box {
         max-width: 600px;
         width: 95vw;
-        height: 500px;
+        min-height: 500px;
         border-radius: 5px;
 
         margin: 0 auto;

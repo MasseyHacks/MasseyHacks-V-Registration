@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     var bgresize = function () {
 
         var windowz = $(window);
@@ -25,9 +26,9 @@ $(document).ready(function () {
 
     };
 
-    $("#login").click(function() {
-        var email = $("#emailLogin").val();
-        var password = $("#passwordLogin").val();
+    $("#login-submit").click(function() {
+        var email = $("#email-login").val();
+        var password = $("#password-login").val();
 
         $.ajax({
             type: "POST",
@@ -50,6 +51,16 @@ $(document).ready(function () {
                 swal("Fail!", "Welcome to HUBG!", "success");
             }
         })
+    });
+
+    $("#register-switch").click(function() {
+        $("#register-core").attr("hidden", false);
+        $("#login-core").attr("hidden", true);
+    });
+
+    $("#login-switch").click(function() {
+        $("#register-core").attr("hidden", true);
+        $("#login-core").attr("hidden", false);
     });
 
     $('.overlay').attr("hidden", false);
