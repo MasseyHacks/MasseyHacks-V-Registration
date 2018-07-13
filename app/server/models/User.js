@@ -7,9 +7,204 @@ var mongoose = require('mongoose'),
 
 JWT_SECRET = process.env.JWT_SECRET;
 
+var status = {
+    /**
+     * Whether or not the user's profile has been completed.
+     * @type {Object}
+     */
+    completedProfile: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    sentConfirmation: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    waitlisted: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    admitted: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    admittedBy: {
+        type: String,
+        select: false
+    },
+    confirmed: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    waiver: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    declined: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    noConfirmation: {
+        type: Boolean,
+        required:true,
+        default: false
+    },
+    rejected: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    checkedIn: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    checkInTime: {
+        type: Number,
+    },
+    confirmBy: {
+        type: Number
+    },
+    statusReleased: {
+        type: Boolean,
+        default: false
+    }
+};
+
+var profile = {
+
+};
+
+var confirmation = {
+
+};
+
+var permissions = {
+    verified : {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    checkin: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    reviewer: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    admin: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    owner: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    developer: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
+};
+
+var status = {
+    completedProfile: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    sentConfirmation: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    waitlisted: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    admitted: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    admittedBy: {
+        type: String,
+        select: false
+    },
+    confirmed: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    waiver: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    declined: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    noConfirmation: {
+        type: Boolean,
+        required:true,
+        default: false
+    },
+    rejected: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    checkedIn: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    checkInTime: {
+        type: Number
+    },
+    confirmBy: {
+        type: Number
+    },
+    statusReleased: {
+        type: Boolean,
+        default: false
+    }
+};
+
+
 var schema = new mongoose.Schema({
 
-    username: {
+    firstName: {
+        type: String,
+        required: true
+    },
+
+    lastName: {
+        type: String,
+        required: true
+    },
+
+    fullName: {
+        type: String,
+        required: true
+    },
+
+    lowerCaseName: {
         type: String,
         required: true
     },
@@ -29,48 +224,53 @@ var schema = new mongoose.Schema({
         select: false
     },
 
-    kills: {
+    timestamp: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
     },
 
-    deaths: {
+    lastUpdated: {
         type: Number,
-        required: true,
-        default: 0
+        default: 0,
     },
 
-    matches: {
+    passwordLastUpdated: {
         type: Number,
-        required: true,
-        default: 0
+        default: 0,
     },
 
-    money: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-
-    actions: {
-        type: Array,
-        required: true,
-        default: []
-    },
-
-    skins: {
-        type: Array,
-        required: true,
-        default: ['PENGUIN']
-    },
-
-
-    skin: {
+    teamCode: {
         type: String,
-        default: 'PENGUIN'
-    }
+        min: 0,
+        maxlength: 140,
+    },
+
+    applicationAdmit: {
+        type: [String],
+    },
+
+    applicationReject: {
+        type: [String],
+    },
+
+    applicationVotes: {
+        type: [String]
+    },
+
+    numVotes : {
+        type: Number,
+        default: 0
+    },
+
+    status: status,
+    permissions : permissions,
+
+    // Only parts user can update
+    profile: profile,
+    confirmation: confirmation
 });
+
 
 schema.methods.checkPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
@@ -123,5 +323,64 @@ schema.statics.findOneByEmail = function (email) {
         email:  email ? email.toLowerCase() : email
     });
 };
+
+schema.virtual('permissions.level').get(function () {
+    // 0 - Hacker Unverified
+    // 1 - Hacker
+    // 2 - Check In
+    // 3 - Admin
+    // 4 - Review
+    // 5 - Owner
+    // 6 - Developer
+
+    if (this.permissions.developer) { // Developers (Gods)
+        return 6;
+    } else if (this.permissions.owner) { // Owner
+        return 5;
+    } else if (this.permissions.reviewer) { // Admin w/ review
+        return 4;
+    } else if (this.permissions.admin) { // Admin w/o review
+        return 3;
+    } else if (this.permissions.checkin) { // Checkin
+        return 2;
+    } else if (this.permissions.verified) { // Verified
+        return 1;
+    } else { // Unverified
+        return 0;
+    }
+});
+
+schema.virtual('status.name').get(function () {
+
+    if (this.status.checkedIn && this.status.statusReleased) {
+        return 'checked in';
+    }
+
+    if (this.status.declined && this.status.statusReleased) {
+        return "declined";
+    }
+
+    if (this.status.waitlisted && this.status.statusReleased) {
+        return "waitlisted";
+    }
+
+    if (this.status.confirmed && this.status.statusReleased) {
+        return "confirmed";
+    }
+
+    if (this.status.admitted && this.status.statusReleased) {
+        return "admitted";
+    }
+    if (this.status.completedProfile) {
+        return "submitted";
+    }
+
+    if (!this.verified) {
+        return "unverified";
+    }
+
+    return "incomplete";
+
+});
 
 module.exports = mongoose.model('User', schema);

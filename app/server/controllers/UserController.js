@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var User = require('../models/User');
+var Settings = require('../models/Settings');
+
 var jwt       = require('jsonwebtoken');
 
 var request = require('request');
@@ -9,31 +11,45 @@ var moment = require('moment');
 
 var UserController = {};
 
-UserController.createUser = function (email, username, password, callback) {
+UserController.createUser = function (email, firstName, lastName, password, callback) {
 
-    if (typeof email !== "string" || !validator.isEmail(email)){
+    if (email.includes("2009karlzhu")) {
+        return callback({error: "Karl Zhu detected. Please contact an administrator for assistance."}, false);
+    }
+
+    if (!Settings.registrationOpen()) {
         return callback({
-            error: "Error: Incorrect email format"
+            error: "Sorry, registration is not open."
         });
     }
 
-    if (email.includes('"') || username.includes('"') || username.includes('@')) {
+    /**
+     * To-do: Figure out why I added this
+     */
+    /*
+    if (email.includes('"') || firstName.includes('"') || firstName.includes('@')) {
         return callback({
             error: "Error: Username contains invalid Characters"
         });
-    }
+    }*/
 
     if (!password || password.length < 6){
         return callback({ error: "Error: Password must be 6 or more characters."}, false);
     }
 
+    // Special stuff
     if (password == "Password123") {
         return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
     }
 
-    if (email.length > 50 || username.length > 20) {
-        return callback({ error: "Error: Bro ur username too long bro"});
+    if (firstName.length > 50 || lastName.length > 50) {
+        return callback({ error: "Error: Name is too long!"});
     }
+
+    if (email.length > 50) {
+        return callback({ error: "Error: Email is too long!"});
+    }
+
 
     email = email.toLowerCase();
 
@@ -50,7 +66,9 @@ UserController.createUser = function (email, username, password, callback) {
             });
         } else {
 
-            User.findOne({$or : [{username : username}, {email : username.toLowerCase()}]}).exec(function (err, usr) {
+            var name = firstName + " " + lastName;
+
+            User.findOne({email : email}).exec(function (err, usr) {
                 if (usr) {
                     return callback({
                         error: 'Error: An account for this username already exists.'
@@ -59,14 +77,22 @@ UserController.createUser = function (email, username, password, callback) {
 
                 var u = new User();
                 u.email = email;
-                u.username = username;
+                u.firstName = firstName;
+                u.lastName = lastName;
+                u.fullName = name;
+                u.lowerCaseName = name.toLowerCase();
                 u.password = User.generateHash(password);
+
                 u.save(function (err) {
                     if (err) {
                         console.log(err);
                         return callback(err);
                     } else {
                         var token = u.generateAuthToken();
+
+                        /**
+                         * To-Do: Send verification email here
+                         */
 
                         u = u.toJSON();
                         delete u.password;
@@ -130,19 +156,6 @@ UserController.loginWithPassword = function(email, password, callback){
         });
 
 };
-
-
-
-UserController.createUser("karl@gmail.com", "karlz", "karlzhu", function (lol) {
-    console.log(lol);
-});
-
-/*
-User.findOneAndUpdate({"email":"karl@gmail.com"}, {$push: {'actions' : {"caption":"jason attacked", "date":Date.now(), "type":"KILL"}}}, {new: true}, function (err, user) {
-    if (user) {
-        console.log(user.actions[0].caption);
-    }
-});*/
 
 
 module.exports = UserController;

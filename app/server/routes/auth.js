@@ -10,31 +10,37 @@ JWT_SECRET = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+    // Register user
     router.post('/register', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
-        var username = req.body.username;
+        var firstName = req.body.firstName;
+        var lastName = req.body.lastName;
 
-        console.log("lol dis boi connected " + req.body.email);
+        console.log(req.body.email + " registered.");
 
         if (!email) {
-            return res.json({error: "Error: No email provided"});
+            return res.status(500).json({error: "Error: No email provided"});
         }
 
         if (!password) {
-            return res.json({error: "Error: No password provided"});
+            return res.status(500).json({error: "Error: No password provided"});
         }
 
-        if (!username) {
-            return res.json({error: "Error: No username provided"});
+        if (!firstName) {
+            return res.status(500).json({error: "Error: No first name provided"});
         }
 
-        UserController.createUser(email, username, password, function (err, token, user) {
+        if (!lastName) {
+            return res.status(500).json({error: "Error: No first name provided"});
+        }
+
+        UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
                 if (err || !user) {
                     if (err) {
-                        return res.json(err);
+                        return res.status(500).json(err);
                     }
-                    return res.json({error: "Error: Unable to process request"});
+                    return res.status(500).json({error: "Error: Unable to process request"});
                 }
                 return res.json({
                     token: token,
@@ -44,12 +50,13 @@ module.exports = function(router) {
 
     });
 
+    // Login and issue token
     router.post('/login', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
         var token = req.body.token;
 
-        console.log("lol dis boi connected " + req.body.email);
+        console.log(req.body.email + " attempting to login.");
 
         if (token) {
 
@@ -61,7 +68,7 @@ module.exports = function(router) {
                         console.log(err);
                     }
 
-                    return res.json({error: "Error: Invalid Token"});
+                    return res.status(400).json({error: "Error: Invalid Token"});
                 }
                 return res.json({
                     token: token,
@@ -72,7 +79,7 @@ module.exports = function(router) {
             UserController.loginWithPassword(email, password, function (err, token, user) {
                 if (err || !user) {
                     console.log(err);
-                    return res.json(err);
+                    return res.status(400).json(err);
                 }
                 return res.json({
                     token: token,
@@ -81,6 +88,14 @@ module.exports = function(router) {
             })
         }
     });
+
+    // Password reset
+
+    // Send password reset email
+
+    // Verify user
+
+    // Send verify email
 
     router.get('/', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});
