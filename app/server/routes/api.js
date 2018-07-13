@@ -1,8 +1,8 @@
-var jwt       = require('jsonwebtoken');
-var validator = require('validator');
-var express = require('express');
+var jwt            = require('jsonwebtoken');
+var validator      = require('validator');
+var express        = require('express');
 
-var User = require('../models/User');
+var User           = require('../models/User');
 var UserController = require('../controllers/UserController');
 
 require('dotenv').config({path: '../../../.env'});
@@ -13,11 +13,6 @@ module.exports = function(router) {
     router.use(express.json());
 
     // Slack error reporting
-    /**
-     * Default response to send an error and the data.
-     * @param  {[type]} res [description]
-     * @return {[type]}     [description]
-     */
     function defaultResponse(req, res){
         return function(err, data){
             if (err){
@@ -70,7 +65,13 @@ module.exports = function(router) {
     // 6 - Developer
 
     function getToken(req){
-        return req.headers['x-access-token'];
+        var token = req.headers['x-access-token'];
+
+        if (!token) {
+            token = req.body.token;
+        }
+
+        return token;
     }
 
     function isVerified(req, res, next) {
@@ -83,6 +84,26 @@ module.exports = function(router) {
             }
 
             if (user && user.permissions.level > 0) {
+                req.user = user;
+                return next();
+            }
+
+            return res.status(401).send({
+                message: 'Access Denied'
+            });
+        });
+    }
+
+    function isCheckin(req, res, next) {
+        var token = getToken(req);
+
+        User.getByToken(token, function (err, user) {
+
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (user && user.permissions.level >= 2) {
                 req.user = user;
                 return next();
             }
@@ -175,66 +196,123 @@ module.exports = function(router) {
 
     // Developer
     // View system log
+    router.post('/log', isDeveloper, function (req, res) {
+        return SettingController.getLog();
+    });
 
     // Developer
     // Inject votes accept
+    router.post('/injectVoteAdmit', isDeveloper, function (req, res) {
+        
+    });
 
     // Developer
     // Inject votes reject
+    router.post('/injectVoteReject', isDeveloper, function (req, res) {
+
+    });
 
     // Developer
     // Reset votes
+    router.post('/voteReset', isDeveloper, function (req, res) {
+
+    });
 
     // Owner
     // Force accept
+    router.post('/forceAccept', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Force reject
+    router.post('/forceReject', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Reset admission state
+    router.post('/resetAdmissionState', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Flush email queue for user
+    router.post('/flushEmailQueue', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Delete user
+    router.post('/deleteUser', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Change password
+    router.post('/changePassword', isOwner, function (req, res) {
 
-    // Owner
-    // Send password reset
+    });
 
     // Owner
     // Send admit emails
+    router.post('/sendAcceptanceEmails', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Send reject emails
+    router.post('/sendRejectionEmails', isOwner, function (req, res) {
 
-    // Owner
-    // Reject everyone without status
+    });
 
     // Owner
     // Send reminder emails
+    router.post('/sendReminderEmails', isOwner, function (req, res) {
+
+    });
+
+    // Owner
+    // Reject everyone without status
+    router.post('/rejectNoStates', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Activate account
+    router.post('/activateAccount', isOwner, function (req, res) {
+
+    });
 
     // Owner
     // Deactivate account
+    router.post('/deactivateAccount', isOwner, function (req, res) {
+
+    });
 
     // Checkin
     // Checkin user
+    router.post('/checkIn', isCheckin, function (req, res) {
+
+    });
 
     // Checkin
     // Checkout user
+    router.post('/checkOut', isCheckin, function (req, res) {
+
+    });
 
     // Checkin
     // Waiver in
+    router.post('/waiverIn', isCheckin, function (req, res) {
+
+    });
 
     // Checkin
     // Waiver out
+    router.post('/waiverOut', isCheckin, function (req, res) {
+
+    });
 
     router.get('/', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});

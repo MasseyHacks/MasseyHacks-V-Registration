@@ -47,7 +47,6 @@ module.exports = function(router) {
                     user: user
                 });
         })
-
     });
 
     // Login and issue token
@@ -77,25 +76,103 @@ module.exports = function(router) {
             })
         } else {
             UserController.loginWithPassword(email, password, function (err, token, user) {
+
                 if (err || !user) {
                     console.log(err);
-                    return res.status(400).json(err);
+                    return res.status(401).json(err);
                 }
+
                 return res.json({
                     token: token,
                     user: user
                 });
+
             })
         }
     });
 
     // Password reset
+    router.post('/reset', function (req, res) {
+        var token = req.body.token;
+
+        if (!token) {
+            return res.status(400).json({error: "Error: Invalid token"});
+        }
+
+        UserController.resetPassword(token, password, function (err, msg) {
+            if (err || !msg) {
+                if (err) {
+                    return res.status(400).json(err);
+                }
+
+                return res.status(400).json({error: "Error: Invalid token"});
+            }
+
+            return res.status(400).json(msg);
+        });
+    });
 
     // Send password reset email
+    router.post('/requestReset', function (req, res) {
+        var email = req.body.email;
+
+        console.log(req.body.email + " requesting reset email.");
+
+        if (!email) {
+            return res.status(400).json({error: "Error: Invalid email"});
+        }
+
+        UserController.sendPasswordResetEmail(email, function (err) {
+            if (err) {
+                return res.status(400).json({error: "Error: Something went wrong."});
+            }
+
+            return res.json({
+                message: 'Success'
+            });
+        });
+    });
 
     // Verify user
+    router.post('/verify', function (req, res) {
+        var token = req.body.token;
+
+        if (!token) {
+            return res.status(400).json({error: "Error: Invalid token"});
+        }
+
+        UserController.verify(token, password, function (err, msg) {
+            if (err || !msg) {
+                if (err) {
+                    return res.status(400).json(err);
+                }
+
+                return res.status(400).json({error: "Error: Invalid token"});
+            }
+
+            return res.status(400).json(msg);
+        });
+    });
 
     // Send verify email
+    router.post('/requestVerify', function (req, res) {
+        var token = req.body.token;
+
+        if (!token) {
+            return res.status(400).json({error: "Error: Invalid token"});
+        }
+
+        UserController.sendVerificationEmail(email, function (err) {
+            if (err) {
+                return res.status(400).json({error: "Error: Something went wrong."});
+            }
+
+            return res.json({
+                message: 'Success'
+            });
+        });
+    });
+
 
     router.get('/', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});

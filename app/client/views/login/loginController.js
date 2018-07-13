@@ -25,6 +25,33 @@ $(document).ready(function () {
 
     };
 
+    $("#login").click(function() {
+        var email = $("#emailLogin").val();
+        var password = $("#passwordLogin").val();
+
+        $.ajax({
+            type: "POST",
+            url:'/auth/login',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                email: email,
+                password: password
+            }),
+            success: function (data) {
+
+                console.log(data);
+
+
+                swal("Success!", "Welcome to HUBG!", "success");
+
+            },
+            error: function(data) {
+                swal("Fail!", "Welcome to HUBG!", "success");
+            }
+        })
+    });
+
     $('.overlay').attr("hidden", false);
 
     bgresize();

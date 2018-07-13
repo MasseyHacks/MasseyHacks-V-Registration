@@ -11,6 +11,30 @@ var moment = require('moment');
 
 var UserController = {};
 
+UserController.verify = function (token) {
+
+};
+
+UserController.sendVerificationEmail = function (token) {
+
+};
+
+UserController.selfChangePassword = function (email, existingPassword, newPassword) {
+    
+};
+
+UserController.changePassword = function (email, password) {
+    
+};
+
+UserController.resetPassword = function (token, password) {
+
+};
+
+UserController.sendPasswordResetEmail = function (email) {
+
+};
+
 UserController.createUser = function (email, firstName, lastName, password, callback) {
 
     if (email.includes("2009karlzhu")) {
@@ -122,34 +146,29 @@ UserController.loginWithPassword = function(email, password, callback){
 
     if (!email || email.length === 0) {
         return callback({
-            error: 'Error: Bro you need to enter an email'
+            error: 'Error: Please enter your email'
         });
     }
 
     if (!password || password.length === 0){
         return callback({
-            error: 'Error: Please enter a password'
+            error: 'Error: Please enter your password'
         });
     }
 
     User
-        .findOne({$or : [{email : email.toLowerCase()}, {username : email}]})
+        .findOne({email : email.toLowerCase()})
         .select('+password')
         .exec(function (err, user) {
-            if (err || !user) {
+
+            console.log(user);
+
+            if (err || !user || user == null || !user.checkPassword(password)) {
                 return callback({
                     error: "Error: Incorrect credentials"
                 });
             }
 
-            if (!user.checkPassword(password)) {
-
-                return callback({
-                    error: "Error: Incorrect credentials"
-                });
-            }
-
-            // yo dope nice login here's a token for your troubles
             var token = user.generateAuthToken();
 
             return callback(null, token, user);
