@@ -47,15 +47,17 @@ UserController.createUser = function (email, firstName, lastName, password, call
         });
     }
 
-    /**
-     * To-do: Figure out why I added this
-     */
-    /*
-    if (email.includes('"') || firstName.includes('"') || firstName.includes('@')) {
+    if (!validator.isEmail(email)){
         return callback({
-            error: "Error: Username contains invalid Characters"
+            error: 'Error: Invalid email format'
         });
-    }*/
+    }
+
+    if (email.includes('"') || firstName.includes('"') || lastName.includes('"')) {
+        return callback({
+            error: "Error: Invalid Characters"
+        });
+    }
 
     if (!password || password.length < 6){
         return callback({ error: "Error: Password must be 6 or more characters."}, false);
@@ -76,7 +78,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
     email = email.toLowerCase();
 
-    User.findOneByEmail(email).exec(function (err, user) {x
+    User.findOneByEmail(email).exec(function (err, user) {
 
         if (err) {
             return callback(err);
