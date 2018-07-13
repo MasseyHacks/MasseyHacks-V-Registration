@@ -30,6 +30,9 @@ $(document).ready(function () {
         var email = $("#email-login").val();
         var password = $("#password-login").val();
 
+        $("#error").html("");
+        $("#error").attr("hidden", true);
+
         $.ajax({
             type: "POST",
             url:'/auth/login',
@@ -41,18 +44,57 @@ $(document).ready(function () {
             }),
             success: function (data) {
 
-                console.log(data);
-
-
-                swal("Success!", "Welcome to HUBG!", "success");
-
+                swal("Success!", data, "success");
+            
             },
             error: function(data) {
-                swal("Fail!", "Welcome to HUBG!", "success");
+                console.log(data.responseText);
+                $("#error").attr("hidden", false);
+                $("#error").html(JSON.parse(data.responseText)['error']);
             }
         })
     });
 
+    $("#register-submit").click(function() {
+        var email = $("#email-register").val();
+
+        var password1 = $("#password-register-1").val();
+        var password2 = $("#password-register-2").val();
+
+        var firstName = $("#first-name-register").val();
+        var lastName = $("#last-name-register").val();
+
+        $("#error").html("");
+        $("#error").attr("hidden", true);
+
+        if (password1 != password2) {
+            $("#error").attr("hidden", false);
+            $("#error").html("Idiot! Your passwords don't match!");
+        } else {
+            $.ajax({
+                type: "POST",
+                url: '/auth/register',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    email: email,
+                    password: password1,
+                    firstName: firstName,
+                    lastName: lastName
+                }),
+                success: function (data) {
+                    console.log(data);
+                    swal("Success!", data, "success");
+                },
+                error: function (data) {
+                    $("#error").attr("hidden", false);
+                    $("#error").html(JSON.parse(data.responseText)['error']);
+                }
+            });
+        }
+    });
+
+    // Toggle between states
     $("#register-switch").click(function() {
         $("#register-core").attr("hidden", false);
         $("#login-core").attr("hidden", true);
@@ -62,8 +104,6 @@ $(document).ready(function () {
         $("#register-core").attr("hidden", true);
         $("#login-core").attr("hidden", false);
     });
-
-    $('.overlay').attr("hidden", false);
 
     bgresize();
     $(window).resize(bgresize);

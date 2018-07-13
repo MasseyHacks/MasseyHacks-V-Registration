@@ -18,6 +18,7 @@
 }
 
 #login-box {
+
     box-shadow: 4px 0 8px 0 rgba(0, 0, 0, 0.2), 6px 0 50px 0 rgba(0, 0, 0, 0.19);
     background-color: white;
 
@@ -25,6 +26,7 @@
 }
 
 .login-box-inner {
+
     position:absolute;
     left:0;
     right:0;
@@ -93,7 +95,7 @@
     #login-box {
         max-width: 600px;
         width: 95vw;
-        min-height: 500px;
+        height: 500px;
         border-radius: 5px;
 
         margin: 0 auto;

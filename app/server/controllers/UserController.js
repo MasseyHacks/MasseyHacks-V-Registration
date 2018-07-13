@@ -74,11 +74,9 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({ error: "Error: Email is too long!"});
     }
 
-
     email = email.toLowerCase();
 
-    User.findOneByEmail(email).exec(function (err, user) {
-
+    User.findOneByEmail(email).exec(function (err, user) {x
 
         if (err) {
             return callback(err);

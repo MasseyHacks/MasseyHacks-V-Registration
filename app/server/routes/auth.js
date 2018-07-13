@@ -20,19 +20,19 @@ module.exports = function(router) {
         console.log(req.body.email + " registered.");
 
         if (!email) {
-            return res.status(500).json({error: "Error: No email provided"});
+            return res.status(400).json({error: "Error: No email provided"});
         }
 
         if (!password) {
-            return res.status(500).json({error: "Error: No password provided"});
+            return res.status(400).json({error: "Error: No password provided"});
         }
 
         if (!firstName) {
-            return res.status(500).json({error: "Error: No first name provided"});
+            return res.status(400).json({error: "Error: No first name provided"});
         }
 
         if (!lastName) {
-            return res.status(500).json({error: "Error: No first name provided"});
+            return res.status(400).json({error: "Error: No last name provided"});
         }
 
         UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
