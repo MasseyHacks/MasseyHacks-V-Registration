@@ -118,7 +118,7 @@ module.exports = function(router) {
 
         console.log(req.body.email + " requesting reset email.");
 
-        if (!email) {
+        if (!email || !validator.isEmail(email)) {
             return res.status(400).json({error: "Error: Invalid email"});
         }
 

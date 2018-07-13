@@ -26,12 +26,16 @@ $(document).ready(function () {
 
     };
 
+    var clearError = function() {
+        $("#error").html("");
+        $("#error").attr("hidden", true);
+    };
+
     $("#login-submit").click(function() {
         var email = $("#email-login").val();
         var password = $("#password-login").val();
 
-        $("#error").html("");
-        $("#error").attr("hidden", true);
+        clearError();
 
         $.ajax({
             type: "POST",
@@ -55,6 +59,33 @@ $(document).ready(function () {
         })
     });
 
+    $("#reset-submit").click(function() {
+        var email = $("#email-reset").val();
+
+        clearError();
+
+        $.ajax({
+            type: "POST",
+            url:'/auth/requestReset',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                email: email
+            }),
+            success: function (data) {
+
+                swal("Email sent!", "Please check " + email + " for instructions to reset your password!", "success");
+
+            },
+            error: function(data) {
+                console.log(data.responseText);
+                $("#error").attr("hidden", false);
+                $("#error").html(JSON.parse(data.responseText)['error']);
+            }
+        })
+    });
+
+
     $("#register-submit").click(function() {
         var email = $("#email-register").val();
 
@@ -64,8 +95,7 @@ $(document).ready(function () {
         var firstName = $("#first-name-register").val();
         var lastName = $("#last-name-register").val();
 
-        $("#error").html("");
-        $("#error").attr("hidden", true);
+        clearError();
 
         if (password1 != password2) {
             $("#error").attr("hidden", false);
@@ -84,6 +114,7 @@ $(document).ready(function () {
                 }),
                 success: function (data) {
                     console.log(data);
+
                     swal("Success!", data, "success");
                 },
                 error: function (data) {
@@ -95,14 +126,29 @@ $(document).ready(function () {
     });
 
     // Toggle between states
+    $("#reset-switch").click(function() {
+        $("#reset-core").attr("hidden", false);
+        $("#login-core").attr("hidden", true);
+        clearError();
+    });
+
+    $("#login-switch-reset").click(function() {
+        $("#reset-core").attr("hidden", true);
+        $("#login-core").attr("hidden", false);
+        clearError();
+    });
+
+
     $("#register-switch").click(function() {
         $("#register-core").attr("hidden", false);
         $("#login-core").attr("hidden", true);
+        clearError();
     });
 
     $("#login-switch").click(function() {
         $("#register-core").attr("hidden", true);
         $("#login-core").attr("hidden", false);
+        clearError();
     });
 
     bgresize();

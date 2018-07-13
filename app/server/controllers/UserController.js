@@ -31,8 +31,8 @@ UserController.resetPassword = function (token, password) {
 
 };
 
-UserController.sendPasswordResetEmail = function (email) {
-
+UserController.sendPasswordResetEmail = function (email, callback) {
+    return callback();
 };
 
 UserController.createUser = function (email, firstName, lastName, password, callback) {
@@ -49,7 +49,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
     if (!validator.isEmail(email)){
         return callback({
-            error: 'Error: Invalid email format'
+            error: 'Error: Invalid Email Format'
         });
     }
 
@@ -64,7 +64,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
     }
 
     // Special stuff
-    if (password == "Password123") {
+    if (password == "Password123" && firstName == "Adam") {
         return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
     }
 

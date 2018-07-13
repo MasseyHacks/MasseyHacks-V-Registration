@@ -44,7 +44,6 @@
                     <p id="login-caption">Get ready to hack.</p>
 
                     <br>
-                    <br>
 
                     <div id="error" class="alert alert-danger" role="alert" hidden="true">
 
@@ -62,6 +61,23 @@
 
                         <button id="login-submit" type="button" class="btn btn-default loginPageButton">Login</button>
                         <button id="register-switch" type="button" class="btn btn-default loginPageButton">Register</button>
+
+                        <br>
+
+                        <p><a id="reset-switch">Forget your password?</a></p>
+                    </div>
+
+                    <div id="reset-core" hidden="true">
+                        <p><b>Forget your password? This is the place to be.</b></p>
+
+                        <p class="field-caption">Email</p>
+                        <input id="email-reset" type="email" placeholder="hacker@hackermail.io" class="login-field">
+
+                        <br>
+
+                        <button id="reset-submit" type="button" class="btn btn-default loginPageButton">Send Reset Email</button>
+
+                        <p><a id="login-switch-reset">Ready to login?</a></p>
                     </div>
 
                     <div id="register-core" hidden="true">
@@ -78,19 +94,14 @@
                         <input id="password-register-1" type="password" placeholder="Shhh... super secret" class="login-field">
 
                         <p class="field-caption">Password (Confirm)</p>
-                        <input id="password-register-2" type="password" placeholder="Shhh... super secret" class="login-field">
+                        <input id="password-register-2" type="password" placeholder="Just to make sure you remember :)" class="login-field">
 
                         <br>
                         <br>
-
 
                         <button id="register-submit" type="button" class="btn btn-default loginPageButton">Register</button>
                         <button id="login-switch" type="button" class="btn btn-default loginPageButton">Have an account? Login</button>
                     </div>
-
-                    <br>
-
-                    <p><a href="javascript: swal('lol that sucks for you')">Forget your password?</a></p>
             </div>
 
         </div>
