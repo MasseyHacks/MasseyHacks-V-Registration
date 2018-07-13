@@ -17,8 +17,6 @@ module.exports = function(router) {
         var firstName = req.body.firstName;
         var lastName = req.body.lastName;
 
-        console.log(req.body.email + " registered.");
-
         if (!email) {
             return res.status(400).json({error: "Error: No email provided"});
         }
@@ -42,6 +40,9 @@ module.exports = function(router) {
                     }
                     return res.status(500).json({error: "Error: Unable to process request"});
                 }
+
+                console.log(req.body.email + " registered.");
+
                 return res.json({
                     token: token,
                     user: user
@@ -141,7 +142,7 @@ module.exports = function(router) {
             return res.status(400).json({error: "Error: Invalid token"});
         }
 
-        UserController.verify(token, password, function (err, msg) {
+        UserController.verify(token, function (err, msg) {
             if (err || !msg) {
                 if (err) {
                     return res.status(400).json(err);
@@ -150,7 +151,9 @@ module.exports = function(router) {
                 return res.status(400).json({error: "Error: Invalid token"});
             }
 
-            return res.status(400).json(msg);
+            return res.json({
+                message: 'Success'
+            });
         });
     });
 
@@ -172,7 +175,6 @@ module.exports = function(router) {
             });
         });
     });
-
 
     router.get('/', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});

@@ -7,11 +7,23 @@ var mongoose = require('mongoose'),
 
 JWT_SECRET = process.env.JWT_SECRET;
 
+var emailQueue = {
+  acceptanceEmails : {
+      type: [String]
+  },
+  rejectionEmails: {
+      type: [String]
+  },
+  reminderEmails: {
+      type: [String]
+  }
+};
 
 var schema = new mongoose.Schema({
     log: {
         type: [String]
-    }
+    },
+    emailQueue : emailQueue
 });
 
 schema.statics.registrationOpen = function() {

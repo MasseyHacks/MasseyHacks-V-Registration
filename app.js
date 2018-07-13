@@ -16,7 +16,7 @@ var app = express();
 mongoose.connect(database);
 
 app.use(express.static('app/client/'));
-app.use(cors());
+//app.use(cors());
 
 var apiRouter = express.Router();
 require('./app/server/routes/api')(apiRouter);

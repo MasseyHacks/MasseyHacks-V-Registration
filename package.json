@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/henrytwo/MasseyHacks-V-Registration.git"
   },
-  "author": "Henry Tu",
+  "author": "Henry Tu <henry@henrytu.me>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/henrytwo/MasseyHacks-V-Registration/issues"

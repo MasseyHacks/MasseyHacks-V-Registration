@@ -1,9 +1,6 @@
 $(document).ready(function () {
 
     var bgresize = function () {
-
-        var windowz = $(window);
-
         if ($(window).width() <= 1230) {
             $("#login-box").addClass("col-10");
             $("#login-box").removeClass("col-3");
@@ -11,6 +8,7 @@ $(document).ready(function () {
             $("#login-box").removeClass("fadeInLeft");
             $("#login-box").addClass("fadeInUp");
 
+            $("#login-box").height(($("#login-box-inner").height() + 50) + "px");
 
             $("#global-spacer").height($("#cover").height() / 2 - $("#login-box").height() / 2);
 
@@ -19,12 +17,36 @@ $(document).ready(function () {
             $("#login-box").addClass("col-3");
 
             $("#login-box").removeClass("fadeInUp");
-            $("#login-box").addClass("fadeInLeft")
+            $("#login-box").addClass("fadeInLeft");
+
+            $("#login-box").height("100%");
 
             $("#global-spacer").height(0);
         }
-
     };
+
+    // Courtesy of https://stackoverflow.com/users/203112/andrea
+    $.fn.enterKey = function (fnc) {
+        return this.each(function () {
+            $(this).keypress(function (ev) {
+                var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+                if (keycode == '13') {
+                    fnc.call(this, ev);
+                }
+            })
+        })
+    };
+
+    // Submits on enter
+    $(".login-field").enterKey(function () {
+        if (!$('#login-core').attr("hidden")) {
+            $("#login-submit").click();
+        } else if (!$('#register-core').attr("hidden")) {
+            $("#register-submit").click();
+        } else if (!$('#reset-core').attr("hidden")) {
+            $("#reset-submit").click();
+        }
+    });
 
     var clearError = function() {
         $("#error").html("");
@@ -130,12 +152,14 @@ $(document).ready(function () {
         $("#reset-core").attr("hidden", false);
         $("#login-core").attr("hidden", true);
         clearError();
+        bgresize();
     });
 
     $("#login-switch-reset").click(function() {
         $("#reset-core").attr("hidden", true);
         $("#login-core").attr("hidden", false);
         clearError();
+        bgresize();
     });
 
 
@@ -143,12 +167,14 @@ $(document).ready(function () {
         $("#register-core").attr("hidden", false);
         $("#login-core").attr("hidden", true);
         clearError();
+        bgresize();
     });
 
     $("#login-switch").click(function() {
         $("#register-core").attr("hidden", true);
         $("#login-core").attr("hidden", false);
         clearError();
+        bgresize();
     });
 
     bgresize();

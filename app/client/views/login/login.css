@@ -15,6 +15,14 @@
 
 #cover {
     min-height: 600px;
+    width: 100vw;
+    height: 100vh;
+
+    background: url('../../images/cover.jpg');
+    background-size: cover;
+    background-position: center;
+
+    overflow: hidden;
 }
 
 #login-box {
@@ -25,7 +33,7 @@
     height: 100%;
 }
 
-.login-box-inner {
+#login-box-inner {
 
     position:absolute;
     left:0;
@@ -88,14 +96,14 @@
 
 /* Smaller Screens */
 @media screen and (max-width:1230px){
-    .login-box-inner {
+    #login-box-inner {
         padding: 40px;
     }
 
     #login-box {
         max-width: 600px;
         width: 95vw;
-        height: 500px;
+        min-height: 400px;
         border-radius: 5px;
 
         margin: 0 auto;

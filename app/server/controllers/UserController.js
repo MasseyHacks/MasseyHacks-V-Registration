@@ -11,27 +11,124 @@ var moment = require('moment');
 
 var UserController = {};
 
-UserController.verify = function (token) {
+UserController.verify = function (token, callback) {
 
+    if (!token) {
+        return callback({error : 'Error: Invalid token'});
+    }
+
+    jwt.verify(token, JWT_SECRET, function (err, payload) {
+        if (err || !payload) {
+            console.log('ur bad');
+            return callback(err);
+        }
+
+        if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
+            return callback({
+                error: 'bro ur token is invalid.'
+            });
+        }
+
+        User.findOneAndUpdate({
+            _id: payload.id
+        },
+        {
+            $set: {
+                'permissions.verified': true
+            }
+        },
+        {
+            new: true
+        }, function (err) {
+            if (err) {
+                console.log(err);
+
+                return callback(err);
+            };
+
+            return callback(null, 'Success');
+        });
+
+    }.bind(this));
 };
 
-UserController.sendVerificationEmail = function (token) {
-
+UserController.sendVerificationEmail = function (token, callback) {
+    // Call the mailer
+    return callback();
 };
 
-UserController.selfChangePassword = function (email, existingPassword, newPassword) {
+UserController.selfChangePassword = function (email, existingPassword, newPassword, callback) {
     
 };
 
-UserController.changePassword = function (email, password) {
-    
+UserController.changePassword = function (email, password, callback) {
+
+    if (!password || password.length < 6){
+        return callback({ error: "Error: Password must be 6 or more characters." });
+    }
+
+    User.findOneAndUpdate({
+        email : email
+    }, {
+        passwordLastUpdated: Date.now(),
+        password: User.generateHash(password)
+    }, {
+        new: true
+    }, function (err, user) {
+
+        if (err || !user) {
+            return callback({ error: "Error: Password must be 6 or more characters." });
+        }
+
+        // Mail password reset email
+
+        return callback(null, { message: "Success" })
+
+    });
 };
 
-UserController.resetPassword = function (token, password) {
+UserController.resetPassword = function (token, password, callback) {
 
+    if (!token || !password) {
+        return callback({error : "Error: Invalid arguments"});
+    }
+
+    jwt.verify(token, JWT_SECRET, function (err, payload) {
+        if (err || !payload) {
+            console.log("ur bad");
+            return callback(err);
+        }
+
+        if (payload.type != "password-reset" || !payload.exp || Date.now() >= payload.exp * 1000) {
+            return callback({
+                message: "bro ur token is invalid."
+            });
+        }
+
+        User.findOne({
+                _id: payload.id
+            }, function (err, user) {
+                if (err) {
+                    console.log(err);
+
+                    return callback({error : "Error: User not found"});
+                };
+
+                UserController.changePassword(user.email, password, function(err) {
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    return callback(null, {message : "Success"});
+
+                });
+            });
+
+    }.bind(this));
 };
 
 UserController.sendPasswordResetEmail = function (email, callback) {
+    // Call the mailer
     return callback();
 };
 
@@ -49,7 +146,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
     if (!validator.isEmail(email)){
         return callback({
-            error: 'Error: Invalid Email Format'
+            error: "Error: Invalid Email Format"
         });
     }
 
@@ -173,6 +270,9 @@ UserController.loginWithPassword = function(email, password, callback){
 
             return callback(null, token, user);
         });
+};
+
+UserController.injectAdmitUser = function(id, user, callback) {
 
 };
 
