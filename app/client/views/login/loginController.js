@@ -53,6 +53,12 @@ $(document).ready(function () {
         $("#error").attr("hidden", true);
     };
 
+    var launchError = function(error) {
+        $("#error").attr("hidden", false);
+        $("#error").html(error);
+        bgresize();
+    };
+
     $("#login-submit").click(function() {
         var email = $("#email-login").val();
         var password = $("#password-login").val();
@@ -75,8 +81,7 @@ $(document).ready(function () {
             },
             error: function(data) {
                 console.log(data.responseText);
-                $("#error").attr("hidden", false);
-                $("#error").html(JSON.parse(data.responseText)['error']);
+                launchError(JSON.parse(data.responseText)['error']);
             }
         })
     });
@@ -103,6 +108,7 @@ $(document).ready(function () {
                 console.log(data.responseText);
                 $("#error").attr("hidden", false);
                 $("#error").html(JSON.parse(data.responseText)['error']);
+                bgresize();
             }
         })
     });
@@ -142,6 +148,7 @@ $(document).ready(function () {
                 error: function (data) {
                     $("#error").attr("hidden", false);
                     $("#error").html(JSON.parse(data.responseText)['error']);
+                    bgresize();
                 }
             });
         }
