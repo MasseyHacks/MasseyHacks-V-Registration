@@ -4,6 +4,7 @@ var express = require('express');
 
 var User = require('../models/User');
 var UserController = require('../controllers/UserController');
+var permissions    = require('../services/permissions');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -54,7 +55,7 @@ module.exports = function(router) {
     router.post('/login', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
-        var token = req.body.token;
+        var token = permissions.getToken(req);
 
         console.log(req.body.email + " attempting to login.");
 
@@ -95,6 +96,7 @@ module.exports = function(router) {
     // Password reset
     router.post('/reset', function (req, res) {
         var token = req.body.token;
+        var password = req.body.password;
 
         if (!token) {
             return res.status(400).json({error: "Error: Invalid token"});

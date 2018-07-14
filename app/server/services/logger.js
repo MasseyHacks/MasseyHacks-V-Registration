@@ -4,7 +4,7 @@ module.exports = {
     defaultResponse : function(req, res){
         return function(err, data){
             if (err){
-                // Only send error if in production
+                // Only send error to slack if in production
                 // Keep everyone happy
                 if (process.env.NODE_ENV === 'production'){
                     request
@@ -27,9 +27,7 @@ module.exports = {
                                 }
                             },
                             function (error, response, body) {
-                                return res.status(500).send({
-                                    message: "Your error has been recorded, we'll get right on it!"
-                                });
+                                return res.status(500).json(data);
                             }
                         );
                 } else {
@@ -48,9 +46,17 @@ module.exports = {
         Settings.findOneAndUpdate(
             {},
             {
-
+                $push : {
+                    'log' : {
+                        "from" : actionFrom,
+                        "to" : actionTo,
+                        "message" : message
+                    }
+                }
             },
             {
+                new: true
+            }, function (err, settings) {
 
             }
         )

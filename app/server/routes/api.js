@@ -1,16 +1,17 @@
-var jwt            = require('jsonwebtoken');
-var validator      = require('validator');
-var express        = require('express');
+var jwt                = require('jsonwebtoken');
+var validator          = require('validator');
+var express            = require('express');
 
-var User           = require('../models/User');
-var UserController = require('../controllers/UserController');
+var User               = require('../models/User');
+var UserController     = require('../controllers/UserController');
+var SettingsController = require('../controllers/SettingsController');
 
-var permissions    = require('../services/permissions');
-var logger         = require('../services/logger');
+var permissions        = require('../services/permissions');
+var logger             = require('../services/logger');
 
 require('dotenv').config({path: '../../../.env'});
 
-JWT_SECRET         = process.env.JWT_SECRET;
+JWT_SECRET             = process.env.JWT_SECRET;
 
 module.exports = function(router) {
     router.use(express.json());
@@ -18,7 +19,7 @@ module.exports = function(router) {
     // Developer
     // View system log
     router.post('/log', permissions.isDeveloper, function (req, res) {
-        return SettingController.getLog();
+        SettingsController.getLog(logger.defaultResponse(req, res));
     });
 
 
@@ -81,6 +82,7 @@ module.exports = function(router) {
     router.post('/flushEmailQueue', permissions.isOwner, function (req, res) {
         var adminID = req.body.adminID;
         var userID = req.body.userID;
+        var userID = req.body.userID;
 
         UserController.flushEmailQueue(adminID, userID, logger.defaultResponse(req, res));
     });
@@ -96,7 +98,7 @@ module.exports = function(router) {
 
     // General
     // Change password
-    router.post('/changePassword', function (req, res) {
+    router.post('/changePassword', permissions.isVerified, function (req, res) {
 
         var token = permissions.getToken(req);
         var newPassword = req.body.newPassword;

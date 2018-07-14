@@ -26,7 +26,7 @@ UserController.verify = function (token, callback) {
 
         if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'bro ur token is invalid.'
+                error: "Error: Token is invalid for this operation."
             });
         }
 
@@ -56,8 +56,24 @@ UserController.verify = function (token, callback) {
 };
 
 UserController.sendVerificationEmail = function (token, callback) {
-    // Call the mailer
-    return callback();
+    User.getByToken(token, function(err, user){
+        if (!user || err) {
+            return callback(err, null);
+        }
+
+        if (!user.status.active) {
+            return callback({ error: "Account is not active. Please contact an administrator for assistance." })
+        }
+
+        var verificationToken = user.generateVerificationToken();
+
+        console.log(verificationToken)
+
+        // Mailer
+
+        return callback(null, {message:"Success"});
+    });
+
 };
 
 UserController.selfChangePassword = function (token, existingPassword, newPassword, callback) {
@@ -148,7 +164,7 @@ UserController.resetPassword = function (token, password, callback) {
 
         if (payload.type != "password-reset" || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                message: "bro ur token is invalid."
+                error: "Error: Token is invalid for this operation."
             });
         }
 
@@ -166,7 +182,7 @@ UserController.resetPassword = function (token, password, callback) {
                         return callback(err);
                     }
 
-                    logger.logAction(userID.email, userID.email, "Changed their password with token.");
+                    logger.logAction(user.email, user.email, "Changed their password with token.");
                     return callback(null, {message : "Success"});
                 });
             });
@@ -174,9 +190,22 @@ UserController.resetPassword = function (token, password, callback) {
     }.bind(this));
 };
 
+
 UserController.sendPasswordResetEmail = function (email, callback) {
-    // Call the mailer
-    return callback();
+    User.getByEmail(email, function(err, user){
+
+        if (user && !err) {
+            var resetToken = user.generateResetToken();
+
+            console.log(resetToken);
+        }
+
+        // Mailer
+
+        return callback(null, {message:"Success"});
+    });
+
+
 };
 
 UserController.createUser = function (email, firstName, lastName, password, callback) {
@@ -222,7 +251,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
     email = email.toLowerCase();
 
-    User.findOneByEmail(email).exec(function (err, user) {
+    User.getByEmail(email, function (err, user) {
 
         if (err) {
             return callback(err);

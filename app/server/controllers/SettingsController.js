@@ -11,8 +11,11 @@ var moment = require('moment');
 
 var SettingsController = {};
 
-SettingsController.getLog = function() {
-    return Settings.getLog();
+SettingsController.getLog = function(callback) {
+
+    return callback(null, {});
+
+    //return callback(null, Settings.getLog());
 };
 
 SettingsController.getPublicSettings = function(callback){

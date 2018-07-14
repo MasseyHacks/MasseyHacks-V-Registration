@@ -21,7 +21,7 @@ for(var key in owners) {
 
 function makeOwner(owner_email, owner_name, owner_nickname, owner_password, reviewer, developer) {
     User
-        .findOneByEmail(owner_email)
+        .getByEmail(owner_email)
         .exec(function (err, user) {
             if (!user) {
                 var u = new User();

@@ -213,7 +213,19 @@ schema.methods.checkPassword = function (password) {
 
 schema.methods.generateAuthToken = function () {
     return jwt.sign({id: this._id, type: 'authentication'}, JWT_SECRET, {
-        expiresIn: 60 * 10080
+        expiresIn: 1209600
+    });
+};
+
+schema.methods.generateVerificationToken = function() {
+    return jwt.sign({id: this._id, type: 'verification'}, JWT_SECRET, {
+        expiresIn: 3600
+    });
+};
+
+schema.methods.generateResetToken = function() {
+    return jwt.sign({id: this._id, type: 'password-reset'}, JWT_SECRET, {
+        expiresIn: 3600
     });
 };
 
@@ -262,7 +274,7 @@ schema.statics.getByToken = function (token, callback) {
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                message: 'bro ur token is invalid.'
+                error: 'Error: Token is invalid for this operation'
             });
         }
 
@@ -270,16 +282,26 @@ schema.statics.getByToken = function (token, callback) {
     }.bind(this));
 };
 
-schema.statics.findOneByUsername = function (username) {
+schema.statics.getByUsername = function (username) {
     return this.findOne({
         username:  username
     });
 };
 
 
-schema.statics.findOneByEmail = function (email) {
-    return this.findOne({
+schema.statics.getByEmail = function (email, callback) {
+    this.findOne({
         email:  email ? email.toLowerCase() : email
+    }, function(err, user) {
+        if (err || !user) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback({error: "Error: User not found"})
+        }
+
+        return callback(null, user);
     });
 };
 
@@ -292,7 +314,9 @@ schema.virtual('permissions.level').get(function () {
     // 5 - Owner
     // 6 - Developer
 
-    if (this.permissions.developer) { // Developers (Gods)
+    if (!this.status.active) {
+        return 0;
+    } else if (this.permissions.developer) { // Developers (Gods)
         return 6;
     } else if (this.permissions.owner) { // Owner
         return 5;
