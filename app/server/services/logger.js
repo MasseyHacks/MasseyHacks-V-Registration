@@ -1,4 +1,4 @@
-var Settings  = require('../models/Settings');
+var Logs  = require('../models/Logs');
 
 module.exports = {
     defaultResponse : function(req, res){
@@ -43,23 +43,17 @@ module.exports = {
 
         console.log(actionFrom, actionTo, message);
 
-        Settings.findOneAndUpdate(
-            {},
-            {
-                $push : {
-                    'log' : {
-                        "from" : actionFrom,
-                        "to" : actionTo,
-                        "message" : message
-                    }
-                }
-            },
-            {
-                new: true
-            }, function (err, settings) {
+        var event = new Logs();
+        event.from = actionFrom;
+        event.to = actionTo;
+        event.message = message;
+        event.timestamp = Date.now();
 
+        event.save(function(err) {
+            if (err) {
+                console.log("Unable to log.", err);
             }
-        )
-        
+        });
+
     }
 };
