@@ -1,52 +1,68 @@
 const fs = require('fs');
-var owners = JSON.parse(fs.readFileSync('config/data/organizers.json', 'utf8'));
+var organizers = JSON.parse(fs.readFileSync('config/data/organizers.json', 'utf8'));
 
 // Create a default OWNER user.
 var User = require('../app/server/models/User');
+var UserController = require('../app/server/controllers/UserController');
 var Mailer = require('../app/server/services/email');
 
-for(var key in owners) {
+console.log("Trying to add organizers");
 
-    owner_email    = owners[key]['email'];
-    owner_name     = owners[key]['name'];
-    owner_nickname = key + " [OWNER]";
-    owner_password = "applepineapple";//"JerrBear37485" + owner_nickname;
-    owner_reviewer = owners[key]['reviewer'];
-    owner_developer = owners[key]['developer'];
+for(var key in organizers) {
 
-    console.log("Adding: " + owner_email);
+    email      = organizers[key]['email'];
+    firstName  = organizers[key]['firstName'];
+    lastName   = organizers[key]['lastName'];
 
-    makeOwner(owner_email, owner_name, owner_nickname, owner_password, owner_reviewer, owner_developer);
+    permission = organizers[key]['permission'];
+
+    makeOrganizer(email, firstName, lastName, permission);
 }
 
-function makeOwner(owner_email, owner_name, owner_nickname, owner_password, reviewer, developer) {
+function makeOrganizer(email, firstName, lastName,  permission) {
     User
-        .getByEmail(owner_email)
-        .exec(function (err, user) {
+        .getByEmail(email, function (err, user) {
             if (!user) {
+                console.log("Adding: ", email, firstName, lastName, permission);
+
                 var u = new User();
                 console.log(u);
-                u.email = owner_email;
-                u.nickname = owner_nickname;
-                u.profile.name = owner_name;
-                u.password = User.generateHash(owner_password);
-                u.owner = true;
-                u.admin = true;
-                u.volunteer = true;
-                u.reviewer = reviewer;
-                u.developer = developer;
-                u.id = owner_nickname;
+
+                u.email = email;
+                u.firstName = firstName;
+                u.lastName = lastName;
+                u.fullName = firstName + " " + lastName;
+                u.lowerCaseName = (firstName + " " + lastName).toLowerCase();
+                u.password = User.generateHash(""); // Impossible password
+
+                u.status.passwordSuspension = true;
+
+                u.developer = permission == 'developer';
+                u.owner = permission == 'owner';
+                u.reviewer = permission == 'reviewer';
+                u.admin = permission == 'admin';
+                u.checkin = permission == 'checkin';
+
                 u.verified = true;
                 u.status.admittedBy = "MasseyHacks Account Authority";
-                u.profile.submittedApplication = true;
+                //u.profile.submittedApplication = true;
                 u.status.admitted = true;
                 u.status.confirmed = true;
                 u.status.statusReleased = true;
 
-                var token = u.generateTempAuthToken();
-                var callback = '';
+                console.log(u);
 
-                console.log(callback);
+                UserController.sendPasswordResetEmail(email, function (err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Email successful.");
+                    }
+                });
+
+                //var token = u.generateTempAuthToken();
+                //var callback = '';
+                //console.log(callback);
 
                 u.save(function (err) {
                     if (err) {

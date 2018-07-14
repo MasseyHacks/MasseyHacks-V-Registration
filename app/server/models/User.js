@@ -14,6 +14,11 @@ var status = {
         required: true,
         default: true
     },
+    passwordSuspension: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     completedProfile: {
         type: Boolean,
         required: true,
@@ -314,7 +319,7 @@ schema.virtual('permissions.level').get(function () {
     // 5 - Owner
     // 6 - Developer
 
-    if (!this.status.active) {
+    if (!this.status.active || this.status.passwordSuspension) {
         return 0;
     } else if (this.permissions.developer) { // Developers (Gods)
         return 6;

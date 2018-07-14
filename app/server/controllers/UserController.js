@@ -345,8 +345,16 @@ UserController.loginWithPassword = function(email, password, callback){
 
             if (err || !user || user == null || !user.checkPassword(password)) {
                 return callback({
-                    error: "Error: Incorrect credentials"
+                    error: "Error: Invalid credentials"
                 });
+            }
+
+            if (user.status.passwordSuspension) {
+                return callback({ error: "Security policy requires you to reset your password to activate your account. Please check your email or press the button below." })
+            }
+
+            if (!user.status.active) {
+                return callback({ error: "Account is not active. Please contact an administrator for assistance." })
             }
 
             logger.logAction(user.email, user.email, "Logged in with password.");
