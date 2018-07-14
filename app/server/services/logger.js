@@ -1,3 +1,5 @@
+var Settings  = require('../models/Settings');
+
 module.exports = {
     defaultResponse : function(req, res){
         return function(err, data){
@@ -40,6 +42,8 @@ module.exports = {
         };
     },
     logAction : function (actionFrom, actionTo, message) {
+
+        console.log(actionFrom, actionTo, message);
 
         Settings.findOneAndUpdate(
             {},

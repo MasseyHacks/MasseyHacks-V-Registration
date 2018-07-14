@@ -10,8 +10,7 @@ var User = require('../models/User');
 // 5 - Owner
 // 6 - Developer
 
-function getToken (req)
-{
+function getToken(req) {
     var token = req.headers['x-access-token'];
 
     if (!token) {
@@ -22,6 +21,11 @@ function getToken (req)
 }
 
 module.exports = {
+
+    getToken : function (req)
+    {
+        return getToken(req);
+    },
 
     isVerified : function (req, res, next) {
         var token = getToken(req);

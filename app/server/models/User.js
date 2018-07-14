@@ -238,8 +238,18 @@ schema.statics.generateHash = function (password) {
 };
 
 schema.statics.getByID = function(id, callback) {
-    return this.findOne({
+    this.findOne({
         _id:  id
+    }, function(err, usr) {
+        if (err || !usr) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback({ error: "Error: User not found." })
+        }
+
+        return callback(usr);
     });
 };
 

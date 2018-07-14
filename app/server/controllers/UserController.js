@@ -60,9 +60,9 @@ UserController.sendVerificationEmail = function (token, callback) {
     return callback();
 };
 
-UserController.selfChangePassword = function (email, existingPassword, newPassword, callback) {
-    UserController.loginWithPassword(email, existingPassword, function(err, usr) {
-        if (err || !usr) {
+UserController.selfChangePassword = function (token, existingPassword, newPassword, callback) {
+    User.getByToken(token, function (err, user) {
+        if (err || !user) {
             if (err) {
                 return callback(err);
             }
@@ -70,24 +70,38 @@ UserController.selfChangePassword = function (email, existingPassword, newPasswo
             return callback({ error: "Error: Something went wrong." });
         }
 
-        UserController.changePassword(email, password, function(err, msg) {
-            if (err) {
-                return callback(err);
+        UserController.loginWithPassword(user.email, existingPassword, function(err, usr) {
+            if (err || !usr) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback({ error: "Error: Something went wrong." });
             }
-            logger.logAction(usr.email, usr.email, "Changed their password with existing.");
-            return callback(null, { message: "Success" });
+
+            UserController.changePassword(user.email, newPassword, function(err, msg) {
+                if (err) {
+                    return callback(err);
+                }
+                logger.logAction(user.email, user.email, "Changed their password with existing.");
+                return callback(null, { message: "Success" });
+            });
         });
     });
 };
 
 UserController.adminChangePassword = function (adminID, userID, newPassword, callback) {
     User.getByID(userID, function (err, usr) {
-        UserController.changePassword(usr.email, password, function(err, msg) {
-            if (err) {
+        if (err || !usr) {
+            return callback({ error: "Error: User not found." });
+        }
+
+        UserController.changePassword(usr.email, newPassword, function(err, msg) {
+            if (err || !msg) {
                 return callback(err);
             }
             logger.logAction(User.getEmailFromID(adminID), usr.email, "Changed this user's password.");
-            return callback(null, { message: "Success" });
+            return callback(null, msg);
         });
     });
 };
@@ -101,14 +115,16 @@ UserController.changePassword = function (email, password, callback) {
     User.findOneAndUpdate({
         email : email
     }, {
-        passwordLastUpdated: Date.now(),
-        password: User.generateHash(password)
+            $set : {
+                passwordLastUpdated: Date.now(),
+                password: User.generateHash(password)
+            }
     }, {
         new: true
     }, function (err, user) {
 
         if (err || !user) {
-            return callback({ error: "Error: Password must be 6 or more characters." });
+            return callback(err);
         }
 
         // Mail password reset email
@@ -272,7 +288,7 @@ UserController.loginWithToken = function(token, callback){
 
         var token = user.generateAuthToken();
 
-        logger.logAction(user.email, userID.email, "Logged in with token.");
+        logger.logAction(user.email, user.email, "Logged in with token.");
 
         return callback(err, token, user);
     });
@@ -304,7 +320,7 @@ UserController.loginWithPassword = function(email, password, callback){
                 });
             }
 
-            logger.logAction(user.email, userID.email, "Logged in with password.");
+            logger.logAction(user.email, user.email, "Logged in with password.");
 
             var token = user.generateAuthToken();
 
@@ -315,7 +331,7 @@ UserController.loginWithPassword = function(email, password, callback){
 /*
 UserController.injectAdmitUser = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false
@@ -347,7 +363,7 @@ UserController.injectAdmitUser = function(adminID, userID, callback) {
 
 UserController.injectRejectUser = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false
@@ -379,7 +395,7 @@ UserController.injectRejectUser = function(adminID, userID, callback) {
 
 UserController.voteAdmitUser = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false,
@@ -415,7 +431,7 @@ UserController.voteAdmitUser = function(adminID, userID, callback) {
 
 UserController.voteRejectUser = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false,
@@ -513,7 +529,7 @@ UserController.checkAdmissionStatus = function(id) {
 
 UserController.resetVotes = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false
@@ -534,7 +550,7 @@ UserController.resetVotes = function(adminID, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(User.getEmailFromID(adminID), userID.email, "Reset votes.");
+        logger.logAction(User.getEmailFromID(adminID), user.email, "Reset votes.");
 
         return callback(err, user);
 
@@ -543,7 +559,7 @@ UserController.resetVotes = function(adminID, userID, callback) {
 
 UserController.resetAdmissionState = function(adminID, userID, callback) {
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true
     }, {
         $set: {
@@ -576,7 +592,7 @@ UserController.admitUser = function(adminID, userID, callback) {
      */
 
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false
@@ -613,7 +629,7 @@ UserController.rejectUser = function(adminID, userID, callback) {
      */
 
     User.findOneAndUpdate({
-        _id : user,
+       _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false
