@@ -7,30 +7,32 @@ var mongoose = require('mongoose'),
 
 JWT_SECRET = process.env.JWT_SECRET;
 
+
 var status = {
-    /**
-     * Whether or not the user's profile has been completed.
-     * @type {Object}
-     */
+    active: {
+        type: Boolean,
+        required: true,
+        default: true
+    },
     completedProfile: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     sentConfirmation: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     waitlisted: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     admitted: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     admittedBy: {
         type: String,
@@ -39,17 +41,17 @@ var status = {
     confirmed: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     waiver: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     declined: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     noConfirmation: {
         type: Boolean,
@@ -59,15 +61,15 @@ var status = {
     rejected: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     checkedIn: {
         type: Boolean,
         required: true,
-        default: false,
+        default: false
     },
     checkInTime: {
-        type: Number,
+        type: Number
     },
     confirmBy: {
         type: Number
@@ -115,73 +117,6 @@ var permissions = {
     developer: {
         type: Boolean,
         required: true,
-        default: false
-    }
-};
-
-var status = {
-    completedProfile: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    sentConfirmation: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    waitlisted: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    admitted: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    admittedBy: {
-        type: String,
-        select: false
-    },
-    confirmed: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    waiver: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    declined: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    noConfirmation: {
-        type: Boolean,
-        required:true,
-        default: false
-    },
-    rejected: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    checkedIn: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    checkInTime: {
-        type: Number
-    },
-    confirmBy: {
-        type: Number
-    },
-    statusReleased: {
-        type: Boolean,
         default: false
     }
 };
@@ -290,8 +225,22 @@ schema.set('toObject', {
     virtuals: true
 });
 
+schema.statics.getEmailFromID = function(id) {
+  if (id == -1) {
+      return "MasseyHacks Internal Authority";
+  }
+
+  return this.findOne({ _id : id}).email;
+};
+
 schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+schema.statics.getByID = function(id, callback) {
+    return this.findOne({
+        _id:  id
+    });
 };
 
 schema.statics.getByToken = function (token, callback) {
