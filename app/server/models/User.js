@@ -250,6 +250,16 @@ schema.statics.getEmailFromID = function(id) {
   return this.findOne({ _id : id}).email;
 };
 
+schema.statics.getIDfromToken = function(token) {
+    this.getByToken(token, function(err, user) {
+        if (err || !user) {
+            return 0;
+        }
+
+
+    })
+};
+
 schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
