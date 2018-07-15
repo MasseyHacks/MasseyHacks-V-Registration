@@ -13,6 +13,7 @@ var port            = process.env.PORT || 3005;
 var database        = process.env.DATABASE || "mongodb://localhost:27017";
 
 var organizers      = require('./config/organizers');
+var settings        = require('./config/settings');
 
 var app = express();
 mongoose.connect(database);

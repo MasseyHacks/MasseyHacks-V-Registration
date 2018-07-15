@@ -20,7 +20,10 @@ var emailQueue = {
 };
 
 var schema = new mongoose.Schema({
-    emailQueue : emailQueue
+    emailQueue : emailQueue,
+    schools: {
+        type: [String]
+    }
 });
 
 schema.statics.registrationOpen = function() {

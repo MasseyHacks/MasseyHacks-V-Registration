@@ -266,7 +266,7 @@ schema.statics.getByID = function(id, callback) {
             return callback({ error: "Error: User not found." })
         }
 
-        return callback(usr);
+        return callback(null, usr);
     });
 };
 

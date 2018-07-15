@@ -134,6 +134,7 @@ UserController.changePassword = function (email, password, callback) {
         email : email
     }, {
             $set : {
+                'status.passwordSuspension': false,
                 passwordLastUpdated: Date.now(),
                 password: User.generateHash(password)
             }
@@ -202,17 +203,19 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             console.log(resetToken);
 
             // Mailer
+
+            /*
             mailer.sendBoringEmail(email,"token",resetToken, function(error){
                 if(error){
                     return callback(true, {message:"Error"});
                 }else{
                     return callback(null, {message:"Success"});
                 }
-            });
+            });*/
         }
 
-
-        return callback(true, {message:"Error"});
+        return callback();
+        //return callback(true, {message:"Error"});
     });
 
 
@@ -695,14 +698,13 @@ UserController.rejectUser = function(adminID, userID, callback) {
 
 UserController.remove = function(adminID, userID, callback){
 
-    /*
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(User.getEmailFromID(adminID), userID.email, "Deleted user.");
+            logger.logAction(User.getEmailFromID(adminID), user.email, "Deleted user.");
         } else {
             return callback({error : "Error: Unable to delete user"})
         }
-    });*/
+    });
 
     User.findOneAndRemove({
         _id: userID
@@ -711,8 +713,54 @@ UserController.remove = function(adminID, userID, callback){
             return callback({error : "Error: Unable to delete user"})
         }
 
-        logger.logAction(User.getEmailFromID(adminID), userID.email, "Deleted user.");
         return callback({message : "Success"})
+    });
+};
+
+UserController.inviteToSlack = function(id, callback) {
+    User.getByID(id, function(err, user) {
+
+        if (err || !user) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback( { error : "Error: User not found" } );
+        }
+
+        if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
+
+            logger.logAction(user.email, user.email, "Requested Slack invite.");
+
+            request.post({
+                url: 'https://' + process.env.SLACK_INVITE + '.slack.com/api/users.admin.invite',
+                form: {
+                    email: user.email,
+                    token: process.env.SLACK_INVITE_TOKEN,
+                    set_active: true
+                }
+            }, function (err, httpResponse, body) {
+                console.log(err, httpResponse, body);
+                if (err || body !== '{"ok":true}') {
+
+                    if (body && body.includes('already_in_team')) {
+                        return callback({ error : 'You have already joined the Slack!\n(' + process.env.SLACK_INVITE + '.slack.com)' });
+                    }
+                    else if (body && body.includes('already_invited')) {
+                        return callback({ error : 'We already sent an invitation!\nBe sure to check your spam in case it was filtered :\'(\n\n(We sent it to ' + user.email + ')' });
+                    }
+                    else {
+                        return callback({ error : "Error: Something went wrong...\nThat's all we know :/" });
+                    }
+                }
+                else {
+                    return callback(null, { message : 'Success'});
+                }
+            });
+        }
+        else {
+            return callback({ error : "Error: You do not have permission to send an invitation." });
+        }
     });
 };
 

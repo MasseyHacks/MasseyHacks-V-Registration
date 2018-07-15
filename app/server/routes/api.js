@@ -96,6 +96,33 @@ module.exports = function(router) {
     });
 
     // General
+    // Send slack invite
+    router.post('/slack', permissions.isVerified, function(req, res){
+        var token = permissions.getToken(req);
+
+        User.getByToken(token, function (err, user) {
+
+            if (err || !user) {
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)({ error : "Error: Invalid token" });
+            }
+
+            UserController.inviteToSlack(user.id, function(err, data){
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)(data);
+
+            });
+        });
+
+    });
+
+    // General
     // Change password
     router.post('/changePassword', permissions.isVerified, function (req, res) {
 
@@ -137,7 +164,19 @@ module.exports = function(router) {
     // Owner
     // Reject everyone without status
     router.post('/rejectNoStates', permissions.isOwner, function (req, res) {
+        User.find({
+            'permission.level': 1,
+            'status.admitted': false,
+            'status.rejected': false,
+            'status.waitlisted' : false
+        }, function(err, users) {
+            console.log(users);
 
+            /**
+             * To-Do: Add async for each here
+             */
+
+        });
     });
 
     // Owner
@@ -168,7 +207,6 @@ module.exports = function(router) {
     // Reviewer
     // Votes reject
     router.post('/voteReject', permissions.isReviewer, function (req, res) {
-        // Accept the hacker. Admin only
         var adminID = req.body.adminID;
         var userID = req.body.userID;
         UserController.voteRejectUser(adminID, userID, logger.defaultResponse(req, res));

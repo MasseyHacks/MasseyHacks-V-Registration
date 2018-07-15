@@ -19,10 +19,12 @@ fs.readFile('./config/schools.txt', 'utf8', function(err, data) {
     // Process data
     schoolsList = data.split('\n');
 
+    console.log(schoolsList);
+
     Settings
         .findOneAndUpdate({},{
             $addToSet: { schools: {$each: schoolsList} }
         }, {new: true}, function(err) {
-            console.log(err);
+            console.log('Adding schools to Settings!', err);
         });
 });
