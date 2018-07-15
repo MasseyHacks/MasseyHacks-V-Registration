@@ -265,14 +265,14 @@ schema.statics.generateHash = function (password) {
 schema.statics.findByID = function(id) {
     return this.findOne({
         _id:  id
-    });
+    }).exec();
 };
 
 schema.statics.getByID = function(id, callback) {
     this.findOne({
         _id:  id
-    }, function(err, usr) {
-        if (err || !usr) {
+    }, function(err, user) {
+        if (err || !user) {
             if (err) {
                 return callback(err);
             }
@@ -280,7 +280,7 @@ schema.statics.getByID = function(id, callback) {
             return callback({ error: "Error: User not found." })
         }
 
-        return callback(null, usr);
+        return callback(null, user);
     });
 };
 

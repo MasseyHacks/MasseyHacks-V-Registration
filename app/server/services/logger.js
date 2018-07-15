@@ -43,19 +43,26 @@ module.exports = {
 
         console.log(actionFrom, actionTo, message);
 
-        var event = new Logs();
+        Logs.buildDataPack(actionFrom, function(data) {
+            var event = new Logs();
 
-        event.from = Logs.buildDataPack(actionFrom);
-        event.to = Logs.buildDataPack(actionTo);
+            event.from = data;
 
-        event.message = message;
-        event.timestamp = Date.now();
+            Logs.buildDataPack(actionTo, function(data) {
 
-        event.save(function(err) {
-            if (err) {
-                console.log("Unable to log.", err);
-            }
+                event.to = data;
+
+                event.message = message;
+                event.timestamp = Date.now();
+
+                console.log(event.toJSON());
+
+                event.save(function(err) {
+                    if (err) {
+                        console.log("Unable to log.", err);
+                    }
+                });
+            });
         });
-
     }
 };
