@@ -233,12 +233,21 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 nickname: "david",
                 confirmBy: "12321431",
                 dashUrl: "dfgasgfg" //set to root url
-            }, function(error){
+            },function(error){
+                if(error){
+                    return callback(error);
+                }
+            });*/
+
+            /*
+            mailer.queueEmail("david@masseyhacks.ca","acceptance",function(error){
                 if(error){
                     return callback(error);
                 }
             });
             */
+
+
 
         }
 

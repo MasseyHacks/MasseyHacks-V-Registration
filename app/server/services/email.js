@@ -2,6 +2,8 @@ require('dotenv').load();
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var handlebars = require('handlebars');
+var mongoose = require('mongoose');
+var Settings = require('../models/Settings');
 
 
 var smtpConfig = {
@@ -17,7 +19,7 @@ var smtpConfig = {
 var transporter = nodemailer.createTransport(smtpConfig);
 
 module.exports = {
-    sendTemplateEmail: function(recipient,templateName,datapack){//templated email
+    sendTemplateEmail: function(recipient,templateName,datapack,callback){//templated email
         templateName = templateName.toLowerCase();
 
         //compile the template
@@ -37,7 +39,7 @@ module.exports = {
                 title = "You have been admitted!";
                 break;
             default:
-                console.log('gffsgsfgfsag');
+                console.log('The specified template does not exist');
                 return callback({error:"The specified template does not exist."});
         }
 
@@ -94,5 +96,54 @@ module.exports = {
                 return callback(null, {message:"Success"});
             }
         });
+    },
+
+    queueEmail : function(recipient,queue,callback){
+        const validQueues = {
+            acceptance: "acceptanceEmails",
+            rejection: "rejectionEmails"
+        };
+
+        queue = queue.toLowerCase();//just in case
+
+        //check if the given queue is valid
+        if(validQueues[queue] === null){//invalid
+            console.log("Invalid queue!");
+            return callback({error:"Invalid queue."});
+        }
+        else{//valid
+            var pushObj = {};
+            pushObj['emailQueue.'+validQueues[queue]] = recipient;
+
+            Settings.findOneAndUpdate({},{
+                $push: pushObj
+            },{
+                new: true
+            }, function(err,settings){
+                if(err){
+                    console.log(err);
+                    return callback({error:"Cannot add email to the queue."});
+                }
+                else{
+                    return callback(null,{message:"Success"});
+                }
+            });
+        }
+
+
+    },
+
+    flushQueue : function(queue,callback){
+        const validQueues = ['acceptance','rejection'];
+        queue = queue.toLowerCase();
+
+        //check if the given queue is valid
+        if(validQueues.indexOf(queue) == -1){//invalid
+            console.log("Invalid queue!");
+            return callback({error:"Invalid queue."});
+        }
+        else{//valid
+            //return all emails from that queue
+        }
     }
 };
