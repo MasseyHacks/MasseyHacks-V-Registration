@@ -229,17 +229,20 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             // Mailer
 
             /*
-            mailer.sendBoringEmail(email,"token",resetToken, function(error){
+            mailer.sendTemplateEmail(email,"admittance",{
+                nickname: "david",
+                confirmBy: "12321431",
+                dashUrl: "dfgasgfg" //set to root url
+            }, function(error){
                 if(error){
-                    return callback(true, {message:"Error"});
-                }else{
-                    return callback(null, {message:"Success"});
+                    return callback(error);
                 }
-            });*/
+            });
+            */
+
         }
 
         return callback();
-        //return callback(true, {message:"Error"});
     });
 
 
