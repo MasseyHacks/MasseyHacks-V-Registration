@@ -18,12 +18,8 @@ SettingsController.getLog = function(callback) {
     //return callback(null, Settings.getLog());
 };
 
-SettingsController.getPublicSettings = function(callback){
-    Settings.getPublicSettings(callback);
-};
-
-SettingsController.getPrivateSettings = function(callback){
-    Settings.getPrivateSettings(callback);
+SettingsController.getSettings = function(callback){
+    Settings.getSettings(callback);
 };
 
 module.exports = SettingsController;

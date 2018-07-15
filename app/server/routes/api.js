@@ -19,9 +19,8 @@ module.exports = function(router) {
     // Developer
     // View system log
     router.post('/log', permissions.isDeveloper, function (req, res) {
-        SettingsController.getLog(logger.defaultResponse(req, res));
+        Logs.getLog(logger.defaultResponse(req, res));
     });
-
 
     /*
     // Developer

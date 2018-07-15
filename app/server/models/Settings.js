@@ -20,9 +20,6 @@ var emailQueue = {
 };
 
 var schema = new mongoose.Schema({
-    log: {
-        type: [String]
-    },
     emailQueue : emailQueue
 });
 
@@ -32,24 +29,9 @@ schema.statics.registrationOpen = function() {
 
 };
 
-schema.statics.getLog = function(){
+schema.statics.getSettings = function(callback){
     this
         .findOne({})
-        .exec(function (err, settings) {
-            return settings.log;
-        });
-};
-
-
-schema.statics.getPrivateSettings = function(callback){
-    this
-        .findOne({})
-        .exec(callback);
-};
-
-schema.statics.getPublicSettings = function(callback){
-    this
-        .findOne({}).select('-log').select('-accumulator')
         .exec(callback);
 };
 

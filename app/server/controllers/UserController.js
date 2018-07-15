@@ -263,10 +263,6 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
     User.getByEmail(email, function (err, user) {
 
-        if (err) {
-            return callback(err);
-        }
-
         if (user) {
             return callback({
                 error: 'Error: An account for this email already exists.'
@@ -275,42 +271,34 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
             var name = firstName + " " + lastName;
 
-            User.findOne({email : email}).exec(function (err, usr) {
-                if (usr) {
-                    return callback({
-                        error: 'Error: An account for this username already exists.'
-                    });
+            var u = new User();
+            u.email = email;
+            u.firstName = firstName;
+            u.lastName = lastName;
+            u.fullName = name;
+            u.lowerCaseName = name.toLowerCase();
+            u.password = User.generateHash(password);
+
+            u.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    return callback(err);
+                } else {
+                    var token = u.generateAuthToken();
+
+                    /**
+                     * To-Do: Send verification email here
+                     */
+
+                    u = u.toJSON();
+                    delete u.password;
+
+                    logger.logAction(u.email, u.email, "Created an account.");
+
+                    return callback(null, token, u);
                 }
-
-                var u = new User();
-                u.email = email;
-                u.firstName = firstName;
-                u.lastName = lastName;
-                u.fullName = name;
-                u.lowerCaseName = name.toLowerCase();
-                u.password = User.generateHash(password);
-
-                u.save(function (err) {
-                    if (err) {
-                        console.log(err);
-                        return callback(err);
-                    } else {
-                        var token = u.generateAuthToken();
-
-                        /**
-                         * To-Do: Send verification email here
-                         */
-
-                        u = u.toJSON();
-                        delete u.password;
-
-                        logger.logAction(u.email, u.email, "Created an account.");
-
-                        return callback(null, token, u);
-                    }
-                });
-
             });
+
         }
     });
 };
