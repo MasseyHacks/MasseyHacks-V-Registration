@@ -1,5 +1,6 @@
 var _              = require('underscore');
 var User           = require('../models/User');
+var Team           = require('../models/Team');
 var Settings       = require('../models/Settings');
 
 var jwt            = require('jsonwebtoken');
@@ -90,7 +91,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
     }
 
     User.getByToken(token, function (err, userFromToken) {
-        if (err || !user) {
+        if (err || !userFromToken) {
             if (err) {
                 return callback(err);
             }
@@ -107,11 +108,11 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 return callback({ error: "Error: Something went wrong." });
             }
 
-            UserController.changePassword(user.email, newPassword, function(err, msg) {
+            UserController.changePassword(userFromToken.email, newPassword, function(err, msg) {
                 if (err) {
                     return callback(err);
                 }
-                logger.logAction(user._id, user._id, "Changed their password with existing.");
+                logger.logAction(userFromToken._id, userFromToken._id, "Changed their password with existing.");
                 return callback(null, { message: "Success" });
             });
         });
@@ -120,7 +121,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
 
 UserController.adminChangePassword = function (adminUser, userID, newPassword, callback) {
 
-    if (!adminID || !userID || !newPassword) {
+    if (!adminUser || !userID || !newPassword) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -408,14 +409,14 @@ UserController.loginWithPassword = function(email, password, callback){
 
             var token = user.generateAuthToken();
 
-            return callback(null, token, user);
+            return callback(null, user, token);
         });
 };
 
 /*
 UserController.injectAdmitUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -452,7 +453,7 @@ UserController.injectAdmitUser = function(adminUser, userID, callback) {
 
 UserController.injectRejectUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -489,7 +490,7 @@ UserController.injectRejectUser = function(adminUser, userID, callback) {
 
 UserController.voteAdmitUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -530,7 +531,7 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
 
 UserController.voteRejectUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -633,7 +634,7 @@ UserController.checkAdmissionStatus = function(id) {
 
 UserController.resetVotes = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -668,7 +669,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
 
 UserController.resetAdmissionState = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -702,7 +703,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
 
 UserController.admitUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -744,7 +745,7 @@ UserController.admitUser = function(adminUser, userID, callback) {
 
 UserController.rejectUser = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -784,7 +785,7 @@ UserController.rejectUser = function(adminUser, userID, callback) {
 
 UserController.remove = function(adminUser, userID, callback){
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -804,6 +805,29 @@ UserController.remove = function(adminUser, userID, callback){
         }
 
         return callback({message : "Success"})
+    });
+};
+
+UserController.joinTeam = function(id, teamCode, callback) {
+
+    if (!id || !teamCode) {
+        return callback({error : 'Error: Invalid arguments'});
+    }
+
+    Team.find({
+        code : teamCode
+    }, function (err, team) {
+       if (err || !team) { // Team doesn't exist yet
+            return callback({ error : "Error: Team doesn't exist" });
+       }
+
+       if (team.memberIDs.length < process.env.TEAM_MAX_SIZE) { // Can still join team
+
+
+
+       } else {
+           return callback({ error : "Error: Team is full" });
+       }
     });
 };
 
@@ -860,7 +884,7 @@ UserController.inviteToSlack = function(id, callback) {
 
 UserController.flushEmailQueue = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -887,7 +911,7 @@ UserController.declineInvitation = function(userID, callback) {
 
 UserController.resetInvitation = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -896,12 +920,12 @@ UserController.resetInvitation = function(adminUser, userID, callback) {
 
 UserController.activate = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.active': true
@@ -925,12 +949,12 @@ UserController.activate = function(adminUser, userID, callback) {
 
 UserController.deactivate = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.active': false
@@ -954,12 +978,12 @@ UserController.deactivate = function(adminUser, userID, callback) {
 
 UserController.checkIn = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.checkedIn': true,
@@ -984,12 +1008,12 @@ UserController.checkIn = function(adminUser, userID, callback) {
 
 UserController.checkOut = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.checkedIn': false
@@ -1013,12 +1037,12 @@ UserController.checkOut = function(adminUser, userID, callback) {
 
 UserController.waiverIn = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.waiver': true,
@@ -1042,12 +1066,12 @@ UserController.waiverIn = function(adminUser, userID, callback) {
 
 UserController.waiverOut = function(adminUser, userID, callback) {
 
-    if (!adminID || !userID) {
+    if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOneAndUpdate({
-        _id : user
+        _id : userID
     }, {
         $set: {
             'status.waiver': false

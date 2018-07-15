@@ -37,7 +37,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level > 0) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 
@@ -57,7 +57,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level >= 2) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 
@@ -77,7 +77,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level >= 3) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 
@@ -97,7 +97,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level >= 4) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 
@@ -117,7 +117,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level >= 5) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 
@@ -137,7 +137,7 @@ module.exports = {
             }
 
             if (user && user.permissions.level == 6) {
-                req.user = user;
+                req.userExecute = user;
                 return next();
             }
 

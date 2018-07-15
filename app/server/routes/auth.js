@@ -67,6 +67,7 @@ module.exports = function(router) {
                 if (err || !user || !token) {
                     if (err) {
                         console.log(err);
+                        return res.status(400).json(err);
                     }
 
                     return res.status(400).json({error: "Error: Invalid Token"});
@@ -77,7 +78,7 @@ module.exports = function(router) {
                 });
             })
         } else {
-            UserController.loginWithPassword(email, password, function (err, token, user) {
+            UserController.loginWithPassword(email, password, function (err, user, token) {
 
                 if (err || !user) {
                     console.log(err);
