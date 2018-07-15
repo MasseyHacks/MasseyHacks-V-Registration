@@ -255,13 +255,17 @@ schema.statics.getIDfromToken = function(token) {
         if (err || !user) {
             return 0;
         }
-
-
     })
 };
 
 schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+schema.statics.findByID = function(id) {
+    return this.findOne({
+        _id:  id
+    });
 };
 
 schema.statics.getByID = function(id, callback) {
@@ -296,13 +300,6 @@ schema.statics.getByToken = function (token, callback) {
         this.findOne({_id: payload.id}, callback);
     }.bind(this));
 };
-
-schema.statics.getByUsername = function (username) {
-    return this.findOne({
-        username:  username
-    });
-};
-
 
 schema.statics.getByEmail = function (email, callback) {
     this.findOne({

@@ -42,14 +42,14 @@ UserController.verify = function (token, callback) {
         },
         {
             new: true
-        }, function (err, usr) {
-            if (err || !usr) {
+        }, function (err, user) {
+            if (err || !user) {
                 console.log(err);
 
                 return callback(err);
             };
 
-            logger.logAction(usr.email, usr.email, "Verified their email.");
+            logger.logAction(user._id, user._id, "Verified their email.");
 
             return callback(null, 'Success');
         });
@@ -89,7 +89,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    User.getByToken(token, function (err, user) {
+    User.getByToken(token, function (err, userFromToken) {
         if (err || !user) {
             if (err) {
                 return callback(err);
@@ -98,8 +98,8 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
             return callback({ error: "Error: Something went wrong." });
         }
 
-        UserController.loginWithPassword(user.email, existingPassword, function(err, usr) {
-            if (err || !usr) {
+        UserController.loginWithPassword(userFromToken.email, existingPassword, function(err, user) {
+            if (err || !user) {
                 if (err) {
                     return callback(err);
                 }
@@ -111,29 +111,29 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 if (err) {
                     return callback(err);
                 }
-                logger.logAction(user.email, user.email, "Changed their password with existing.");
+                logger.logAction(user._id, user._id, "Changed their password with existing.");
                 return callback(null, { message: "Success" });
             });
         });
     });
 };
 
-UserController.adminChangePassword = function (adminEmail, userID, newPassword, callback) {
+UserController.adminChangePassword = function (adminID, userID, newPassword, callback) {
 
-    if (!adminEmail || !userID || !newPassword) {
+    if (!adminID || !userID || !newPassword) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    User.getByID(userID, function (err, usr) {
-        if (err || !usr) {
+    User.getByID(userID, function (err, user) {
+        if (err || !user) {
             return callback({ error: "Error: User not found." });
         }
 
-        UserController.changePassword(usr.email, newPassword, function(err, msg) {
+        UserController.changePassword(user.email, newPassword, function(err, msg) {
             if (err || !msg) {
                 return callback(err);
             }
-            logger.logAction(adminEmail, usr.email, "Changed this user's password.");
+            logger.logAction(adminID, user._id, "Changed this user's password.");
             return callback(null, msg);
         });
     });
@@ -204,7 +204,7 @@ UserController.resetPassword = function (token, password, callback) {
                         return callback(err);
                     }
 
-                    logger.logAction(user.email, user.email, "Changed their password with token.");
+                    logger.logAction(user._id, user._id, "Changed their password with token.");
                     return callback(null, {message : "Success"});
                 });
             });
@@ -302,31 +302,31 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
             var name = firstName + " " + lastName;
 
-            var u = new User();
-            u.email = email;
-            u.firstName = firstName;
-            u.lastName = lastName;
-            u.fullName = name;
-            u.lowerCaseName = name.toLowerCase();
-            u.password = User.generateHash(password);
+            var user = new User();
+            user.email = email;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.fullName = name;
+            user.lowerCaseName = name.toLowerCase();
+            user.password = User.generateHash(password);
 
-            u.save(function (err) {
+            user.save(function (err) {
                 if (err) {
                     console.log(err);
                     return callback(err);
                 } else {
-                    var token = u.generateAuthToken();
+                    var token = user.generateAuthToken();
 
                     /**
                      * To-Do: Send verification email here
                      */
 
-                    u = u.toJSON();
-                    delete u.password;
+                    user = user.toJSON();
+                    delete user.password;
 
-                    logger.logAction(u.email, u.email, "Created an account.");
+                    logger.logAction(user._id, user._id, "Created an account.");
 
-                    return callback(null, token, u);
+                    return callback(null, token, user);
                 }
             });
 
@@ -351,7 +351,7 @@ UserController.loginWithToken = function(token, callback){
 
         var token = user.generateAuthToken();
 
-        logger.logAction(user.email, user.email, "Logged in with token.");
+        logger.logAction(user._id, user._id, "Logged in with token.");
 
         return callback(err, token, user);
     });
@@ -392,7 +392,7 @@ UserController.loginWithPassword = function(email, password, callback){
                 return callback({ error: "Account is not active. Please contact an administrator for assistance." })
             }
 
-            logger.logAction(user.email, user.email, "Logged in with password.");
+            logger.logAction(user._id, user._id, "Logged in with password.");
 
             var token = user.generateAuthToken();
 
@@ -401,9 +401,9 @@ UserController.loginWithPassword = function(email, password, callback){
 };
 
 /*
-UserController.injectAdmitUser = function(adminEmail, userID, callback) {
+UserController.injectAdmitUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -414,8 +414,8 @@ UserController.injectAdmitUser = function(adminEmail, userID, callback) {
         'status.accepted': false
     }, {
         $push: {
-            'applicationAdmit': adminEmail,
-            'votedBy': adminEmail
+            'applicationAdmit': User.getEmailFromID(adminID),
+            'votedBy': User.getEmailFromID(adminID)
         },
         $inc : {
             'numVotes': 1
@@ -431,16 +431,16 @@ UserController.injectAdmitUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Injected admit vote.");
+        logger.logAction(adminID, user._id, "Injected admit vote.");
 
         return callback(err, user);
 
     });
 };
 
-UserController.injectRejectUser = function(adminEmail, userID, callback) {
+UserController.injectRejectUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -451,8 +451,8 @@ UserController.injectRejectUser = function(adminEmail, userID, callback) {
         'status.accepted': false
     }, {
         $push: {
-            'applicationReject': adminEmail,
-            'votedBy': adminEmail
+            'applicationReject': User.getEmailFromID(adminID),
+            'votedBy': User.getEmailFromID(adminID)
         },
         $inc : {
             'numVotes': 1
@@ -468,16 +468,16 @@ UserController.injectRejectUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Injected reject vote.");
+        logger.logAction(adminID, user._id, "Injected reject vote.");
 
         return callback(err, user);
 
     });
 };*/
 
-UserController.voteAdmitUser = function(adminEmail, userID, callback) {
+UserController.voteAdmitUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -486,12 +486,12 @@ UserController.voteAdmitUser = function(adminEmail, userID, callback) {
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false,
-        'applicationAdmit' : {$nin : [adminUser.email]},
-        'applicationReject' : {$nin : [adminUser.email]}
+        'applicationAdmit' : {$nin : [User.getEmailFromID(adminID)]},
+        'applicationReject' : {$nin : [User.getEmailFromID(adminID)]}
     }, {
         $push: {
-            'applicationAdmit': adminEmail,
-            'votedBy': adminEmail
+            'applicationAdmit': User.getEmailFromID(adminID),
+            'votedBy': User.getEmailFromID(adminID)
         },
         $inc : {
             'numVotes': 1
@@ -507,7 +507,7 @@ UserController.voteAdmitUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Voted to admit.");
+        logger.logAction(adminID, user._id, "Voted to admit.");
 
         UserController.checkAdmissionStatus(userID);
 
@@ -516,9 +516,9 @@ UserController.voteAdmitUser = function(adminEmail, userID, callback) {
     });
 };
 
-UserController.voteRejectUser = function(adminEmail, userID, callback) {
+UserController.voteRejectUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -527,12 +527,12 @@ UserController.voteRejectUser = function(adminEmail, userID, callback) {
         'permissions.verified': true,
         'status.rejected': false,
         'status.accepted': false,
-        'applicationAdmit' : {$nin : [adminUser.email]},
-        'applicationReject' : {$nin : [adminUser.email]}
+        'applicationAdmit' : {$nin : [User.getEmailFromID(adminID)]},
+        'applicationReject' : {$nin : [User.getEmailFromID(adminID)]}
     }, {
         $push: {
-            'applicationReject': adminEmail,
-            'votedBy': adminEmail
+            'applicationReject': User.getEmailFromID(adminID),
+            'votedBy': User.getEmailFromID(adminID)
         },
         $inc : {
             'numVotes': 1
@@ -548,7 +548,7 @@ UserController.voteRejectUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Voted to reject.");
+        logger.logAction(adminID, user._id, "Voted to reject.");
 
         UserController.checkAdmissionStatus(userID);
 
@@ -574,7 +574,7 @@ UserController.checkAdmissionStatus = function(id) {
                     user.status.rejected = true;
                     console.log("Rejected user");
 
-                    logger.logAction(-1, user.email, "Soft rejected user.");
+                    logger.logAction(-1, user._id, "Soft rejected user.");
 
                 } else {
                     console.log(user);
@@ -586,13 +586,13 @@ UserController.checkAdmissionStatus = function(id) {
                             user.status.admittedBy = "MasseyHacks Admission Authority";
                             console.log("Admitted user");
 
-                            logger.logAction(-1, user.email, "Accepted user.");
+                            logger.logAction(-1, user._id, "Accepted user.");
                         } else {
                             user.status.waitlisted = true;
                             user.status.rejected = false;
                             console.log("Waitlisted User");
 
-                            logger.logAction(-1, user.email, "Waitlisted user.");
+                            logger.logAction(-1, user._id, "Waitlisted user.");
                         }
                     }
                 }
@@ -619,9 +619,9 @@ UserController.checkAdmissionStatus = function(id) {
     });
 };
 
-UserController.resetVotes = function(adminEmail, userID, callback) {
+UserController.resetVotes = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -647,16 +647,16 @@ UserController.resetVotes = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Reset votes.");
+        logger.logAction(adminID, user._id, "Reset votes.");
 
         return callback(err, user);
 
     });
 };
 
-UserController.resetAdmissionState = function(adminEmail, userID, callback) {
+UserController.resetAdmissionState = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -681,16 +681,16 @@ UserController.resetAdmissionState = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Reset admission status.");
+        logger.logAction(adminID, user._id, "Reset admission status.");
 
         return callback(err, user);
 
     });
 };
 
-UserController.admitUser = function(adminEmail, userID, callback) {
+UserController.admitUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -709,7 +709,7 @@ UserController.admitUser = function(adminEmail, userID, callback) {
             'status.rejected': false,
             'status.waitlisted': false,
             'statusReleased': false,
-            'status.admittedBy': adminEmail,
+            'status.admittedBy': User.getEmailFromID(adminID),
             'status.confirmBy': Date.now() + 604800000
         }
     }, {
@@ -723,16 +723,16 @@ UserController.admitUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Admitted user.");
+        logger.logAction(adminID, user._id, "Admitted user.");
 
         return callback(err, user);
 
     });
 };
 
-UserController.rejectUser = function(adminEmail, userID, callback) {
+UserController.rejectUser = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -763,22 +763,22 @@ UserController.rejectUser = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Rejected user.");
+        logger.logAction(adminID, user._id, "Rejected user.");
 
         return callback(err, user);
 
     });
 };
 
-UserController.remove = function(adminEmail, userID, callback){
+UserController.remove = function(adminID, userID, callback){
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(adminEmail, user.email, "Deleted user.");
+            logger.logAction(adminID, user._id, "Deleted user.");
         } else {
             return callback({error : "Error: Unable to delete user"})
         }
@@ -813,7 +813,7 @@ UserController.inviteToSlack = function(id, callback) {
 
         if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
 
-            logger.logAction(user.email, user.email, "Requested Slack invite.");
+            logger.logAction(user._id, user._id, "Requested Slack invite.");
 
             request.post({
                 url: 'https://' + process.env.SLACK_INVITE + '.slack.com/api/users.admin.invite',
@@ -846,9 +846,9 @@ UserController.inviteToSlack = function(id, callback) {
     });
 };
 
-UserController.flushEmailQueue = function(adminEmail, userID, callback) {
+UserController.flushEmailQueue = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -873,18 +873,18 @@ UserController.declineInvitation = function(userID, callback) {
 
 };
 
-UserController.resetInvitation = function(adminEmail, userID, callback) {
+UserController.resetInvitation = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
 
 };
 
-UserController.activate = function(adminEmail, userID, callback) {
+UserController.activate = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -905,15 +905,15 @@ UserController.activate = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Activated user.");
+        logger.logAction(adminID, user._id, "Activated user.");
 
         return callback(err, user);
     });
 };
 
-UserController.deactivate = function(adminEmail, userID, callback) {
+UserController.deactivate = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -934,15 +934,15 @@ UserController.deactivate = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Deactivated user.");
+        logger.logAction(adminID, user._id, "Deactivated user.");
 
         return callback(err, user);
     });
 };
 
-UserController.checkIn = function(adminEmail, userID, callback) {
+UserController.checkIn = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -964,15 +964,15 @@ UserController.checkIn = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Checked In user.");
+        logger.logAction(adminID, user._id, "Checked In user.");
 
         return callback(err, user);
     });
 };
 
-UserController.checkOut = function(adminEmail, userID, callback) {
+UserController.checkOut = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -993,15 +993,15 @@ UserController.checkOut = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Checked Out user.");
+        logger.logAction(adminID, user._id, "Checked Out user.");
 
         return callback(err, user);
     });
 };
 
-UserController.waiverIn = function(adminEmail, userID, callback) {
+UserController.waiverIn = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -1022,15 +1022,15 @@ UserController.waiverIn = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Waiver flagged as on file for user.");
+        logger.logAction(adminID, user._id, "Waiver flagged as on file for user.");
 
         return callback(err, user);
     });
 };
 
-UserController.waiverOut = function(adminEmail, userID, callback) {
+UserController.waiverOut = function(adminID, userID, callback) {
 
-    if (!adminEmail || !userID) {
+    if (!adminID || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
@@ -1051,7 +1051,7 @@ UserController.waiverOut = function(adminEmail, userID, callback) {
             return callback({ error: "Error: Unable to perform action." })
         }
 
-        logger.logAction(adminEmail, user.email, "Waiver flagged as not on file for user.");
+        logger.logAction(adminID, user._id, "Waiver flagged as not on file for user.");
 
         return callback(err, user);
     });

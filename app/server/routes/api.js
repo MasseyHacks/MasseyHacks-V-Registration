@@ -34,10 +34,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-        UserController.injectAdmitUser(adminEmail, userID, logger.defaultResponse(req, res));
+        UserController.injectAdmitUser(adminID,  userID, logger.defaultResponse(req, res));
     });
     });
 
@@ -52,9 +52,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.injectRejectUser(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.injectRejectUser(adminID,  userID, logger.defaultResponse(req, res));
         });
     });*/
 
@@ -68,9 +68,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.resetVotes(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.resetVotes(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -84,10 +84,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-            UserController.admitUser(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.admitUser(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -101,10 +101,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-            UserController.rejectUser(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.rejectUser(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -118,10 +118,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-            UserController.resetAdmissionState(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.resetAdmissionState(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -135,11 +135,11 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
             var userID = req.body.userID;
 
-            UserController.flushEmailQueue(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.flushEmailQueue(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -153,10 +153,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-            UserController.remove(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.remove(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -203,11 +203,11 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
             var password = req.body.password;
 
-            UserController.adminChangePassword(adminEmail, userID, password, logger.defaultResponse(req, res));
+            UserController.adminChangePassword(adminID,  userID, password, logger.defaultResponse(req, res));
         });
     });
 
@@ -259,9 +259,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.activate(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.activate(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -275,9 +275,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.deactivate(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.deactivate(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -291,10 +291,10 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
 
-            UserController.voteAdmitUser(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.voteAdmitUser(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -308,9 +308,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.voteRejectUser(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.voteRejectUser(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -324,9 +324,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.checkIn(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.checkIn(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -340,9 +340,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.checkOut(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.checkOut(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -356,9 +356,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.waiverIn(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.waiverIn(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 
@@ -372,9 +372,9 @@ module.exports = function(router) {
                 }
             }
 
-            var adminEmail = adminUser.email;
+            var adminID = adminUser._id;
             var userID = req.body.userID;
-            UserController.waiverOut(adminEmail, userID, logger.defaultResponse(req, res));
+            UserController.waiverOut(adminID,  userID, logger.defaultResponse(req, res));
         });
     });
 

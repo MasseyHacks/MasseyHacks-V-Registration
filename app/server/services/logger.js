@@ -44,8 +44,10 @@ module.exports = {
         console.log(actionFrom, actionTo, message);
 
         var event = new Logs();
-        event.from = actionFrom;
-        event.to = actionTo;
+
+        event.from = Logs.buildDataPack(actionFrom);
+        event.to = Logs.buildDataPack(actionTo);
+
         event.message = message;
         event.timestamp = Date.now();
 
