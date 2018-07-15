@@ -4,5 +4,11 @@
     "firstName" : "Henry",
     "lastName" : "Tu",
     "permission": "developer"
+  },
+  "david" : {
+    "email": "david@masseyhacks.ca",
+    "firstName" : "David",
+    "lastName" : "Hui",
+    "permission": "developer"
   }
 }

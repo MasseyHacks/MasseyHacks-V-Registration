@@ -10,6 +10,8 @@ var validator      = require('validator');
 var moment         = require('moment');
 var logger         = require('../services/logger');
 
+var mailer         = require('../services/email');
+
 var UserController = {};
 
 UserController.verify = function (token, callback) {
@@ -198,11 +200,19 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             var resetToken = user.generateResetToken();
 
             console.log(resetToken);
+
+            // Mailer
+            mailer.sendBoringEmail(email,"token",resetToken, function(error){
+                if(error){
+                    return callback(true, {message:"Error"});
+                }else{
+                    return callback(null, {message:"Success"});
+                }
+            });
         }
 
-        // Mailer
 
-        return callback(null, {message:"Success"});
+        return callback(true, {message:"Error"});
     });
 
 
