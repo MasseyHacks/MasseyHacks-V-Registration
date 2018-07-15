@@ -43,12 +43,17 @@ module.exports = {
 
         console.log(actionFrom, actionTo, message);
 
-        Logs.buildDataPack(actionFrom, function(data) {
+        /**
+         * To-Do: Fix this bash...
+         */
+
+        // Creates log object
+        Logs.buildLoggingData(actionFrom, function(data) {
             var event = new Logs();
 
             event.from = data;
 
-            Logs.buildDataPack(actionTo, function(data) {
+            Logs.buildLoggingData(actionTo, function(data) {
 
                 event.to = data;
 

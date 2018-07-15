@@ -43,7 +43,7 @@ schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp);
 });
 
-function buildDataPackCore(id, name, email) {
+function buildLoggingDataCore(id, name, email) {
     var dp = dataPack;
 
     dp.ID = id;
@@ -53,17 +53,22 @@ function buildDataPackCore(id, name, email) {
     return dp;
 }
 
-schema.statics.buildDataPack = function(id, callback) {
+// Builds object with core data
+// Extracts data from mongo
+// -> ID
+// -> Full name
+// -> Email
+schema.statics.buildLoggingData = function(id, callback) {
 
     if (id == -1) {
-        return callback(buildDataPackCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
+        return callback(buildLoggingDataCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
     }
 
     User.getByID(id, function (err, user) {
         if (!user) {
-            return callback(buildDataPackCore(0, "null", "null"));
+            return callback(buildLoggingDataCore(id, "null name", "null email"));
         } else {
-            return callback(buildDataPackCore(id, user.fullName, user.email));
+            return callback(buildLoggingDataCore(id, user.fullName, user.email));
         }
     });
 };

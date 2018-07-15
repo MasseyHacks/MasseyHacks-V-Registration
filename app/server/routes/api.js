@@ -27,137 +27,73 @@ module.exports = function(router) {
     // Developer
     // Inject votes accept
     router.post('/injectVoteAdmit', permissions.isDeveloper, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
+
+        if (req.adminUserdminUser) {
+            if (err) {
+                logger.defaultResponse(req, r;es)(err)
             }
+        }
 
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
 
-        UserController.injectAdmitUser(adminID,  userID, logger.defaultResponse(req, res));
-    });
+        var userID = req.body.userID;
+     rController.injectAdmitUser(admiUserl, userID, logger.defaultResponse(req, res));
+    })
     });
 
     // Developer
     // Inject votes reject
     router.post('/injectVoteReject', permissions.isDeveloper, function (req, res) {
         // Accept the hacker. Admin only
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
 
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.injectRejectUser(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        i
+            if (err) {
+                log
+
+        var userID = req.body.userID;
+        UserController.injectRejectUsUserminEmail, userID, logger.defaultResponse(req, res));
+
     });*/
 
     // Developer
     // Reset votes
     router.post('/voteReset', permissions.isDeveloper, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.resetVotes(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.resetVotes(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Force accept
     router.post('/forceAccept', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-
-            UserController.admitUser(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.admitUser(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Force reject
     router.post('/forceReject', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-
-            UserController.rejectUser(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.rejectUser(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Reset admission state
     router.post('/resetAdmissionState', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-
-            UserController.resetAdmissionState(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.resetAdmissionState(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Flush email queue for user
     router.post('/flushEmailQueue', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            var userID = req.body.userID;
-
-            UserController.flushEmailQueue(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+       UserController.flushEmailQueue(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Delete user
     router.post('/deleteUser', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-
-            UserController.remove(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.remove(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // General
@@ -180,7 +116,6 @@ module.exports = function(router) {
                 return logger.defaultResponse(req, res)(null, data);
             });
         });
-
     });
 
     // General
@@ -196,19 +131,9 @@ module.exports = function(router) {
 
     // Change password
     router.post('/adminChangePassword', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            var password = req.body.password;
-
-            UserController.adminChangePassword(adminID,  userID, password, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        var password = req.body.password;
+        UserController.adminChangePassword(req.adminUser, userID, password, logger.defaultResponse(req, res));
     });
 
 
@@ -241,144 +166,70 @@ module.exports = function(router) {
         }, function(err, users) {
             console.log(users);
 
-            logger.logAction(User.getEmailFromID(adminID), user.email, "Changed this user's password.");
+            logger.logAction(req.adminUser.email, user.email, "Changed this user's password.");
             /**
              * To-Do: Add async for each here
              */
-
         });
     });
 
     // Owner
     // Activate account
     router.post('/activateAccount', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.activate(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.activate(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Deactivate account
     router.post('/deactivateAccount', permissions.isOwner, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.deactivate(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.deactivate(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Reviewer
     // Votes admit
     router.post('/voteAdmit', permissions.isReviewer, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-
-            UserController.voteAdmitUser(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.voteAdmitUser(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Reviewer
     // Votes reject
     router.post('/voteReject', permissions.isReviewer, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.voteRejectUser(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.voteRejectUser(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Checkin user
     router.post('/checkIn', permissions.isCheckin, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.checkIn(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.checkIn(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Checkout user
     router.post('/checkOut', permissions.isCheckin, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.checkOut(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.checkOut(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Waiver in
     router.post('/waiverIn', permissions.isCheckin, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.waiverIn(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.waiverIn(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Waiver out
     router.post('/waiverOut', permissions.isCheckin, function (req, res) {
-        User.getByToken(permissions.getToken(req), function(err, adminUser) {
-            if (err || !adminUser) {
-                if (err) {
-                    logger.defaultResponse(req, res)(err)
-                }
-            }
-
-            var adminID = adminUser._id;
-            var userID = req.body.userID;
-            UserController.waiverOut(adminID,  userID, logger.defaultResponse(req, res));
-        });
+        var userID = req.body.userID;
+        UserController.waiverOut(req.adminUser, userID, logger.defaultResponse(req, res));
     });
 
     router.get('/', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});
-    })
+    });
 };
