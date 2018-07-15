@@ -37,11 +37,11 @@ function makeOrganizer(email, firstName, lastName,  permission) {
 
                 u.status.passwordSuspension = true;
 
-                u.developer = permission == 'developer';
-                u.owner = permission == 'owner';
-                u.reviewer = permission == 'reviewer';
-                u.admin = permission == 'admin';
-                u.checkin = permission == 'checkin';
+                u.permissions.developer = permission.includes('developer');
+                u.permissions.owner = permission.includes('owner');
+                u.permissions.reviewer = permission.includes('reviewer');
+                u.permissions.admin = permission.includes('admin');
+                u.permissions.checkin = permission.includes('checkin');
 
                 u.verified = true;
                 u.status.admittedBy = "MasseyHacks Account Authority";

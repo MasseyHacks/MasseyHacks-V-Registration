@@ -53,26 +53,19 @@ function buildDataPackCore(id, name, email) {
     return dp;
 }
 
-schema.statics.buildDataPack = function(id) {
+schema.statics.buildDataPack = function(id, callback) {
 
-    if (true || id == -1) {
-        return buildDataPackCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca");
+    if (id == -1) {
+        return callback(buildDataPackCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
     }
 
-    /**
-     * To-Do: Figure out why this doesn't work
-     */
-
-    User.getByID(id, function(e, u) {
-        user = u;
+    User.getByID(id, function (err, user) {
+        if (!user) {
+            return callback(buildDataPackCore(0, "null", "null"));
+        } else {
+            return callback(buildDataPackCore(id, user.fullName, user.email));
+        }
     });
-
-
-    if (!user) {
-        return buildDataPackCore(0, "null", "null");
-    } else {
-        return buildDataPackCore(id, user.name,User.getEmailFromID(id));
-    }
 };
 
 schema.statics.getLog = function(callback){
