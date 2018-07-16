@@ -108,8 +108,8 @@ module.exports = {
 
         //check if the given queue is valid
         if(validQueues[queue] === null){//invalid
-            console.log("Invalid queue!");
-            return callback({error:"Invalid queue."});
+            console.log("Invalid email queue!");
+            return callback({error:"Invalid email queue."});
         }
         else{//valid
             var pushObj = {};
@@ -139,11 +139,14 @@ module.exports = {
 
         //check if the given queue is valid
         if(validQueues.indexOf(queue) == -1){//invalid
-            console.log("Invalid queue!");
-            return callback({error:"Invalid queue."});
+            console.log("Invalid email queue!");
+            return callback({error:"Invalid email queue."});
         }
         else{//valid
             //return all emails from that queue
+            Settings.find({}, function(err, settings) {
+                console.log(settings.emailQueue);
+            })
         }
     }
 };

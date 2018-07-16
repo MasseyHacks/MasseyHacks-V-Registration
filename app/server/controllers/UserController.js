@@ -238,8 +238,9 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 if(error){
                     return callback(error);
                 }
-            });*/
+            });
 
+            */
             /*
             mailer.queueEmail("david@masseyhacks.ca","acceptance",function(error){
                 if(error){
@@ -247,7 +248,11 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 }
             });
             */
-
+            mailer.flushQueue('acceptance', function(error){
+                if(error){
+                    return callback(error);
+                }
+            })
 
 
         }
