@@ -144,7 +144,7 @@ module.exports = {
         }
         else{//valid
             //return all emails from that queue
-            Settings.find({}, function(err, settings) {
+            Settings.findOne({}, function(err, settings) {
                 console.log(settings.emailQueue);
             })
         }
