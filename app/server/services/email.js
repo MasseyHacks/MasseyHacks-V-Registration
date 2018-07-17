@@ -106,7 +106,7 @@ module.exports = {
 
             var email_message = {//construct the message
                 from: process.env.EMAIL_HOST,
-                to: recipient,
+                to: "davidhui@davesoftllc.com",
                 subject: title,
                 text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
                 html: htmlEmail
@@ -191,7 +191,7 @@ module.exports = {
         console.log(validQueues);
 
         //check if the given queue is valid
-        if(validQueues[queue] === null){//invalid
+        if(validQueues[queue]['queueName'] === null){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
@@ -205,7 +205,7 @@ module.exports = {
                     console.log(settings.emailQueue[validQueues[queue]]);//debug
 
                     //get pending emails from database
-                    var emailPendingList = settings.emailQueue[validQueues[queue]];
+                    var emailPendingList = settings.emailQueue[validQueues[queue]['queueName']];
 
                     //loop through each
                     emailPendingList.forEach(function(element){
@@ -222,7 +222,7 @@ module.exports = {
                                 var dataPack = null;
 
                                 //depending on the queue, fill dataPack
-                                switch(validQueues[queue]){
+                                switch(validQueues[queue]['queueName']){
                                     case "acceptanceEmails":
                                         dataPack = {
                                             nickname: user['firstName'],
