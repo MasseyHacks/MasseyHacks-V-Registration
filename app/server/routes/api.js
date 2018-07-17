@@ -19,8 +19,23 @@ module.exports = function(router) {
 
     // Developer
     // View system log
-    router.post('/log', permissions.isDeveloper, function (req, res) {
+    router.get('/log', permissions.isDeveloper, function (req, res) {
         Logs.getLog(logger.defaultResponse(req, res));
+    });
+
+    // Self or admin
+    // Get self or user
+    router.get('/user/:userID', permissions.isUser, function(req, res) {
+        var userID = req.params.userID;
+        User.getByID(userID, logger.defaultResponse(req, res), req.permissionLevel);
+    });
+
+    // Checkin
+    // Data varies depending on permission
+    // Get all users
+    router.get('/users', permissions.isCheckin, function(req, res) {
+        var userID = req.params.userID;
+        User.getByID(userID, defaultResponse(req, res));
     });
 
     /*

@@ -27,17 +27,38 @@ module.exports = {
         return getToken(req);
     },
 
+    isUser : function (req, res, next) {
+        var token = getToken(req);
+        var userID = req.params.userID == null ? req.body.userID : req.params.userID;
+
+        User.getByToken(token, function (err, user) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (user && (user._id == userID || user.permissions.level >= 3)) {
+                req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
+                return next();
+            }
+
+            return res.status(401).send({
+                message: 'Access Denied'
+            });
+        });
+    },
+
     isVerified : function (req, res, next) {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level > 0) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
@@ -51,13 +72,13 @@ module.exports = {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level >= 2) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
@@ -71,13 +92,13 @@ module.exports = {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level >= 3) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
@@ -91,13 +112,13 @@ module.exports = {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level >= 4) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
@@ -111,13 +132,13 @@ module.exports = {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level >= 5) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
@@ -131,13 +152,13 @@ module.exports = {
         var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
-
             if (err) {
                 return res.status(500).send(err);
             }
 
             if (user && user.permissions.level == 6) {
                 req.userExecute = user;
+                req.permissionLevel = user.permissions.level;
                 return next();
             }
 
