@@ -19,7 +19,7 @@ var status = {
         required: true,
         default: false
     },
-    completedProfile: {
+    submittedApplication: {
         type: Boolean,
         required: true,
         default: false
@@ -40,8 +40,7 @@ var status = {
         default: false
     },
     admittedBy: {
-        type: String,
-        select: false
+        type: String
     },
     confirmed: {
         type: Boolean,
@@ -144,11 +143,6 @@ var schema = new mongoose.Schema({
         required: true
     },
 
-    lowerCaseName: {
-        type: String,
-        required: true
-    },
-
     email: {
         type: String,
         required: true,
@@ -167,12 +161,12 @@ var schema = new mongoose.Schema({
     timestamp: {
         type: Number,
         required: true,
-        default: 0,
+        default: 0
     },
 
     lastUpdated: {
         type: Number,
-        default: 0,
+        default: 0
     },
 
     passwordLastUpdated: {
@@ -183,15 +177,15 @@ var schema = new mongoose.Schema({
     teamCode: {
         type: String,
         min: 0,
-        maxlength: 140,
+        maxlength: 140
     },
 
     applicationAdmit: {
-        type: [String],
+        type: [String]
     },
 
     applicationReject: {
-        type: [String],
+        type: [String]
     },
 
     applicationVotes: {
@@ -246,7 +240,47 @@ schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-schema.statics.getByID = function(id, callback) {
+function filterSensitive(user, permissionLevel) {
+    var u = user.toJSON();
+
+    // No one gets this...
+    delete u.password;
+
+    // Less than Owner
+    if (permissionLevel < 5) {
+        delete u.applicationAdmit;
+        delete u.applicationReject;
+    }
+
+    // Less than Admin
+    if (permissionLevel < 3) {
+        delete u.applicationVotes;
+        delete u.numVotes;
+        delete u.status.admittedBy;
+        delete u.lastUpdated;
+    }
+
+    if (!user.status.statusReleased && permissionLevel < 3) {
+        u.status.admitted = false;
+        u.status.declined = false;
+        u.status.waitlisted = false;
+        u.status.rejected = false;
+        u.status.waitlisted = false;
+    }
+
+    return u;
+}
+
+schema.statics.filterSensitive = function(user, permissionLevel) {
+    return filterSenstive(user, permissionLevel);
+};
+
+schema.statics.getByID = function(id, callback, permissionLevel) {
+
+    if (permissionLevel == null) {
+        permissionLevel = 1;
+    }
+
     this.findOne({
         _id:  id
     }, function(err, user) {
@@ -258,7 +292,7 @@ schema.statics.getByID = function(id, callback) {
             return callback({ error: "Error: User not found." })
         }
 
-        return callback(null, user);
+        return callback(null, filterSensitive(user, permissionLevel));
     });
 };
 
@@ -313,6 +347,11 @@ schema.statics.getByEmail = function (email, callback) {
         return callback(null, user);
     });
 };
+
+
+schema.virtual('lowerCaseName').get(function() {
+    return this.fullName.toLowerCase();
+});
 
 schema.virtual('permissions.level').get(function () {
     // 0 - Hacker Unverified

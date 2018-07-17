@@ -223,9 +223,9 @@ UserController.sendPasswordResetEmail = function (email, callback) {
     User.getByEmail(email, function(err, user){
 
         if (user && !err) {
-            var resetToken = user.generateResetToken();
+            var resetURL = process.env.ROOT_URL + "/reset/" + user.generateResetToken();
 
-            console.log(resetToken);
+            console.log(resetURL);
 
             // Mailer
 
@@ -325,8 +325,9 @@ UserController.createUser = function (email, firstName, lastName, password, call
             user.firstName = firstName;
             user.lastName = lastName;
             user.fullName = name;
-            user.lowerCaseName = name.toLowerCase();
             user.password = User.generateHash(password);
+            user.passwordLastUpdated = Date.now();
+            user.timestamp = Date.now();
 
             user.save(function (err) {
                 if (err) {
@@ -634,7 +635,7 @@ UserController.checkAdmissionStatus = function(id) {
                     });
             }
         }
-    });
+    }, 1000);
 };
 
 UserController.resetVotes = function(adminUser, userID, callback) {

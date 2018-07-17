@@ -6,7 +6,7 @@ var Settings = require('../models/Settings')
 function removeUnverifiedUser(){
     var now = Date.now()
 
-    User.find({"admin": false,"owner":false,"volunteer":false,"verified":false})
+    User.find({"admin": false,"owner":false,"volunteer":false,"verified":false}).select('timestamp')
         .exec(function(err, users) {
             if (err || !users) {
                 throw err;
