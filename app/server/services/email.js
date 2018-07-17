@@ -4,6 +4,7 @@ var fs = require('fs');
 var handlebars = require('handlebars');
 var mongoose = require('mongoose');
 var Settings = require('../models/Settings');
+var User = require('../models/User');
 
 
 var smtpConfig = {
@@ -18,24 +19,106 @@ var smtpConfig = {
 
 var transporter = nodemailer.createTransport(smtpConfig);
 
+const validQueues = {
+    acceptance: "acceptanceEmails",
+    acceptanceemails: "acceptanceEmails",
+    admittance: "acceptanceEmails",
+    admittanceemails: "acceptanceEmails",
+    confirm: "confirmEmails",
+    confirmemails: "confirmEmails",
+    decline: "declineEmails",
+    declineemails: "declineEmails",
+    laggar: "laggarEmails",
+    laggaremails: "laggarEmails",
+    laggarconfirm: "laggarConfirmEmails",
+    laggarconfirmemails: "laggarConfirmEmails",
+    passwordchanged: "passwordChangedEmails",
+    passwordchangedemails: "passwordChangedEmails",
+    passwordreset: "passwordResetEmails",
+    passwordresetemails: "passwordResetEmails",
+    qr: "qrEmails",
+    qremails: "qrEmails",
+    reject: "rejectionEmails",
+    rejection: "rejectionEmails",
+    rejectionemails: "rejectionEmails",
+    verify: "verificationEmails",
+    verification: "verificationEmails",
+    verificationemails: "verificationEmails"
+
+};
+
 module.exports = {
-    sendTemplateEmail: function(recipient,templateName,datapack,callback){//templated email
+    sendTemplateEmail: function(recipient,templateName,dataPack,callback){//templated email
         templateName = templateName.toLowerCase();
 
         //compile the template
         var htmlTemplate,htmlEmail,template,title;
 
-        switch(templateName){
-            case "admittance":
+        switch(validQueues[templateName]){
+            case "acceptanceEmails":
                 htmlTemplate = fs.readFileSync("./app/server/templates/email-admittance/html.hbs","utf-8");
                 template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(datapack);
+                htmlEmail = template(dataPack);
                 title = "You have been admitted!";
                 break;
-            case "application":
+            case "applicationEmails":
                 htmlTemplate = fs.readFileSync("./app/server/templates/email-application/html.hbs","utf-8");
                 template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(datapack);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "confirmationEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-confirmation/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "declineEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-decline/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "laggarEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-laggar/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "laggarConfirmEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-laggar-confirmation/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "passwordChangedEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-password-changed/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "passwordResetEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-password-reset/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "qrEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-qr/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "rejectionEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-reject/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
+                title = "You have been admitted!";
+                break;
+            case "verifyEmails":
+                htmlTemplate = fs.readFileSync("./app/server/templates/email-verify/html.hbs","utf-8");
+                template = handlebars.compile(htmlTemplate);
+                htmlEmail = template(dataPack);
                 title = "You have been admitted!";
                 break;
             default:
@@ -99,10 +182,6 @@ module.exports = {
     },
 
     queueEmail : function(recipient,queue,callback){
-        const validQueues = {
-            acceptance: "acceptanceEmails",
-            rejection: "rejectionEmails"
-        };
 
         queue = queue.toLowerCase();//just in case
 
@@ -134,18 +213,67 @@ module.exports = {
     },
 
     flushQueue : function(queue,callback){
-        const validQueues = ['acceptance','rejection'];
         queue = queue.toLowerCase();
 
+        console.log(validQueues);
+
         //check if the given queue is valid
-        if(validQueues.indexOf(queue) == -1){//invalid
+        if(validQueues[queue] === null){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
         else{//valid
             //return all emails from that queue
-            Settings.find({}, function(err, settings) {
-                console.log(settings.emailQueue);
+            Settings.findOne({}, function(err, settings) {
+                if(err){
+                    return callback({error:"Cannot find the email queue."});
+                }
+                else{
+                    console.log(settings.emailQueue[validQueues[queue]]);//debug
+
+                    //get pending emails from database
+                    var emailPendingList = settings.emailQueue[validQueues[queue]];
+
+                    //loop through each
+                    emailPendingList.forEach(function(element){
+                        console.log(validQueues[queue]);//debug
+
+                        //return user properties and send email
+                        User.getByEmail(element,function(error,user){
+                            if(error){
+                                return callback({error:"The provided email does not correspond to a user."});
+                            }
+                            else{
+
+                                //setup the datapack
+                                var dataPack = null;
+
+                                //depending on the queue, fill dataPack
+                                switch(validQueues[queue]){
+                                    case "acceptanceEmails":
+                                        dataPack = {
+                                            nickname: user['firstName'],
+                                            confirmBy: "lol",
+                                            dashURL: process.env.ROOT_URL
+                                        }
+                                }
+
+                                //send the email
+                                module.exports.sendTemplateEmail(element,queue,dataPack,function(err){
+                                    if(err){
+                                        console.log(err);
+                                        return callback({error:"Cannot send email when flushing queue."});
+                                    }else{
+                                        return callback(null,{message:"Success"});
+                                    }
+                                })
+                            }
+
+                        })
+
+                    });
+                }
+
             })
         }
     }
