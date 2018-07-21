@@ -34,10 +34,11 @@ module.exports = {
                             },
                             function (error, response, body) {
                                 console.log('Message sent to slack');
-                                return res.json(err);
                             }
                         );
                 }
+
+                return res.json(err);
             } else {
                 return res.json(data);
             }
