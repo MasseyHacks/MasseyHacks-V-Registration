@@ -20,30 +20,66 @@ var smtpConfig = {
 var transporter = nodemailer.createTransport(smtpConfig);
 
 const validQueues = {
-    acceptance: "acceptanceEmails",
-    acceptanceemails: "acceptanceEmails",
-    admittance: "acceptanceEmails",
-    admittanceemails: "acceptanceEmails",
-    confirm: "confirmEmails",
-    confirmemails: "confirmEmails",
-    decline: "declineEmails",
-    declineemails: "declineEmails",
-    laggar: "laggarEmails",
-    laggaremails: "laggarEmails",
-    laggarconfirm: "laggarConfirmEmails",
-    laggarconfirmemails: "laggarConfirmEmails",
-    passwordchanged: "passwordChangedEmails",
-    passwordchangedemails: "passwordChangedEmails",
-    passwordreset: "passwordResetEmails",
-    passwordresetemails: "passwordResetEmails",
-    qr: "qrEmails",
-    qremails: "qrEmails",
-    reject: "rejectionEmails",
-    rejection: "rejectionEmails",
-    rejectionemails: "rejectionEmails",
-    verify: "verificationEmails",
-    verification: "verificationEmails",
-    verificationemails: "verificationEmails"
+    acceptanceemails: {
+        queueName: "acceptanceEmails",
+        templateLocation: "email-admittance",
+        emailTitle: "You have been admitted!"
+    },
+    applicationemails: {
+        queueName: "applicationEmails",
+        templateLocation: "email-application",
+        emailTitle: "You have applied!"
+    },
+    basicemails: {
+        queueName: "basicEmails",
+        templateLocation: "email-basic",
+        emailTitle: "Ur basic"
+    },
+    confirmationemails: {
+        queueName: "confirmEmails",
+        templateLocation: "email-confirmation",
+        emailTitle: "You have been confirmed!"
+    },
+    declineemails: {
+        queueName: "declineEmails",
+        templateLocation: "email-decline",
+        emailTitle: "You have declined your invitation. :("
+    },
+    laggeremails: {
+        queueName: "laggerEmails",
+        templateLocation: "email-lagger",
+        emailTitle: "WhY u LaG liKe mienCraft oN the scKool coMputEr"
+    },
+    laggerconfirmemails:{
+        queueName: "laggerConfirmEmails",
+        templateLocation: "email-lagger-confirmation",
+        emailTitle: "WhY u LaG liKe mienCraft oN the scKool coMputEr conFiRm"
+    },
+    passwordchangedemails: {
+        queueName: "passwordChangedEmails",
+        templateLocation: "email-password-changed",
+        emailTitle: "Your password has been changed!"
+    },
+    passwordresetemails: {
+        queueName: "passwordResetEmails",
+        templateLocation: "email-password-reset",
+        emailTitle: "You requested to changed your password"
+    },
+    qremails: {
+        queueName: "qrEmails",
+        templateLocation: "email-qr",
+        emailTitle: "Your QR code for admittance"
+    },
+    rejectionemails: {
+        queueName: "rejectionEmails",
+        templateLocation: "email-reject",
+        emailTitle: "You have been rejected. :("
+    },
+    verifyemails:{
+        queueName: "verifyEmails",
+        templateLocation: "email-verify",
+        emailTitle: "Please verify your email address!"
+    }
 
 };
 
@@ -51,107 +87,44 @@ module.exports = {
     sendTemplateEmail: function(recipient,templateName,dataPack,callback){//templated email
         templateName = templateName.toLowerCase();
 
-        //compile the template
-        var htmlTemplate,htmlEmail,template,title;
+        if(validQueues[templateName]['queueName']){
+            //compile the template
+            var htmlTemplate,htmlEmail,template,title;
 
-        switch(validQueues[templateName]){
-            case "acceptanceEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-admittance/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "applicationEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-application/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "confirmationEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-confirmation/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "declineEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-decline/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "laggarEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-laggar/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "laggarConfirmEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-laggar-confirmation/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "passwordChangedEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-password-changed/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "passwordResetEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-password-reset/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "qrEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-qr/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "rejectionEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-reject/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            case "verifyEmails":
-                htmlTemplate = fs.readFileSync("./app/server/templates/email-verify/html.hbs","utf-8");
-                template = handlebars.compile(htmlTemplate);
-                htmlEmail = template(dataPack);
-                title = "You have been admitted!";
-                break;
-            default:
-                console.log('The specified template does not exist');
-                return callback({error:"The specified template does not exist."});
+            htmlTemplate = fs.readFileSync("./app/server/templates/"+ validQueues[templateName]['templateLocation'] +"/html.hbs","utf-8");
+            template = handlebars.compile(htmlTemplate);
+            htmlEmail = template(dataPack);
+            title = validQueues[templateName]['emailTitle'];
+
+            //start sending
+            transporter.verify(function(error, success) {//verify the connection
+                if (error) {
+                    console.log(error);
+                    return callback({error:"Cannot connect to SMTP server."});
+                }
+            });
+
+            var email_message = {//construct the message
+                from: process.env.EMAIL_HOST,
+                to: "davidhui@davesoftllc.com",
+                subject: title,
+                text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
+                html: htmlEmail
+            };
+
+            transporter.sendMail(email_message, function(error,response){//send the email
+                if(error){
+                    console.log(error,response);
+                    return callback({error:"Something went wrong when we attempted to send the email."});
+                }
+                else{
+                    return callback(null, {message:"Success"});
+                }
+            });
         }
-
-        //start sending
-        transporter.verify(function(error, success) {//verify the connection
-            if (error) {
-                console.log(error);
-                return callback({error:"Cannot connect to SMTP server."});
-            }
-        });
-
-        var email_message = {//construct the message
-            from: process.env.EMAIL_HOST,
-            to: recipient,
-            subject: title,
-            text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
-            html: htmlEmail
-        };
-
-        transporter.sendMail(email_message, function(error,response){//send the email
-            if(error){
-                console.log(error,response);
-                return callback({error:"Something went wrong when we attempted to send the email."});
-            }
-            else{
-                return callback(null, {message:"Success"});
-            }
-        });
-
+        else{
+            return callback({error:"Invalid email queue!"});
+        }
     },
 
     sendBoringEmail : function(recipient,title,message,callback){//plaintext email
@@ -218,7 +191,7 @@ module.exports = {
         console.log(validQueues);
 
         //check if the given queue is valid
-        if(validQueues[queue] === null){//invalid
+        if(validQueues[queue]['queueName'] === null){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
@@ -232,7 +205,7 @@ module.exports = {
                     console.log(settings.emailQueue[validQueues[queue]]);//debug
 
                     //get pending emails from database
-                    var emailPendingList = settings.emailQueue[validQueues[queue]];
+                    var emailPendingList = settings.emailQueue[validQueues[queue]['queueName']];
 
                     //loop through each
                     emailPendingList.forEach(function(element){
@@ -249,7 +222,7 @@ module.exports = {
                                 var dataPack = null;
 
                                 //depending on the queue, fill dataPack
-                                switch(validQueues[queue]){
+                                switch(validQueues[queue]['queueName']){
                                     case "acceptanceEmails":
                                         dataPack = {
                                             nickname: user['firstName'],

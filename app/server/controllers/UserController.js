@@ -249,12 +249,11 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 }
             });
             */
-            mailer.flushQueue('acceptance', function(error){
+            mailer.flushQueue('acceptanceEmails', function(error){
                 if(error){
                     return callback(error);
                 }
-            })
-
+            });
 
         }
 
