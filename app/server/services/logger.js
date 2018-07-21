@@ -3,6 +3,7 @@ var Logs  = require('../models/Logs');
 module.exports = {
     defaultResponse : function(req, res){
         return function(err, data){
+
             if (err){
                 // Only send error to slack if in production
                 // Keep everyone happy
@@ -34,7 +35,6 @@ module.exports = {
                     return res.status(500).send(err);
                 }
             } else {
-                console.log(data);
                 return res.json(data);
             }
         };

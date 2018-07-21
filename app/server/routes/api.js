@@ -114,7 +114,7 @@ module.exports = function(router) {
     // General
     // Send slack invite
     router.post('/slack', permissions.isVerified, function(req, res){
-        var user = req.user;
+        var user = req.userExecute;
 
         UserController.inviteToSlack(user._id, function(err, data){
             if (err) {
@@ -126,20 +126,78 @@ module.exports = function(router) {
     });
 
     // General
-    // Send join team
-    router.post('/joinTeam', permissions.isVerified, function(req, res){
-        var user = req.user;
-        var teamCode = req.body.teamCode;
+    // Create team
+    router.post('/createTeam', permissions.isVerified, function(req, res){
+        var user = req.userExecute;
+        var teamName = req.body.teamName;
 
-        UserController.joinTeam(user._id, teamCode, function(err, data){
-            if (err) {
-                return logger.defaultResponse(req, res)(err);
+        UserController.createTeam(user._id, teamName, function(err, data){
+            if (err || !data) {
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)( { error : "Error: Unable to create team" } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
         });
     });
 
+    // General
+    // Join team
+    router.post('/joinTeam', permissions.isVerified, function(req, res){
+        var user = req.userExecute;
+        var teamCode = req.body.teamCode;
+
+        UserController.joinTeam(user._id, teamCode, function(err, data){
+            if (err || !data) {
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)( { error : "Error: Unable to join team" } );
+            }
+
+            return logger.defaultResponse(req, res)(null, data);
+        });
+    });
+
+    // General
+    // Leave team
+    router.post('/leaveTeam', permissions.isVerified, function(req, res){
+        var user = req.userExecute;
+
+        UserController.leaveTeam(user._id, function(err, data){
+            if (err || !data) {
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)( { error : "Error: Unable to leave team" } );
+            }
+
+            return logger.defaultResponse(req, res)(null, data);
+        });
+    });
+
+    // General
+    // Get team
+    router.post('/getTeam', permissions.isVerified, function(req, res){
+        var user = req.userExecute;
+
+        UserController.getTeam(user._id, function(err, data){
+            if (err || !data) {
+                if (err) {
+                    return logger.defaultResponse(req, res)(err);
+                }
+
+                return logger.defaultResponse(req, res)( { error : "Error: Unable to get team" } );
+            }
+
+            return logger.defaultResponse(req, res)(null, data);
+        });
+    });
 
     // General
     // Change password

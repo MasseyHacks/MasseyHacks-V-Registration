@@ -4,6 +4,7 @@ var Team           = require('../models/Team');
 var Settings       = require('../models/Settings');
 
 var jwt            = require('jsonwebtoken');
+var uuidv4         = require('uuid/v4');
 
 var request        = require('request');
 
@@ -403,10 +404,6 @@ UserController.loginWithPassword = function(email, password, callback){
                 });
             }
 
-            if (user.status.passwordSuspension) {
-                return callback({ error: "Security policy requires you to reset your password to activate your account. Please check your email or press the button below." })
-            }
-
             if (!user.status.active) {
                 return callback({ error: "Account is not active. Please contact an administrator for assistance." })
             }
@@ -730,6 +727,10 @@ UserController.admitUser = function(adminUser, userID, callback) {
             'statusReleased': false,
             'status.admittedBy': adminUser.email,
             'status.confirmBy': Date.now() + 604800000
+
+            /**
+             * To-Do: Change confirm by to setting's confirmBy date
+             */
         }
     }, {
         new: true
@@ -814,29 +815,195 @@ UserController.remove = function(adminUser, userID, callback){
     });
 };
 
+UserController.createTeam = function(id, teamName, callback) {
+
+    if (!id || !teamName) {
+        return callback({error : 'Error: Invalid arguments'});
+    }
+
+    User.getByID(id, function(err, user) {
+        if (err || !user) {
+            return callback({error : 'Error: Unable to get user'});
+        }
+
+        if (user.teamCode && user.teamCode.length != 0) {
+            return callback({error : 'Error: You are already in a team!'});
+        }
+
+        var team = Team();
+        team.name = teamName;
+        team.code = uuidv4();
+        team.memberIDs = [user._id];
+
+        team.save();
+
+        User.findOneAndUpdate({
+            _id: id
+        }, {
+            teamCode: team.code
+        }, {
+            new: true
+        }, function(err, newUser) {
+            logger.logAction(id, id, "Created the team: " + teamName + " (" + team.code + ")");
+            return callback(null, { team : team.toJSON(), user : newUser });
+        });
+    });
+};
+
 UserController.joinTeam = function(id, teamCode, callback) {
 
     if (!id || !teamCode) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    Team.find({
-        code : teamCode
-    }, function (err, team) {
-       if (err || !team) { // Team doesn't exist yet
-            return callback({ error : "Error: Team doesn't exist" });
+    User.getByID(id, function(err, user) {
+       if (err || !user) {
+           return callback({error : 'Error: Unable to get user'});
        }
 
-       if (team.memberIDs.length < process.env.TEAM_MAX_SIZE) { // Can still join team
-
-
-
-       } else {
-           return callback({ error : "Error: Team is full" });
+       if (user.teamCode && user.teamCode.length != 0) {
+           return callback({error : 'Error: You are already in a team!'});
        }
+
+       Team.findOne({
+           code : teamCode
+       }, function (err, team) {
+           if (err || !team) { // Team doesn't exist yet
+               return callback({ error : 'Error: Team doesn\'t exist' });
+           }
+
+           if (team.memberIDs.length < process.env.TEAM_MAX_SIZE) { // Can still join team
+               Team.findOneAndUpdate({
+                   code : teamCode
+               }, {
+                   $push : {
+                       memberIDs: user._id
+                   }
+               }, {
+                   new: true
+               }, function(err, newTeam) {
+                   if (err || !newTeam) {
+                       return callback({ error : 'Error: Unable to join team' });
+                   }
+
+                   User.findOneAndUpdate({
+                       _id : id
+                   }, {
+                       $set : {
+                           teamCode: newTeam.code
+                       }
+                   }, {
+                       new: true
+                   }, function(err, newUser) {
+                       if (err || !newUser) {
+                           return callback({error : 'Error: Something went wrong' });
+                       }
+                       logger.logAction(id, id, "Joined the team: " + newTeam + " (" + team.code + ")");
+                       return callback(null, { team : newTeam, user : newUser });
+                   });
+               });
+           } else {
+               return callback({ error : "Error: Team is full" });
+           }
+        });
     });
 };
 
+UserController.leaveTeam = function(id, callback) {
+
+    if (!id) {
+        return callback({error : 'Error: Invalid arguments'});
+    }
+
+    User.getByID(id, function(err, user) {
+       if (err || !user) {
+           if (err) {
+               return callback(err);
+           }
+
+           return callback({error : 'Error: Unable to get user'});
+       }
+
+       if (user.teamCode.length == 0) {
+           return callback({error : 'Error: You are not in a team'});
+       }
+
+        User.findOneAndUpdate({
+            _id : user._id
+        }, {
+            $set : {
+                teamCode : ''
+            }
+        }, {
+            new: true
+        }, function(err, newUser) {
+            if (err || !newUser) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback({error: 'Error: Unable to leave team'});
+            }
+
+            Team.findOneAndUpdate({
+                code : user.teamCode
+            }, {
+                $pull : {
+                    memberIDs : user._id
+                }
+            }, {
+                new: true
+            }, function(err, newTeam) {
+
+                if (newTeam && newTeam.memberIDs.length == 0) { // Team is dead, kill it for good
+                    Team.findOneAndRemove({
+                        _id : newTeam._id
+                    }, function(err) {
+                        logger.logAction(-1, -1, "Deleted the team: " + newTeam.name + " (" + user.teamCode + ")");
+                    });
+                }
+
+                if (!newTeam) {
+                    newTeam.name = "null";
+                }
+
+                logger.logAction(id, id, "Left the team: " + newTeam.name + " (" + user.teamCode + ")");
+                return callback(null, newUser)
+            });
+        })
+    });
+};
+
+UserController.getTeam = function(id, callback) {
+
+    if (!id) {
+        return callback({error : 'Error: Invalid arguments'});
+    }
+
+    User.getByID(id, function(err, user) {
+        if (err || !user) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback({error : 'Error: Unable to get user'});
+        }
+
+        if (user.teamCode.length == 0) {
+            return callback({error : 'Error: You are not in a team'});
+        }
+
+        Team.findOne({
+            code : user.teamCode
+        }, function (err, team) {
+            if (err || !team) { // Team doesn't exist
+                return callback({ error : 'Error: Team doesn\'t exist' });
+            }
+
+            return callback(null, team);
+        });
+    });
+};
 UserController.inviteToSlack = function(id, callback) {
 
     if (!id) {
