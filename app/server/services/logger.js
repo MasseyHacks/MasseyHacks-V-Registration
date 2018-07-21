@@ -1,4 +1,5 @@
-var Logs  = require('../models/Logs');
+var Logs    = require('../models/Logs');
+var request = require('request');
 
 module.exports = {
     defaultResponse : function(req, res){
@@ -8,11 +9,15 @@ module.exports = {
                 // Only send error to slack if in production
                 // Keep everyone happy
                 if (process.env.NODE_ENV === 'production'){
+                    console.log('Sending slack notification...');
+
                     request
                         .post(process.env.SLACK_HOOK,
                             {
                                 form: {
                                     payload: JSON.stringify({
+                                        "icon_emoji" : ":happydoris:",
+                                        "username" : "CrashBot",
                                         "text":
                                         process.env.ADMIN_UIDS + "\nAn issue was detected with the server.\n\n``` \n" +
                                         "Request: \n " +
@@ -28,11 +33,10 @@ module.exports = {
                                 }
                             },
                             function (error, response, body) {
-                                return res.status(500).json(data);
+                                console.log('Message sent to slack');
+                                return res.json(err);
                             }
                         );
-                } else {
-                    return res.status(500).send(err);
                 }
             } else {
                 return res.json(data);
