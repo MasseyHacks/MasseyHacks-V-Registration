@@ -209,6 +209,29 @@ module.exports = function(router) {
         UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res));
     });
 
+    // General
+    // Update profile
+    router.post('/updateProfile', permissions.isUser, function(req, res) {
+        var userID = req.body.userID;
+        var profile = req.body.profile;
+
+        UserController.updateProfile(req.userExecute, userID, profile, logger.defaultResponse(req, res));
+    });
+
+    // General
+    // Update confirmation
+    router.post('/updateConfirmation', permissions.isUser, function(req, res) {
+        var userID = req.body.userID;
+        var confirmation = req.body.confirmation;
+
+        UserController.updateConfirmation(req.userExecute, userID, confirmation, logger.defaultResponse(req, res));
+    });
+
+    router.post('/declineInvitation', permissions.isUser, function(req, res) {
+        var userID = req.body.userID;
+
+        UserController.declineInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
 
     // Change password
     router.post('/adminChangePassword', permissions.isOwner, function (req, res) {

@@ -12,20 +12,20 @@ module.exports = {
                     console.log('Sending slack notification...');
 
                     request
-                        .post(process.env.SLACK_HOOK,
+                        .post(process.env.ERROR_SLACK_HOOK,
                             {
                                 form: {
                                     payload: JSON.stringify({
                                         "icon_emoji" : ":happydoris:",
                                         "username" : "CrashBot",
                                         "text":
-                                        process.env.ADMIN_UIDS + "\nAn issue was detected with the server.\n\n``` \n" +
+                                        "Hey! " + process.env.ADMIN_UIDS + " An issue was detected with the server.\n\n```" +
                                         "Request: \n " +
                                         req.method + ' ' + req.url +
-                                        "\n ------------------------------------ \n" +
+                                        "\n -------------------------- \n" +
                                         "Body: \n " +
                                         JSON.stringify(req.body, null, 2) +
-                                        "\n ------------------------------------ \n" +
+                                        "\n -------------------------- \n" +
                                         "\nError:\n" +
                                         JSON.stringify(err, null, 2) +
                                         "``` \n"
@@ -66,6 +66,26 @@ module.exports = {
                 event.timestamp = Date.now();
 
                 console.log(event.toJSON());
+
+                if (process.env.NODE_ENV === 'production'){
+                    console.log('Sending slack audit log...');
+
+                    request
+                        .post(process.env.AUDIT_SLACK_HOOK,
+                            {
+                                form: {
+                                    payload: JSON.stringify({
+                                        "icon_emoji" : ":pcedoris:",
+                                        "username" : "AuditBot",
+                                        "text": "```" + event + "```"
+                                    })
+                                }
+                            },
+                            function (error, response, body) {
+                                console.log('Message sent to slack');
+                            }
+                        );
+                }
 
                 event.save(function(err) {
                     if (err) {

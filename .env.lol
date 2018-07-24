@@ -24,7 +24,10 @@ EMAIL_PORT=''
 TEAM_MAX_SIZE=4
 
 # Used to send error messages to your Slack team when the API catches an error
-SLACK_HOOK='https://hooks.slack.com/services/yourapikey'
+ERROR_SLACK_HOOK='https://hooks.slack.com/services/yourapikey'
+
+# Used to send error messages to your Slack team as a backup of the system audit log
+AUDIT_SLACK_HOOK='https://hooks.slack.com/services/yourapikey'
 
 # UIDs of admins on Slack so they can be @ messaged
 ADMIN_UIDS=''

@@ -36,7 +36,7 @@ module.exports = {
                 return res.status(500).send(err);
             }
 
-            if (user && (user._id == userID || user.permissions.level >= 3)) {
+            if (userID && user && (user._id == userID || user.permissions.level >= 3)) {
                 req.userExecute = user;
                 req.permissionLevel = user.permissions.level;
                 return next();

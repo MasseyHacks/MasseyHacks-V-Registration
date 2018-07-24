@@ -92,6 +92,24 @@ var confirmation = {
 
 };
 
+var userType = {
+    hacker : {
+        type: Boolean,
+        required: true,
+        default: true
+    },
+    mentor: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    workshopHost: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
+};
+
 var permissions = {
     verified : {
         type: Boolean,
@@ -171,7 +189,7 @@ var schema = new mongoose.Schema({
 
     passwordLastUpdated: {
         type: Number,
-        default: 0,
+        default: 0
     },
 
     teamCode: {
@@ -199,6 +217,7 @@ var schema = new mongoose.Schema({
 
     status: status,
     permissions : permissions,
+    userType: userType,
 
     // Only parts user can update
     profile: profile,
@@ -260,6 +279,7 @@ function filterSensitive(user, permissionLevel) {
         delete u.lastUpdated;
     }
 
+    // Mask status
     if (!user.status.statusReleased && permissionLevel < 3) {
         u.status.admitted = false;
         u.status.declined = false;
@@ -271,6 +291,7 @@ function filterSensitive(user, permissionLevel) {
     return u;
 }
 
+// Helper function
 schema.statics.filterSensitive = function(user, permissionLevel) {
     return filterSenstive(user, permissionLevel);
 };
