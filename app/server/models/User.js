@@ -156,11 +156,6 @@ var schema = new mongoose.Schema({
         required: true
     },
 
-    fullName: {
-        type: String,
-        required: true
-    },
-
     email: {
         type: String,
         required: true,
@@ -371,8 +366,21 @@ schema.statics.getByEmail = function (email, callback) {
 
 
 schema.virtual('lowerCaseName').get(function() {
-    return this.fullName.toLowerCase();
+    if (this.firstName && this.lastName) {
+        return this.firstName.toLowerCase() + " " + this.lastName.toLowerCase();
+    }
+
+    return "";
 });
+
+schema.virtual('fullName').get(function() {
+    if (this.firstName && this.lastName) {
+        return this.firstName + " " + this.lastName;
+    }
+
+    return "";
+});
+
 
 schema.virtual('permissions.level').get(function () {
     // 0 - Hacker Unverified

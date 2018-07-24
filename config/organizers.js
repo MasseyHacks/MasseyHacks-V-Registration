@@ -31,7 +31,6 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                 u.email = email;
                 u.firstName = firstName;
                 u.lastName = lastName;
-                u.fullName = firstName + " " + lastName;
                 u.password = User.generateHash(""); // Impossible password
 
                 u.status.passwordSuspension = true;
@@ -44,7 +43,7 @@ function makeOrganizer(email, firstName, lastName,  permission) {
 
                 u.verified = true;
                 u.status.admittedBy = "MasseyHacks Account Authority";
-                u.profile.submittedApplication = true;
+                //u.profile.submittedApplication = true;
                 u.status.admitted = true;
                 u.status.confirmed = true;
                 u.status.statusReleased = true;
