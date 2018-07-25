@@ -576,6 +576,38 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
     });
 };
 
+UserController.teamAccept = function(adminUser, userID, callback) {
+    User.getbyID(userID, function (err, user) {
+        if (err || !user){
+            if (err) {
+                console.log(err)
+            }
+            return null
+        } else {
+            Team.getByCode(user.teamCode, function (err, team) {
+                if (err || !team) {
+                    if (err) {
+                        console.log(err)
+                    }
+                    return null
+                }
+
+                for (id in team.memberIDs) {
+                    UserController.admitUser(adminUser, id, function (err, user) {
+                        if (err || !user){
+                            if (err) {
+                                console.log(err)
+                            }
+                            return null
+                        }
+                    })
+                }
+            })
+        }
+
+    })
+}
+
 UserController.checkAdmissionStatus = function(id) {
 
     User.getByID(id, function (err, user) {

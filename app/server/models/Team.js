@@ -21,6 +21,22 @@ var schema = new mongoose.Schema({
 
 });
 
+schema.statics.getByCode = function(code, callback) {
+    this.findOne({
+        code: code
+    }, function(err, team) {
+        if (err || !team) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback({ error: "Error: Team not found" })
+        }
+
+        return callback(null, team);
+    });
+};
+
 schema.set('toJSON', {
     virtuals: true
 });

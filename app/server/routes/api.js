@@ -199,6 +199,13 @@ module.exports = function(router) {
         });
     });
 
+    // Reviewer
+    // Accept team
+    router.post('/AdmitTeam', permissions.isReviewer, function (req, res) {
+        var userID = req.body.userID;
+        UserController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
     // General
     // Change password
     router.post('/changePassword', permissions.isVerified, function (req, res) {
