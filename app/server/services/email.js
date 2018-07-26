@@ -19,19 +19,19 @@ var smtpConfig = {
 };
 
 var transporter = nodemailer.createTransport(smtpConfig);
-const validQueues = JSON.parse(fs.readFileSync('config/data/emailQueues.json', 'utf8'));
+const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
 
 module.exports = {
     sendTemplateEmail: function(recipient,templateName,dataPack,callback){//templated email
         templateName = templateName.toLowerCase();
-
-        if(validQueues[templateName]['queueName']){
+        console.log("Sending template email! to:" +recipient+ " tempalte "+templateName+" dp "+dataPack);
+        if(validTemplates[templateName]['queueName']){
             //compile the template
 
-            var htmlTemplate = fs.readFileSync(validQueues[templateName]['templateLocation']);
+            var htmlTemplate = fs.readFileSync(validTemplates[templateName]['templateLocation'],"utf-8");
             var template = handlebars.compile(htmlTemplate);
             var htmlEmail = template(dataPack);
-            var title = validQueues[templateName]['emailTitle'];
+            var title = validTemplates[templateName]['emailTitle'];
 
             //start sending
             transporter.verify(function(error, success) {//verify the connection
@@ -43,7 +43,7 @@ module.exports = {
 
             var email_message = {//construct the message
                 from: process.env.EMAIL_CONTACT,
-                to: "davidhui@davesoftllc.com",
+                to: recipient,
                 subject: title,
                 text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
                 html: htmlEmail
@@ -55,6 +55,7 @@ module.exports = {
                     return callback({error:"Something went wrong when we attempted to send the email."});
                 }
                 else{
+                    console.log("email sent");
                     return callback(null, {message:"Success"});
                 }
             });
@@ -96,14 +97,14 @@ module.exports = {
         queue = queue.toLowerCase();//just in case
 
         //check if the given queue is valid
-        if(validQueues[queue] === null){//invalid
+        if(validTemplates[queue] === null){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
         else{//valid
             var pushObj = {};
             //kinda sketchy
-            pushObj['emailQueue.'+validQueues[queue]['queueName']] = recipient;
+            pushObj['emailQueue.'+validTemplates[queue]['queueName']] = recipient;
 
             Settings.findOneAndUpdate({},{
                 $push: pushObj
@@ -127,7 +128,7 @@ module.exports = {
         queue = queue.toLowerCase();
 
         //check if the given queue is valid
-        if(validQueues[queue]['queueName'] === null || !validQueues[queue]['canQueue']){//invalid
+        if(validTemplates[queue]['queueName'] === null || !validTemplates[queue]['canQueue']){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
@@ -138,10 +139,10 @@ module.exports = {
                     return callback({error:"Cannot find the email queue."});
                 }
                 else{
-                    console.log(settings.emailQueue[validQueues[queue]]);//debug
+                    console.log(settings.emailQueue[validTemplates[queue]]);//debug
 
                     //get pending emails from database
-                    var emailPendingList = settings.emailQueue[validQueues[queue]['queueName']];
+                    var emailPendingList = settings.emailQueue[validTemplates[queue]['queueName']];
 
                     //loop through each
                     emailPendingList.forEach(function(element){
@@ -163,9 +164,11 @@ module.exports = {
                                 var dataPack = {
                                     nickname: user['firstName'],
                                     confirmBy: confirmByString,
-                                    dashURL: process.env.ROOT_URL,
+                                    dashUrl: process.env.ROOT_URL,
                                     submitBy: submitByString
                                 };
+
+                                console.log(dataPack.dashURL);
 
                                 //send the email
                                 module.exports.sendTemplateEmail(element,queue,dataPack,function(err){
@@ -175,15 +178,19 @@ module.exports = {
                                     }else{
                                         return callback(null,{message:"Success"});
                                     }
-                                })
+                                });
                             }
 
                         })
 
                     });
+
                 }
 
-            })
+                //clear the queue
+
+
+            });
         }
     }
 };

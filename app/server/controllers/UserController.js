@@ -80,7 +80,16 @@ UserController.sendVerificationEmail = function (token, callback) {
 
         console.log(verificationToken);
 
-        // Mailer
+        //send the email
+        mailer.sendTemplateEmail(user.email,'verifyemails',{
+            nickname: firstname,
+            verifyUrl: "CHANGEME"
+        },function(err){
+            if(err) {
+                return callback(err);
+            }
+        });
+
 
         return callback(null, {message:"Success"});
     });
@@ -171,6 +180,15 @@ UserController.changePassword = function (email, password, callback) {
 
         // Mail password reset email
 
+        mailer.sendTemplateEmail(user.email,'passwordchangedemails',{
+            nickname: user.firstName,
+            dashUrl: process.env.ROOT_URL
+        },function(err){
+            if(err) {
+                return callback(err);
+            }
+        });
+
         return callback(null, { message: "Success" })
 
     });
@@ -209,6 +227,7 @@ UserController.resetPassword = function (token, password, callback) {
                     }
 
                     logger.logAction(user._id, user._id, "Changed their password with token.");
+
                     return callback(null, {message : "Success"});
                 });
             });
@@ -232,28 +251,10 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 
             console.log(resetURL);
 
-            // Mailer
-
-            /*
-            mailer.sendTemplateEmail(email,"admittance",{
-                nickname: "david",
-                confirmBy: "12321431",
-                dashUrl: "dfgasgfg" //set to root url
+            mailer.sendTemplateEmail(email,"passwordresetemails",{
+                nickname: user.firstName,
+                resetUrl: resetURL
             },function(error){
-                if(error){
-                    return callback(error);
-                }
-            });
-
-            */
-            /*
-            mailer.queueEmail("david@masseyhacks.ca","acceptance",function(error){
-                if(error){
-                    return callback(error);
-                }
-            });
-            */
-            mailer.flushQueue('acceptanceEmails', function(error){
                 if(error){
                     return callback(error);
                 }
@@ -336,9 +337,15 @@ UserController.createUser = function (email, firstName, lastName, password, call
                 } else {
                     var token = user.generateAuthToken();
 
-                    /**
-                     * To-Do: Send verification email here
-                     */
+                    //send the email
+                    mailer.sendTemplateEmail(email,'verifyemails',{
+                        nickname: firstname,
+                        verifyUrl: "CHANGEME"
+                    },function(err){
+                        if(err) {
+                            return callback(err);
+                        }
+                    });
 
                     user = user.toJSON();
                     delete user.password;
@@ -744,10 +751,6 @@ UserController.admitUser = function(adminUser, userID, callback) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    /**
-     * To-Do: Add to email queue
-     */
-
     User.findOneAndUpdate({
        _id : userID,
         'permissions.verified': true,
@@ -779,6 +782,13 @@ UserController.admitUser = function(adminUser, userID, callback) {
 
         logger.logAction(adminUser._id, user._id, "Admitted user.");
 
+        //send the email
+        mailer.queueEmail(user.email,'acceptanceemails',function(err){
+            if(err){
+                return callback(err);
+            }
+        });
+
         return callback(err, user);
 
     });
@@ -789,10 +799,6 @@ UserController.rejectUser = function(adminUser, userID, callback) {
     if (!adminUser || !userID) {
         return callback({error : 'Error: Invalid arguments'});
     }
-
-    /**
-     * To-Do: Add to email queue
-     */
 
     User.findOneAndUpdate({
        _id : userID,
@@ -818,6 +824,12 @@ UserController.rejectUser = function(adminUser, userID, callback) {
         }
 
         logger.logAction(adminUser._id, user._id, "Rejected user.");
+
+        mailer.queueEmail(user.email,'rejectionemails',function(err){
+            if(err){
+                return callback(err);
+            }
+        });
 
         return callback(err, user);
 
