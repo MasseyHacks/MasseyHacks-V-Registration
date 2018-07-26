@@ -54,13 +54,14 @@ module.exports = {
         // Creates log object
         LogEvent.buildLoggingData(actionFrom, function(dataFrom) {
             LogEvent.buildLoggingData(actionTo, function(dataTo) {
-                console.log(dataFrom, dataTo, message);
 
                 LogEvent.create({
                     "to": dataTo,
                     "from": dataFrom,
                     "message": message,
                     "timestamp": Date.now()
+                }, function (err, event) {
+                    console.log(event);
                 });
 
                 if (process.env.NODE_ENV === 'production'){

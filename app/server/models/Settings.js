@@ -19,24 +19,29 @@ var emailQueue = {
 var schema = new mongoose.Schema({
     emailQueue : emailQueue,
     schools: {
-        type: [String]
+        type: [String],
+        required: true
     },
     timeOpen: {
         type: Number,
-        default: Date.now()
+        default: Date.now(),
+        required: true
     },
     timeClose: {
         type: Number,
-        default: Date.now() + 31104000000
+        default: Date.now() + 31104000000,
+        required: true
     },
     timeConfirm: {
         type: Number,
-        default: Date.now() + 31104000000
+        default: Date.now() + 31104000000,
+        required: true
     }
 });
 
 schema.statics.registrationOpen = function() {
-    return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
+    return true;
+    return this.findOne({}).timeClose >= Date.now() && Date.now() >= this.findOne({}).timeOpen;
 };
 
 schema.statics.confirmationOpen = function() {
