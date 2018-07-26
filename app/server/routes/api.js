@@ -3,7 +3,7 @@ var validator          = require('validator');
 var express            = require('express');
 
 var User               = require('../models/User');
-var Logs               = require('../models/Logs');
+var LogEvent               = require('../models/LogEvent');
 var UserController     = require('../controllers/UserController');
 var SettingsController = require('../controllers/SettingsController');
 
@@ -20,7 +20,7 @@ module.exports = function(router) {
     // Developer
     // View system log
     router.get('/log', permissions.isDeveloper, function (req, res) {
-        Logs.getLog(logger.defaultResponse(req, res));
+        LogEvent.getLog(logger.defaultResponse(req, res));
     });
 
     // Self or admin

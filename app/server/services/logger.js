@@ -1,4 +1,4 @@
-var Logs    = require('../models/Logs');
+var LogEvent    = require('../models/LogEvent');
 var request = require('request');
 
 module.exports = {
@@ -11,31 +11,30 @@ module.exports = {
                 if (process.env.NODE_ENV === 'production'){
                     console.log('Sending slack notification...');
 
-                    request
-                        .post(process.env.ERROR_SLACK_HOOK,
-                            {
-                                form: {
-                                    payload: JSON.stringify({
-                                        "icon_emoji" : ":happydoris:",
-                                        "username" : "CrashBot",
-                                        "text":
-                                        "Hey! " + process.env.ADMIN_UIDS + " An issue was detected with the server.\n\n```" +
-                                        "Request: \n " +
-                                        req.method + ' ' + req.url +
-                                        "\n -------------------------- \n" +
-                                        "Body: \n " +
-                                        JSON.stringify(req.body, null, 2) +
-                                        "\n -------------------------- \n" +
-                                        "\nError:\n" +
-                                        JSON.stringify(err, null, 2) +
-                                        "``` \n"
-                                    })
-                                }
-                            },
-                            function (error, response, body) {
-                                console.log('Message sent to slack');
+                    request.post(process.env.ERROR_SLACK_HOOK,
+                        {
+                            form: {
+                                payload: JSON.stringify({
+                                    "icon_emoji" : ":happydoris:",
+                                    "username" : "CrashBot",
+                                    "text":
+                                    "Hey! " + process.env.ADMIN_UIDS + " An issue was detected with the server.\n\n```" +
+                                    "Request: \n " +
+                                    req.method + ' ' + req.url +
+                                    "\n -------------------------- \n" +
+                                    "Body: \n " +
+                                    JSON.stringify(req.body, null, 2) +
+                                    "\n -------------------------- \n" +
+                                    "\nError:\n" +
+                                    JSON.stringify(err, null, 2) +
+                                    "``` \n"
+                                })
                             }
-                        );
+                        },
+                        function (error, response, body) {
+                            console.log('Message sent to slack');
+                        }
+                    );
                 }
 
                 return res.json(err);
@@ -53,11 +52,11 @@ module.exports = {
          */
 
         // Creates log object
-        Logs.buildLoggingData(actionFrom, function(dataFrom) {
-            Logs.buildLoggingData(actionTo, function(dataTo) {
+        LogEvent.buildLoggingData(actionFrom, function(dataFrom) {
+            LogEvent.buildLoggingData(actionTo, function(dataTo) {
                 console.log(dataFrom, dataTo, message);
 
-                Logs.create({
+                LogEvent.create({
                     "to": dataTo,
                     "from": dataFrom,
                     "message": message,

@@ -76,7 +76,7 @@ UserController.sendVerificationEmail = function (token, callback) {
 
         var verificationToken = user.generateVerificationToken();
 
-        logger.logAction(user.email, user.email, "Requested a verification email.");
+        logger.logAction(user._id, user._id, "Requested a verification email.");
 
         console.log(verificationToken);
 
@@ -228,7 +228,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
         if (user && !err) {
             var resetURL = process.env.ROOT_URL + "/reset/" + user.generateResetToken();
 
-            logger.logAction(user.email, user.email, "Requested a password reset email.");
+            logger.logAction(user._id.email, user._id, "Requested a password reset email.");
 
             console.log(resetURL);
 

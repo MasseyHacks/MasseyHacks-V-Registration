@@ -87,4 +87,4 @@ schema.statics.getLog = function(callback){
         });
 };
 
-module.exports = mongoose.model('Logs', schema);
+module.exports = mongoose.model('LogEvent', schema);

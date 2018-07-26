@@ -17,6 +17,8 @@ var SettingsController = {};
 
 // Dynamic email magic goes here
 
+// Get stats
+
 SettingsController.getLog = function(callback) {
     return callback(null, Settings.getLog());
 };
