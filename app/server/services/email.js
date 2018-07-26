@@ -5,6 +5,7 @@ var handlebars = require('handlebars');
 var mongoose = require('mongoose');
 var Settings = require('../models/Settings');
 var User = require('../models/User');
+var date = new Date();
 
 
 var smtpConfig = {
@@ -18,70 +19,7 @@ var smtpConfig = {
 };
 
 var transporter = nodemailer.createTransport(smtpConfig);
-
-const validQueues = {
-    acceptanceemails: {
-        queueName: "acceptanceEmails",
-        templateLocation: "email-admittance",
-        emailTitle: "You have been admitted!"
-    },
-    applicationemails: {
-        queueName: "applicationEmails",
-        templateLocation: "email-application",
-        emailTitle: "You have applied!"
-    },
-    basicemails: {
-        queueName: "basicEmails",
-        templateLocation: "email-basic",
-        emailTitle: "Ur basic"
-    },
-    confirmationemails: {
-        queueName: "confirmEmails",
-        templateLocation: "email-confirmation",
-        emailTitle: "You have been confirmed!"
-    },
-    declineemails: {
-        queueName: "declineEmails",
-        templateLocation: "email-decline",
-        emailTitle: "You have declined your invitation. :("
-    },
-    laggeremails: {
-        queueName: "laggerEmails",
-        templateLocation: "email-lagger",
-        emailTitle: "WhY u LaG liKe mienCraft oN the scKool coMputEr"
-    },
-    laggerconfirmemails:{
-        queueName: "laggerConfirmEmails",
-        templateLocation: "email-lagger-confirmation",
-        emailTitle: "WhY u LaG liKe mienCraft oN the scKool coMputEr conFiRm"
-    },
-    passwordchangedemails: {
-        queueName: "passwordChangedEmails",
-        templateLocation: "email-password-changed",
-        emailTitle: "Your password has been changed!"
-    },
-    passwordresetemails: {
-        queueName: "passwordResetEmails",
-        templateLocation: "email-password-reset",
-        emailTitle: "You requested to changed your password"
-    },
-    qremails: {
-        queueName: "qrEmails",
-        templateLocation: "email-qr",
-        emailTitle: "Your QR code for admittance"
-    },
-    rejectionemails: {
-        queueName: "rejectionEmails",
-        templateLocation: "email-reject",
-        emailTitle: "You have been rejected. :("
-    },
-    verifyemails:{
-        queueName: "verifyEmails",
-        templateLocation: "email-verify",
-        emailTitle: "Please verify your email address!"
-    }
-
-};
+const validQueues = JSON.parse(fs.readFileSync('config/data/emailQueues.json', 'utf8'));
 
 module.exports = {
     sendTemplateEmail: function(recipient,templateName,dataPack,callback){//templated email
@@ -89,12 +27,11 @@ module.exports = {
 
         if(validQueues[templateName]['queueName']){
             //compile the template
-            var htmlTemplate,htmlEmail,template,title;
 
-            htmlTemplate = fs.readFileSync("./app/server/templates/"+ validQueues[templateName]['templateLocation'] +"/html.hbs","utf-8");
-            template = handlebars.compile(htmlTemplate);
-            htmlEmail = template(dataPack);
-            title = validQueues[templateName]['emailTitle'];
+            var htmlTemplate = fs.readFileSync(validQueues[templateName]['templateLocation']);
+            var template = handlebars.compile(htmlTemplate);
+            var htmlEmail = template(dataPack);
+            var title = validQueues[templateName]['emailTitle'];
 
             //start sending
             transporter.verify(function(error, success) {//verify the connection
@@ -105,7 +42,7 @@ module.exports = {
             });
 
             var email_message = {//construct the message
-                from: process.env.EMAIL_HOST,
+                from: process.env.EMAIL_CONTACT,
                 to: "davidhui@davesoftllc.com",
                 subject: title,
                 text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
@@ -165,7 +102,8 @@ module.exports = {
         }
         else{//valid
             var pushObj = {};
-            pushObj['emailQueue.'+validQueues[queue]] = recipient;
+            //kinda sketchy
+            pushObj['emailQueue.'+validQueues[queue]['queueName']] = recipient;
 
             Settings.findOneAndUpdate({},{
                 $push: pushObj
@@ -188,10 +126,8 @@ module.exports = {
     flushQueue : function(queue,callback){
         queue = queue.toLowerCase();
 
-        console.log(validQueues);
-
         //check if the given queue is valid
-        if(validQueues[queue]['queueName'] === null){//invalid
+        if(validQueues[queue]['queueName'] === null || !validQueues[queue]['canQueue']){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
@@ -209,7 +145,6 @@ module.exports = {
 
                     //loop through each
                     emailPendingList.forEach(function(element){
-                        console.log(validQueues[queue]);//debug
 
                         //return user properties and send email
                         User.getByEmail(element,function(error,user){
@@ -217,19 +152,20 @@ module.exports = {
                                 return callback({error:"The provided email does not correspond to a user."});
                             }
                             else{
+                                //define the dates
+                                date.setTime(settings.timeConfirm);
+                                const confirmByString = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-                                //setup the datapack
-                                var dataPack = null;
+                                date.setTime(settings.timeClose);
+                                const submitByString = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-                                //depending on the queue, fill dataPack
-                                switch(validQueues[queue]['queueName']){
-                                    case "acceptanceEmails":
-                                        dataPack = {
-                                            nickname: user['firstName'],
-                                            confirmBy: "lol",
-                                            dashURL: process.env.ROOT_URL
-                                        }
-                                }
+                                //fill dataPack
+                                var dataPack = {
+                                    nickname: user['firstName'],
+                                    confirmBy: confirmByString,
+                                    dashURL: process.env.ROOT_URL,
+                                    submitBy: submitByString
+                                };
 
                                 //send the email
                                 module.exports.sendTemplateEmail(element,queue,dataPack,function(err){
