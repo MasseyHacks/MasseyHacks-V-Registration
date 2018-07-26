@@ -138,27 +138,37 @@ module.exports = {
                 if(err){
                     return callback({error:"Cannot find the email queue."});
                 }
-                else{
+                else {
                     console.log(settings.emailQueue[validTemplates[queue]]);//debug
 
                     //get pending emails from database
                     var emailPendingList = settings.emailQueue[validTemplates[queue]['queueName']];
 
                     //loop through each
-                    emailPendingList.forEach(function(element){
+                    emailPendingList.forEach(function (element) {
 
                         //return user properties and send email
-                        User.getByEmail(element,function(error,user){
-                            if(error){
-                                return callback({error:"The provided email does not correspond to a user."});
+                        User.getByEmail(element, function (error, user) {
+                            if (error) {
+                                return callback({error: "The provided email does not correspond to a user."});
                             }
-                            else{
+                            else {
                                 //define the dates
                                 date.setTime(settings.timeConfirm);
-                                const confirmByString = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                                const confirmByString = date.toLocaleDateString("en-US", {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
 
                                 date.setTime(settings.timeClose);
-                                const submitByString = date.toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                                const submitByString = date.toLocaleDateString("en-US", {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
 
                                 //fill dataPack
                                 var dataPack = {
@@ -171,14 +181,22 @@ module.exports = {
                                 console.log(dataPack.dashURL);
 
                                 //send the email
-                                module.exports.sendTemplateEmail(element,queue,dataPack,function(err){
-                                    if(err){
+                                module.exports.sendTemplateEmail(element, queue, dataPack, function (err) {
+                                    if (err) {
                                         console.log(err);
-                                        return callback({error:"Cannot send email when flushing queue."});
-                                    }else{
-                                        return callback(null,{message:"Success"});
+                                        return callback({error: "Cannot send email when flushing queue."});
                                     }
                                 });
+
+                                var pullObj = {};
+                                //kinda sketchy too
+                                pullObj['emailQueue.'+validTemplates[queue]['queueName']] = {
+                                    $in: [element]
+                                };
+                                //remove it from the queue
+                                Settings.findOneAndUpdate({},{
+                                    $pull:pullObj
+                                },{multi:false})
                             }
 
                         })
@@ -186,9 +204,6 @@ module.exports = {
                     });
 
                 }
-
-                //clear the queue
-
 
             });
         }
