@@ -1,0 +1,68 @@
+{
+  "acceptanceemails":{
+    "queueName":"acceptanceEmails",
+    "templateLocation":"./app/server/templates/email-admittance/html.hbs",
+    "emailTitle":"You have been admitted!",
+    "canQueue":true
+  },
+  "applicationemails":{
+    "queueName":"applicationEmails",
+    "templateLocation":"./app/server/templates/email-application/html.hbs",
+    "emailTitle":"You have applied!",
+    "canQueue":false
+  },
+  "confirmationemails":{
+    "queueName":"confirmEmails",
+    "templateLocation":"./app/server/templates/email-confirmation/html.hbs",
+    "emailTitle":"You have been confirmed!",
+    "canQueue":false
+  },
+  "declineemails":{
+    "queueName":"declineEmails",
+    "templateLocation":"./app/server/templates/email-decline/html.hbs",
+    "emailTitle":"You have declined your invitation. :(",
+    "canQueue":false
+  },
+  "laggeremails":{
+    "queueName":"laggerEmails",
+    "templateLocation":"./app/server/templates/email-lagger/html.hbs",
+    "emailTitle":"WhY u LaG liKe mienCraft oN the scKool coMputEr",
+    "canQueue":true
+  },
+  "laggerconfirmemails":{
+    "queueName":"laggerConfirmEmails",
+    "templateLocation":"./app/server/templates/email-lagger-confirmation/html.hbs",
+    "emailTitle":"WhY u LaG liKe mienCraft oN the scKool coMputEr conFiRm",
+    "canQueue":true
+  },
+  "passwordchangedemails":{
+    "queueName":"passwordChangedEmails",
+    "templateLocation":"./app/server/templates/email-password-changed/html.hbs",
+    "emailTitle":"Your password has been changed!",
+    "canQueue":false
+  },
+  "passwordresetemails":{
+    "queueName":"passwordResetEmails",
+    "templateLocation":"./app/server/templates/email-password-reset/html.hbs",
+    "emailTitle":"You requested to changed your password",
+    "canQueue":false
+  },
+  "qremails":{
+    "queueName":"qrEmails",
+    "templateLocation":"./app/server/templates/email-qr/html.hbs",
+    "emailTitle":"Your QR code for admittance",
+    "canQueue":false
+  },
+  "rejectionemails":{
+    "queueName":"rejectionEmails",
+    "templateLocation":"./app/server/templates/email-reject/html.hbs",
+    "emailTitle":"You have been rejected. :(",
+    "canQueue":true
+  },
+  "verifyemails":{
+    "queueName":"verifyEmails",
+    "templateLocation":"./app/server/templates/email-verify/html.hbs",
+    "emailTitle":"Please verify your email address!",
+    "canQueue":false
+  }
+}
