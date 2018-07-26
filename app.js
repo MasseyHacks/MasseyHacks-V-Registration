@@ -12,14 +12,19 @@ var mongoose        = require('mongoose');
 var port            = process.env.PORT || 3005;
 var database        = process.env.DATABASE || "mongodb://localhost:27017";
 
+// Start configuration
 var organizers      = require('./config/organizers');
 var settings        = require('./config/settings');
+
+// Start services
+var autoRemove         = require('./app/server/services/autoRemove');
+var waiverReceiver     = require('./app/server/services/waiverReceiver');
 
 var app = express();
 mongoose.connect(database);
 
+// Start routers
 app.use(express.static('app/client/'));
-//app.use(cors());
 
 var apiRouter = express.Router();
 require('./app/server/routes/api')(apiRouter);

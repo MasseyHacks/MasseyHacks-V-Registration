@@ -10,7 +10,7 @@ var SettingsController = require('../controllers/SettingsController');
 var permissions        = require('../services/permissions');
 var logger             = require('../services/logger');
 
-require('dotenv').config({path: '../../../.env'});
+require('dotenv').load();
 
 JWT_SECRET             = process.env.JWT_SECRET;
 
@@ -201,7 +201,7 @@ module.exports = function(router) {
 
     // Reviewer
     // Accept team
-    router.post('/AdmitTeam', permissions.isReviewer, function (req, res) {
+    router.post('/admitTeam', permissions.isReviewer, function (req, res) {
         var userID = req.body.userID;
         UserController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
     });

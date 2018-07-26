@@ -53,45 +53,35 @@ module.exports = {
          */
 
         // Creates log object
-        Logs.buildLoggingData(actionFrom, function(data) {
-            var event = new Logs();
+        Logs.buildLoggingData(actionFrom, function(dataFrom) {
+            Logs.buildLoggingData(actionTo, function(dataTo) {
+                console.log(dataFrom, dataTo, message);
 
-            event.from = data;
-
-            Logs.buildLoggingData(actionTo, function(data) {
-
-                event.to = data;
-
-                event.message = message;
-                event.timestamp = Date.now();
-
-                console.log(event.toJSON());
+                Logs.create({
+                    "to": dataTo,
+                    "from": dataFrom,
+                    "message": message,
+                    "timestamp": Date.now()
+                });
 
                 if (process.env.NODE_ENV === 'production'){
                     console.log('Sending slack audit log...');
 
-                    request
-                        .post(process.env.AUDIT_SLACK_HOOK,
-                            {
-                                form: {
-                                    payload: JSON.stringify({
-                                        "icon_emoji" : ":pcedoris:",
-                                        "username" : "AuditBot",
-                                        "text": "```" + event + "```"
-                                    })
-                                }
-                            },
-                            function (error, response, body) {
-                                console.log('Message sent to slack');
+                    request.post(process.env.AUDIT_SLACK_HOOK,
+                        {
+                            form: {
+                                payload: JSON.stringify({
+                                    "icon_emoji" : ":pcedoris:",
+                                    "username" : "AuditBot",
+                                    "text": "```" + event + "```"
+                                })
                             }
-                        );
+                        },
+                        function (error, response, body) {
+                            console.log('Message sent to slack');
+                        }
+                    );
                 }
-
-                event.save(function(err) {
-                    if (err) {
-                        console.log("Unable to log.", err);
-                    }
-                });
             });
         });
     }

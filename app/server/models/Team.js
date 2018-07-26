@@ -1,4 +1,4 @@
-require('dotenv').config({path: '../../../.env'});
+require('dotenv').load();
 
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),

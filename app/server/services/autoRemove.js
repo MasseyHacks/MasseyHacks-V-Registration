@@ -1,24 +1,23 @@
 var _ = require('underscore');
 var async = require('async');
 var User = require('../models/User');
-var Settings = require('../models/Settings')
 
 function removeUnverifiedUser(){
-    var now = Date.now()
+    var now = Date.now();
 
-    User.find({"admin": false,"owner":false,"volunteer":false,"verified":false}).select('timestamp')
-        .exec(function(err, users) {
-            if (err || !users) {
-                throw err;
+    // Only delete users below checkin
+    User.find({"permissions.level" : { $lt : 2 }}, function(err, users) {
+        if (err || !users) {
+            throw err;
+        }
+
+        async.each(users, function (user, callback) {
+            if (now - user.timestamp > 172800000){
+                console.log("Removing " + user.email);
+                User.findOneAndRemove({"id":user.id}, callback);
             }
-
-            async.each(users, function (user, callback) {
-                if (now - user.timestamp > 172800000){
-                    console.log("Removing " + user.email);
-                    User.findOneAndRemove({"id":user.id}, callback);
-                }
-            })
         })
+    });
 }
 
 setInterval(function() {

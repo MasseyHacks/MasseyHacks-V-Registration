@@ -1,4 +1,4 @@
-require('dotenv').config({path: '../../../.env'});
+require('dotenv').load();
 
 var mongoose = require('mongoose'),
     bcrypt = require('bcrypt-nodejs'),
@@ -84,8 +84,22 @@ var status = {
     }
 };
 
-var profile = {
+var hackerApplication = {
 
+};
+
+var mentorApplication = {
+
+};
+
+var workshopHost = {
+
+};
+
+var profile = {
+    hacker: hackerApplication,
+    mentor: mentorApplication,
+    workshop: workshopHost
 };
 
 var confirmation = {

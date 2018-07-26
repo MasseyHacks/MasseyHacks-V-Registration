@@ -11,11 +11,14 @@ var moment = require('moment');
 
 var SettingsController = {};
 
+// Add school
+
+// Search for schools
+
+// Dynamic email magic goes here
+
 SettingsController.getLog = function(callback) {
-
-    return callback(null, {});
-
-    //return callback(null, Settings.getLog());
+    return callback(null, Settings.getLog());
 };
 
 SettingsController.getSettings = function(callback){

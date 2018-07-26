@@ -1,5 +1,5 @@
-var Imap = require('imap'),
-    inspect = require('util').inspect;
+var Imap = require('imap');
+var inspect = require('util').inspect;
 var Users = require('../models/User');
 var Settings = require('../models/Settings');
 
@@ -11,31 +11,14 @@ var imap = new Imap({
     tls: true
 });
 
-var addToLog = function (message, callback) {
-
-    var marked_message = "[" + Date() + "] " + message;
-
-    console.log(marked_message);
-
-    Settings.findOneAndUpdate({}, {
-        $push: {
-            log : marked_message
-        }
-    }, {
-        new: true
-    }, function () {
-
-    }, callback);
-};
-
 function openInbox(cb) {
     imap.openBox('INBOX', false, cb);
 }
 
 imap.once('ready', function() {
-    fetch_email()
+    fetch_email();
 
-    imap.on('mail', function (message) {
+    imap.on('mail', function () {
         fetch_email()
     })
 });
@@ -49,7 +32,7 @@ imap.once('end', function() {
 });
 
 var fetch_email = function() {
-    openInbox(function(err, box) {
+    openInbox(function() {
         imap.search([ 'UNSEEN'], function(err, results) {
             if (!err && results.length !== 0) {
 
@@ -58,15 +41,15 @@ var fetch_email = function() {
                     markSeen: true,
                     struct: true
                 });
-                f.on('message', function (msg, seqno) {
-                    var prefix = '(#' + seqno + ') ';
-                    msg.on('body', function (stream, info) {
+                f.on('message', function (msg) {
+                    msg.on('body', function (stream) {
                         var buffer;
                         stream.on('data', function (chunk) {
                             buffer = chunk.toString('utf8');
                         });
                         stream.once('end', function () {
-                            buffer = buffer.split("\r\n")
+                            buffer = buffer.split("\r\n");
+
                             if (buffer[0] === "From: HelloSign <noreply@mail.hellosign.com>") {
                                 console.log(buffer[1]);
                                 var process = buffer[1].split(" ");

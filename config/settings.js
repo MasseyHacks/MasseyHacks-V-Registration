@@ -1,30 +1,22 @@
 var Settings = require('../app/server/models/Settings');
 var fs = require('fs');
 
-Settings
-    .findOne({})
-    .exec(function(err, settings){
-        if (err) {
-            throw err;
-        }
-        if (!settings){
-            var settings = new Settings();
-            settings.save();
-            console.log('Created new settings!');
-        }
-    });
-
-fs.readFile('./config/schools.txt', 'utf8', function(err, data) {
+// Check if settings exists
+// If not, create new object
+Settings.findOne({}, function(err, settings){
     if (err) throw err;
-    // Process data
-    schoolsList = data.split('\n');
 
-    console.log(schoolsList);
+    if (!settings){
+        fs.readFile('config/data/schools.txt', 'utf8', function(err, data) {
+            if (err) throw err;
 
-    Settings
-        .findOneAndUpdate({},{
-            $addToSet: { schools: {$each: schoolsList} }
-        }, {new: true}, function(err) {
-            console.log('Adding schools to Settings!', err);
+            Settings.create({
+                schools: data.split('\n')
+            }, function(err) {
+                if (err) throw err;
+
+                console.log('Settings created.');
+            });
         });
+    }
 });

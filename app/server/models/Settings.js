@@ -1,9 +1,6 @@
-require('dotenv').config({path: '../../../.env'});
+require('dotenv').load();
 
 var mongoose = require('mongoose'),
-    bcrypt = require('bcrypt-nodejs'),
-    validator = require('validator'),
-    jwt = require('jsonwebtoken');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -23,13 +20,27 @@ var schema = new mongoose.Schema({
     emailQueue : emailQueue,
     schools: {
         type: [String]
+    },
+    timeOpen: {
+        type: Number,
+        default: Date.now()
+    },
+    timeClose: {
+        type: Number,
+        default: Date.now() + 31104000000
+    },
+    timeConfirm: {
+        type: Number,
+        default: Date.now() + 31104000000
     }
 });
 
 schema.statics.registrationOpen = function() {
+    return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
+};
 
-    return true;
-
+schema.statics.confirmationOpen = function() {
+    return this.timeConfirm >= Date.now();
 };
 
 schema.statics.getSettings = function(callback){

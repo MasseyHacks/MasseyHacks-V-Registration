@@ -43,7 +43,7 @@ schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp);
 });
 
-function buildLoggingDataCore(id, name, email) {
+function buildLoggingCore(id, name, email) {
     var dp = dataPack;
 
     dp.ID = id;
@@ -59,16 +59,15 @@ function buildLoggingDataCore(id, name, email) {
 // -> Full name
 // -> Email
 schema.statics.buildLoggingData = function(id, callback) {
-
     if (id == -1) {
-        return callback(buildLoggingDataCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
+        return callback(buildLoggingCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
     }
 
     User.getByID(id, function (err, user) {
         if (!user) {
-            return callback(buildLoggingDataCore(id, "null name", "null email"));
+            return callback(buildLoggingCore(id, "null name", "null email"));
         } else {
-            return callback(buildLoggingDataCore(id, user.fullName, user.email));
+            return callback(buildLoggingCore(id, user.fullName, user.email));
         }
     });
 };

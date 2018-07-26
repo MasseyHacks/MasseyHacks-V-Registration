@@ -322,19 +322,15 @@ UserController.createUser = function (email, firstName, lastName, password, call
             });
         } else {
 
-            var name = firstName + " " + lastName;
-
-            var user = new User();
-            user.email = email;
-            user.firstName = firstName;
-            user.lastName = lastName;
-            user.fullName = name;
-            user.password = User.generateHash(password);
-            user.passwordLastUpdated = Date.now();
-            user.timestamp = Date.now();
-
-            user.save(function (err) {
-                if (err) {
+            User({
+                "email": email,
+                "firstName": firstName,
+                "lastName": lastName,
+                "password": User.generateHash(password),
+                "passwordLastUpdated": Date.now(),
+                "timestamp": Date.now()
+            }, function (err, user) {
+                if (err || !user) {
                     console.log(err);
                     return callback(err);
                 } else {
@@ -584,6 +580,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
             }
             return null
         } else {
+
             Team.getByCode(user.teamCode, function (err, team) {
                 if (err || !team) {
                     if (err) {
@@ -591,6 +588,8 @@ UserController.teamAccept = function(adminUser, userID, callback) {
                     }
                     return null
                 }
+
+                logger.logAction(adminUser._id, -1, "Admitted team " + team.name);
 
                 for (id in team.memberIDs) {
                     UserController.admitUser(adminUser, id, function (err, user) {
@@ -606,7 +605,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
         }
 
     })
-}
+};
 
 UserController.checkAdmissionStatus = function(id) {
 
