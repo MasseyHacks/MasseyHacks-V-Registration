@@ -316,14 +316,13 @@ UserController.createUser = function (email, firstName, lastName, password, call
     email = email.toLowerCase();
 
     User.getByEmail(email, function (err, user) {
-
-        if (user) {
+        if (!err || user) {
             return callback({
                 error: 'Error: An account for this email already exists.'
             });
         } else {
 
-            User({
+            User.create({
                 "email": email,
                 "firstName": firstName,
                 "lastName": lastName,
@@ -331,6 +330,9 @@ UserController.createUser = function (email, firstName, lastName, password, call
                 "passwordLastUpdated": Date.now(),
                 "timestamp": Date.now()
             }, function (err, user) {
+
+                console.log("dank");
+
                 if (err || !user) {
                     console.log(err);
                     return callback(err);
@@ -339,7 +341,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 
                     //send the email
                     mailer.sendTemplateEmail(email,'verifyemails',{
-                        nickname: firstname,
+                        nickname: firstName,
                         verifyUrl: "CHANGEME"
                     },function(err){
                         if(err) {
@@ -355,7 +357,6 @@ UserController.createUser = function (email, firstName, lastName, password, call
                     return callback(null, token, user);
                 }
             });
-
         }
     });
 };
