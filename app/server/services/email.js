@@ -202,8 +202,9 @@ module.exports = {
                                 }, {
 
                                 }, function(err, settings) {
-                                    console.log(err, settings.emailQueue)
+                                    console.log(err, settings.emailQueue);
                                 });
+
 
                                 /*
                                 Settings.findOneAndUpdate({},{
@@ -214,6 +215,8 @@ module.exports = {
                         })
 
                     });
+
+                    return callback(null, {message: "Success"});
 
                 }
 

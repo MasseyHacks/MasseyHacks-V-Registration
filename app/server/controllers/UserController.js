@@ -254,6 +254,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             mailer.flushQueue("acceptanceemails", function(err){
                 if(err){
                     console.log(err);
+                    return callback(err);
                 }
 
                 return callback();
