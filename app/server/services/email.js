@@ -190,9 +190,7 @@ module.exports = {
 
                                 var pullObj = {};
                                 //kinda sketchy too
-                                pullObj['emailQueue.'+validTemplates[queue]['queueName']] = {
-                                    $in: [element]
-                                };
+                                pullObj['emailQueue.'+validTemplates[queue]['queueName']] = element;
                                 //remove it from the queue
                                 Settings.findOneAndUpdate({},{
                                     $pull:pullObj
