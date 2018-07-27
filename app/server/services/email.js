@@ -127,8 +127,10 @@ module.exports = {
     flushQueue : function(queue,callback){
         queue = queue.toLowerCase();
 
+        console.log("Attempting queue flush");
+
         //check if the given queue is valid
-        if(validTemplates[queue]['queueName'] === null || !validTemplates[queue]['canQueue']){//invalid
+        if(!queue || validTemplates[queue]['queueName'] === null || !validTemplates[queue]['canQueue']){//invalid
             console.log("Invalid email queue!");
             return callback({error:"Invalid email queue."});
         }
@@ -139,7 +141,7 @@ module.exports = {
                     return callback({error:"Cannot find the email queue."});
                 }
                 else {
-                    console.log(settings.emailQueue[validTemplates[queue]]);//debug
+                    console.log('Flushing Queue...', settings.emailQueue[validTemplates[queue]['queueName']]);//debug
 
                     //get pending emails from database
                     var emailPendingList = settings.emailQueue[validTemplates[queue]['queueName']];
@@ -192,9 +194,21 @@ module.exports = {
                                 //kinda sketchy too
                                 pullObj['emailQueue.'+validTemplates[queue]['queueName']] = element;
                                 //remove it from the queue
+
+                                console.log(pullObj);
+
+                                Settings.findOneAndUpdate({}, {
+                                    $pull : pullObj
+                                }, {
+
+                                }, function(err, settings) {
+                                    console.log(err, settings.emailQueue)
+                                });
+
+                                /*
                                 Settings.findOneAndUpdate({},{
                                     $pull:pullObj
-                                },{multi:false})
+                                },{multi:false});*/
                             }
 
                         })

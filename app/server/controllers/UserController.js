@@ -219,7 +219,7 @@ UserController.resetPassword = function (token, password, callback) {
                     console.log(err);
 
                     return callback({error : "Error: User not found"});
-                };
+                }
 
                 UserController.changePassword(user.email, password, function(err) {
                     if (err) {
@@ -251,10 +251,12 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 
             console.log(resetURL);
 
-            mailer.flushQueue("acceptanceemails",function(err){
-               if(err){
-                   return callback(err);
-               }
+            mailer.flushQueue("acceptanceemails", function(err){
+                if(err){
+                    console.log(err);
+                }
+
+                return callback();
             });
 
             /*
@@ -265,12 +267,8 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 if(error){
                     return callback(error);
                 }
-            });
-            */
-
+            });*/
         }
-
-        return callback();
     });
 
 
