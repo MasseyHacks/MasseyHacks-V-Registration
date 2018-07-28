@@ -14,7 +14,13 @@ var logger         = require('../services/logger');
 
 var mailer         = require('../services/email');
 
+var stats          = require('../services/stats');
+
 var UserController = {};
+
+UserController.getStats = function (callback) {
+    callback(null, stats.getUserStats())
+}
 
 UserController.verify = function (token, callback) {
 
@@ -593,7 +599,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
             if (err) {
                 console.log(err)
             }
-            return null
+            return callback(err, user);
         } else {
 
             Team.getByCode(user.teamCode, function (err, team) {
@@ -601,7 +607,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
                     if (err) {
                         console.log(err)
                     }
-                    return null
+                    return callback(err, user);
                 }
 
                 logger.logAction(adminUser._id, -1, "Admitted team " + team.name);
@@ -612,13 +618,13 @@ UserController.teamAccept = function(adminUser, userID, callback) {
                             if (err) {
                                 console.log(err)
                             }
-                            return null
                         }
                     })
                 }
+
+                return callback(err, user);
             })
         }
-
     })
 };
 
