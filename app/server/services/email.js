@@ -45,7 +45,7 @@ module.exports = {
                 from: process.env.EMAIL_CONTACT,
                 to: recipient,
                 subject: title,
-                text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
+                text: "Your email client-old does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client-old capable of viewing HTML emails.",
                 html: htmlEmail
             };
 

@@ -1,3 +1,11 @@
+angular.module('registration')
+    .controller('LoginController', [
+        '$rootScope',
+        '$scope',
+        function($rootScope, $scope) {
+
+        }]);
+
 $(document).ready(function () {
 
     var bgresize = function () {

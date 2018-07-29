@@ -3,9 +3,10 @@ module.exports = function(app) {
         res.sendfile('./app/client/index.html');
     });
 
+    /*
     app.get('/login', function(req, res){
-        res.sendfile('./app/client/views/login/index.html');
-    });
+        res.sendfile('./app/client-old/views/login/login.html');
+    });*/
 
     app.get('*', function(req, res){
         res.sendfile('./app/client/index.html');
