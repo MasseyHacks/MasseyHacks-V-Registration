@@ -23,6 +23,12 @@ module.exports = function(router) {
         LogEvent.getLog(logger.defaultResponse(req, res));
     });
 
+    // Admin
+    // View current stats
+    router.get('/stats', permissions.isAdmin, function (req, res) {
+        UserController.getStats(logger.defaultResponse(req, res))
+    })
+
     // Self or admin
     // Get self or user
     router.get('/user/:userID', permissions.isUser, function(req, res) {
