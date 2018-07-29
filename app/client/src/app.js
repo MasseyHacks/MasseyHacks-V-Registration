@@ -1,9 +1,18 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import swal from 'sweetalert'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
 console.log('Hello there!! test!!!');
+
+//import auth from './auth'
+import App from './App.vue'
+//import About from 'components/About.vue'
+import Dashboard from './Dashboard.vue'
+import Login from './Login.vue'
+
+swal("Hello!");
 
 function requireAuth (to, from, next) {
     if (!auth.loggedIn()) {
@@ -21,7 +30,9 @@ const router = new VueRouter({
    base: '/',
    routers: [
        {
-          path: '/dashboard'
+          path: '/dashboard',
+          component: Dashboard,
+          beforeEnter: requireAuth
        },
        {
           path: '/login',
@@ -30,7 +41,8 @@ const router = new VueRouter({
        {
           path: '/logout',
            beforeEnter (to, from, next) {
-              next('/');
+              auth.logout()
+              next('/')
            }
        }
    ]

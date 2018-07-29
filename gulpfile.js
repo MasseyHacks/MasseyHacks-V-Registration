@@ -5,15 +5,19 @@ var babel = require('gulp-babel');
 var webpack = require('gulp-webpack');
 var nodemon = require('nodemon');
 var dotenv = require('dotenv');
+//var VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 gulp.task('js', function() {
 
     console.log('Rebuilding JS...');
 
-    gulp.src('app/client/src/*.js')
+    gulp.src(['app/client/src/*.vue', 'app/client/src/*.js'])
         .pipe(webpack({
             module: {
                 loaders: [{
+                    test: /.vue$/,
+                    loader: 'vue-loader'
+                }, {
                     test: /.js$/,
                     loader: 'babel-loader',
                     query: {
@@ -22,22 +26,15 @@ gulp.task('js', function() {
                 }]
             },
             output: {
-                filename: '[name].js'
+                filename: 'main.js'
             }
         }))
         .pipe(gulp.dest('app/client/dist'))
-
-        /*
-        .pipe(babel({
-            loader: ['babel-loader'],
-            plugins: ['transform-runtime'],
-            presets: ['es2015', 'env']
-        }))
-        .pipe(gulp.dest('app/client/src'))*/
 });
 
 gulp.task('watch', ['js'], function() {
     gulp.watch('app/client/src/*.js', ['js']);
+    gulp.watch('app/client/src/*.vue', ['js']);
 });
 
 // Restart server upon detecting change
