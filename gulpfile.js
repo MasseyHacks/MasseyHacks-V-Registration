@@ -16,7 +16,13 @@ gulp.task('js', function() {
             module: {
                 loaders: [{
                     test: /.vue$/,
-                    loader: 'vue-loader'
+                    loader: 'vue-loader',
+                    query: {
+                        presets: ['es2015', 'stage-0'],
+                        loaders: {
+                            'js': 'babel-loader'
+                        }
+                    }
                 }, {
                     test: /.js$/,
                     loader: 'babel-loader',
@@ -26,7 +32,7 @@ gulp.task('js', function() {
                 }]
             },
             output: {
-                filename: 'main.js'
+                filename: '[name].js'
             }
         }))
         .pipe(gulp.dest('app/client/dist'))

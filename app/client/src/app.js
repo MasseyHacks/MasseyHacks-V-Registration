@@ -1,6 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import swal from 'sweetalert'
+import $ from 'jquery'
+
+$(document).ready(() => {
+    swal("Hello!");
+});
+
 
 Vue.use(VueRouter)
 
@@ -12,7 +18,7 @@ import App from './App.vue'
 import Dashboard from './Dashboard.vue'
 import Login from './Login.vue'
 
-swal("Hello!");
+
 
 function requireAuth (to, from, next) {
     if (!auth.loggedIn()) {
