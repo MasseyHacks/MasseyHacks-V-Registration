@@ -7,16 +7,15 @@ $(document).ready(() => {
     swal("Hello!");
 });
 
-
 Vue.use(VueRouter)
 
-console.log('Hello there!! test!!!');
+alert('Hello there!! test!!!');
 
-//import auth from './auth'
-import App from './App.vue'
+import auth from './auth'
+import App from '../components/App.vue'
 //import About from 'components/About.vue'
-import Dashboard from './Dashboard.vue'
-import Login from './Login.vue'
+import Dashboard from '../components/Dashboard.vue'
+import Login from '../components/Login.vue'
 
 
 

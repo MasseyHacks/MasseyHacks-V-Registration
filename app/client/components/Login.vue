@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import auth from '../auth'
+    import auth from '../src/auth'
 
     module.exports = {
         data () {
