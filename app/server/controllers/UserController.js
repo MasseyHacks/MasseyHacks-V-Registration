@@ -16,6 +16,8 @@ var mailer         = require('../services/email');
 
 var stats          = require('../services/stats');
 
+var UserFields     = require('../models/data/UserFields');
+
 var UserController = {};
 
 UserController.getStats = function (callback) {
@@ -435,6 +437,105 @@ UserController.loginWithPassword = function(email, password, callback){
             return callback(null, user, token);
         });
 };
+
+UserController.updateProfile = function (id, profile, callback){
+
+    // Validate the user profile, and mark the user as profile completed
+    // when successful.
+    console.log("Updating " + profile);
+
+    csvValidation(profile, function(profileValidated){
+        User.validateProfile(id, profile, function(err){
+            if (err){
+                return callback({message: 'invalid profile'});
+            }
+
+            // Check if its within the registration window.
+            Settings.getRegistrationTimes(function(err, times){
+                if (err) {
+                    callback(err);
+                }
+
+                var now = Date.now();
+
+                if (now < times.timeOpen){
+                    return callback({
+                        message: "Registration opens in " + moment(times.timeOpen).fromNow() + "!"
+                    });
+                }
+
+                if (now > times.timeClose){
+                    return callback({
+                        message: "Sorry, registration is closed."
+                    });
+                }
+
+                if (!profile.submittedApplication) {
+                    User.findById(id, function(err, user) {
+                        if (err) {
+                            console.log('Could not send email:');
+                            console.log(err);
+                        }
+                        Mailer.sendApplicationEmail(user);
+                    });
+                }
+
+                for (key in Object.keys(UserFields.profile)) {
+                    if(UserFields.profile[key].required){
+                        if (profileValidated[key] && profileValidated[key] !== "") {
+                            return callback({message: "Field " + key + " is required"})
+                        }
+                    }
+                }
+
+                if (profileValidated.firstname.length > 0 && profileValidated.lastname.length > 0) {
+                    profile.name = profile.firstname + " " + profile.lastname;
+                }
+
+                User.findOne(
+                    {
+                        _id: id,
+                        verified: true
+                    },
+                    function (err, user) {
+
+                        if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
+                            return callback({
+                                message: "Sorry, registration is closed."
+                            });
+                        }
+
+                        var d = Date.now();
+                        var lastUpdated = (Date.now() > user.lastUpdated) ? Date.now() : user.lastUpdated;
+
+                        if (user.status.admitted || user.status.rejected) {
+                            currentWave = user.wave;
+                        } else if (user.wave) {
+                            currentWave = (currentWave > user.wave) ? currentWave : user.wave;
+                        }
+
+                        User.findOneAndUpdate({
+                                _id: id,
+                                verified: true
+                            },
+                            {
+                                $set: {
+                                    'sname': profile.name.toLowerCase(),
+                                    'lastUpdated': lastUpdated,
+                                    'profile': profileValidated,
+                                    'status.completedProfile': true
+                                }
+                            },
+                            {
+                                new: true
+                            },
+                            callback);
+                    });
+            });
+        });
+    });
+};
+
 
 /*
 UserController.injectAdmitUser = function(adminUser, userID, callback) {
