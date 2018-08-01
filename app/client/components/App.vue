@@ -1,13 +1,22 @@
 <template>
     <div id="app">
-        <h1>Auth Flow</h1>
+        <h1>MasseyHacks | Platform Internal Services</h1>
         <ul>
             <li>
                 <router-link v-if="loggedIn" to="/logout">Log out</router-link>
                 <router-link v-if="!loggedIn" to="/login">Log in</router-link>
             </li>
             <li>
-                <router-link to="/about">About</router-link>
+                <router-link to="/organizer">Organizer</router-link>
+            </li>
+            <li>
+                <router-link to="/owner">Owner</router-link>
+            </li>
+            <li>
+                <router-link to="/confirmation">Confirmations</router-link>
+            </li>
+            <li>
+                <router-link to="/application">Application</router-link>
             </li>
             <li>
                 <router-link to="/dashboard">Dashboard</router-link>
@@ -26,7 +35,7 @@
 <script>
     import auth from '../src/auth'
 
-    module.exports = {
+    export default {
         data () {
             return {
                 loggedIn: auth.loggedIn()

@@ -16,7 +16,7 @@
 <script>
     import auth from '../src/auth'
 
-    module.exports = {
+    export default {
         data () {
             return {
                 email: 'joe@example.com',

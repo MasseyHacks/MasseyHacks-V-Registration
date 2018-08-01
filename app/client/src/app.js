@@ -1,25 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import swal from 'sweetalert'
-import $ from 'jquery'
-
-$(document).ready(() => {
-    swal("Hello!");
-});
-
-Vue.use(VueRouter)
-
-alert('Hello there!! test!!!');
 
 import auth from './auth'
 import App from '../components/App.vue'
-//import About from 'components/About.vue'
 import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
 
-
+Vue.use(VueRouter)
 
 function requireAuth (to, from, next) {
+    swal("U NEED AUTH!!!");
+
     if (!auth.loggedIn()) {
         next({
             path: '/login',
@@ -32,29 +24,28 @@ function requireAuth (to, from, next) {
 
 const router = new VueRouter({
    mode: 'history',
-   base: '/',
-   routers: [
+   base: __dirname,
+   routes: [
        {
-          path: '/dashboard',
-          component: Dashboard,
-          beforeEnter: requireAuth
+           path: '/dashboard',
+           component: Dashboard,
+           beforeEnter: requireAuth
        },
        {
-          path: '/login',
-          component: Login
+           path: '/login',
+           component: Login
        },
-       {
-          path: '/logout',
+       { path: '/logout',
            beforeEnter (to, from, next) {
-              auth.logout()
-              next('/')
+               auth.logout()
+               next('/')
            }
        }
    ]
 });
 
 new Vue({
-   el: '#vue-app',
+   el: '#app',
    router,
    render: h => h(App)
 });
