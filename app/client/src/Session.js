@@ -17,25 +17,26 @@ module.exports = {
         }
     },
 
-    computed: {
-        tokenData() {
-            const token = this.getToken();
+    getTokenData() {
+        const token = this.getToken();
 
-            if (token) {
-                return JSON.parse(atob(token.split('.')[1]))
-            }
-
-            return {}
-        },
-        token() {
-            return localStorage.token;
-        },
-        userID() {
-            return localStorage.userID;
-        },
-        user() {
-            return localStorage.user;
+        if (token) {
+            return JSON.parse(atob(token.split('.')[1]))
         }
+
+        return {}
+    },
+
+    getToken() {
+        return localStorage.token;
+    },
+
+    getUserID() {
+        return localStorage.userID;
+    },
+
+    getUser() {
+        return localStorage.user;
     },
 
     setUser(user) {
