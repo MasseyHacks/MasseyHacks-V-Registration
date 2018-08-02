@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import swal from 'sweetalert'
+import swal from 'sweetalert2'
 
-import auth from './auth'
+import Session from './Session'
+import AuthService from './AuthService'
 import App from '../components/App.vue'
 import Dashboard from '../components/Dashboard.vue'
 import Login from '../components/Login.vue'
@@ -10,9 +11,7 @@ import Login from '../components/Login.vue'
 Vue.use(VueRouter)
 
 function requireAuth (to, from, next) {
-    swal("U NEED AUTH!!!");
-
-    if (!auth.loggedIn()) {
+    if (!Session.loggedIn()) {
         next({
             path: '/login',
             query: { redirect: to.fullPath }
@@ -33,12 +32,31 @@ const router = new VueRouter({
        },
        {
            path: '/login',
-           component: Login
-       },
-       { path: '/logout',
+           component: Login,
            beforeEnter (to, from, next) {
-               auth.logout()
-               next('/')
+               if (Session.loggedIn()) {
+                   next('/')
+               } else {
+                   next()
+               }
+           }
+       },
+       {
+           path: '/logout',
+           beforeEnter (to, from, next) {
+               swal({
+                   title: "Just to be safe",
+                   text: "Are you sure you want to logout?",
+                   type: "warning",
+                   showCancelButton: true,
+                   confirmButtonColor: "#DD6B55",
+                   confirmButtonText: "Logout"
+               }).then(result => {
+                   if (result.value) {
+                       AuthService.logout()
+                       next('/')
+                   }
+               });
            }
        }
    ]

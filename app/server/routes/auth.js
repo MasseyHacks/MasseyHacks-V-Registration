@@ -53,6 +53,7 @@ module.exports = function(router) {
 
     // Login and issue token
     router.post('/login', function (req, res) {
+
         var email = req.body.email;
         var password = req.body.password;
         var token = permissions.getToken(req);

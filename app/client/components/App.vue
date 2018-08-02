@@ -33,17 +33,18 @@
 </template>
 
 <script>
-    import auth from '../src/auth'
+    import AuthService from '../src/AuthService'
+    import Session     from '../src/Session'
 
     export default {
         data () {
             return {
-                loggedIn: auth.loggedIn()
+                loggedIn: Session.loggedIn()
             }
         },
-        created () {
-            auth.onChange = loggedIn => {
-                this.loggedIn = loggedIn
+        created() {
+            AuthService.updateLoginState = state => {
+                this.loggedIn = state
             }
         }
     }

@@ -6,30 +6,31 @@
         </p>
         <form @submit.prevent="login">
             <label><input v-model="email" placeholder="email"></label>
-            <label><input v-model="pass" placeholder="password" type="password"></label> (hint: password1)<br>
+            <label><input v-model="pass" placeholder="password" type="password"></label><br>
             <button type="submit">login</button>
-            <p v-if="error" class="error">Bad login information</p>
+            <p v-if="error" class="error">{{error}}</p>
         </form>
     </div>
 </template>
 
 <script>
-    import auth from '../src/auth'
+    import AuthService from '../src/AuthService'
 
     export default {
         data () {
             return {
-                email: 'joe@example.com',
+                email: '',
                 pass: '',
                 error: false
             }
         },
         methods: {
             login () {
-                auth.login(this.email, this.pass, loggedIn => {
-                    if (!loggedIn) {
-                        this.error = true
+                AuthService.loginWithPassword(this.email, this.pass, (err, data) => {
+                    if (err) {
+                        this.error = err
                     } else {
+                        this.error = null;
                         this.$router.replace(this.$route.query.redirect || '/')
                     }
                 })

@@ -413,11 +413,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
     }
 
-    User
-        .findOne({email : email.toLowerCase()})
-        .select('+password')
-        .exec(function (err, user) {
-
+    User.findOne({email : email.toLowerCase()}, '+password', function (err, user) {
             console.log(user);
 
             if (err || !user || user == null || !user.checkPassword(password)) {
