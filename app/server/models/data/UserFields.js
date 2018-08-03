@@ -5,6 +5,14 @@ var mongoose = require('mongoose'),
     validator = require('validator'),
     jwt = require('jsonwebtoken');
 
+const UNVERIFIED_HACKER = 0;
+const HACKER = 1;
+const CHECK_IN = 2;
+const ADMIN = 3;
+const REVIEW = 4;
+const OWNER = 5;
+const DEVELOPER = 6;
+
 JWT_SECRET = process.env.JWT_SECRET;
 
 var status = {
@@ -31,7 +39,8 @@ var status = {
     waitlisted: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permission: ADMIN
     },
     admitted: {
         type: Boolean,
@@ -127,7 +136,7 @@ var permissions = {
     verified : {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
     },
     checkin: {
         type: Boolean,

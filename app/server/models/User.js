@@ -1,10 +1,10 @@
 require('dotenv').load();
 
-var mongoose = require('mongoose'),
-    bcrypt = require('bcrypt-nodejs'),
-    validator = require('validator'),
-    jwt = require('jsonwebtoken');
-var fields = require('../models/data/UserFields');
+var mongoose    = require('mongoose'),
+    bcrypt      = require('bcrypt-nodejs'),
+    validator   = require('validator'),
+    jwt         = require('jsonwebtoken');
+var fields      = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -232,5 +232,40 @@ schema.virtual('status.name').get(function () {
     return "incomplete";
 
 });
+
+schema.static.filterSensitive = function (excuterID, user, callback) {
+    u = user.toJson();
+    this.findOne({_id: excuterID}, function (err, user) {
+        var permissionLevel = 0;
+
+        if (user) {
+            permissionLevel = user.permissions.level;
+        }
+
+        var queue = [[fields, u]];
+        var runner;
+        var userpath;
+        var keys;
+
+        while (queue.length !== 0) {
+            runner = queue[0][0];
+            userpath = queue.shift()[1];
+            keys = Object.keys(runner);
+
+            for (var i = 0; i < keys.length; i++) {
+                if("type" in runner[keys[i]]) {
+                    if (runner[keys[i]].permission >= permissionLevel){
+                        delete userpath[keys[i]];
+                    }
+                } else {
+                    console.log()
+                    queue.push([runner[keys[i]], userpath[keys[i]]])
+                }
+            }
+        }
+
+        return callback(false, user)
+    })
+}
 
 module.exports = mongoose.model('User', schema);
