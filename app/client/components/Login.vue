@@ -5,11 +5,13 @@
             You need to login first.
         </p>
         <form @submit.prevent="login">
-            <label><input v-model="email" placeholder="email"></label>
+            <label><input v-model="email" placeholder="email" autofocus></label>
             <label><input v-model="pass" placeholder="password" type="password"></label><br>
             <button type="submit">login</button>
             <p v-if="error" class="error">{{error}}</p>
         </form>
+
+        <router-link to="/register">Register</router-link>
     </div>
 </template>
 

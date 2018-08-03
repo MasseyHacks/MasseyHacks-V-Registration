@@ -11,6 +11,29 @@ beforeSend: xhr => {
 * */
 
 module.exports = {
+    register(email, firstName, lastName, password, callback) {
+        $.ajax({
+            type: 'POST',
+            url: '/auth/register',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                email: email,
+                password: password,
+                firstName: firstName,
+                lastName: lastName
+            }),
+            success: data => {
+                this.updateLoginState(true)
+                Session.create(data['token'], data['user']);
+                if (callback) callback(null, data)
+            },
+            error: data => {
+                if (callback) callback(JSON.parse(data.responseText)['error'])
+            }
+        });
+    },
+
     loginWithPassword (email, password, callback) {
         $.ajax({
             type: 'POST',
@@ -24,10 +47,10 @@ module.exports = {
             success: data => {
                 this.updateLoginState(true)
                 Session.create(data['token'], data['user']);
-                callback(null, data)
+                if (callback) callback(null, data)
             },
             error: data => {
-                callback(JSON.parse(data.responseText)['error'])
+                if (callback) callback(JSON.parse(data.responseText)['error'])
             }
         });
     },
@@ -43,10 +66,11 @@ module.exports = {
             }),
             success: data => {
                 this.updateLoginState(true)
-                callback(null, data)
+                Session.create(data['token'], data['user']);
+                if (callback) callback(null, data)
             },
             error: data => {
-                callback(JSON.parse(data.responseText)['error'])
+                if (callback) callback(JSON.parse(data.responseText)['error'])
             }
         });
     },

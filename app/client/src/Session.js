@@ -36,11 +36,11 @@ module.exports = {
     },
 
     getUser() {
-        return localStorage.user;
+        return JSON.parse(localStorage.user);
     },
 
     setUser(user) {
-        localStorage.user = user;
+        localStorage.user = JSON.stringify(user);
     },
 
     loggedIn() {

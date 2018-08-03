@@ -4,19 +4,29 @@ import swal         from 'sweetalert2'
 
 import Session      from './Session'
 import AuthService  from './AuthService'
+
 import App          from '../components/App.vue'
-import Dashboard    from '../components/Dashboard.vue'
+
 import Login        from '../components/Login.vue'
 import Register     from '../components/Register.vue'
-import PageNotFound from '../components/PageNotFound.vue'
+
+import Dashboard    from '../components/Dashboard.vue'
+import Error        from '../components/Error.vue'
 
 Vue.use(VueRouter)
+
+// Login with token if it exists
+if (Session.loggedIn()) {
+    AuthService.loginWithToken(Session.getToken())
+}
 
 function requireAuth (to, from, next) {
     if (!Session.loggedIn()) {
         next({
             path: '/login',
-            query: { redirect: to.fullPath }
+            query: {
+                redirect: to.fullPath
+            }
         })
     } else {
         next()
@@ -29,6 +39,75 @@ function requireNoAuth (to, from, next) {
     } else {
         next()
     }
+}
+
+function isAuthorized (to, from, next, authCondition) {
+    if (!Session.loggedIn()) {
+        next({
+            path: '/login',
+            query: {
+                redirect: to.fullPath
+            }
+        })
+    } else if (Session.getUser() && Session.getUser().permissions.level >= authCondition) {
+        next()
+    } else {
+        next({
+            path: '/error',
+            query: {
+                error: "You don't have permission to access this page."
+            }
+        })
+    }
+}
+
+/*
+function isAdmitted (to, from, next) {
+    if (!Session.loggedIn()) {
+        next({
+            path: '/login',
+            query: {
+                redirect: to.fullPath
+            }
+        })
+    } else if (Session.getUser() && Session.getUser().status.admitted) {
+        next()
+    } else {
+        next({
+            path: '/dashboard',
+            query: {
+                error: "Access Denied"
+            }
+        })
+    }
+}*/
+
+function isVerified (to, from, next) {
+    isAuthorized(to, from, next, 1)
+}
+
+function isCheckin (to, from, next) {
+    isAuthorized(to, from, next, 2)
+}
+
+function isAdmin (to, from, next) {
+    isAuthorized(to, from, next, 3)
+}
+
+function isReviewer (to, from, next) {
+    isAuthorized(to, from, next, 4)
+}
+
+function isAdmin (to, from, next) {
+    isAuthorized(to, from, next, 5)
+}
+
+function isOwner (to, from, next) {
+    isAuthorized(to, from, next, 6)
+}
+
+function isDeveloper (to, from, next) {
+    isAuthorized(to, from, next, 7)
 }
 
 const router = new VueRouter({
@@ -49,6 +128,31 @@ const router = new VueRouter({
            path: '/dashboard',
            component: Dashboard,
            beforeEnter: requireAuth
+       },
+       {
+           path: '/application',
+           component: Dashboard,
+           beforeEnter: isVerified
+       },
+       {
+           path: '/confirmation',
+           component: Dashboard,
+           beforeEnter: isVerified
+       },
+       {
+           path: '/checkin',
+           component: Dashboard,
+           beforeEnter: isCheckin
+       },
+       {
+           path: '/organizer',
+           component: Dashboard,
+           beforeEnter: isAdmin
+       },
+       {
+           path: '/owner',
+           component: Dashboard,
+           beforeEnter: isOwner
        },
        {
            path: '/register',
@@ -79,8 +183,23 @@ const router = new VueRouter({
            }
        },
        {
+           path: '/reset',
+           component: Login
+       },
+       {
+           path: '/error',
+           component: Error
+       },
+       {
            path: '*',
-           component: PageNotFound
+           beforeEnter (to, from, next) {
+               next({
+                   path: '/error',
+                   query: {
+                       error: "Page not found."
+                   }
+               })
+           }
        }
 
    ]
