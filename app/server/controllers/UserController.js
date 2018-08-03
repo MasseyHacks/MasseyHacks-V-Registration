@@ -259,16 +259,6 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 
             console.log(resetURL);
 
-            mailer.flushQueue("acceptanceemails", function(err){
-                if(err){
-                    console.log(err);
-                    return callback(err);
-                }
-
-                return callback();
-            });
-
-            /*
             mailer.sendTemplateEmail(email,"passwordresetemails",{
                 nickname: user.firstName,
                 resetUrl: resetURL
@@ -276,8 +266,10 @@ UserController.sendPasswordResetEmail = function (email, callback) {
                 if(error){
                     return callback(error);
                 }
-            });*/
+            });
         }
+
+        return callback();
     });
 
 

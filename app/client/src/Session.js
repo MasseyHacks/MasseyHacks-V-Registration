@@ -36,7 +36,7 @@ module.exports = {
     },
 
     getUser() {
-        return JSON.parse(localStorage.user);
+        return this.loggedIn() ? JSON.parse(localStorage.user) : null;
     },
 
     setUser(user) {

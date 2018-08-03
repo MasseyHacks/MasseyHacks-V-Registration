@@ -45,8 +45,8 @@ module.exports = {
                 password: password
             }),
             success: data => {
-                this.updateLoginState(true)
                 Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
                 if (callback) callback(null, data)
             },
             error: data => {
@@ -65,8 +65,27 @@ module.exports = {
                 token: token
             }),
             success: data => {
-                this.updateLoginState(true)
                 Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
+                if (callback) callback(null, data)
+            },
+            error: data => {
+                Session.destroy()
+                if (callback) callback(JSON.parse(data.responseText)['error'])
+            }
+        });
+    },
+
+    requestReset (email, callback) {
+        $.ajax({
+            type: 'POST',
+            url: '/auth/requestReset',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                email: email
+            }),
+            success: data => {
                 if (callback) callback(null, data)
             },
             error: data => {

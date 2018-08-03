@@ -12,6 +12,7 @@
         </form>
 
         <router-link to="/register">Register</router-link>
+        <router-link to="/reset">Reset</router-link>
     </div>
 </template>
 

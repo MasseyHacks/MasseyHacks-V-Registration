@@ -9,6 +9,7 @@ import App          from '../components/App.vue'
 
 import Login        from '../components/Login.vue'
 import Register     from '../components/Register.vue'
+import Reset        from '../components/Reset.vue'
 
 import Dashboard    from '../components/Dashboard.vue'
 import Error        from '../components/Error.vue'
@@ -182,9 +183,17 @@ const router = new VueRouter({
                });
            }
        },
+       ,
+       {
+           path: '/reset/:token',
+           component: Reset,
+           props: true,
+           beforeEnter: requireNoAuth
+       },
        {
            path: '/reset',
-           component: Login
+           component: Reset,
+           beforeEnter: requireNoAuth
        },
        {
            path: '/error',

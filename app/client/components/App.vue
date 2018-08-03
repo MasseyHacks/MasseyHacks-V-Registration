@@ -6,23 +6,25 @@
         <ul v-if="loggedIn">
             <li>
                 <router-link v-if="loggedIn" to="/logout">Log out</router-link>
-                <router-link v-if="!loggedIn" to="/login">Log in</router-link>
             </li>
-            <li>
+
+            <li  v-if="user.permissions.level >= 1">
+                <router-link to="/application">Application</router-link>
+            </li>
+            <li v-if="user.permissions.level >= 2">
+                <router-link to="/organizer">Check In</router-link>
+            </li>
+            <li v-if="user.permissions.level >= 3">
                 <router-link to="/organizer">Organizer</router-link>
             </li>
-            <li>
+            <li v-if="user.permissions.level >= 5">
                 <router-link to="/owner">Owner</router-link>
             </li>
-            <li>
+            <li v-if="user.status.admitted">
                 <router-link to="/confirmation">Confirmations</router-link>
             </li>
             <li>
-                <router-link to="/application">Application</router-link>
-            </li>
-            <li>
                 <router-link to="/dashboard">Dashboard</router-link>
-                (authenticated)
             </li>
         </ul>
 
@@ -38,13 +40,15 @@
     import Session     from '../src/Session'
 
     export default {
-        data () {
+        data() {
             return {
+                user: Session.getUser(),
                 loggedIn: Session.loggedIn()
             }
         },
         created() {
             AuthService.updateLoginState = state => {
+                this.user = Session.getUser()
                 this.loggedIn = state
             }
         }
