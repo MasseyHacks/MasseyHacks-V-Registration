@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>Dashboard</h2>
-        <p>Current status: {{status}}</p>
+        <p>Current status: {{user.status.name.toUpperCase()}}<br>Logged in as: {{user.fullName}}</p>
     </div>
 </template>
 
@@ -12,7 +12,7 @@
         data() {
             return {
                 data: JSON.stringify(Session.getUser()),
-                status: Session.getUser().status.name.toUpperCase()
+                user: Session.getUser()
             }
         }
     }

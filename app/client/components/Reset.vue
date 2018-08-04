@@ -3,7 +3,7 @@
         <h2>Request Password Reset</h2>
 
         <form @submit.prevent="requestReset">
-            <label><input v-model="email" placeholder="email" autofocus></label>
+            <label><input v-model="email" placeholder="email" autofocus email></label>
             <button type="submit">Submit</button>
             <p v-if="error" class="error">{{error}}</p>
         </form>
@@ -13,8 +13,9 @@
     <div v-else>
         <h2>Password Reset</h2>
 
-        <form @submit.prevent="requestReset">
-            <label><input v-model="email" placeholder="email" autofocus></label>
+        <form @submit.prevent="resetPassword">
+            <label><input v-model="password1" type="password" placeholder="Shhh super secret" autofocus></label><br>
+            <label><input v-model="password2" type="password"placeholder="Just to make sure you remember :)"></label><br>
             <button type="submit">Change Password</button>
             <p v-if="error" class="error">{{error}}</p>
         </form>
@@ -36,6 +37,8 @@
         data () {
             return {
                 email: '',
+                password1: '',
+                password2: '',
                 error: false
             }
         },
@@ -50,6 +53,23 @@
                         swal({
                             title: 'Success!',
                             text: 'An email was sent to ' + this.email + '!',
+                            type: 'success'
+                        }).then(result => {
+                            this.$router.replace('/login')
+                        })
+                    }
+                })
+            },
+            resetPassword() {
+                AuthService.resetPasswordWithToken(this.token, this.password1, (err, data) => {
+                    if (err) {
+                        this.error = err
+                    } else {
+                        this.error = null
+
+                        swal({
+                            title: 'Success!',
+                            text: 'Password changed!',
                             type: 'success'
                         }).then(result => {
                             this.$router.replace('/login')

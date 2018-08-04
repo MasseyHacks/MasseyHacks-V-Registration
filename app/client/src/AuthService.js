@@ -11,6 +11,7 @@ beforeSend: xhr => {
 * */
 
 module.exports = {
+
     register(email, firstName, lastName, password, callback) {
         $.ajax({
             type: 'POST',
@@ -24,8 +25,8 @@ module.exports = {
                 lastName: lastName
             }),
             success: data => {
-                this.updateLoginState(true)
                 Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
                 if (callback) callback(null, data)
             },
             error: data => {
@@ -71,6 +72,25 @@ module.exports = {
             },
             error: data => {
                 Session.destroy()
+                if (callback) callback(JSON.parse(data.responseText)['error'])
+            }
+        });
+    },
+
+    resetPasswordWithToken(token, password, callback) {
+        $.ajax({
+            type: 'POST',
+            url: '/auth/reset',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                token: token,
+                password: password
+            }),
+            success: data => {
+                if (callback) callback(null, data)
+            },
+            error: data => {
                 if (callback) callback(JSON.parse(data.responseText)['error'])
             }
         });

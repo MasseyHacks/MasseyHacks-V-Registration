@@ -183,7 +183,6 @@ const router = new VueRouter({
                });
            }
        },
-       ,
        {
            path: '/reset/:token',
            component: Reset,

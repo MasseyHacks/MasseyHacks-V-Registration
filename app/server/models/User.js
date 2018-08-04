@@ -202,6 +202,10 @@ schema.virtual('permissions.level').get(function () {
 
 schema.virtual('status.name').get(function () {
 
+    if (this.permissions.level >= 2) {
+        return "organizer";
+    }
+
     if (this.status.checkedIn && this.status.statusReleased) {
         return 'checked in';
     }
@@ -221,11 +225,12 @@ schema.virtual('status.name').get(function () {
     if (this.status.admitted && this.status.statusReleased) {
         return "admitted";
     }
-    if (this.status.completedProfile) {
+
+    if (this.status.submittedApplication) {
         return "submitted";
     }
 
-    if (!this.verified) {
+    if (!this.permissions.verified) {
         return "unverified";
     }
 

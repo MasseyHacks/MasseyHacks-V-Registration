@@ -22,7 +22,7 @@ var transporter = nodemailer.createTransport(smtpConfig);
 const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
 
 module.exports = {
-    sendTemplateEmail: function(recipient,templateName,dataPack,callback){//templated email
+    sendTemplateEmail: function(recipient,templateName,dataPack){//templated email
         templateName = templateName.toLowerCase();
         console.log("Sending template email! to:" +recipient+ " tempalte "+templateName+" dp "+dataPack);
         if(validTemplates[templateName]['queueName']){
@@ -37,7 +37,7 @@ module.exports = {
             transporter.verify(function(error, success) {//verify the connection
                 if (error) {
                     console.log(error);
-                    return callback({error:"Cannot connect to SMTP server."});
+                    return;
                 }
             });
 
@@ -52,19 +52,15 @@ module.exports = {
             transporter.sendMail(email_message, function(error,response){//send the email
                 if(error){
                     console.log(error,response);
-                    return callback({error:"Something went wrong when we attempted to send the email."});
                 }
                 else{
                     console.log("email sent");
-                    return callback(null, {message:"Success"});
                 }
             });
         }
-        else{
-            return callback({error:"Invalid email queue!"});
-        }
     },
 
+    /*
     sendBoringEmail : function(recipient,title,message,callback){//plaintext email
 
         transporter.verify(function(error, success) {//verify the connection
@@ -90,7 +86,7 @@ module.exports = {
                 return callback(null, {message:"Success"});
             }
         });
-    },
+    },*/
 
     queueEmail : function(recipient,queue,callback){
 

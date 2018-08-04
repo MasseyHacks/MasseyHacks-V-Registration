@@ -229,6 +229,12 @@ UserController.resetPassword = function (token, password, callback) {
                     return callback({error : "Error: User not found"});
                 }
 
+                if (payload.iat * 1000 < user.passwordLastUpdated) {
+                    return callback({
+                        error: 'Error: Token is revoked.'
+                    });
+                }
+
                 UserController.changePassword(user.email, password, function(err) {
                     if (err) {
                         return callback(err);
