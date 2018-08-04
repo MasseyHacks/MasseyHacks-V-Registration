@@ -1,5 +1,7 @@
 module.exports = {
     create(token, user) {
+        console.log(user)
+
         localStorage.token = token;
         localStorage.userID = user._id;
         localStorage.user = JSON.stringify(user);

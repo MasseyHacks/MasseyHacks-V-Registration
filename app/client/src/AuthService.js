@@ -77,6 +77,24 @@ module.exports = {
         });
     },
 
+    verify(token, callback) {
+        $.ajax({
+            type: 'POST',
+            url: '/auth/verify',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                token: token
+            }),
+            success: data => {
+                if (callback) callback(null)
+            },
+            error: data => {
+                if (callback) callback(JSON.parse(data.responseText)['error'])
+            }
+        });
+    },
+
     resetPasswordWithToken(token, password, callback) {
         $.ajax({
             type: 'POST',

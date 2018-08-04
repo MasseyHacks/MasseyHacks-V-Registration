@@ -33,7 +33,9 @@ UserController.verify = function (token, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log('ur bad');
-            return callback(err);
+            return callback({
+                error: 'Error: Invalid Token'
+            });
         }
 
         if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
@@ -82,22 +84,21 @@ UserController.sendVerificationEmail = function (token, callback) {
             return callback({ error: "Account is not active. Please contact an administrator for assistance." })
         }
 
-        var verificationToken = user.generateVerificationToken();
+        var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
 
         logger.logAction(user._id, user._id, "Requested a verification email.");
 
-        console.log(verificationToken);
+        console.log(verificationURL);
 
         //send the email
         mailer.sendTemplateEmail(user.email,'verifyemails',{
-            nickname: firstname,
-            verifyUrl: "CHANGEME"
+            nickname: user.firstName,
+            verifyUrl: verificationURL
         },function(err){
             if(err) {
                 return callback(err);
             }
         });
-
 
         return callback(null, {message:"Success"});
     });
@@ -211,7 +212,9 @@ UserController.resetPassword = function (token, password, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log("ur bad");
-            return callback(err);
+            return callback({
+                error: 'Error: Invalid Token'
+            });
         }
 
         if (payload.type != "password-reset" || !payload.exp || Date.now() >= payload.exp * 1000) {
@@ -340,7 +343,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
                 "firstName": firstName,
                 "lastName": lastName,
                 "password": User.generateHash(password),
-                "passwordLastUpdated": Date.now(),
+                "passwordLastUpdated": Date.now() - 60000,
                 "timestamp": Date.now()
             }, function (err, user) {
 
@@ -351,11 +354,13 @@ UserController.createUser = function (email, firstName, lastName, password, call
                     return callback(err);
                 } else {
                     var token = user.generateAuthToken();
+                    var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
 
-                    //send the email
-                    mailer.sendTemplateEmail(email,'verifyemails',{
-                        nickname: firstName,
-                        verifyUrl: "CHANGEME"
+                    console.log(verificationURL);
+
+                    mailer.sendTemplateEmail(user.email,'verifyemails',{
+                        nickname: user.firstName,
+                        verifyUrl: verificationURL
                     },function(err){
                         if(err) {
                             return callback(err);

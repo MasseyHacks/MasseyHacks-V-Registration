@@ -10,6 +10,7 @@ import App          from '../components/App.vue'
 import Login        from '../components/Login.vue'
 import Register     from '../components/Register.vue'
 import Reset        from '../components/Reset.vue'
+import Verify       from '../components/Verify.vue'
 
 import Dashboard    from '../components/Dashboard.vue'
 import Error        from '../components/Error.vue'
@@ -184,15 +185,18 @@ const router = new VueRouter({
            }
        },
        {
+           path: '/verify/:token',
+           component: Verify,
+           props: true
+       },
+       {
            path: '/reset/:token',
            component: Reset,
-           props: true,
-           beforeEnter: requireNoAuth
+           props: true
        },
        {
            path: '/reset',
-           component: Reset,
-           beforeEnter: requireNoAuth
+           component: Reset
        },
        {
            path: '/error',

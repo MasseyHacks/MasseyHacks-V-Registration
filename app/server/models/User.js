@@ -106,7 +106,9 @@ schema.statics.getByToken = function (token, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log('ur bad');
-            return callback(err);
+            return callback({
+                error: 'Error: Invalid Token'
+            });
         }
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {

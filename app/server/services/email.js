@@ -11,7 +11,7 @@ var date = new Date();
 var smtpConfig = {
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: false, // upgrade later with STARTTLS
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -24,7 +24,7 @@ const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.js
 module.exports = {
     sendTemplateEmail: function(recipient,templateName,dataPack){//templated email
         templateName = templateName.toLowerCase();
-        console.log("Sending template email! to:" +recipient+ " tempalte "+templateName+" dp "+dataPack);
+        console.log("Sending template email! to:" +recipient+ " template "+templateName+" dp "+dataPack);
         if(validTemplates[templateName]['queueName']){
             //compile the template
 
@@ -45,7 +45,7 @@ module.exports = {
                 from: process.env.EMAIL_CONTACT,
                 to: recipient,
                 subject: title,
-                text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client-old capable of viewing HTML emails.",
+                text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
                 html: htmlEmail
             };
 
