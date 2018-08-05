@@ -1,5 +1,5 @@
-import Raven        from 'raven-js';
-import RavenVue     from 'raven-js/plugins/vue';
+import Raven        from 'raven-js'
+import RavenVue     from 'raven-js/plugins/vue'
 
 module.exports = {
     setSettings(settings) {
@@ -7,7 +7,7 @@ module.exports = {
     },
 
     getSettings() {
-        return JSON.parse(sessionStorage.settings)
+        return sessionStorage.settings ? JSON.parse(sessionStorage.settings) : null
     },
 
     create(token, user) {
@@ -27,7 +27,8 @@ module.exports = {
         delete localStorage.token;
         delete localStorage.userID;
         delete localStorage.user;
-        delete document.cookie;
+
+        document.cookie = ""
 
         Raven.setUserContext()
 
@@ -35,6 +36,18 @@ module.exports = {
             callback();
         }
     },
+
+    /*
+    clearCookies() {
+        var cookies = document.cookie.includes(';') ? document.cookie.split(';') : [document.cookie]
+
+        for (var entry in cookies) {
+
+            entry = entry.includes('=') ? entry.split('='): entry
+
+            document.cookie = entry + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;'
+        }
+    },*/
 
     getTokenData() {
         const token = this.getToken();

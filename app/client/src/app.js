@@ -21,8 +21,8 @@ import Application  from '../components/Application.vue'
 import Confirmation from '../components/Confirmation.vue'
 import Error        from '../components/Error.vue'
 
-import Raven        from 'raven-js';
-import RavenVue     from 'raven-js/plugins/vue';
+import Raven        from 'raven-js'
+import RavenVue     from 'raven-js/plugins/vue'
 
 Raven
     .config('https://4847023082204ef8b35b1ea961567902@sentry.io/1256194')

@@ -12,7 +12,7 @@ var User = require('../models/User');
 
 function getToken(req) {
 
-    var token = req.headers.cookie.split(';')[0].trim();
+    var token = req.headers.cookie ? req.headers.cookie.split(';')[0].trim() : false;
 
     if (!token) {
         token = req.body.token;

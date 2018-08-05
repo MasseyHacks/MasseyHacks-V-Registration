@@ -12,6 +12,18 @@ beforeSend: xhr => {
 
 module.exports = {
 
+    isAuthorized(permissionName) {
+        if (Session.getSettings()) {
+            const permission = Session.getSettings().permissions
+
+            if (permissionName in permission) {
+                return permission[permissionName].permissionLevel <= Session.getUser().permissions.level
+            }
+        }
+
+        return false
+    },
+
     register(email, firstName, lastName, password, callback) {
         $.ajax({
             type: 'POST',
@@ -135,14 +147,6 @@ module.exports = {
     logout (callback) {
         this.updateLoginState(false)
         Session.destroy(callback)
-    },
-
-    hasPermission (rankRequired) {
-        if (this.loggedIn() && Session.getTokenData().permissions['']) {
-
-        }
-
-        return false;
     },
 
     updateLoginState(state) {}

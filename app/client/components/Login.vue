@@ -11,8 +11,8 @@
             <p v-if="error" class="error">{{error}}</p>
         </form>
 
-        <router-link to="/register" v-if="registrationOpen">Register</router-link>
-        <p v-else>Sorry, registration is closed.</p>
+        <router-link to="/register" v-if="settings.registrationOpen">Register</router-link>
+        <p v-else>Sorry, registration is {{settings.timeOpen > Date.now() ? "not open yet!" : "closed!"}}</p>
 
         <router-link to="/reset">Reset</router-link>
     </div>
@@ -28,7 +28,7 @@
                 email: '',
                 pass: '',
                 error: false,
-                registrationOpen: false //Session.getSettings()
+                settings: Session.getSettings()
             }
         },
         methods: {

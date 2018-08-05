@@ -17,7 +17,7 @@
             <li v-if="user.permissions.level >= 3">
                 <router-link to="/organizer">Organizer</router-link>
             </li>
-            <li v-if="user.permissions.level >= 5">
+            <li v-if="AuthService.isAuthorized('owner')">
                 <router-link to="/owner">Owner</router-link>
             </li>
             <li v-if="user.status.admitted">
@@ -43,7 +43,8 @@
         data() {
             return {
                 user: Session.getUser(),
-                loggedIn: Session.loggedIn()
+                loggedIn: Session.loggedIn(),
+                AuthService: AuthService
             }
         },
         created() {
