@@ -1,6 +1,7 @@
 require('dotenv').load();
 
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
+var userFields = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -39,19 +40,28 @@ var schema = new mongoose.Schema({
     }
 });
 
-schema.statics.registrationOpen = function() {
-    return true;
-    return this.findOne({}).timeClose >= Date.now() && Date.now() >= this.findOne({}).timeOpen;
-};
+schema.set('toJSON', {
+    virtuals: true
+});
+
+schema.set('toObject', {
+    virtuals: true
+});
+
+schema.virtual('permissions').get(function() {
+    return userFields.permissions;
+});
+
+schema.virtual('registrationOpen').get(function() {
+   return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
+});
 
 schema.statics.confirmationOpen = function() {
     return this.timeConfirm >= Date.now();
 };
 
 schema.statics.getSettings = function(callback){
-    this
-        .findOne({})
-        .exec(callback);
+    this.findOne({}, '-emailQueue -_id -__v', callback);
 };
 
 module.exports = mongoose.model('Settings', schema);

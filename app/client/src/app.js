@@ -1,6 +1,7 @@
 import Vue          from 'vue'
 import VueRouter    from 'vue-router'
 import swal         from 'sweetalert2'
+import $            from 'jquery'
 
 import Session      from './Session'
 import AuthService  from './AuthService'
@@ -10,9 +11,35 @@ import App          from '../components/App.vue'
 import Login        from '../components/Login.vue'
 import Register     from '../components/Register.vue'
 import Reset        from '../components/Reset.vue'
+import Verify       from '../components/Verify.vue'
 
 import Dashboard    from '../components/Dashboard.vue'
+import Organizer    from '../components/Organizer.vue'
+import Owner        from '../components/Owner.vue'
+import Checkin      from '../components/Checkin.vue'
+import Application  from '../components/Application.vue'
+import Confirmation from '../components/Confirmation.vue'
 import Error        from '../components/Error.vue'
+
+import Raven        from 'raven-js'
+import RavenVue     from 'raven-js/plugins/vue'
+
+$.ajax({
+    type: 'GET',
+    url: '/api/settings',
+    async: false,
+    success: data => {
+        Session.setSettings(data)
+    },
+    error: data => {
+        Raven.captureMessage(JSON.stringify(data))
+    }
+});
+
+Raven
+    .config('https://4847023082204ef8b35b1ea961567902@sentry.io/1256194')
+    .addPlugin(RavenVue, Vue)
+    .install();
 
 Vue.use(VueRouter)
 
@@ -132,27 +159,27 @@ const router = new VueRouter({
        },
        {
            path: '/application',
-           component: Dashboard,
+           component: Application,
            beforeEnter: isVerified
        },
        {
            path: '/confirmation',
-           component: Dashboard,
+           component: Confirmation,
            beforeEnter: isVerified
        },
        {
            path: '/checkin',
-           component: Dashboard,
+           component: Checkin,
            beforeEnter: isCheckin
        },
        {
            path: '/organizer',
-           component: Dashboard,
+           component: Organizer,
            beforeEnter: isAdmin
        },
        {
            path: '/owner',
-           component: Dashboard,
+           component: Owner,
            beforeEnter: isOwner
        },
        {
@@ -183,17 +210,19 @@ const router = new VueRouter({
                });
            }
        },
-       ,
+       {
+           path: '/verify/:token',
+           component: Verify,
+           props: true
+       },
        {
            path: '/reset/:token',
            component: Reset,
-           props: true,
-           beforeEnter: requireNoAuth
+           props: true
        },
        {
            path: '/reset',
-           component: Reset,
-           beforeEnter: requireNoAuth
+           component: Reset
        },
        {
            path: '/error',

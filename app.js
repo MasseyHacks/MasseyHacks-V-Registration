@@ -1,41 +1,60 @@
 require('dotenv').load();
 
-var express = require('express');
-var cors = require('cors')
+const express = require('express');
+const cors = require('cors')
 
-var bodyParser      = require('body-parser');
-var methodOverride  = require('method-override');
-var morgan          = require('morgan');
-var cookieParser    = require('cookie-parser');
+const bodyParser      = require('body-parser');
+const methodOverride  = require('method-override');
+const morgan          = require('morgan');
+const cookieParser    = require('cookie-parser');
+const cluster         = require('cluster');
+const cpuCount        = require('os').cpus().length;
 
-var mongoose        = require('mongoose');
-var port            = process.env.PORT || 3005;
-var database        = process.env.DATABASE || "mongodb://localhost:27017";
+const mongoose        = require('mongoose');
+const port            = process.env.PORT || 3005;
+const database        = process.env.DATABASE || "mongodb://localhost:27017";
 
 // Start configuration
-var organizers      = require('./config/organizers');
-var settings        = require('./config/settings');
+const organizers      = require('./config/organizers');
+const settings        = require('./config/settings');
 
 // Start services
-var autoRemove         = require('./app/server/services/autoRemove');
-var waiverReceiver     = require('./app/server/services/waiverReceiver');
+const autoRemove      = require('./app/server/services/autoRemove');
+const stats           = require('./app/server/services/stats');
+//const waiverReceiver     = require('./app/server/services/waiverReceiver');
 
 var app = express();
 mongoose.connect(database);
 
-// Start routers
-app.use(express.static('app/client/'));
+if (cluster.isMaster) {
+    console.log(`Master ${process.pid} is running`);
 
-var apiRouter = express.Router();
-require('./app/server/routes/api')(apiRouter);
-app.use('/api', apiRouter);
+    for (let i = 0; i < cpuCount; i++) {
+        cluster.fork();
+    }
 
-var authRouter = express.Router();
-require('./app/server/routes/auth')(authRouter);
-app.use('/auth', authRouter);
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(`worker ${worker.process.pid} died`);
+    });
+} else {
 
-require('./app/server/routes')(app);
+    console.log(`Worker ${process.pid} started`);
 
-app.listen(port, function(){
-    console.log('listening on *:' + port);
-});
+    // Start routers
+    app.use(express.static('app/client/'));
+
+    var apiRouter = express.Router();
+    require('./app/server/routes/api')(apiRouter);
+    app.use('/api', apiRouter);
+
+    var authRouter = express.Router();
+    require('./app/server/routes/auth')(authRouter);
+    app.use('/auth', authRouter);
+
+    require('./app/server/routes')(app);
+
+    app.listen(port, function () {
+        console.log('listening on *:' + port);
+    });
+
+}

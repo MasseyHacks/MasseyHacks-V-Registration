@@ -60,8 +60,7 @@ module.exports = function(router) {
 
         console.log(req.body.email + " attempting to login.");
 
-        if (token) {
-
+        if (token && !email && !password) {
             console.log(token);
 
             UserController.loginWithToken(token, function (err, token, user) {
@@ -180,7 +179,7 @@ module.exports = function(router) {
         });
     });
 
-    router.get('/', function (req, res) {
+    router.get('*', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});
     })
 };

@@ -4,7 +4,7 @@ var mongoose    = require('mongoose'),
     bcrypt      = require('bcrypt-nodejs'),
     validator   = require('validator'),
     jwt         = require('jsonwebtoken');
-var fields      = require('../models/data/UserFields');
+    fields      = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -106,7 +106,9 @@ schema.statics.getByToken = function (token, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log('ur bad');
-            return callback(err);
+            return callback({
+                error: 'Error: Invalid Token'
+            });
         }
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {
@@ -171,7 +173,6 @@ schema.virtual('fullName').get(function() {
     return "";
 });
 
-
 schema.virtual('permissions.level').get(function () {
     // 0 - Hacker Unverified
     // 1 - Hacker
@@ -202,6 +203,10 @@ schema.virtual('permissions.level').get(function () {
 
 schema.virtual('status.name').get(function () {
 
+    if (this.permissions.level >= 2) {
+        return "organizer";
+    }
+
     if (this.status.checkedIn && this.status.statusReleased) {
         return 'checked in';
     }
@@ -221,11 +226,12 @@ schema.virtual('status.name').get(function () {
     if (this.status.admitted && this.status.statusReleased) {
         return "admitted";
     }
-    if (this.status.completedProfile) {
+
+    if (this.status.submittedApplication) {
         return "submitted";
     }
 
-    if (!this.verified) {
+    if (!this.permissions.verified) {
         return "unverified";
     }
 

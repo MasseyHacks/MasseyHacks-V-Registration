@@ -8,20 +8,20 @@
                 <router-link v-if="loggedIn" to="/logout">Log out</router-link>
             </li>
 
-            <li  v-if="user.permissions.level >= 1">
+            <li  v-if="AuthService.isAuthorized('verified')">
                 <router-link to="/application">Application</router-link>
             </li>
-            <li v-if="user.permissions.level >= 2">
-                <router-link to="/organizer">Check In</router-link>
+            <li v-if="AuthService.isAuthorized('checkin')">
+                <router-link to="/checkin">Check In</router-link>
             </li>
-            <li v-if="user.permissions.level >= 3">
+            <li v-if="AuthService.isAuthorized('admin')">
                 <router-link to="/organizer">Organizer</router-link>
             </li>
-            <li v-if="user.permissions.level >= 5">
+            <li v-if="AuthService.isAuthorized('owner')">
                 <router-link to="/owner">Owner</router-link>
             </li>
             <li v-if="user.status.admitted">
-                <router-link to="/confirmation">Confirmations</router-link>
+                <router-link to="/confirmation">Confirmation</router-link>
             </li>
             <li>
                 <router-link to="/dashboard">Dashboard</router-link>
@@ -43,7 +43,8 @@
         data() {
             return {
                 user: Session.getUser(),
-                loggedIn: Session.loggedIn()
+                loggedIn: Session.loggedIn(),
+                AuthService: AuthService
             }
         },
         created() {
