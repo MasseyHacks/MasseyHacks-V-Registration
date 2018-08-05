@@ -1,11 +1,26 @@
-module.exports = {
-    create(token, user) {
-        console.log(user)
+import Raven        from 'raven-js';
+import RavenVue     from 'raven-js/plugins/vue';
 
+module.exports = {
+    setSettings(settings) {
+        sessionStorage.settings = JSON.stringify(settings)
+    },
+
+    getSettings() {
+        return JSON.parse(sessionStorage.settings)
+    },
+
+    create(token, user) {
         localStorage.token = token;
         localStorage.userID = user._id;
         localStorage.user = JSON.stringify(user);
         document.cookie = token;
+
+        Raven.setUserContext({
+            email: user.email,
+            id: user._id,
+            name: user.fullName
+        })
     },
 
     destroy(callback) {
@@ -13,6 +28,8 @@ module.exports = {
         delete localStorage.userID;
         delete localStorage.user;
         delete document.cookie;
+
+        Raven.setUserContext()
 
         if (callback) {
             callback();

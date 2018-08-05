@@ -12,7 +12,7 @@
                 <router-link to="/application">Application</router-link>
             </li>
             <li v-if="user.permissions.level >= 2">
-                <router-link to="/organizer">Check In</router-link>
+                <router-link to="/checkin">Check In</router-link>
             </li>
             <li v-if="user.permissions.level >= 3">
                 <router-link to="/organizer">Organizer</router-link>
@@ -21,7 +21,7 @@
                 <router-link to="/owner">Owner</router-link>
             </li>
             <li v-if="user.status.admitted">
-                <router-link to="/confirmation">Confirmations</router-link>
+                <router-link to="/confirmation">Confirmation</router-link>
             </li>
             <li>
                 <router-link to="/dashboard">Dashboard</router-link>

@@ -3,7 +3,8 @@ var validator          = require('validator');
 var express            = require('express');
 
 var User               = require('../models/User');
-var LogEvent               = require('../models/LogEvent');
+var Settings           = require('../models/Settings');
+var LogEvent           = require('../models/LogEvent');
 var UserController     = require('../controllers/UserController');
 var SettingsController = require('../controllers/SettingsController');
 
@@ -21,6 +22,12 @@ module.exports = function(router) {
     // View system log
     router.get('/log', permissions.isDeveloper, function (req, res) {
         LogEvent.getLog(logger.defaultResponse(req, res));
+    });
+
+    // Public
+    // Get global settings
+    router.get('/settings', function (req, res) {
+        SettingsController.getSettings(logger.defaultResponse(req, res));
     });
 
     // Admin
@@ -346,7 +353,7 @@ module.exports = function(router) {
         UserController.waiverOut(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
-    router.get('/', function (req, res) {
+    router.get('*', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});
     });
 };

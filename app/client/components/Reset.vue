@@ -3,7 +3,7 @@
         <h2>Request Password Reset</h2>
 
         <form @submit.prevent="requestReset">
-            <label><input v-model="email" placeholder="email" autofocus email></label>
+            <label><input v-model="email" type="email" placeholder="hacker@hackermail.io" autofocus></label>
             <button type="submit">Submit</button>
             <p v-if="error" class="error">{{error}}</p>
         </form>

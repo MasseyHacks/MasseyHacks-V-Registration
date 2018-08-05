@@ -11,7 +11,8 @@ var User = require('../models/User');
 // 6 - Developer
 
 function getToken(req) {
-    var token = req.headers['x-access-token'];
+
+    var token = req.headers.cookie.split(';')[0].trim();
 
     if (!token) {
         token = req.body.token;

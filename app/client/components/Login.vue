@@ -5,26 +5,30 @@
             You need to login first.
         </p>
         <form @submit.prevent="login">
-            <label><input v-model="email" placeholder="email" autofocus></label>
-            <label><input v-model="pass" placeholder="password" type="password"></label><br>
+            <label><input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required></label>
+            <label><input v-model="pass" placeholder="Shhh super secret" type="password" required></label><br>
             <button type="submit">login</button>
             <p v-if="error" class="error">{{error}}</p>
         </form>
 
-        <router-link to="/register">Register</router-link>
+        <router-link to="/register" v-if="registrationOpen">Register</router-link>
+        <p v-else>Sorry, registration is closed.</p>
+
         <router-link to="/reset">Reset</router-link>
     </div>
 </template>
 
 <script>
     import AuthService from '../src/AuthService'
+    import Session     from '../src/Session'
 
     export default {
         data () {
             return {
                 email: '',
                 pass: '',
-                error: false
+                error: false,
+                registrationOpen: false //Session.getSettings()
             }
         },
         methods: {

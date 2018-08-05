@@ -48,6 +48,7 @@
     "morgan": "^1.9.0",
     "nodemailer": "^4.6.7",
     "nodemon": "^1.18.1",
+    "raven-js": "^3.26.4",
     "request": "^2.87.0",
     "sweetalert2": "^7.26.9",
     "uglify-js": "^3.3.13",

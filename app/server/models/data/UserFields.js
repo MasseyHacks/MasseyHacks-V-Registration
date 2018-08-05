@@ -137,31 +137,37 @@ var permissions = {
         type: Boolean,
         required: true,
         default: false,
+        permissionLevel: 1
     },
     checkin: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permissionLevel: 2
     },
     reviewer: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permissionLevel: 3
     },
     admin: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permissionLevel: 4
     },
     owner: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permissionLevel: 5
     },
     developer: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permissionLevel: 6
     }
 };
 

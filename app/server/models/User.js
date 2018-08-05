@@ -4,7 +4,7 @@ var mongoose    = require('mongoose'),
     bcrypt      = require('bcrypt-nodejs'),
     validator   = require('validator'),
     jwt         = require('jsonwebtoken');
-var fields      = require('../models/data/UserFields');
+    fields      = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -172,7 +172,6 @@ schema.virtual('fullName').get(function() {
 
     return "";
 });
-
 
 schema.virtual('permissions.level').get(function () {
     // 0 - Hacker Unverified

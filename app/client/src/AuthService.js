@@ -137,5 +137,13 @@ module.exports = {
         Session.destroy(callback)
     },
 
+    hasPermission (rankRequired) {
+        if (this.loggedIn() && Session.getTokenData().permissions['']) {
+
+        }
+
+        return false;
+    },
+
     updateLoginState(state) {}
 }

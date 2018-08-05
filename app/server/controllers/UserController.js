@@ -294,7 +294,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({error: "Karl Zhu detected. Please contact an administrator for assistance."}, false);
     }
 
-    if (!Settings.registrationOpen()) {
+    if (!Settings.registrationOpen) {
         return callback({
             error: "Sorry, registration is not open."
         });
