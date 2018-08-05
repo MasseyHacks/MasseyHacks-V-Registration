@@ -8,13 +8,13 @@
                 <router-link v-if="loggedIn" to="/logout">Log out</router-link>
             </li>
 
-            <li  v-if="user.permissions.level >= 1">
+            <li  v-if="AuthService.isAuthorized('verified')">
                 <router-link to="/application">Application</router-link>
             </li>
-            <li v-if="user.permissions.level >= 2">
+            <li v-if="AuthService.isAuthorized('checkin')">
                 <router-link to="/checkin">Check In</router-link>
             </li>
-            <li v-if="user.permissions.level >= 3">
+            <li v-if="AuthService.isAuthorized('admin')">
                 <router-link to="/organizer">Organizer</router-link>
             </li>
             <li v-if="AuthService.isAuthorized('owner')">

@@ -7,7 +7,7 @@ module.exports = {
     },
 
     getSettings() {
-        return sessionStorage.settings ? JSON.parse(sessionStorage.settings) : null
+        return sessionStorage.settings ? JSON.parse(sessionStorage.settings) : {}
     },
 
     create(token, user) {

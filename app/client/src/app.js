@@ -24,6 +24,18 @@ import Error        from '../components/Error.vue'
 import Raven        from 'raven-js'
 import RavenVue     from 'raven-js/plugins/vue'
 
+$.ajax({
+    type: 'GET',
+    url: '/api/settings',
+    async: false,
+    success: data => {
+        Session.setSettings(data)
+    },
+    error: data => {
+        Raven.captureMessage(JSON.stringify(data))
+    }
+});
+
 Raven
     .config('https://4847023082204ef8b35b1ea961567902@sentry.io/1256194')
     .addPlugin(RavenVue, Vue)
@@ -35,18 +47,6 @@ Vue.use(VueRouter)
 if (Session.loggedIn()) {
     AuthService.loginWithToken(Session.getToken())
 }
-
-$.ajax({
-    type: 'GET',
-    url: '/api/settings',
-    success: data => {
-        Session.setSettings(data)
-    },
-    error: data => {
-        Raven.captureMessage(JSON.stringify(data))
-    }
-});
-
 
 function requireAuth (to, from, next) {
     if (!Session.loggedIn()) {
@@ -77,7 +77,7 @@ function isAuthorized (to, from, next, authCondition) {
                 redirect: to.fullPath
             }
         })
-    } else if (Session.getUser() && Session.s.getUser().permissions.level >= authCondition) {
+    } else if (Session.getUser() && Session.getUser().permissions.level >= authCondition) {
         next()
     } else {
         next({

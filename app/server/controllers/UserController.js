@@ -14,8 +14,6 @@ var logger         = require('../services/logger');
 
 var mailer         = require('../services/email');
 
-var stats          = require('../services/stats');
-
 var UserFields     = require('../models/data/UserFields');
 
 var UserController = {};
