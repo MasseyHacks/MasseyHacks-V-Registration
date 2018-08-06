@@ -47,6 +47,26 @@
     transform: translateX(-50%);
 }
 
+#login-form-elements button {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5%;
+    background-color: transparent;
+    color: white;
+    border-radius: 2em;
+    border: 2px solid white;
+    width: 10vw;
+    height: 4vh;
+    font-size: 0.9rem;
+    text-align: center;
+    transition: background-color 0.1s;
+}
+
+#login-form-elements button:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
 
 #login-form-elements {
     margin: auto;

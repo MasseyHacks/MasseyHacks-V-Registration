@@ -5,12 +5,12 @@
             You need to login first.
         </p>
         <div id="login-form-box">
-            <h2 class="subtitle">Login</h2>
+            <h2 class="subtitle">Registration System</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="login">
                     <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
                     <input v-model="pass" placeholder="Shhh super secret" type="password" required><br>
-                    <button type="submit">login</button>
+                    <button type="submit">SIGN IN</button>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
