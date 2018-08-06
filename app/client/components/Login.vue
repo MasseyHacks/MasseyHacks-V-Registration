@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>Login</h2>
+        <h2>MasseyHacks Registration</h2>
         <p v-if="$route.query.redirect">
             You need to login first.
         </p>
