@@ -5,6 +5,7 @@ var handlebars = require('handlebars');
 var mongoose = require('mongoose');
 var Settings = require('../models/Settings');
 var User = require('../models/User');
+var Templates = require('../models/Templates')
 var date = new Date();
 
 
@@ -22,7 +23,7 @@ var transporter = nodemailer.createTransport(smtpConfig);
 const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
 
 module.exports = {
-    sendTemplateEmail: function(recipient,templateName,dataPack){//templated email
+    sendTemplateEmail: function(recipient,templateName,dataPack,templateHTML=null){//templated email
         templateName = templateName.toLowerCase();
         console.log("Sending template email! to:" +recipient+ " template "+templateName+" dp "+dataPack);
         if(validTemplates[templateName]['queueName']){
