@@ -5,7 +5,7 @@
             You need to login first.
         </p>
         <div id="login-form-box">
-            <h2 class="subtitle">Registration System</h2>
+            <h2 class="subtitle">Login</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="login">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
