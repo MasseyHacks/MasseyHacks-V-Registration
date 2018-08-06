@@ -224,10 +224,10 @@ UserController.resetPassword = function (token, password, callback) {
         User.findOne({
                 _id: payload.id
             }, function (err, user) {
-                if (err) {
+                if (err || !user) {
                     console.log(err);
 
-                    return callback({error : "Error: User not found"});
+                    return callback({error : "Error: Something went wrong"});
                 }
 
                 if (payload.iat * 1000 < user.passwordLastUpdated) {
@@ -292,11 +292,13 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({error: "Karl Zhu detected. Please contact an administrator for assistance."}, false);
     }
 
-    if (!Settings.registrationOpen) {
-        return callback({
-            error: "Sorry, registration is not open."
-        });
-    }
+    Settings.getSettings(function(err, settings) {
+        if (!settings.registrationOpen) {
+            return callback({
+                error: "Sorry, registration is not open."
+            });
+        }
+    })
 
     if (!validator.isEmail(email)){
         return callback({
