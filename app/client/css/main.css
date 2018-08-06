@@ -1,3 +1,12 @@
 body {
     font-family: 'Lato Thin'
 }
+
+.pineapple {
+    font-weight: bold;
+    underline: dash;
+}
+
+#asd {
+    font-size: 500px;
+}
