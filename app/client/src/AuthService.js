@@ -84,6 +84,7 @@ module.exports = {
             },
             error: data => {
                 Session.destroy()
+                this.updateLoginState(false)
                 if (callback) callback(JSON.parse(data.responseText)['error'])
             }
         });

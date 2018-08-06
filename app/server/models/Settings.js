@@ -52,6 +52,10 @@ schema.virtual('permissions').get(function() {
     return userFields.permissions;
 });
 
+schema.virtual('applications').get(function() {
+    return this.registrationOpen ? userFields.profile: {};
+});
+
 schema.virtual('registrationOpen').get(function() {
    return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
 });

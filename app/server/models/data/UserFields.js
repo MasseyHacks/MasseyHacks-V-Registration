@@ -94,6 +94,12 @@ var status = {
 
 var hackerApplication = {
 
+    whyUWannaCome: {
+        type: String,
+        maxlength: 1500,
+        questionType: "fullReponse"
+    }
+
 };
 
 var mentorApplication = {
@@ -176,17 +182,20 @@ var schema = {
 
     firstName: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 100
     },
 
     lastName: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 100
     },
 
     email: {
         type: String,
         required: true,
+        maxlength: 100,
         validate: [
             validator.isEmail,
             'Invalid Email'
