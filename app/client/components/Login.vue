@@ -1,15 +1,20 @@
 <template>
-    <div>
-        <h2>MasseyHacks Registration</h2>
+    <div id="main">
+        
         <p v-if="$route.query.redirect">
             You need to login first.
         </p>
-        <form @submit.prevent="login">
-            <label><input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required></label>
-            <label><input v-model="pass" placeholder="Shhh super secret" type="password" required></label><br>
-            <button type="submit">login</button>
-            <p v-if="error" class="error">{{error}}</p>
-        </form>
+        <div id="login-form-box">
+            <h2 class="subtitle">Login</h2>
+            <div id="login-form-elements">
+                <form @submit.prevent="login">
+                    <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
+                    <input v-model="pass" placeholder="Shhh super secret" type="password" required><br>
+                    <button type="submit">login</button>
+                    <p v-if="error" class="error">{{error}}</p>
+                </form>
+            </div>
+        </div>
 
         <router-link to="/register" v-if="settings.registrationOpen">Register</router-link>
         <p v-else>Sorry, registration is {{settings.timeOpen > Date.now() ? "not open yet!" : "closed!"}}</p>

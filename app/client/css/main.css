@@ -1,12 +1,57 @@
-body {
-    font-family: 'Lato Thin'
+@font-face {
+    font-family: "Futura";
+    src: url(../fonts/Futura Light Regular.otf);
 }
 
-.pineapple {
-    font-weight: bold;
-    underline: dash;
+@font-face {
+    font-family: "Futura Bold";
+    src: url(../fonts/Futura Bold.otf);
 }
 
-#asd {
-    font-size: 500px;
+* {
+    font-family: "Futura";
+    font-weight: normal;
+}
+
+#login-form-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
+    width: 30vw;
+    padding: 1%;
+    color: #ffffff;
+    align-items: center;
+    display: grid;
+    margin: auto;
+    font-size: 2em;
+}
+#login-form-box h2 {
+    color: white;
+    font-family: "Futura Bold";
+    text-align: center;
+    font-size: 1em;
+}
+
+::placeholder {
+    color: white;
+    font-size: 1.5em;
+}
+#login-form-box input {
+    padding: 2%;
+    height: 7vh;
+    border: 0px;
+    background: transparent;
+    width: 20vw;
+    border-bottom: 2px solid white;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+#login-form-elements {
+    margin: auto;
+}
+
+#main {
+    display: grid;
 }
