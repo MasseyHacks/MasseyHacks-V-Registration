@@ -43,11 +43,6 @@ Raven
 
 Vue.use(VueRouter)
 
-// Login with token if it exists
-if (Session.loggedIn()) {
-    AuthService.loginWithToken(Session.getToken())
-}
-
 function requireAuth (to, from, next) {
     if (!Session.loggedIn()) {
         next({
@@ -56,14 +51,6 @@ function requireAuth (to, from, next) {
                 redirect: to.fullPath
             }
         })
-    } else {
-        next()
-    }
-}
-
-function requireNoAuth (to, from, next) {
-    if (Session.loggedIn()) {
-        next('/')
     } else {
         next()
     }
@@ -184,13 +171,11 @@ const router = new VueRouter({
        },
        {
            path: '/register',
-           component: Register,
-           beforeEnter: requireNoAuth
+           component: Register
        },
        {
            path: '/login',
-           component: Login,
-           beforeEnter: requireNoAuth
+           component: Login
        },
        {
            path: '/logout',

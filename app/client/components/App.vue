@@ -51,6 +51,17 @@
             AuthService.updateLoginState = state => {
                 this.user = Session.getUser()
                 this.loggedIn = state
+
+                console.log('Setting state to', state)
+
+                if (!state) {
+                    this.$router.replace('/login')
+                }
+            }
+
+            // Login with token if it exists
+            if (Session.loggedIn()) {
+                AuthService.loginWithToken(Session.getToken())
             }
         }
     }

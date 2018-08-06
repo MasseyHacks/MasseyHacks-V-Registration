@@ -54,16 +54,16 @@
                             title: 'Success!',
                             text: 'An email was sent to ' + this.email + '!',
                             type: 'success'
-                        }).then(result => {
-                            this.$router.replace('/login')
                         })
+
+                        this.$router.replace('/login')
                     }
                 })
             },
             resetPassword() {
                 AuthService.resetPasswordWithToken(this.token, this.password1, (err, data) => {
                     if (err) {
-                        this.error = err
+                        this.error = err ? err : 'Error: Something went wrong'
                     } else {
                         this.error = null
 
@@ -71,8 +71,6 @@
                             title: 'Success!',
                             text: 'Password changed!',
                             type: 'success'
-                        }).then(result => {
-                            this.$router.replace('/login')
                         })
                     }
                 })

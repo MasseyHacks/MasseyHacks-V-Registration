@@ -36,6 +36,12 @@
                 settings: Session.getSettings()
             }
         },
+        created() {
+
+            if (Session.loggedIn()) {
+                this.$router.replace('/dashboard')
+            }
+        },
         methods: {
             login () {
                 AuthService.loginWithPassword(this.email, this.pass, (err, data) => {

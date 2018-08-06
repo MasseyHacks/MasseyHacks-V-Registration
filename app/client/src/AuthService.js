@@ -83,8 +83,7 @@ module.exports = {
                 if (callback) callback(null, data)
             },
             error: data => {
-                Session.destroy()
-                this.updateLoginState(false)
+                this.logout()
                 if (callback) callback(JSON.parse(data.responseText)['error'])
             }
         });
@@ -119,6 +118,7 @@ module.exports = {
                 password: password
             }),
             success: data => {
+                this.logout()
                 if (callback) callback(null, data)
             },
             error: data => {
@@ -146,8 +146,8 @@ module.exports = {
     },
 
     logout (callback) {
-        this.updateLoginState(false)
         Session.destroy(callback)
+        this.updateLoginState(false)
     },
 
     updateLoginState(state) {}
