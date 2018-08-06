@@ -1,11 +1,11 @@
 @font-face {
     font-family: "Futura";
-    src: url(../fonts/Berthold Akzidenz Grotesk BE Regular.otf);
+    src: url(../fonts/avenir.otf);
 }
 
 @font-face {
     font-family: "Futura Bold";
-    src: url(../fonts/Berthold Akzidenz Grotesk Bold.otf);
+    src: url(../fonts/avenir-next-bold.ttf);
 }
 
 * {
