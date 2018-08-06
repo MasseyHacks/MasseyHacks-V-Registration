@@ -28,7 +28,7 @@
     color: white;
     font-family: "Futura Bold";
     text-align: center;
-    font-size: 1rem;
+    font-size: 1em;
 }
 
 ::placeholder {
@@ -63,6 +63,7 @@
     font-size: 0.9rem;
     text-align: center;
     transition: background-color 0.1s;
+    transition: border 0.1s;
 }
 
 #login-form-elements button:hover {
@@ -73,7 +74,10 @@
 #login-form-elements {
     margin: auto;
 }
-
+#login-form-elements input:focus{
+    outline: 0px;
+    border-bottom: 2px solid #fc6076;
+}
 #main {
     display: grid;
 }
