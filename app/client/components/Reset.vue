@@ -1,24 +1,35 @@
 <template>
     <div v-if="!token">
-        <h2>Request Password Reset</h2>
 
-        <form @submit.prevent="requestReset">
+<!--         <form @submit.prevent="requestReset">
             <label><input v-model="email" type="email" placeholder="hacker@hackermail.io" autofocus required></label>
             <button type="submit">Submit</button>
             <p v-if="error" class="error">{{error}}</p>
-        </form>
-
+        </form> -->
+        <div id="login-form-box">
+            <h2 class="subtitle">Request Password Reset</h2>
+            <div id="login-form-elements">
+                <form @submit.prevent="requestReset">
+                    <input v-model="email" placeholder="email" type="email" autofocus required>
+                    <button type="submit">sign in</button>
+                    <p v-if="error" class="error">{{error}}</p>
+                </form>
+            </div>
+        </div>
         <router-link to="/login">Login</router-link>
     </div>
     <div v-else>
-        <h2>Password Reset</h2>
-
-        <form @submit.prevent="resetPassword">
-            <label><input v-model="password1" type="password" placeholder="Shhh super secret" autofocus></label><br>
-            <label><input v-model="password2" type="password"placeholder="Just to make sure you remember :)"></label><br>
-            <button type="submit">Change Password</button>
-            <p v-if="error" class="error">{{error}}</p>
-        </form>
+        <div id="login-form-box">
+            <h2 class="subtitle">Reset Password</h2>
+            <div id="login-form-elements">
+                <form @submit.prevent="resetPassword">
+                    <input v-model="password1" placeholder="Password" type="password" required>
+                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
+                    <button type="submit">reset</button>
+                    <p v-if="error" class="error">{{error}}</p>
+                </form>
+            </div>
+        </div>
 
         <router-link to="/login">Login</router-link>
     </div>
