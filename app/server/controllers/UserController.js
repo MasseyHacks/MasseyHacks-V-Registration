@@ -269,10 +269,6 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             mailer.sendTemplateEmail(email,"passwordresetemails",{
                 nickname: user.firstName,
                 resetUrl: resetURL
-            },function(error){
-                if(error){
-                    return callback(error);
-                }
             });
         }
 
@@ -298,7 +294,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
                 error: "Sorry, registration is not open."
             });
         }
-    })
+    });
 
     if (!validator.isEmail(email)){
         return callback({

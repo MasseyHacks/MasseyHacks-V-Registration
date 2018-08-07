@@ -5,7 +5,6 @@ var handlebars = require('handlebars');
 var mongoose = require('mongoose');
 var Settings = require('../models/Settings');
 var User = require('../models/User');
-var Templates = require('../models/Templates')
 var date = new Date();
 
 
@@ -23,13 +22,32 @@ var transporter = nodemailer.createTransport(smtpConfig);
 const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
 
 module.exports = {
+    assembleTemplate : function(queueName){
+        const templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
+        const baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
+
+        const template = baseHTML.replace("{{uniqueValue}}",templateHTML);
+        console.log(template);
+        return template;
+
+    },
+
     sendTemplateEmail: function(recipient,templateName,dataPack,templateHTML=null){//templated email
         templateName = templateName.toLowerCase();
         console.log("Sending template email! to:" +recipient+ " template "+templateName+" dp "+dataPack);
         if(validTemplates[templateName]['queueName']){
             //compile the template
 
-            var htmlTemplate = fs.readFileSync(validTemplates[templateName]['templateLocation'],"utf-8");
+            var htmlTemplate;
+            if(templateHTML){
+                //passed HTML
+                htmlTemplate = templateHTML;
+            }
+            else{
+                //assemble it
+                htmlTemplate = module.exports.assembleTemplate(templateName);
+            }
+
             var template = handlebars.compile(htmlTemplate);
             var htmlEmail = template(dataPack);
             var title = validTemplates[templateName]['emailTitle'];
@@ -38,7 +56,6 @@ module.exports = {
             transporter.verify(function(error, success) {//verify the connection
                 if (error) {
                     console.log(error);
-                    return;
                 }
             });
 
@@ -60,34 +77,6 @@ module.exports = {
             });
         }
     },
-
-    /*
-    sendBoringEmail : function(recipient,title,message,callback){//plaintext email
-
-        transporter.verify(function(error, success) {//verify the connection
-            if (error) {
-                console.log(error);
-                return callback({error:"Cannot connect to SMTP server."});
-            }
-        });
-
-        var email_message = {//construct the message
-            from: process.env.EMAIL_HOST,
-            to: recipient,
-            subject: title,
-            text: message
-        };
-
-        transporter.sendMail(email_message, function(error,response){//send the email
-            if(error){
-                console.log(error,response);
-                return callback({error:"Something went wrong when we attempted to send the email."});
-            }
-            else{
-                return callback(null, {message:"Success"});
-            }
-        });
-    },*/
 
     queueEmail : function(recipient,queue,callback){
 
@@ -143,6 +132,9 @@ module.exports = {
                     //get pending emails from database
                     var emailPendingList = settings.emailQueue[validTemplates[queue]['queueName']];
 
+                    //Assemble the template
+                    const emailHTML = module.exports.assembleTemplate(queue);
+
                     //loop through each
                     emailPendingList.forEach(function (element) {
 
@@ -180,12 +172,7 @@ module.exports = {
                                 console.log(dataPack.dashURL);
 
                                 //send the email
-                                module.exports.sendTemplateEmail(element, queue, dataPack, function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                        return callback({error: "Cannot send email when flushing queue."});
-                                    }
-                                });
+                                module.exports.sendTemplateEmail(element, queue, dataPack,emailHTML);
 
                                 var pullObj = {};
                                 //kinda sketchy too
@@ -202,11 +189,6 @@ module.exports = {
                                     console.log(err, settings.emailQueue);
                                 });
 
-
-                                /*
-                                Settings.findOneAndUpdate({},{
-                                    $pull:pullObj
-                                },{multi:false});*/
                             }
 
                         })
