@@ -11,7 +11,7 @@
             <div id="login-form-elements">
                 <form @submit.prevent="requestReset">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
-                    <button type="submit">sign in</button>
+                    <button type="submit">request</button>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
