@@ -2,3 +2,4 @@ node_modules
 .env
 app/client/dist
 .idea
+.DS_Store
