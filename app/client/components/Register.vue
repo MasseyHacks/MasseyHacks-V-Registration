@@ -10,8 +10,10 @@
                     <input v-model="email" placeholder="Email" type="email" required>
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <button type="submit">register</button>
-                    <router-link to="/login"><button>u has account? login</button></router-link>
+                    <div id="button-row">
+                        <button type="submit">register</button>
+                        <router-link to="/login"><button>u has account? login</button></router-link>
+                    </div>
 
                     <p v-if="error" class="error">{{error}}</p>
                 </form>

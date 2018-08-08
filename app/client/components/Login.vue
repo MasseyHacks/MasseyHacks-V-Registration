@@ -11,11 +11,11 @@
                 <form @submit.prevent="login">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
                     <input v-model="pass" placeholder="password" type="password" required><br>
-
-                    <button type="submit">sign in</button>
-                    <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
-                    <router-link to="/reset"><button>reset pw</button></router-link>
-
+                    <div id="button-row">
+                        <button type="submit">sign in</button>
+                        <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
+                        <router-link to="/reset"><button>reset pw</button></router-link>
+                    </div>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
