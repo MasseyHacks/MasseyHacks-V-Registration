@@ -266,10 +266,11 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 
             console.log(resetURL);
 
-            mailer.sendTemplateEmail(email,"passwordresetemails",{
+            /*mailer.sendTemplateEmail(email,"passwordresetemails",{
                 nickname: user.firstName,
                 resetUrl: resetURL
-            });
+            });*/
+            mailer.flushQueueUser(email);
         }
 
         return callback();

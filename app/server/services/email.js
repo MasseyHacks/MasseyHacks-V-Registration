@@ -201,5 +201,26 @@ module.exports = {
 
             });
         }
+    },
+
+    flushQueueUser : function(userEmail,callback){
+
+        console.log('Attempting user queue flush');
+
+        //check if the given queue is valid
+        Settings.findOne({},function(err,settings){
+            if(err){
+                return callback(err);
+            }
+            else{
+                for(var emailQueue in settings.emailQueue){
+                    if(typeof settings.emailQueue[emailQueue] !== "function"){
+                        for(var i=0; i < settings.emailQueue[emailQueue].length; i++){
+                            console.log(emailQueue + " " + email);
+                        }
+                    }
+                }
+            }
+        })
     }
 };
