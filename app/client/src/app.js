@@ -37,7 +37,7 @@ $.ajax({
 });
 
 Raven
-    .config('https://4847023082204ef8b35b1ea961567902@sentry.io/1256194')
+    .config(CLIENT_RAVEN_KEY) //Sub in key with webpack
     .addPlugin(RavenVue, Vue)
     .install();
 

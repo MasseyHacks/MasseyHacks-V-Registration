@@ -112,7 +112,7 @@ module.exports = function(router) {
                 return res.status(400).json({error: "Error: Invalid token"});
             }
 
-            return res.status(400).json(msg);
+            return res.json(msg);
         });
     });
 
