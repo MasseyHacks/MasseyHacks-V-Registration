@@ -76,11 +76,6 @@ function filterSensitive(user, permissionLevel) {
     return u;
 }
 
-// Helper function
-schema.statics.filterSensitive = function(user, permissionLevel) {
-    return filterSenstive(user, permissionLevel);
-};
-
 schema.statics.getByID = function(id, callback, permissionLevel) {
 
     if (permissionLevel == null) {
