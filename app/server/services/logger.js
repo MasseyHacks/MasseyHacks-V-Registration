@@ -1,6 +1,7 @@
 var LogEvent    = require('../models/LogEvent');
 var request = require('request');
 var permission = require('../services/permissions');
+var User = require('../models/User');
 
 module.exports = {
     defaultResponse : function(req, res){
