@@ -16,5 +16,11 @@
     "firstName" : "James",
     "lastName" : "Xu",
     "permission": "developer"
+  },
+  "ryan" : {
+    "email": "ryan@masseyhacks.ca",
+    "firstName" : "Ryan",
+    "lastName" : "Zhang",
+    "permission": "developer"
   }
 }
