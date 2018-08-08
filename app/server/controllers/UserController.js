@@ -293,82 +293,82 @@ UserController.createUser = function (email, firstName, lastName, password, call
             return callback({
                 error: "Sorry, registration is not open."
             });
-        }
-    });
-
-    if (!validator.isEmail(email)){
-        return callback({
-            error: "Error: Invalid Email Format"
-        });
-    }
-
-    if (email.includes('"') || firstName.includes('"') || lastName.includes('"')) {
-        return callback({
-            error: "Error: Invalid Characters"
-        });
-    }
-
-    if (!password || password.length < 6){
-        return callback({ error: "Error: Password must be 6 or more characters."}, false);
-    }
-
-    // Special stuff
-    if (password == "Password123" && firstName == "Adam") {
-        return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
-    }
-
-    if (firstName.length > 50 || lastName.length > 50) {
-        return callback({ error: "Error: Name is too long!"});
-    }
-
-    if (email.length > 50) {
-        return callback({ error: "Error: Email is too long!"});
-    }
-
-    email = email.toLowerCase();
-
-    User.getByEmail(email, function (err, user) {
-        if (!err || user) {
-            return callback({
-                error: 'Error: An account for this email already exists.'
-            });
         } else {
+            if (!validator.isEmail(email)){
+                return callback({
+                    error: "Error: Invalid Email Format"
+                });
+            }
 
-            User.create({
-                "email": email,
-                "firstName": firstName,
-                "lastName": lastName,
-                "password": User.generateHash(password),
-                "passwordLastUpdated": Date.now() - 60000,
-                "timestamp": Date.now()
-            }, function (err, user) {
+            if (email.includes('"') || firstName.includes('"') || lastName.includes('"')) {
+                return callback({
+                    error: "Error: Invalid Characters"
+                });
+            }
 
-                console.log("dank");
+            if (!password || password.length < 6){
+                return callback({ error: "Error: Password must be 6 or more characters."}, false);
+            }
 
-                if (err || !user) {
-                    console.log(err);
-                    return callback(err);
+            // Special stuff
+            if (password == "Password123" && firstName == "Adam") {
+                return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
+            }
+
+            if (firstName.length > 50 || lastName.length > 50) {
+                return callback({ error: "Error: Name is too long!"});
+            }
+
+            if (email.length > 50) {
+                return callback({ error: "Error: Email is too long!"});
+            }
+
+            email = email.toLowerCase();
+
+            User.getByEmail(email, function (err, user) {
+                if (!err || user) {
+                    return callback({
+                        error: 'Error: An account for this email already exists.'
+                    });
                 } else {
-                    var token = user.generateAuthToken();
-                    var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
 
-                    console.log(verificationURL);
+                    User.create({
+                        "email": email,
+                        "firstName": firstName,
+                        "lastName": lastName,
+                        "password": User.generateHash(password),
+                        "passwordLastUpdated": Date.now() - 60000,
+                        "timestamp": Date.now()
+                    }, function (err, user) {
 
-                    mailer.sendTemplateEmail(user.email,'verifyemails',{
-                        nickname: user.firstName,
-                        verifyUrl: verificationURL
-                    },function(err){
-                        if(err) {
+                        console.log("dank");
+
+                        if (err || !user) {
+                            console.log(err);
                             return callback(err);
+                        } else {
+                            var token = user.generateAuthToken();
+                            var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
+
+                            console.log(verificationURL);
+
+                            mailer.sendTemplateEmail(user.email,'verifyemails',{
+                                nickname: user.firstName,
+                                verifyUrl: verificationURL
+                            },function(err){
+                                if(err) {
+                                    return callback(err);
+                                }
+                            });
+
+                            user = user.toJSON();
+                            delete user.password;
+
+                            logger.logAction(user._id, user._id, "Created an account.");
+
+                            return callback(null, token, user);
                         }
                     });
-
-                    user = user.toJSON();
-                    delete user.password;
-
-                    logger.logAction(user._id, user._id, "Created an account.");
-
-                    return callback(null, token, user);
                 }
             });
         }
