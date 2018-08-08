@@ -20,7 +20,7 @@
                     <input v-model="email" placeholder="Email" type="email" required>
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <button type="submit">login</button>
+                    <button type="submit">register</button>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
