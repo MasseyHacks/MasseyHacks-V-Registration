@@ -41,15 +41,7 @@ module.exports = {
 
                 return res.json(err);
             } else {
-                var token = permission.getToken(req);
-
-                User.filterSensitive(token, data, function(err, data) {
-                    if (err) {
-                        return res.json(err);
-                    } else {
-                        return res.json(data);
-                    }
-                })
+                return res.data(data);
             }
         };
     },
