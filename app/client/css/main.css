@@ -20,7 +20,9 @@
 .vertical-centered {
     transform: translateY(-50%);
 }
-
+.primary-button {
+    border-color: #fc6076;
+}
 #login-form-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);

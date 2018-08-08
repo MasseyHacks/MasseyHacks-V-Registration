@@ -11,8 +11,8 @@
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
                     <div id="button-row">
-                        <button type="submit">register</button>
-                        <router-link to="/login"><button>u has account? login</button></router-link>
+                        <button type="submit" class="primary-button">register</button>
+                        <router-link to="/login"><button>back</button></router-link>
                     </div>
 
                     <p v-if="error" class="error">{{error}}</p>

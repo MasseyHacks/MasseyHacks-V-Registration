@@ -13,8 +13,8 @@
                 <form @submit.prevent="requestReset">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
                     <div id="button-row">
-                        <button type="submit">request</button>
-                        <router-link to="/login"><button>u gud? login</button></router-link>
+                        <button type="submit" class="primary-button">request</button>
+                        <router-link to="/login"><button>back</button></router-link>
                     </div>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
