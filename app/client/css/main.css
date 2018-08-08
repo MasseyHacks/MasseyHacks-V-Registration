@@ -61,6 +61,7 @@
 /*    position: relative;
     left: 50%;
     transform: translateX(-50%);*/
+    margin: auto;
     margin-top: 5%;
     background-color: transparent;
     color: white;
@@ -74,9 +75,10 @@
     transition: border 0.1s;
 }
 #button-row {
-    position: relative;
+/*    position: relative;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
+    margin: auto;
 }
 #login-form-elements button:hover {
     background-color: rgba(255,255,255,0.2);
