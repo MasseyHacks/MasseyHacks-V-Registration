@@ -75,6 +75,7 @@
     transition: border 0.1s;
 }
 #button-row {
+    text-align: center;
 /*    position: relative;
     left: 50%;
     transform: translateX(-50%);*/
