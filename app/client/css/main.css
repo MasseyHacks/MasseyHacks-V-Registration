@@ -58,9 +58,9 @@
 }
 
 #login-form-elements button {
-    position: relative;
+/*    position: relative;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
     margin-top: 5%;
     background-color: transparent;
     color: white;
