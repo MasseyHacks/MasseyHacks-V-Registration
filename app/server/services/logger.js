@@ -1,5 +1,6 @@
 var LogEvent    = require('../models/LogEvent');
 var request = require('request');
+var permission = require('permissions');
 
 module.exports = {
     defaultResponse : function(req, res){
@@ -39,7 +40,7 @@ module.exports = {
 
                 return res.json(err);
             } else {
-                var token = getToken(req);
+                var token = permission.getToken(req);
 
                 User.filterSensitive(token, data, function(err, data) {
                     if (err) {
