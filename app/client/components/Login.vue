@@ -37,7 +37,6 @@
             }
         },
         created() {
-
             if (Session.loggedIn()) {
                 this.$router.replace('/dashboard')
             }

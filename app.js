@@ -24,7 +24,7 @@ const stats           = require('./app/server/services/stats');
 //const waiverReceiver     = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
 
-Raven.config('https://3a2e17bfabed451a97d9237d87e6d72b@sentry.io/1256420').install();
+Raven.config(process.env.SERVER_RAVEN_KEY).install();
 
 var app = express();
 mongoose.connect(database);

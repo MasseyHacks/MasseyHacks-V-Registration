@@ -32,6 +32,7 @@
 
 <script>
     import AuthService from '../src/AuthService'
+    import Session     from '../src/Session'
 
     export default {
         data () {
@@ -42,6 +43,11 @@
                 password1: '',
                 password2: '',
                 error: false
+            }
+        },
+        created() {
+            if (Session.loggedIn()) {
+                this.$router.replace('/dashboard')
             }
         },
         methods: {

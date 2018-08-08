@@ -26,7 +26,7 @@ module.exports = {
         const templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
         const baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
 
-        const template = baseHTML.replace("{{uniqueValue}}",templateHTML);
+        const template = baseHTML.replace("{{emailData}}",templateHTML);
         console.log(template);
         return template;
 

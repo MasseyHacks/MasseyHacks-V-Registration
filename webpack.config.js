@@ -1,4 +1,5 @@
-var webpack = require('webpack')
+require('dotenv').load();
+const webpack = require('webpack')
 
 module.exports = {
     entry: [
@@ -34,5 +35,10 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.common.js'
         }
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY)
+        })
+    ]
 }

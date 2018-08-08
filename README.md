@@ -1,1 +1,1 @@
-# HUBG-Website
+# MasseyHacks Registration System
