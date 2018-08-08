@@ -13,6 +13,14 @@
     font-weight: normal;
 }
 
+.spacer {
+    height: 50vh;
+}
+
+.vertical-centered {
+    transform: translateY(-50%);
+}
+
 #login-form-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
@@ -102,4 +110,20 @@
         height: 6vh;
         font-size: 3rem;
     }
+}
+
+/* State transitions */
+.child-view {
+
+    transition: all .5s cubic-bezier(.55,0,.1,1);
+}
+.slide-left-enter, .slide-right-leave-active {
+    opacity: 0;
+    -webkit-transform: translate(30px, 0);
+    transform: translate(30px, 0);
+}
+.slide-left-leave-active, .slide-right-enter {
+    opacity: 0;
+    -webkit-transform: translate(-30px, 0);
+    transform: translate(-30px, 0);
 }

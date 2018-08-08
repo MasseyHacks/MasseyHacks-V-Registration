@@ -19,6 +19,10 @@ var emailQueue = {
 
 var schema = new mongoose.Schema({
     emailQueue : emailQueue,
+    pendingSchools : {
+        type: [String],
+        required: true
+    },
     schools: {
         type: [String],
         required: true
@@ -53,7 +57,7 @@ schema.virtual('permissions').get(function() {
 });
 
 schema.virtual('applications').get(function() {
-    return this.registrationOpen ? userFields.profile: {};
+    return Date.now() >= this.timeOpen ? userFields.profile : {"error":"Applications are not open yet"};
 });
 
 schema.virtual('registrationOpen').get(function() {
@@ -65,7 +69,7 @@ schema.statics.confirmationOpen = function() {
 };
 
 schema.statics.getSettings = function(callback){
-    this.findOne({}, '-emailQueue -_id -__v', callback);
+    this.findOne({}, '-emailQueue -_id -__v -newSchools', callback);
 };
 
 module.exports = mongoose.model('Settings', schema);

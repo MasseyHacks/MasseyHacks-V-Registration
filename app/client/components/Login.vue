@@ -1,25 +1,26 @@
 <template>
     <div id="main">
-        
-        <p v-if="$route.query.redirect">
-            You need to login first.
-        </p>
-        <div id="login-form-box">
+        <div class="spacer"></div>
+        <div id="login-form-box" class="vertical-centered">
+            <p v-if="$route.query.redirect">
+                You need to login first.
+            </p>
+
             <h2 class="subtitle">Login</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="login">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
                     <input v-model="pass" placeholder="password" type="password" required><br>
+
                     <button type="submit">sign in</button>
+                    <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
+                    <router-link to="/reset"><button>reset pw</button></router-link>
+
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
 
-        <router-link to="/register" v-if="settings.registrationOpen">Register</router-link>
-        <p v-else>Sorry, registration is {{settings.timeOpen > Date.now() ? "not open yet!" : "closed!"}}</p>
-
-        <router-link to="/reset">Reset</router-link>
     </div>
 </template>
 

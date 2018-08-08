@@ -36,6 +36,26 @@ module.exports = function(router) {
         UserController.getStats(logger.defaultResponse(req, res))
     })
 
+    // Admin
+    // Get schools pending approval
+    router.get('/pendingSchools', permissions.isOwner, function (req, res) {
+        SettingsController.getPendingSchools(logger.defaultResponse(req, res))
+    })
+
+    // Admin
+    // Approve pending school
+    router.post('/approveSchool', permissions.isOwner, function (req, res) {
+        var schoolName = req.body.schoolName;
+        SettingsController.approvePendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
+    });
+
+    // Admin
+    // Reject pending school
+    router.post('/rejectSchool', permissions.isOwner, function (req, res) {
+        var schoolName = req.body.schoolName;
+        SettingsController.rejectPendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
+    });
+
     // Self or admin
     // Get self or user
     router.get('/user/:userID', permissions.isUser, function(req, res) {

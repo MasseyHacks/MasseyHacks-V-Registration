@@ -93,13 +93,26 @@ var status = {
 };
 
 var hackerApplication = {
-
     whyUWannaCome: {
         type: String,
         maxlength: 1500,
-        questionType: "fullReponse"
-    }
+        questionType: "fullResponse",
+        question: "Why do you want to come to MasseyHacks V?"
+    },
 
+    skillQuestion: {
+        type: Boolean,
+        questionType: "boolean",
+        question: "Are bananas yellow?"
+    },
+
+    grade: {
+        type: String,
+        questionType: "dropdown",
+        enum: {
+            values: "<=8 9 10 11 12"
+        }
+    }
 };
 
 var mentorApplication = {

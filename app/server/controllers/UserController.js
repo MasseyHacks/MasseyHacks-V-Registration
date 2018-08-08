@@ -485,10 +485,6 @@ UserController.updateProfile = function (id, profile, callback){
                     }
                 }
 
-                if (profileValidated.firstname.length > 0 && profileValidated.lastname.length > 0) {
-                    profile.name = profile.firstname + " " + profile.lastname;
-                }
-
                 User.findOne(
                     {
                         _id: id,
@@ -502,15 +498,6 @@ UserController.updateProfile = function (id, profile, callback){
                             });
                         }
 
-                        var d = Date.now();
-                        var lastUpdated = (Date.now() > user.lastUpdated) ? Date.now() : user.lastUpdated;
-
-                        if (user.status.admitted || user.status.rejected) {
-                            currentWave = user.wave;
-                        } else if (user.wave) {
-                            currentWave = (currentWave > user.wave) ? currentWave : user.wave;
-                        }
-
                         User.findOneAndUpdate({
                                 _id: id,
                                 verified: true
@@ -518,7 +505,7 @@ UserController.updateProfile = function (id, profile, callback){
                             {
                                 $set: {
                                     'sname': profile.name.toLowerCase(),
-                                    'lastUpdated': lastUpdated,
+                                    'lastUpdated': Date.now(),
                                     'profile': profileValidated,
                                     'status.completedProfile': true
                                 }

@@ -1,7 +1,5 @@
 <template>
     <div id="app">
-        <h1>MasseyHacks | Platform Internal Services</h1>
-
         <!-- Common elements -->
         <ul v-if="loggedIn">
             <li>
@@ -30,7 +28,9 @@
 
         <!-- Router injects stuff in here -->
         <template v-if="$route.matched.length">
-            <router-view></router-view>
+            <transition :name="transitionName">
+                <router-view class="child-view"></router-view>
+            </transition>
         </template>
     </div>
 </template>
@@ -40,11 +40,18 @@
     import Session     from '../src/Session'
 
     export default {
+        beforeRouteUpdate (to, from, next) {
+            const toDepth = to.path.split('/').length
+            const fromDepth = from.path.split('/').length
+            this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+            next()
+        },
         data() {
             return {
                 user: Session.getUser(),
                 loggedIn: Session.loggedIn(),
-                AuthService: AuthService
+                AuthService: AuthService,
+                transitionName: 'slide-left'
             }
         },
         created() {

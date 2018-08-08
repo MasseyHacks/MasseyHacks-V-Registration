@@ -6,20 +6,22 @@
             <button type="submit">Submit</button>
             <p v-if="error" class="error">{{error}}</p>
         </form> -->
-        <div id="login-form-box">
+        <div class="spacer"></div>
+        <div id="login-form-box" class="vertical-centered">
             <h2 class="subtitle">Request Password Reset</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="requestReset">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
                     <button type="submit">request</button>
+                    <router-link to="/login"><button>u gud? login</button></router-link>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
-        <router-link to="/login">Login</router-link>
     </div>
     <div v-else>
-        <div id="login-form-box">
+        <div class="spacer"></div>
+        <div id="login-form-box" class="vertical-centered">
             <h2 class="subtitle">Reset Password</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="resetPassword">
@@ -30,8 +32,6 @@
                 </form>
             </div>
         </div>
-
-        <router-link to="/login">Login</router-link>
     </div>
 </template>
 

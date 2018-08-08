@@ -1,17 +1,7 @@
 <template>
     <div>
-        <h2>Register</h2>
-        <!--
-        <form @submit.prevent="register">
-            <label><input v-model="firstName" placeholder="Master" required autofocus></label><br>
-            <label><input v-model="lastName" placeholder="Hax0r" required></label><br>
-            <label><input v-model="email" placeholder="hacker@hackermail.io" required></label><br>
-            <label><input v-model="password1" placeholder="Shhh... super secret" type="password" required></label><br>
-            <label><input v-model="password2" placeholder="Just to make sure you remember :)" type="password" required></label><br>
-            <button type="submit">login</button>
-            <p v-if="error" class="error">{{error}}</p>
-        </form>-->
-        <div id="login-form-box">
+        <div class="spacer"></div>
+        <div id="login-form-box" class="vertical-centered">
             <h2 class="subtitle">Registration System</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="register">
@@ -20,13 +10,13 @@
                     <input v-model="email" placeholder="Email" type="email" required>
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <button type="submit">login</button>
+                    <button type="submit">register</button>
+                    <router-link to="/login"><button>u has account? login</button></router-link>
+
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
-
-        <router-link to="/login">Already have an account? Login here</router-link>
     </div>
 </template>
 

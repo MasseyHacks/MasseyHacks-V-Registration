@@ -162,12 +162,31 @@ const router = new VueRouter({
        {
            path: '/organizer',
            component: Organizer,
-           beforeEnter: isAdmin
+           beforeEnter: isAdmin,
+           children: [
+               {
+                   path: 'statistics', component: Reset
+               },
+               {
+                   path: 'users', component: Dashboard
+               },
+               {
+                   path: 'review', component: Checkin
+               }
+           ]
        },
        {
            path: '/owner',
            component: Owner,
-           beforeEnter: isOwner
+           beforeEnter: isOwner,
+           children: [
+               {
+                   path: '/settings', component: Login
+               },
+               {
+                   path: '/log', component: Login
+               }
+           ]
        },
        {
            path: '/register',

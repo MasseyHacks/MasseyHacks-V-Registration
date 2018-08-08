@@ -26,7 +26,7 @@ module.exports = {
         const templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
         const baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
 
-        const template = baseHTML.replace("{{emailData}}",templateHTML);
+        const template = baseHTML.replace('{{emailData}}',templateHTML);
         console.log(template);
         return template;
 
@@ -34,7 +34,7 @@ module.exports = {
 
     sendTemplateEmail: function(recipient,templateName,dataPack,templateHTML=null){//templated email
         templateName = templateName.toLowerCase();
-        console.log("Sending template email! to:" +recipient+ " template "+templateName+" dp "+dataPack);
+        console.log('Sending template email! to:' +recipient+ ' template '+templateName+' dp '+dataPack);
         if(validTemplates[templateName]['queueName']){
             //compile the template
 
@@ -63,7 +63,7 @@ module.exports = {
                 from: process.env.EMAIL_CONTACT,
                 to: recipient,
                 subject: title,
-                text: "Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.",
+                text: 'Your email client does not support the viewing of HTML emails. Please consider enabling HTML emails in your settings, or downloading a client capable of viewing HTML emails.',
                 html: htmlEmail
             };
 
@@ -72,7 +72,7 @@ module.exports = {
                     console.log(error,response);
                 }
                 else{
-                    console.log("email sent");
+                    console.log('email sent');
                 }
             });
         }
@@ -84,8 +84,8 @@ module.exports = {
 
         //check if the given queue is valid
         if(validTemplates[queue] === null){//invalid
-            console.log("Invalid email queue!");
-            return callback({error:"Invalid email queue."});
+            console.log('Invalid email queue!');
+            return callback({error:'Invalid email queue.'});
         }
         else{//valid
             var pushObj = {};
@@ -99,10 +99,10 @@ module.exports = {
             }, function(err,settings){
                 if(err){
                     console.log(err);
-                    return callback({error:"Cannot add email to the queue."});
+                    return callback({error:'Cannot add email to the queue.'});
                 }
                 else{
-                    return callback(null,{message:"Success"});
+                    return callback(null,{message:'Success'});
                 }
             });
         }
@@ -113,18 +113,18 @@ module.exports = {
     flushQueue : function(queue,callback){
         queue = queue.toLowerCase();
 
-        console.log("Attempting queue flush");
+        console.log('Attempting queue flush');
 
         //check if the given queue is valid
         if(!queue || validTemplates[queue]['queueName'] === null || !validTemplates[queue]['canQueue']){//invalid
-            console.log("Invalid email queue!");
-            return callback({error:"Invalid email queue."});
+            console.log('Invalid email queue!');
+            return callback({error:'Invalid email queue.'});
         }
         else{//valid
             //return all emails from that queue
             Settings.findOne({}, function(err, settings) {
                 if(err){
-                    return callback({error:"Cannot find the email queue."});
+                    return callback({error:'Cannot find the email queue.'});
                 }
                 else {
                     console.log('Flushing Queue...', settings.emailQueue[validTemplates[queue]['queueName']]);//debug
@@ -141,12 +141,12 @@ module.exports = {
                         //return user properties and send email
                         User.getByEmail(element, function (error, user) {
                             if (error) {
-                                return callback({error: "The provided email does not correspond to a user."});
+                                return callback({error: 'The provided email does not correspond to a user.'});
                             }
                             else {
                                 //define the dates
                                 date.setTime(settings.timeConfirm);
-                                const confirmByString = date.toLocaleDateString("en-US", {
+                                const confirmByString = date.toLocaleDateString('en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -154,7 +154,7 @@ module.exports = {
                                 });
 
                                 date.setTime(settings.timeClose);
-                                const submitByString = date.toLocaleDateString("en-US", {
+                                const submitByString = date.toLocaleDateString('en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -195,7 +195,7 @@ module.exports = {
 
                     });
 
-                    return callback(null, {message: "Success"});
+                    return callback(null, {message: 'Success'});
 
                 }
 
