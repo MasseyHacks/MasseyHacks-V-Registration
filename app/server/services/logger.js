@@ -39,7 +39,15 @@ module.exports = {
 
                 return res.json(err);
             } else {
-                return res.json(data);
+                var token = getToken(req);
+
+                User.filterSensitive(token, data, function(err, data) {
+                    if (err) {
+                        return res.json(err);
+                    } else {
+                        return res.json(data);
+                    }
+                })
             }
         };
     },

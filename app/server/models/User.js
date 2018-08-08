@@ -239,9 +239,8 @@ schema.virtual('status.name').get(function () {
 
 });
 
-schema.static.filterSensitive = function (excuterID, user, callback) {
-    u = user.toJson();
-    this.findOne({_id: excuterID}, function (err, user) {
+schema.static.filterSensitive = function (excuterToken, user, callback) {
+    this.getByToken(excuterToken, function (err, user) {
         var permissionLevel = 0;
 
         if (user) {
@@ -261,10 +260,13 @@ schema.static.filterSensitive = function (excuterID, user, callback) {
             for (var i = 0; i < keys.length; i++) {
                 if("type" in runner[keys[i]]) {
                     if (runner[keys[i]].permission >= permissionLevel){
-                        delete userpath[keys[i]];
+                        try {
+                            delete userpath[keys[i]];
+                        } catch (e) {
+                            console.log(e)
+                        }
                     }
                 } else {
-                    console.log()
                     queue.push([runner[keys[i]], userpath[keys[i]]])
                 }
             }
