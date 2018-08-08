@@ -41,7 +41,7 @@ module.exports = {
 
                 return res.json(err);
             } else {
-                return res.data(data);
+                return res.json(data);
             }
         };
     },
