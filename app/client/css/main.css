@@ -21,7 +21,7 @@
     transform: translateY(-50%);
 }
 .primary-button {
-    border-color: #fc6076;
+    border-bottom: 2px solid #fc6076 !important;
 }
 #login-form-box {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
