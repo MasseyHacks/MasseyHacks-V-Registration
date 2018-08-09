@@ -145,7 +145,7 @@ h2 {
 
 #app-view {
     position: relative;
-    left: calc(25vw+50px);
+    left: 25vw;
 }
 
 .app-screen {
