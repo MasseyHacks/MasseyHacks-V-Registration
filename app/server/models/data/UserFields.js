@@ -25,7 +25,6 @@ var status = {
         type: Boolean,
         required: true,
         default: false,
-        permission: ADMIN
     },
     submittedApplication: {
         type: Boolean,
@@ -41,7 +40,6 @@ var status = {
         type: Boolean,
         required: true,
         default: false,
-        permission: ADMIN
     },
     admitted: {
         type: Boolean,
@@ -49,7 +47,8 @@ var status = {
         default: false
     },
     admittedBy: {
-        type: String
+        type: String,
+        permission: ADMIN
     },
     confirmed: {
         type: Boolean,
@@ -89,7 +88,8 @@ var status = {
     },
     statusReleased: {
         type: Boolean,
-        default: false
+        default: false,
+        permission: ADMIN
     }
 };
 
@@ -245,20 +245,24 @@ var schema = {
     },
 
     applicationAdmit: {
-        type: [String]
+        type: [String],
+        permission: ADMIN
     },
 
     applicationReject: {
-        type: [String]
+        type: [String],
+        permission: ADMIN
     },
 
     applicationVotes: {
-        type: [String]
+        type: [String],
+        permission: ADMIN
     },
 
     numVotes : {
         type: Number,
-        default: 0
+        default: 0,
+        permission: REVIEW
     },
 
     status: status,
