@@ -36,24 +36,31 @@ module.exports = function(router) {
         UserController.getStats(logger.defaultResponse(req, res))
     })
 
-    // Admin
+    // Owner
     // Get schools pending approval
     router.get('/pendingSchools', permissions.isOwner, function (req, res) {
         SettingsController.getPendingSchools(logger.defaultResponse(req, res))
     })
 
-    // Admin
+    // Owner
     // Approve pending school
     router.post('/approveSchool', permissions.isOwner, function (req, res) {
         var schoolName = req.body.schoolName;
         SettingsController.approvePendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
     });
 
-    // Admin
+    // Owner
     // Reject pending school
     router.post('/rejectSchool', permissions.isOwner, function (req, res) {
         var schoolName = req.body.schoolName;
         SettingsController.rejectPendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Reject pending school
+    router.post('/applicationTime', permissions.isOwner, function (req, res) {
+        var newTimes = req.body;
+        SettingsController.modifyTime(req.userExecute, newTimes,logger.defaultResponse(req, res));
     });
 
     // Self or admin
@@ -129,6 +136,10 @@ module.exports = function(router) {
         var userID = req.body.userID;
         UserController.resetAdmissionState(req.userExecute, userID, logger.defaultResponse(req, res));
     });
+
+    /**
+     * To-Do: Resetting admission state should also remove emails from queue
+     */
 
     // Owner
     // Flush email queue for user

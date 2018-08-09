@@ -20,44 +20,46 @@ const settings        = require('./config/settings');
 
 // Start services
 const autoRemove      = require('./app/server/services/autoRemove');
-const stats           = require('./app/server/services/stats');
-//const waiverReceiver     = require('./app/server/services/waiverReceiver');
+const waiverReceiver  = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
 
 Raven.config(process.env.SERVER_RAVEN_KEY).install();
+Raven.context(function() {
 
-var app = express();
-mongoose.connect(database);
+    var app = express();
+    mongoose.connect(database);
 
-if (cluster.isMaster) {
-    console.log(`Master ${process.pid} is running`);
+    if (cluster.isMaster) {
+        console.log(`Master ${process.pid} is running`);
 
-    for (let i = 0; i < cpuCount; i++) {
-        cluster.fork();
+        for (let i = 0; i < cpuCount; i++) {
+            cluster.fork();
+        }
+
+        cluster.on('exit', (worker, code, signal) => {
+            console.log(`worker ${worker.process.pid} died`);
+        });
+    } else {
+
+        console.log(`Worker ${process.pid} started`);
+
+        // Start routers
+        app.use(express.static('app/client/'));
+
+        var apiRouter = express.Router();
+        require('./app/server/routes/api')(apiRouter);
+        app.use('/api', apiRouter);
+
+        var authRouter = express.Router();
+        require('./app/server/routes/auth')(authRouter);
+        app.use('/auth', authRouter);
+
+        require('./app/server/routes')(app);
+
+        app.listen(port, function () {
+            console.log('listening on *:' + port);
+        });
+
     }
 
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`worker ${worker.process.pid} died`);
-    });
-} else {
-
-    console.log(`Worker ${process.pid} started`);
-
-    // Start routers
-    app.use(express.static('app/client/'));
-
-    var apiRouter = express.Router();
-    require('./app/server/routes/api')(apiRouter);
-    app.use('/api', apiRouter);
-
-    var authRouter = express.Router();
-    require('./app/server/routes/auth')(authRouter);
-    app.use('/auth', authRouter);
-
-    require('./app/server/routes')(app);
-
-    app.listen(port, function () {
-        console.log('listening on *:' + port);
-    });
-
-}
+})

@@ -29,7 +29,10 @@
                 <form @submit.prevent="resetPassword">
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <button type="submit">reset</button>
+                    <div class="button-row">
+                        <button type="submit">reset</button>
+                        <router-link to="/login"><button>cancel</button></router-link>
+                    </div>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>

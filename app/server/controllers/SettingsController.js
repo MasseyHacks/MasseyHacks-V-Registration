@@ -8,6 +8,7 @@ const request = require('request');
 
 const validator = require('validator');
 const moment = require('moment');
+const logger = require('../services/logger');
 
 const SettingsController = {};
 
@@ -95,7 +96,34 @@ SettingsController.requestSchool = function(user, schoolName, callback) {
 
             return callback(null, {'message':'Success'})
         })
-}
+};
+
+SettingsController.modifyTime = function(user, newTime, callback) {
+    if (newTime.timeOpen > newTime.timeClose) {
+        return callback({'error': 'Closing time is less than open time'})
+    }
+
+    if (newTime.timeConfirm < newTime.timeClose) {
+        return callback({'error': 'Confirmation deadline before application close'})
+    }
+
+    Settings.findOneAndUpdate({},
+        {
+            timeOpen : newTime.timeOpen,
+            timeClose : newTime.timeClose,
+            timeConfirm : newTime.timeConfirm
+        }, {
+            new: true
+        }, function(err, settings) {
+            if (err || !settings) {
+                return callback({'error':'Unable to update time'})
+            }
+
+            logger.logAction(user._id, -1, 'Requested to modify time to ' + newTime + '.');
+
+            return callback(null, {'message':'Success'})
+        })
+};
 
 SettingsController.getLog = function(callback) {
     return callback(null, Settings.getLog());

@@ -1,10 +1,10 @@
 require('dotenv').load();
 
-var mongoose    = require('mongoose'),
-    bcrypt      = require('bcrypt-nodejs'),
-    validator   = require('validator'),
-    jwt         = require('jsonwebtoken');
-    fields      = require('../models/data/UserFields');
+const mongoose    = require('mongoose');
+const bcrypt      = require('bcrypt-nodejs');
+const validator   = require('validator');
+const jwt         = require('jsonwebtoken');
+const fields      = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 

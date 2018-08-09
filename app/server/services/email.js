@@ -212,12 +212,11 @@ module.exports = {
                 return callback(err);
             }
             else{
-
                 User.getByEmail(userEmail, function (error, user) {
                     if(error){
                         return callback({error: 'The provided email does not correspond to a user.'});
                     }
-                    else{
+                    else {
                         //define the dates
                         date.setTime(settings.timeConfirm);
                         let confirmByString = date.toLocaleDateString('en-US', {
@@ -242,29 +241,27 @@ module.exports = {
                             dashUrl: process.env.ROOT_URL,
                             submitBy: submitByString
                         };
-                        for(var emailQueueName in settings.emailQueue){
-                            if(typeof settings.emailQueue[emailQueueName] === 'object'){
+                        for (var emailQueueName in settings.emailQueue) {
+                            if (typeof settings.emailQueue[emailQueueName] === 'object') {
                                 console.log(typeof settings.emailQueue[emailQueueName]);
-                                for(var i=0; i < settings.emailQueue[emailQueueName].length; i++){
+                                for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
                                     console.log(emailQueueName + " " + settings.emailQueue[emailQueueName][i]);
-                                    if(settings.emailQueue[emailQueueName][i] === userEmail){
+                                    if (settings.emailQueue[emailQueueName][i] === userEmail) {
 
                                         //mailer
-                                        module.exports.sendTemplateEmail(userEmail,emailQueueName.toLowerCase(),dataPack);
+                                        module.exports.sendTemplateEmail(userEmail, emailQueueName.toLowerCase(), dataPack);
 
                                         //delete entry from db
                                         var pullObj = {};
                                         //kinda sketchy too
-                                        pullObj['emailQueue.'+emailQueueName] = userEmail;
+                                        pullObj['emailQueue.' + emailQueueName] = userEmail;
                                         //remove it from the queue
 
                                         console.log(pullObj);
 
                                         Settings.findOneAndUpdate({}, {
-                                            $pull : pullObj
-                                        }, {
-
-                                        }, function(err, settings) {
+                                            $pull: pullObj
+                                        }, {}, function (err, settings) {
                                             console.log(err, settings.emailQueue);
                                         });
 
@@ -274,10 +271,9 @@ module.exports = {
                             }
                         }
                     }
-
                 });
 
             }
-        })
+        });
     }
 };
