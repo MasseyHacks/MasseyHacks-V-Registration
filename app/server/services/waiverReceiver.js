@@ -43,7 +43,7 @@ const fetch_email = function() {
                 });
                 f.on('message', function (msg) {
                     msg.on('body', function (stream) {
-                        const buffer;
+                        var buffer;
                         stream.on('data', function (chunk) {
                             buffer = chunk.toString('utf8');
                         });

@@ -32,6 +32,43 @@ schema.methods.generateResetToken = function() {
     });
 };
 
+schema.methods.setPermission = function(level) {
+    console.log('Got level ', level)
+
+    if (level && typeof level == 'string') {
+        for (var key in fields['permissions']) {
+
+            if (key == level.toLowerCase()) {
+
+                console.log('Locked to', key)
+
+                level = fields['permissions'][key]['permissionLevel']
+                break
+            }
+        }
+    }
+
+    console.log('Translating to ', level)
+
+    if (!level) {
+        level = 0
+    }
+
+    for (var key in fields.permissions) {
+        this.permissions[key] = fields['permissions'][key]['permissionLevel'] <= level
+    }
+
+    this.update({
+        permissions: this.permissions
+    }, function(err, user) {
+        if (err || !user) {
+            console.log('Failed to set permission')
+        }
+
+        console.log('Permission set')
+    });
+};
+
 schema.set('toJSON', {
     virtuals: true
 });

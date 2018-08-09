@@ -31,22 +31,21 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                 'status.confirmed': true,
                 'status.statusReleased': true,
                 'status.admittedBy': 'MasseyHacks Internal Authority',
-                'permissions.developer': permission.includes('developer'),
-                'permissions.owner': permission.includes('owner'),
-                'permissions.reviewer': permission.includes('reviewer'),
-                'permissions.admin': permission.includes('admin'),
-                'permissions.checkin': permission.includes('checkin'),
                 'verified': true
-            }, function(err) {
+            }, function(err, userNew) {
+
                 if (err) throw err;
 
+                userNew.setPermission(permission)
+
+                /*
                 UserController.sendPasswordResetEmail(email, function (err) {
                     if (err) {
                         console.log(err);
                     } else {
                         console.log('Email successful.');
                     }
-                });
+                });*/
             });
         }
     });
