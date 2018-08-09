@@ -65,7 +65,7 @@ module.exports = function(router) {
 
     // Self or admin
     // Get self or user
-    router.get('/user/:userID', function(req, res) {
+    router.get('/user/:userID', permissions.isUser, function(req, res) {
         var userID = req.params.userID;
         User.getByID(userID, logger.defaultResponse(req, res), req.permissionLevel);
     });
