@@ -11,10 +11,14 @@ module.exports = {
     },
 
     create(token, user) {
+
+        var date = new Date()
+        var expiration = date.setMonth(date.getMonth() + 1)
+
         localStorage.token = token;
         localStorage.userID = user._id;
         localStorage.user = JSON.stringify(user);
-        document.cookie = token;
+        document.cookie = 'token=' + token + ';expires=' + expiration + ';path=/';
 
         Raven.setUserContext({
             email: user.email,
