@@ -144,24 +144,32 @@ h2 {
 }
 
 #app-view {
-    position: relative;
-    left: 25vw;
+
 }
 
 .app-screen {
-    display: grid;
-    margin: auto;
+    width: 75vw
+    margin: 0 auto;
+    position: relative;
+    left: 20vw;
+}
+
+.ui-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    height: 20vh;
+    width: 20vh;
 }
 
 .title-card {
-    padding: 1%;
-    text-align: center;
-    width: 60vw;
+/*    padding: 1%;
+*/    text-align: center;
 }
 
 .title-card h2 {
     font-size: 3.5em;
     letter-spacing: 0.1em;
+    text-align: center;
 }
 .title-card h3 {
     font-size: 2em;
