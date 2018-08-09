@@ -137,6 +137,10 @@ module.exports = function(router) {
         UserController.resetAdmissionState(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
+    /**
+     * To-Do: Resetting admission state should also remove emails from queue
+     */
+
     // Owner
     // Flush email queue for user
     router.post('/flushEmailQueue', permissions.isOwner, function (req, res) {

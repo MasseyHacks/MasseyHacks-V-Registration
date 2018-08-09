@@ -216,7 +216,7 @@ module.exports = {
                 for(var emailQueue in settings.emailQueue){
                     if(typeof settings.emailQueue[emailQueue] !== "function"){
                         for(var i=0; i < settings.emailQueue[emailQueue].length; i++){
-                            console.log(emailQueue + " " + email);
+                            console.log(emailQueue + " " + userEmail);
                         }
                     }
                 }

@@ -1,20 +1,21 @@
-var _              = require('underscore');
-var User           = require('../models/User');
-var Team           = require('../models/Team');
-var Settings       = require('../models/Settings');
+const _              = require('underscore');
+const User           = require('../models/User');
+const Team           = require('../models/Team');
+const Settings       = require('../models/Settings');
 
-var jwt            = require('jsonwebtoken');
-var uuidv4         = require('uuid/v4');
+const jwt            = require('jsonwebtoken');
+const uuidv4         = require('uuid/v4');
 
-var request        = require('request');
+const request        = require('request');
 
-var validator      = require('validator');
-var moment         = require('moment');
-var logger         = require('../services/logger');
+const validator      = require('validator');
+const moment         = require('moment');
 
-var mailer         = require('../services/email');
+const logger         = require('../services/logger');
+const mailer         = require('../services/email');
+const stats         = require('../services/stats');
 
-var UserFields     = require('../models/data/UserFields');
+const UserFields     = require('../models/data/UserFields');
 
 var UserController = {};
 
@@ -38,7 +39,7 @@ UserController.verify = function (token, callback) {
 
         if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: "Error: Token is invalid for this operation."
+                error: 'Error: Token is invalid for this operation.'
             });
         }
 
@@ -59,7 +60,7 @@ UserController.verify = function (token, callback) {
                 return callback(err);
             };
 
-            logger.logAction(user._id, user._id, "Verified their email.");
+            logger.logAction(user._id, user._id, 'Verified their email.');
 
             return callback(null, 'Success');
         });
@@ -79,12 +80,12 @@ UserController.sendVerificationEmail = function (token, callback) {
         }
 
         if (!user.status.active) {
-            return callback({ error: "Account is not active. Please contact an administrator for assistance." })
+            return callback({ error: 'Account is not active. Please contact an administrator for assistance.' })
         }
 
-        var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
+        var verificationURL = process.env.ROOT_URL + '/verify/' + user.generateVerificationToken();
 
-        logger.logAction(user._id, user._id, "Requested a verification email.");
+        logger.logAction(user._id, user._id, 'Requested a verification email.');
 
         console.log(verificationURL);
 
@@ -98,7 +99,7 @@ UserController.sendVerificationEmail = function (token, callback) {
             }
         });
 
-        return callback(null, {message:"Success"});
+        return callback(null, {message:'Success'});
     });
 
 };
@@ -115,7 +116,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 return callback(err);
             }
 
-            return callback({ error: "Error: Something went wrong." });
+            return callback({ error: 'Error: Something went wrong.' });
         }
 
         UserController.loginWithPassword(userFromToken.email, existingPassword, function(err, user) {
@@ -124,15 +125,15 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                     return callback(err);
                 }
 
-                return callback({ error: "Error: Something went wrong." });
+                return callback({ error: 'Error: Something went wrong.' });
             }
 
             UserController.changePassword(userFromToken.email, newPassword, function(err, msg) {
                 if (err) {
                     return callback(err);
                 }
-                logger.logAction(userFromToken._id, userFromToken._id, "Changed their password with existing.");
-                return callback(null, { message: "Success" });
+                logger.logAction(userFromToken._id, userFromToken._id, 'Changed their password with existing.');
+                return callback(null, { message: 'Success' });
             });
         });
     });
@@ -146,14 +147,14 @@ UserController.adminChangePassword = function (adminUser, userID, newPassword, c
 
     User.getByID(userID, function (err, user) {
         if (err || !user) {
-            return callback({ error: "Error: User not found." });
+            return callback({ error: 'Error: User not found.' });
         }
 
         UserController.changePassword(user.email, newPassword, function(err, msg) {
             if (err || !msg) {
                 return callback(err);
             }
-            logger.logAction(adminUser._id, user._id, "Changed this user's password.");
+            logger.logAction(adminUser._id, user._id, 'Changed this user\'s password.');
             return callback(null, msg);
         });
     });
@@ -166,7 +167,7 @@ UserController.changePassword = function (email, password, callback) {
     }
 
     if (!password || password.length < 6){
-        return callback({ error: "Error: Password must be 6 or more characters." });
+        return callback({ error: 'Error: Password must be 6 or more characters.' });
     }
 
     User.findOneAndUpdate({
@@ -196,7 +197,7 @@ UserController.changePassword = function (email, password, callback) {
             }
         });
 
-        return callback(null, { message: "Success" })
+        return callback(null, { message: 'Success' })
 
     });
 };
@@ -204,20 +205,20 @@ UserController.changePassword = function (email, password, callback) {
 UserController.resetPassword = function (token, password, callback) {
 
     if (!token || !password) {
-        return callback({error : "Error: Invalid arguments"});
+        return callback({error : 'Error: Invalid arguments'});
     }
 
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
-            console.log("ur bad");
+            console.log('ur bad');
             return callback({
                 error: 'Error: Invalid Token'
             });
         }
 
-        if (payload.type != "password-reset" || !payload.exp || Date.now() >= payload.exp * 1000) {
+        if (payload.type != 'password-reset' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: "Error: Token is invalid for this operation."
+                error: 'Error: Token is invalid for this operation.'
             });
         }
 
@@ -227,7 +228,7 @@ UserController.resetPassword = function (token, password, callback) {
                 if (err || !user) {
                     console.log(err);
 
-                    return callback({error : "Error: Something went wrong"});
+                    return callback({error : 'Error: Something went wrong'});
                 }
 
                 if (payload.iat * 1000 < user.passwordLastUpdated) {
@@ -241,9 +242,9 @@ UserController.resetPassword = function (token, password, callback) {
                         return callback(err);
                     }
 
-                    logger.logAction(user._id, user._id, "Changed their password with token.");
+                    logger.logAction(user._id, user._id, 'Changed their password with token.');
 
-                    return callback(null, {message : "Success"});
+                    return callback(null, {message : 'Success'});
                 });
             });
 
@@ -260,17 +261,19 @@ UserController.sendPasswordResetEmail = function (email, callback) {
     User.getByEmail(email, function(err, user){
 
         if (user && !err) {
-            var resetURL = process.env.ROOT_URL + "/reset/" + user.generateResetToken();
+            var resetURL = process.env.ROOT_URL + '/reset/' + user.generateResetToken();
 
-            logger.logAction(user._id.email, user._id, "Requested a password reset email.");
+            logger.logAction(user._id.email, user._id, 'Requested a password reset email.');
 
             console.log(resetURL);
 
-            /*mailer.sendTemplateEmail(email,"passwordresetemails",{
+            /*mailer.sendTemplateEmail(email,'passwordresetemails',{
                 nickname: user.firstName,
                 resetUrl: resetURL
             });*/
-            mailer.flushQueueUser(email);
+            mailer.flushQueue('acceptanceEmails', function(err, msg) {
+                console.log(err, msg)
+            });
         }
 
         return callback();
@@ -285,43 +288,37 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    if (email.includes("2009karlzhu")) {
-        return callback({error: "Karl Zhu detected. Please contact an administrator for assistance."}, false);
+    if (email.includes('2009karlzhu')) {
+        return callback({error: 'Karl Zhu detected. Please contact an administrator for assistance.'}, false);
     }
 
     Settings.getSettings(function(err, settings) {
         if (!settings.registrationOpen) {
             return callback({
-                error: "Sorry, registration is not open."
+                error: 'Sorry, registration is not open.'
             });
         } else {
             if (!validator.isEmail(email)){
                 return callback({
-                    error: "Error: Invalid Email Format"
-                });
-            }
-
-            if (email.includes('"') || firstName.includes('"') || lastName.includes('"')) {
-                return callback({
-                    error: "Error: Invalid Characters"
+                    error: 'Error: Invalid Email Format'
                 });
             }
 
             if (!password || password.length < 6){
-                return callback({ error: "Error: Password must be 6 or more characters."}, false);
+                return callback({ error: 'Error: Password must be 6 or more characters.'}, false);
             }
 
             // Special stuff
-            if (password == "Password123" && firstName == "Adam") {
-                return callback({ error: "Error: Hi adam, u have a bad passwd"}, false);
+            if (password == 'Password123' && firstName == 'Adam') {
+                return callback({ error: 'Error: Hi adam, u have a bad passwd'}, false);
             }
 
             if (firstName.length > 50 || lastName.length > 50) {
-                return callback({ error: "Error: Name is too long!"});
+                return callback({ error: 'Error: Name is too long!'});
             }
 
             if (email.length > 50) {
-                return callback({ error: "Error: Email is too long!"});
+                return callback({ error: 'Error: Email is too long!'});
             }
 
             email = email.toLowerCase();
@@ -334,22 +331,22 @@ UserController.createUser = function (email, firstName, lastName, password, call
                 } else {
 
                     User.create({
-                        "email": email,
-                        "firstName": firstName,
-                        "lastName": lastName,
-                        "password": User.generateHash(password),
-                        "passwordLastUpdated": Date.now() - 60000,
-                        "timestamp": Date.now()
+                        'email': email,
+                        'firstName': firstName,
+                        'lastName': lastName,
+                        'password': User.generateHash(password),
+                        'passwordLastUpdated': Date.now() - 60000,
+                        'timestamp': Date.now()
                     }, function (err, user) {
 
-                        console.log("dank");
+                        console.log('dank');
 
                         if (err || !user) {
                             console.log(err);
                             return callback(err);
                         } else {
                             var token = user.generateAuthToken();
-                            var verificationURL = process.env.ROOT_URL + "/verify/" + user.generateVerificationToken();
+                            var verificationURL = process.env.ROOT_URL + '/verify/' + user.generateVerificationToken();
 
                             console.log(verificationURL);
 
@@ -365,7 +362,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
                             user = user.toJSON();
                             delete user.password;
 
-                            logger.logAction(user._id, user._id, "Created an account.");
+                            logger.logAction(user._id, user._id, 'Created an account.');
 
                             return callback(null, token, user);
                         }
@@ -388,12 +385,12 @@ UserController.loginWithToken = function(token, callback){
         }
 
         if (!user.status.active) {
-            return callback({ error: "Account is not active. Please contact an administrator for assistance." })
+            return callback({ error: 'Account is not active. Please contact an administrator for assistance.' })
         }
 
         var token = user.generateAuthToken();
 
-        logger.logAction(user._id, user._id, "Logged in with token.");
+        logger.logAction(user._id, user._id, 'Logged in with token.');
 
         return callback(err, token, user);
     });
@@ -403,13 +400,13 @@ UserController.loginWithPassword = function(email, password, callback){
 
     if (!email || email.length === 0) {
         return callback({
-            error: "Error: Please enter your email"
+            error: 'Error: Please enter your email'
         });
     }
 
     if (!password || password.length === 0){
         return callback({
-            error: "Error: Please enter your password"
+            error: 'Error: Please enter your password'
         });
     }
 
@@ -418,15 +415,15 @@ UserController.loginWithPassword = function(email, password, callback){
 
             if (err || !user || user == null || !user.checkPassword(password)) {
                 return callback({
-                    error: "Error: Invalid credentials"
+                    error: 'Error: Invalid credentials'
                 });
             }
 
             if (!user.status.active) {
-                return callback({ error: "Account is not active. Please contact an administrator for assistance." })
+                return callback({ error: 'Account is not active. Please contact an administrator for assistance.' })
             }
 
-            logger.logAction(user._id, user._id, "Logged in with password.");
+            logger.logAction(user._id, user._id, 'Logged in with password.');
 
             var token = user.generateAuthToken();
 
@@ -438,7 +435,7 @@ UserController.updateProfile = function (id, profile, callback){
 
     // Validate the user profile, and mark the user as profile completed
     // when successful.
-    console.log("Updating " + profile);
+    console.log('Updating ' + profile);
 
     csvValidation(profile, function(profileValidated){
         User.validateProfile(id, profile, function(err){
@@ -456,13 +453,13 @@ UserController.updateProfile = function (id, profile, callback){
 
                 if (now < times.timeOpen){
                     return callback({
-                        message: "Registration opens in " + moment(times.timeOpen).fromNow() + "!"
+                        message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
                     });
                 }
 
                 if (now > times.timeClose){
                     return callback({
-                        message: "Sorry, registration is closed."
+                        message: 'Sorry, registration is closed.'
                     });
                 }
 
@@ -480,8 +477,8 @@ UserController.updateProfile = function (id, profile, callback){
 
                 for (var i = 0; i < keys.length; i++) {
                     if(UserFields.profile[keys[i]].required){
-                        if (profileValidated[keys[i]] && profileValidated[keys[i]] !== "") {
-                            return callback({message: "Field " + key + " is required"})
+                        if (profileValidated[keys[i]] && profileValidated[keys[i]] !== '') {
+                            return callback({message: 'Field ' + key + ' is required'})
                         }
                     }
                 }
@@ -495,7 +492,7 @@ UserController.updateProfile = function (id, profile, callback){
 
                         if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
                             return callback({
-                                message: "Sorry, registration is closed."
+                                message: 'Sorry, registration is closed.'
                             });
                         }
 
@@ -550,10 +547,10 @@ UserController.injectAdmitUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Injected admit vote.");
+        logger.logAction(adminUser._id, user._id, 'Injected admit vote.');
 
         return callback(err, user);
 
@@ -587,10 +584,10 @@ UserController.injectRejectUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Injected reject vote.");
+        logger.logAction(adminUser._id, user._id, 'Injected reject vote.');
 
         return callback(err, user);
 
@@ -626,10 +623,10 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Voted to admit.");
+        logger.logAction(adminUser._id, user._id, 'Voted to admit.');
 
         UserController.checkAdmissionStatus(userID);
 
@@ -667,10 +664,10 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Voted to reject.");
+        logger.logAction(adminUser._id, user._id, 'Voted to reject.');
 
         UserController.checkAdmissionStatus(userID);
 
@@ -696,7 +693,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
                     return callback(err, user);
                 }
 
-                logger.logAction(adminUser._id, -1, "Admitted team " + team.name);
+                logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name);
 
                 for (id in team.memberIDs) {
                     UserController.admitUser(adminUser, id, function (err, user) {
@@ -722,16 +719,16 @@ UserController.checkAdmissionStatus = function(id) {
                 console.log(err);
             }
 
-            console.log("Error checking admission status for " + id);
+            console.log('Error checking admission status for ' + id);
         } else {
 
             if (!user.status.admitted && !user.status.rejected && !user.status.waitlisted) {
                 if (user.applicationReject.length >= 3) {
                     user.status.admitted = false;
                     user.status.rejected = true;
-                    console.log("Rejected user");
+                    console.log('Rejected user');
 
-                    logger.logAction(-1, user._id, "Soft rejected user.");
+                    logger.logAction(-1, user._id, 'Soft rejected user.');
 
                 } else {
                     console.log(user);
@@ -740,16 +737,16 @@ UserController.checkAdmissionStatus = function(id) {
                         if (data < total) {
                             user.status.admitted = true;
                             user.status.rejected = false;
-                            user.status.admittedBy = "MasseyHacks Admission Authority";
-                            console.log("Admitted user");
+                            user.status.admittedBy = 'MasseyHacks Admission Authority';
+                            console.log('Admitted user');
 
-                            logger.logAction(-1, user._id, "Accepted user.");
+                            logger.logAction(-1, user._id, 'Accepted user.');
                         } else {
                             user.status.waitlisted = true;
                             user.status.rejected = false;
-                            console.log("Waitlisted User");
+                            console.log('Waitlisted User');
 
-                            logger.logAction(-1, user._id, "Waitlisted user.");
+                            logger.logAction(-1, user._id, 'Waitlisted user.');
                         }
                     }
                 }
@@ -801,10 +798,10 @@ UserController.resetVotes = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Reset votes.");
+        logger.logAction(adminUser._id, user._id, 'Reset votes.');
 
         return callback(err, user);
 
@@ -835,10 +832,10 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Reset admission status.");
+        logger.logAction(adminUser._id, user._id, 'Reset admission status.');
 
         return callback(err, user);
 
@@ -852,10 +849,10 @@ UserController.admitUser = function(adminUser, userID, callback) {
     }
 
     User.findOneAndUpdate({
-       _id : userID,
+        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false
+        'status.admitted': false
     }, {
         $set: {
             'status.admitted': true,
@@ -877,10 +874,10 @@ UserController.admitUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Admitted user.");
+        logger.logAction(adminUser._id, user._id, 'Admitted user.');
 
         //send the email
         mailer.queueEmail(user.email,'acceptanceemails',function(err){
@@ -904,7 +901,7 @@ UserController.rejectUser = function(adminUser, userID, callback) {
        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false
+        'status.admitted': false
     }, {
         $set: {
             'status.admitted': false,
@@ -920,10 +917,10 @@ UserController.rejectUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Rejected user.");
+        logger.logAction(adminUser._id, user._id, 'Rejected user.');
 
         mailer.queueEmail(user.email,'rejectionemails',function(err){
             if(err){
@@ -944,9 +941,9 @@ UserController.remove = function(adminUser, userID, callback){
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(adminUser._id, user._id, "Deleted user.");
+            logger.logAction(adminUser._id, user._id, 'Deleted user.');
         } else {
-            return callback({error : "Error: Unable to delete user"})
+            return callback({error : 'Error: Unable to delete user'})
         }
     });
 
@@ -954,10 +951,10 @@ UserController.remove = function(adminUser, userID, callback){
         _id: userID
     }, function (err) {
         if (err) {
-            return callback({error : "Error: Unable to delete user"})
+            return callback({error : 'Error: Unable to delete user'})
         }
 
-        return callback({message : "Success"})
+        return callback({message : 'Success'})
     });
 };
 
@@ -990,7 +987,7 @@ UserController.createTeam = function(id, teamName, callback) {
         }, {
             new: true
         }, function(err, newUser) {
-            logger.logAction(id, id, "Created the team: " + teamName + " (" + team.code + ")");
+            logger.logAction(id, id, 'Created the team: ' + teamName + ' (' + team.code + ')');
             return callback(null, { team : team.toJSON(), user : newUser });
         });
     });
@@ -1044,12 +1041,12 @@ UserController.joinTeam = function(id, teamCode, callback) {
                        if (err || !newUser) {
                            return callback({error : 'Error: Something went wrong' });
                        }
-                       logger.logAction(id, id, "Joined the team: " + newTeam + " (" + team.code + ")");
+                       logger.logAction(id, id, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
                        return callback(null, { team : newTeam, user : newUser });
                    });
                });
            } else {
-               return callback({ error : "Error: Team is full" });
+               return callback({ error : 'Error: Team is full' });
            }
         });
     });
@@ -1105,15 +1102,15 @@ UserController.leaveTeam = function(id, callback) {
                     Team.findOneAndRemove({
                         _id : newTeam._id
                     }, function(err) {
-                        logger.logAction(-1, -1, "Deleted the team: " + newTeam.name + " (" + user.teamCode + ")");
+                        logger.logAction(-1, -1, 'Deleted the team: ' + newTeam.name + ' (' + user.teamCode + ')');
                     });
                 }
 
                 if (!newTeam) {
-                    newTeam.name = "null";
+                    newTeam.name = 'null';
                 }
 
-                logger.logAction(id, id, "Left the team: " + newTeam.name + " (" + user.teamCode + ")");
+                logger.logAction(id, id, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
                 return callback(null, newUser)
             });
         })
@@ -1163,12 +1160,12 @@ UserController.inviteToSlack = function(id, callback) {
                 return callback(err);
             }
 
-            return callback( { error : "Error: User not found" } );
+            return callback( { error : 'Error: User not found' } );
         }
 
         if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
 
-            logger.logAction(user._id, user._id, "Requested Slack invite.");
+            logger.logAction(user._id, user._id, 'Requested Slack invite.');
 
             request.post({
                 url: 'https://' + process.env.SLACK_INVITE + '.slack.com/api/users.admin.invite',
@@ -1179,7 +1176,7 @@ UserController.inviteToSlack = function(id, callback) {
                 }
             }, function (err, httpResponse, body) {
                 console.log(err, httpResponse, body);
-                if (err || body !== '{"ok":true}') {
+                if (err || body !== '{\'ok\':true}') {
                     if (body && body.includes('already_in_team')) {
                         return callback({ error : 'You have already joined the Slack!\n(' + process.env.SLACK_INVITE + '.slack.com)' });
                     }
@@ -1187,7 +1184,7 @@ UserController.inviteToSlack = function(id, callback) {
                         return callback({ error : 'We already sent an invitation!\nBe sure to check your spam in case it was filtered :\'(\n\n(We sent it to ' + user.email + ')' });
                     }
                     else {
-                        return callback({ error : "Error: Something went wrong...\nThat's all we know :/" });
+                        return callback({ error : 'Error: Something went wrong...\nThat\'s all we know :/' });
                     }
                 }
                 else {
@@ -1196,7 +1193,7 @@ UserController.inviteToSlack = function(id, callback) {
             });
         }
         else {
-            return callback({ error : "Error: You do not have permission to send an invitation." });
+            return callback({ error : 'Error: You do not have permission to send an invitation.' });
         }
     });
 };
@@ -1257,10 +1254,10 @@ UserController.activate = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Activated user.");
+        logger.logAction(adminUser._id, user._id, 'Activated user.');
 
         return callback(err, user);
     });
@@ -1286,10 +1283,10 @@ UserController.deactivate = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Deactivated user.");
+        logger.logAction(adminUser._id, user._id, 'Deactivated user.');
 
         return callback(err, user);
     });
@@ -1316,10 +1313,10 @@ UserController.checkIn = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Checked In user.");
+        logger.logAction(adminUser._id, user._id, 'Checked In user.');
 
         return callback(err, user);
     });
@@ -1345,10 +1342,10 @@ UserController.checkOut = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Checked Out user.");
+        logger.logAction(adminUser._id, user._id, 'Checked Out user.');
 
         return callback(err, user);
     });
@@ -1374,10 +1371,10 @@ UserController.waiverIn = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Waiver flagged as on file for user.");
+        logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.');
 
         return callback(err, user);
     });
@@ -1403,10 +1400,10 @@ UserController.waiverOut = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: "Error: Unable to perform action." })
+            return callback({ error: 'Error: Unable to perform action.' })
         }
 
-        logger.logAction(adminUser._id, user._id, "Waiver flagged as not on file for user.");
+        logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.');
 
         return callback(err, user);
     });
