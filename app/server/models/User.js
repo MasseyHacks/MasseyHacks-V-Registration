@@ -81,6 +81,7 @@ schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
+/*
 function filterSensitive(user, permissionLevel) {
     var u = user.toJSON();
 
@@ -112,6 +113,7 @@ function filterSensitive(user, permissionLevel) {
 
     return u;
 }
+*/
 
 // Helper function
 schema.statics.filterSensitive = function(user, permissionLevel) {
@@ -287,41 +289,48 @@ schema.virtual('status.name').get(function () {
 
 });
 
-schema.static.filterSensitive = function (excuterToken, user, callback) {
-    this.getByToken(excuterToken, function (err, user) {
-        var permissionLevel = 0;
+var filterSensitive = function (user, permission) {
+    var u = user.toJSON();
 
-        if (user) {
-            permissionLevel = user.permissions.level;
-        }
+    console.log(u)
 
-        var queue = [[fields, u]];
-        var runner;
-        var userpath;
-        var keys;
 
-        while (queue.length !== 0) {
-            runner = queue[0][0];
-            userpath = queue.shift()[1];
-            keys = Object.keys(runner);
+    var permissionLevel;
 
-            for (var i = 0; i < keys.length; i++) {
-                if('type' in runner[keys[i]]) {
-                    if (runner[keys[i]].permission >= permissionLevel){
-                        try {
-                            delete userpath[keys[i]];
-                        } catch (e) {
-                            console.log(e)
-                        }
+    if (permissionLevel) {
+        permissionLevel = permission;
+    } else {
+        permissionLevel = 0;
+    }
+
+    var queue = [[fields, u]];
+    var runner;
+    var userpath;
+    var keys;
+
+    while (queue.length !== 0) {
+        runner = queue[0][0];
+        userpath = queue.shift()[1];
+        keys = Object.keys(runner);
+
+        for (var i = 0; i < keys.length; i++) {
+            if('type' in runner[keys[i]]) {
+                if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel){
+                    try {
+                        delete userpath[keys[i]];
+                    } catch (e) {
+                        console.log(e)
                     }
-                } else {
+                }
+            } else {
+                if(userpath[keys[i]]) {
                     queue.push([runner[keys[i]], userpath[keys[i]]])
                 }
             }
         }
+    }
 
-        return callback(false, user)
-    })
-}
+    return u;
+};
 
 module.exports = mongoose.model('User', schema);
