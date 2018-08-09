@@ -38,7 +38,7 @@
             }
         },
         created() {
-
+            this.$router.replace('/organizer/statistics')
         }
     }
 </script>

@@ -89,7 +89,7 @@ function calculateStats(settings){
     var votes = {};
 
     User
-        .find({"reviewer":true, "developer":false})
+        .find({'reviewer':true, 'developer':false})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {
                 throw err;
@@ -100,7 +100,7 @@ function calculateStats(settings){
             }
 
             User
-                .find({"admin": false,"owner":false,"volunteer":false})
+                .find({'admin': false,'owner':false,'volunteer':false})
                 .exec(function(err, users){
                     if (err || !users){
                         throw err;
@@ -179,7 +179,7 @@ function calculateStats(settings){
                             }
 
                             if (user.profile.school) {
-                                if (user.profile.school.toLowerCase().includes("massey")) {
+                                if (user.profile.school.toLowerCase().includes('massey')) {
                                     newStats.demo.massey += 1;
                                 }
                                 else {
@@ -215,7 +215,7 @@ function calculateStats(settings){
                             }
 
                             if (user.profile.school) {
-                                if (user.profile.school.toLowerCase().includes("massey")) {
+                                if (user.profile.school.toLowerCase().includes('massey')) {
                                     newStats.confirmedStat.demo.massey += 1;
                                 }
                                 else {

@@ -1,10 +1,12 @@
-var jwt       = require('jsonwebtoken');
-var validator = require('validator');
-var express = require('express');
+const jwt                = require('jsonwebtoken');
+const validator          = require('validator');
+const express            = require('express');
 
-var User = require('../models/User');
-var UserController = require('../controllers/UserController');
-var permissions    = require('../services/permissions');
+const User               = require('../models/User');
+const UserController     = require('../controllers/UserController');
+
+const permissions        = require('../services/permissions');
+const logger             = require('../services/logger');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -19,19 +21,19 @@ module.exports = function(router) {
         var lastName = req.body.lastName;
 
         if (!email) {
-            return res.status(400).json({error: "Error: No email provided"});
+            return res.status(400).json({error: 'Error: No email provided'});
         }
 
         if (!password) {
-            return res.status(400).json({error: "Error: No password provided"});
+            return res.status(400).json({error: 'Error: No password provided'});
         }
 
         if (!firstName) {
-            return res.status(400).json({error: "Error: No first name provided"});
+            return res.status(400).json({error: 'Error: No first name provided'});
         }
 
         if (!lastName) {
-            return res.status(400).json({error: "Error: No last name provided"});
+            return res.status(400).json({error: 'Error: No last name provided'});
         }
 
         UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
@@ -39,10 +41,10 @@ module.exports = function(router) {
                     if (err) {
                         return res.status(500).json(err);
                     }
-                    return res.status(500).json({error: "Error: Unable to process request"});
+                    return res.status(500).json({error: 'Error: Unable to process request'});
                 }
 
-                console.log(req.body.email + " registered.");
+                console.log(req.body.email + ' registered.');
 
                 return res.json({
                     token: token,
@@ -58,7 +60,7 @@ module.exports = function(router) {
         var password = req.body.password;
         var token = permissions.getToken(req);
 
-        console.log(req.body.email + " attempting to login.");
+        console.log(req.body.email + ' attempting to login.');
 
         if (token && !email && !password) {
             console.log(token);
@@ -70,7 +72,7 @@ module.exports = function(router) {
                         return res.status(400).json(err);
                     }
 
-                    return res.status(400).json({error: "Error: Invalid Token"});
+                    return res.status(401).json({error: 'Error: Invalid Token'});
                 }
                 return res.json({
                     token: token,
@@ -100,7 +102,7 @@ module.exports = function(router) {
         var password = req.body.password;
 
         if (!token) {
-            return res.status(400).json({error: "Error: Invalid token"});
+            return res.status(400).json({error: 'Error: Invalid token'});
         }
 
         UserController.resetPassword(token, password, function (err, msg) {
@@ -109,7 +111,7 @@ module.exports = function(router) {
                     return res.status(400).json(err);
                 }
 
-                return res.status(400).json({error: "Error: Invalid token"});
+                return res.status(400).json({error: 'Error: Invalid token'});
             }
 
             return res.json(msg);
@@ -120,15 +122,15 @@ module.exports = function(router) {
     router.post('/requestReset', function (req, res) {
         var email = req.body.email;
 
-        console.log(req.body.email + " requesting reset email.");
+        console.log(req.body.email + ' requesting reset email.');
 
         if (!email || !validator.isEmail(email)) {
-            return res.status(400).json({error: "Error: Invalid email"});
+            return res.status(400).json({error: 'Error: Invalid email'});
         }
 
         UserController.sendPasswordResetEmail(email, function (err) {
             if (err) {
-                return res.status(400).json({error: "Error: Something went wrong."});
+                return res.status(400).json({error: 'Error: Something went wrong.'});
             }
 
             return res.json({
@@ -142,7 +144,7 @@ module.exports = function(router) {
         var token = req.body.token;
 
         if (!token) {
-            return res.status(400).json({error: "Error: Invalid token"});
+            return res.status(400).json({error: 'Error: Invalid token'});
         }
 
         UserController.verify(token, function (err, msg) {
@@ -151,7 +153,7 @@ module.exports = function(router) {
                     return res.status(400).json(err);
                 }
 
-                return res.status(400).json({error: "Error: Invalid token"});
+                return res.status(400).json({error: 'Error: Invalid token'});
             }
 
             return res.json({
@@ -165,12 +167,12 @@ module.exports = function(router) {
         var token = req.body.token;
 
         if (!token) {
-            return res.status(400).json({error: "Error: Invalid token"});
+            return res.status(400).json({error: 'Error: Invalid token'});
         }
 
         UserController.sendVerificationEmail(email, function (err) {
             if (err) {
-                return res.status(400).json({error: "Error: Something went wrong."});
+                return res.status(400).json({error: 'Error: Something went wrong.'});
             }
 
             return res.json({
@@ -178,6 +180,24 @@ module.exports = function(router) {
             });
         });
     });
+    
+    // General
+    // Change password
+    router.post('/changePassword', permissions.isVerified, function (req, res) {
+        var token = permissions.getToken(req);
+        var newPassword = req.body.newPassword;
+        var oldPassword = req.body.oldPassword;
+
+        UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res));
+    });
+
+    // Change password
+    router.post('/adminChangePassword', permissions.isOwner, function (req, res) {
+        var userID = req.body.userID;
+        var password = req.body.password;
+        UserController.adminChangePassword(req.userExecute, userID, password, logger.defaultResponse(req, res));
+    });
+
 
     router.get('*', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});

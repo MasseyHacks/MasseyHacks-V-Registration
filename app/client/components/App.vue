@@ -49,6 +49,7 @@
         data() {
             return {
                 user: Session.getUser(),
+                settings: Session.getSettings(),
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
                 transitionName: 'slide-left'

@@ -57,8 +57,8 @@ module.exports = function(router) {
     });
 
     // Owner
-    // Reject pending school
-    router.post('/applicationTime', permissions.isOwner, function (req, res) {
+    // Modify application time
+    router.post('/updateRegistrationTime', permissions.isOwner, function (req, res) {
         var newTimes = req.body;
         SettingsController.modifyTime(req.userExecute, newTimes,logger.defaultResponse(req, res));
     });
@@ -74,46 +74,8 @@ module.exports = function(router) {
     // Data varies depending on permission
     // Get all users
     router.get('/users', permissions.isCheckin, function(req, res) {
-        var userID = req.params.userID;
-        User.getByID(userID, defaultResponse(req, res));
-    });
-
-    /*
-    // Developer
-    // Inject votes accept
-    router.post('/injectVoteAdmit', permissions.isDeveloper, function (req, res) {
-
-        if (req.userExecutedminUser) {
-            if (err) {
-                logger.defaultResponse(req, r;es)(err)
-            }
-        }
-
-
-        var userID = req.body.userID;
-     rController.injectAdmitUser(admiUserl, userID, logger.defaultResponse(req, res));
-    })
-    });
-
-    // Developer
-    // Inject votes reject
-    router.post('/injectVoteReject', permissions.isDeveloper, function (req, res) {
-        // Accept the hacker. Admin only
-
-        i
-            if (err) {
-                log
-
-        var userID = req.body.userID;
-        UserController.injectRejectUsUserminEmail, userID, logger.defaultResponse(req, res));
-
-    });*/
-
-    // Developer
-    // Reset votes
-    router.post('/voteReset', permissions.isDeveloper, function (req, res) {
-        var userID = req.body.userID;
-        UserController.resetVotes(req.userExecute, userID, logger.defaultResponse(req, res));
+        var query  = req.params.query;
+        UserController.getByQuery(query, logger.defaultResponse(req, res));
     });
 
     // Owner
@@ -181,7 +143,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : "Error: Unable to create team" } );
+                return logger.defaultResponse(req, res)( { error : 'Error: Unable to create team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -200,7 +162,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : "Error: Unable to join team" } );
+                return logger.defaultResponse(req, res)( { error : 'Error: Unable to join team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -218,7 +180,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : "Error: Unable to leave team" } );
+                return logger.defaultResponse(req, res)( { error : 'Error: Unable to leave team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -236,7 +198,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : "Error: Unable to get team" } );
+                return logger.defaultResponse(req, res)( { error : 'Error: Unable to get team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -248,16 +210,6 @@ module.exports = function(router) {
     router.post('/admitTeam', permissions.isReviewer, function (req, res) {
         var userID = req.body.userID;
         UserController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
-    });
-
-    // General
-    // Change password
-    router.post('/changePassword', permissions.isVerified, function (req, res) {
-        var token = permissions.getToken(req);
-        var newPassword = req.body.newPassword;
-        var oldPassword = req.body.oldPassword;
-
-        UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res));
     });
 
     // General
@@ -283,14 +235,6 @@ module.exports = function(router) {
 
         UserController.declineInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
     });
-
-    // Change password
-    router.post('/adminChangePassword', permissions.isOwner, function (req, res) {
-        var userID = req.body.userID;
-        var password = req.body.password;
-        UserController.adminChangePassword(req.userExecute, userID, password, logger.defaultResponse(req, res));
-    });
-
 
     // Owner
     // Send admit emails
@@ -321,7 +265,7 @@ module.exports = function(router) {
         }, function(err, users) {
             console.log(users);
 
-            logger.logAction(req.userExecute.email, user.email, "Changed this user's password.");
+            logger.logAction(req.userExecute.email, user.email, 'Rejected everyone without state.');
             /**
              * To-Do: Add async for each here
              */
@@ -330,16 +274,23 @@ module.exports = function(router) {
 
     // Owner
     // Activate account
-    router.post('/activateAccount', permissions.isOwner, function (req, res) {
+    router.post('/activate', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
         UserController.activate(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Deactivate account
-    router.post('/deactivateAccount', permissions.isOwner, function (req, res) {
+    router.post('/deactivate', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
         UserController.deactivate(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
+    // Developer
+    // Reset votes
+    router.post('/voteReset', permissions.isDeveloper, function (req, res) {
+        var userID = req.body.userID;
+        UserController.resetVotes(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // Reviewer

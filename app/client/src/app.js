@@ -1,28 +1,30 @@
-import Vue          from 'vue'
-import VueRouter    from 'vue-router'
-import swal         from 'sweetalert2'
-import $            from 'jquery'
+import Vue            from 'vue'
+import VueRouter      from 'vue-router'
+import swal           from 'sweetalert2'
+import $              from 'jquery'
 
-import Session      from './Session'
-import AuthService  from './AuthService'
+import Session        from './Session'
+import AuthService    from './AuthService'
 
-import App          from '../components/App.vue'
+import App            from '../components/App.vue'
 
-import Login        from '../components/Login.vue'
-import Register     from '../components/Register.vue'
-import Reset        from '../components/Reset.vue'
-import Verify       from '../components/Verify.vue'
+import Login          from '../components/Login.vue'
+import Register       from '../components/Register.vue'
+import Reset          from '../components/Reset.vue'
+import Verify         from '../components/Verify.vue'
 
-import Dashboard    from '../components/Dashboard.vue'
-import Organizer    from '../components/Organizer.vue'
-import Owner        from '../components/Owner.vue'
-import Checkin      from '../components/Checkin.vue'
-import Application  from '../components/Application.vue'
-import Confirmation from '../components/Confirmation.vue'
-import Error        from '../components/Error.vue'
+import Dashboard      from '../components/Dashboard.vue'
+import Organizer      from '../components/Organizer.vue'
+import Owner          from '../components/Owner.vue'
+import Checkin        from '../components/Checkin.vue'
+import Statistics     from '../components/Statistics.vue'
+import Application    from '../components/Application.vue'
+import Confirmation   from '../components/Confirmation.vue'
+import Error          from '../components/Error.vue'
+import PasswordChange from '../components/PasswordChange.vue'
 
-import Raven        from 'raven-js'
-import RavenVue     from 'raven-js/plugins/vue'
+import Raven          from 'raven-js'
+import RavenVue       from 'raven-js/plugins/vue'
 
 $.ajax({
     type: 'GET',
@@ -70,7 +72,7 @@ function isAuthorized (to, from, next, authCondition) {
         next({
             path: '/error',
             query: {
-                error: "You don't have permission to access this page."
+                error: 'You don\'t have permission to access this page.'
             }
         })
     }
@@ -91,7 +93,7 @@ function isAdmitted (to, from, next) {
         next({
             path: '/dashboard',
             query: {
-                error: "Access Denied"
+                error: 'Access Denied'
             }
         })
     }
@@ -145,6 +147,11 @@ const router = new VueRouter({
            beforeEnter: requireAuth
        },
        {
+           path: '/password',
+           component: PasswordChange,
+           beforeEnter: requireAuth
+       },
+       {
            path: '/application',
            component: Application,
            beforeEnter: isVerified
@@ -165,7 +172,7 @@ const router = new VueRouter({
            beforeEnter: isAdmin,
            children: [
                {
-                   path: 'statistics', component: Reset
+                   path: 'statistics', component: Statistics
                },
                {
                    path: 'users', component: Dashboard
@@ -200,12 +207,12 @@ const router = new VueRouter({
            path: '/logout',
            beforeEnter (to, from, next) {
                swal({
-                   title: "Just to be safe",
-                   text: "Are you sure you want to logout?",
-                   type: "warning",
+                   title: 'Just to be safe',
+                   text: 'Are you sure you want to logout?',
+                   type: 'warning',
                    showCancelButton: true,
-                   confirmButtonColor: "#DD6B55",
-                   confirmButtonText: "Logout"
+                   confirmButtonColor: '#DD6B55',
+                   confirmButtonText: 'Logout'
                }).then(result => {
                    if (result.value) {
                        AuthService.logout()
@@ -238,7 +245,7 @@ const router = new VueRouter({
                next({
                    path: '/error',
                    query: {
-                       error: "Page not found."
+                       error: 'Page not found.'
                    }
                })
            }

@@ -1,19 +1,19 @@
 require('dotenv').load();
 
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const webpack = require('gulp-webpack');
-const nodemon = require('nodemon');
-const dotenv = require('dotenv');
+const gulp          = require('gulp');
+const babel         = require('gulp-babel');
+const webpack       = require('gulp-webpack');
+const nodemon       = require('nodemon');
+const dotenv        = require('dotenv');
 const WebpackConfig = require('./webpack.config');
-const uglify = require('gulp-uglify');
-const minifyCss = require('gulp-minify-css')
+const uglify        = require('gulp-uglify');
+const minifyCSS     = require('gulp-minify-css')
 
 gulp.task('css', function() {
     console.log('Rebuilding CSS...');
 
     gulp.src(['app/client/css/*.css'])
-        .pipe(minifyCss())
+        .pipe(minifyCSS())
         .pipe(gulp.dest('app/client/dist'))
 
     console.log('CSS built!')

@@ -1,7 +1,7 @@
 /* globals localStorage */
 
-const $       = require('jquery');
-const Session = require('./Session');
+import $       from 'jquery';
+import Session from './Session';
 
 /*
 *
@@ -11,6 +11,28 @@ beforeSend: xhr => {
 * */
 
 module.exports = {
+
+    changePassword(oldPassword, newPassword, callback) {
+        $.ajax({
+            type: 'POST',
+            url: '/auth/changePassword',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            data: JSON.stringify({
+                token: Session.getToken(),
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            }),
+            success: data => {
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
+                if (callback) callback(null, data)
+            },
+            error: data => {
+                if (callback) callback(JSON.parse(data.responseText)['error'])
+            }
+        });
+    },
 
     isAuthorized(permissionName) {
         if (Session.getSettings()) {

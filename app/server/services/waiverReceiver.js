@@ -48,12 +48,12 @@ var fetch_email = function() {
                             buffer = chunk.toString('utf8');
                         });
                         stream.once('end', function () {
-                            buffer = buffer.split("\r\n");
+                            buffer = buffer.split('\r\n');
 
-                            if (buffer[0] === "From: HelloSign <noreply@mail.hellosign.com>") {
+                            if (buffer[0] === 'From: HelloSign <noreply@mail.hellosign.com>') {
                                 console.log(buffer[1]);
-                                var process = buffer[1].split(" ");
-                                if (process[process.length-1] === "by") {
+                                var process = buffer[1].split(' ');
+                                if (process[process.length-1] === 'by') {
                                     process = [buffer[2].slice(1)];
                                 }
 
@@ -69,8 +69,8 @@ var fetch_email = function() {
                                     },
                                     function(err, user) {
                                         if (user) {
-                                            console.log(user.email + "'s waiver has been received");
-                                            addToLog(user.email + "'s waiver has been received", null);
+                                            console.log(user.email + '\'s waiver has been received');
+                                            addToLog(user.email + '\'s waiver has been received', null);
                                         } else {
                                             addToLog('broooo da sheit? dis bois (' + process[process.length-1] + ') has da non existianting email bro')
                                         }
@@ -81,7 +81,7 @@ var fetch_email = function() {
 
                 });
                 f.once('error', function (err) {
-                    console.log("imap error " + err);
+                    console.log('imap error ' + err);
                 });
             }
         });

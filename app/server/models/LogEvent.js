@@ -60,12 +60,12 @@ function buildLoggingCore(id, name, email) {
 // -> Email
 schema.statics.buildLoggingData = function(id, callback) {
     if (id == -1) {
-        return callback(buildLoggingCore(-1, "MasseyHacks Internal Authority", "internal@masseyhacks.ca"));
+        return callback(buildLoggingCore(-1, 'MasseyHacks Internal Authority', 'internal@masseyhacks.ca'));
     }
 
     User.getByID(id, function (err, user) {
         if (!user) {
-            return callback(buildLoggingCore(id, "null name", "null email"));
+            return callback(buildLoggingCore(id, 'null name', 'null email'));
         } else {
             return callback(buildLoggingCore(id, user.fullName, user.email));
         }

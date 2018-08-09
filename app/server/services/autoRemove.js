@@ -6,15 +6,15 @@ function removeUnverifiedUser(){
     var now = Date.now();
 
     // Only delete users below checkin
-    User.find({"permissions.level" : { $lt : 2 }}, function(err, users) {
+    User.find({'permissions.level' : { $lt : 2 }}, function(err, users) {
         if (err || !users) {
             throw err;
         }
 
         async.each(users, function (user, callback) {
             if (now - user.timestamp > 172800000){
-                console.log("Removing " + user.email);
-                User.findOneAndRemove({"id":user.id}, callback);
+                console.log('Removing ' + user.email);
+                User.findOneAndRemove({'id':user.id}, callback);
             }
         })
     });

@@ -95,7 +95,11 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
                 return callback(err);
             }
 
-            return callback({ error: "Error: User not found." })
+            return callback({
+                error: 'Error: User not found.',
+                code: 404
+            })
+
         }
 
         return callback(null, filterSensitive(user, permissionLevel));
@@ -107,13 +111,15 @@ schema.statics.getByToken = function (token, callback) {
         if (err || !payload) {
             console.log('ur bad');
             return callback({
-                error: 'Error: Invalid Token'
+                error: 'Error: Invalid Token',
+                code: 401
             });
         }
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Error: Token is invalid for this operation'
+                error: 'Error: Token is invalid for this operation',
+                code: 403
             });
         }
 
@@ -125,13 +131,15 @@ schema.statics.getByToken = function (token, callback) {
                 }
 
                 return callback({
-                    error: 'Error: Token is invalid.'
+                    error: 'Error: Token is invalid.',
+                    code: 401
                 });
             }
 
             if (payload.iat * 1000 < user.passwordLastUpdated) {
                 return callback({
-                    error: 'Error: Token is revoked.'
+                    error: 'Error: Token is invalid.',
+                    code: 401
                 });
             }
 
@@ -149,7 +157,10 @@ schema.statics.getByEmail = function (email, callback) {
                 return callback(err);
             }
 
-            return callback({error: "Error: User not found"})
+            return callback({
+                error: 'Error: User not found',
+                code: 404
+            })
         }
 
         return callback(null, user);
@@ -159,18 +170,18 @@ schema.statics.getByEmail = function (email, callback) {
 
 schema.virtual('lowerCaseName').get(function() {
     if (this.firstName && this.lastName) {
-        return this.firstName.toLowerCase() + " " + this.lastName.toLowerCase();
+        return this.firstName.toLowerCase() + ' ' + this.lastName.toLowerCase();
     }
 
-    return "";
+    return '';
 });
 
 schema.virtual('fullName').get(function() {
     if (this.firstName && this.lastName) {
-        return this.firstName + " " + this.lastName;
+        return this.firstName + ' ' + this.lastName;
     }
 
-    return "";
+    return '';
 });
 
 schema.virtual('permissions.level').get(function () {
@@ -204,7 +215,7 @@ schema.virtual('permissions.level').get(function () {
 schema.virtual('status.name').get(function () {
 
     if (this.permissions.level >= 2) {
-        return "organizer";
+        return 'organizer';
     }
 
     if (this.status.checkedIn && this.status.statusReleased) {
@@ -212,30 +223,30 @@ schema.virtual('status.name').get(function () {
     }
 
     if (this.status.declined && this.status.statusReleased) {
-        return "declined";
+        return 'declined';
     }
 
     if (this.status.waitlisted && this.status.statusReleased) {
-        return "waitlisted";
+        return 'waitlisted';
     }
 
     if (this.status.confirmed && this.status.statusReleased) {
-        return "confirmed";
+        return 'confirmed';
     }
 
     if (this.status.admitted && this.status.statusReleased) {
-        return "admitted";
+        return 'admitted';
     }
 
     if (this.status.submittedApplication) {
-        return "submitted";
+        return 'submitted';
     }
 
     if (!this.permissions.verified) {
-        return "unverified";
+        return 'unverified';
     }
 
-    return "incomplete";
+    return 'incomplete';
 
 });
 
@@ -258,7 +269,7 @@ schema.static.filterSensitive = function (excuterToken, user, callback) {
             keys = Object.keys(runner);
 
             for (var i = 0; i < keys.length; i++) {
-                if("type" in runner[keys[i]]) {
+                if('type' in runner[keys[i]]) {
                     if (runner[keys[i]].permission >= permissionLevel){
                         try {
                             delete userpath[keys[i]];

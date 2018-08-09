@@ -77,19 +77,23 @@
                 })
             },
             resetPassword() {
-                AuthService.resetPasswordWithToken(this.token, this.password1, (err, data) => {
-                    if (err) {
-                        this.error = err ? err : 'Error: Something went wrong'
-                    } else {
-                        this.error = null
+                if (this.password1 != this.password2) {
+                    this.error = 'Error: Passwords don\'t match!'
+                } else {
+                    AuthService.resetPasswordWithToken(this.token, this.password1, (err, data) => {
+                        if (err) {
+                            this.error = err ? err : 'Error: Something went wrong'
+                        } else {
+                            this.error = null
 
-                        swal({
-                            title: 'Success!',
-                            text: 'Password changed!',
-                            type: 'success'
-                        })
-                    }
-                })
+                            swal({
+                                title: 'Success!',
+                                text: 'Password changed!',
+                                type: 'success'
+                            })
+                        }
+                    })
+                }
             }
         }
     }

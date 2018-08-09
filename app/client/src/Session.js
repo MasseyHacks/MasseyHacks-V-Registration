@@ -28,7 +28,7 @@ module.exports = {
         delete localStorage.userID;
         delete localStorage.user;
 
-        document.cookie = ""
+        document.cookie = ''
 
         Raven.setUserContext()
 

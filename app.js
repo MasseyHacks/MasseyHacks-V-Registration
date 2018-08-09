@@ -12,7 +12,7 @@ const cpuCount        = require('os').cpus().length;
 
 const mongoose        = require('mongoose');
 const port            = process.env.PORT || 3005;
-const database        = process.env.DATABASE || "mongodb://localhost:27017";
+const database        = process.env.DATABASE || 'mongodb://localhost:27017';
 
 // Start configuration
 const organizers      = require('./config/organizers');

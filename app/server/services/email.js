@@ -85,7 +85,7 @@ module.exports = {
         //check if the given queue is valid
         if(validTemplates[queue] === null){//invalid
             console.log('Invalid email queue!');
-            return callback({error:'Invalid email queue.'});
+            return callback({error: 'Invalid email queue.'});
         }
         else{//valid
             var pushObj = {};
@@ -99,7 +99,7 @@ module.exports = {
             }, function(err,settings){
                 if(err){
                     console.log(err);
-                    return callback({error:'Cannot add email to the queue.'});
+                    return callback({error: 'Cannot add email to the queue.'});
                 }
                 else{
                     return callback(null,{message:'Success'});
@@ -118,13 +118,13 @@ module.exports = {
         //check if the given queue is valid
         if(!queue || validTemplates[queue]['queueName'] === null || !validTemplates[queue]['canQueue']){//invalid
             console.log('Invalid email queue!');
-            return callback({error:'Invalid email queue.'});
+            return callback({error: 'Invalid email queue.'});
         }
         else{//valid
             //return all emails from that queue
             Settings.findOne({}, function(err, settings) {
                 if(err){
-                    return callback({error:'Cannot find the email queue.'});
+                    return callback({error: 'Cannot find the email queue.'});
                 }
                 else {
                     console.log('Flushing Queue...', settings.emailQueue[validTemplates[queue]['queueName']]);//debug
@@ -214,9 +214,9 @@ module.exports = {
             }
             else{
                 for(var emailQueue in settings.emailQueue){
-                    if(typeof settings.emailQueue[emailQueue] !== "function"){
+                    if(typeof settings.emailQueue[emailQueue] !== 'function'){
                         for(var i=0; i < settings.emailQueue[emailQueue].length; i++){
-                            console.log(emailQueue + " " + userEmail);
+                            console.log(emailQueue + ' ' + userEmail);
                         }
                     }
                 }

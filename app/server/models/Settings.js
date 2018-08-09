@@ -12,7 +12,13 @@ var emailQueue = {
   rejectionEmails: {
       type: [String]
   },
-  reminderEmails: {
+  waitlistEmails: {
+      type: [String]
+  },
+  laggerConfirmEmails: {
+      type: [String]
+  },
+  laggerEmails: {
       type: [String]
   }
 };
@@ -57,12 +63,34 @@ schema.virtual('permissions').get(function() {
 });
 
 schema.virtual('applications').get(function() {
-    return Date.now() >= this.timeOpen ? userFields.profile : {"error":"Applications are not open yet"};
+    return Date.now() >= this.timeOpen ? userFields.profile : {'error':'Applications are not open yet'};
 });
 
 schema.virtual('registrationOpen').get(function() {
    return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
 });
+
+schema.statics.requestSchool = function(schoolName, callback) {
+    this.findOneAndUpdate({
+
+    }, {
+        $push: {
+            pendingSchools: schoolName
+        }
+    }, {
+        new: true
+    }, function(err, settings) {
+        if (err || !settings) {
+            if (err) {
+                return callback(err)
+            }
+
+            return callback({error: 'Unable to add school to pending list', code: 500})
+        }
+
+        return callback(null, {message: 'Success'})
+    })
+}
 
 schema.statics.confirmationOpen = function() {
     return this.timeConfirm >= Date.now();

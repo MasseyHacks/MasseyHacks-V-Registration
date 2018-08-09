@@ -7,20 +7,19 @@ const User            = require('../models/User');
 module.exports = {
     defaultResponse : function(req, res){
         return function(err, data){
-
             if (err){
                 // Only send error to slack if in production
                 // Keep everyone happy
                 if (process.env.NODE_ENV === 'production'){
 
-                    var data =  "Request: " + req.method + ' ' + req.url +
-                                "\n -------------------------- \n" +
-                                "Body: \n " +
+                    var data =  'Request: ' + req.method + ' ' + req.url +
+                                '\n -------------------------- \n' +
+                                'Body: \n ' +
                                 JSON.stringify(req.body, null, 2) +
-                                "\n -------------------------- \n" +
-                                "\nError:\n" +
+                                '\n -------------------------- \n' +
+                                '\nError:\n' +
                                 JSON.stringify(err, null, 2) +
-                                "``` \n";
+                                '``` \n';
 
                     if (process.env.SERVER_RAVEN_KEY) {
                         Raven.captureMessage(data, {
@@ -35,10 +34,10 @@ module.exports = {
                             {
                                 form: {
                                     payload: JSON.stringify({
-                                        "icon_emoji": ":happydoris:",
-                                        "username": "CrashBot",
-                                        "text":
-                                        "Hey! " + process.env.ADMIN_UIDS + " An issue was detected with the server.\n\n```" +
+                                        'icon_emoji': ':happydoris:',
+                                        'username': 'CrashBot',
+                                        'text':
+                                        'Hey! ' + process.env.ADMIN_UIDS + ' An issue was detected with the server.\n\n```' +
                                         data
                                     })
                                 }
@@ -50,7 +49,7 @@ module.exports = {
                     }
                 }
 
-                return res.json(err);
+                return res.status(err.code ? err.code : 500).json(err);
             } else {
                 return res.json(data);
             }
@@ -69,10 +68,10 @@ module.exports = {
             LogEvent.buildLoggingData(actionTo, function(dataTo) {
 
                 LogEvent.create({
-                    "to": dataTo,
-                    "from": dataFrom,
-                    "message": message,
-                    "timestamp": Date.now()
+                    'to': dataTo,
+                    'from': dataFrom,
+                    'message': message,
+                    'timestamp': Date.now()
                 }, function (err, event) {
                     console.log(event);
 
@@ -83,9 +82,9 @@ module.exports = {
                             {
                                 form: {
                                     payload: JSON.stringify({
-                                        "icon_emoji": ":pcedoris:",
-                                        "username": "AuditBot",
-                                        "text": "```" + event + "```"
+                                        'icon_emoji': ':pcedoris:',
+                                        'username': 'AuditBot',
+                                        'text': '```' + event + '```'
                                     })
                                 }
                             },
