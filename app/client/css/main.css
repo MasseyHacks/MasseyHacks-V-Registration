@@ -128,16 +128,17 @@ h2 {
 
 #main-sidebar {
     height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: rgb(8,27,74);
     position: absolute;
     width: 20vw;
 }
 
 #main-sidebar ul {
     list-style: none;
+    color: white
 }
 
-#main-sidebar router-link {
+#main-sidebar li {
     color: white;
     text-decoration: none;
 }
@@ -152,15 +153,16 @@ h2 {
 }
 
 .title-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
     padding: 1%;
-    color: white;
     text-align: center;
     width: 60vw;
 }
 
 .title-card h2 {
+    font-size: 3.5em;
+    letter-spacing: 0.1em;
+}
+.title-card h3 {
     font-size: 2em;
 }
 
