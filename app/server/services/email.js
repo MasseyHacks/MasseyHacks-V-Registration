@@ -1,10 +1,10 @@
 require('dotenv').load();
-var nodemailer = require('nodemailer');
-var fs = require('fs');
-var handlebars = require('handlebars');
-var mongoose = require('mongoose');
-var Settings = require('../models/Settings');
-var User = require('../models/User');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const handlebars = require('handlebars');
+const mongoose = require('mongoose');
+const Settings = require('../models/Settings');
+const User = require('../models/User');
 var date = new Date();
 
 
@@ -19,14 +19,14 @@ var smtpConfig = {
 };
 
 var transporter = nodemailer.createTransport(smtpConfig);
-const validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
+let validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json', 'utf8'));
 
 module.exports = {
     assembleTemplate : function(queueName){
-        const templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
-        const baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
+        let templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
+        let baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
 
-        const template = baseHTML.replace('{{emailData}}',templateHTML);
+        let template = baseHTML.replace('{{emailData}}',templateHTML);
         console.log(template);
         return template;
 
@@ -133,7 +133,7 @@ module.exports = {
                     var emailPendingList = settings.emailQueue[validTemplates[queue]['queueName']];
 
                     //Assemble the template
-                    const emailHTML = module.exports.assembleTemplate(queue);
+                    let emailHTML = module.exports.assembleTemplate(queue);
 
                     //loop through each
                     emailPendingList.forEach(function (element) {
@@ -146,7 +146,7 @@ module.exports = {
                             else {
                                 //define the dates
                                 date.setTime(settings.timeConfirm);
-                                const confirmByString = date.toLocaleDateString('en-US', {
+                                let confirmByString = date.toLocaleDateString('en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -154,7 +154,7 @@ module.exports = {
                                 });
 
                                 date.setTime(settings.timeClose);
-                                const submitByString = date.toLocaleDateString('en-US', {
+                                let submitByString = date.toLocaleDateString('en-US', {
                                     weekday: 'long',
                                     year: 'numeric',
                                     month: 'long',
@@ -207,19 +207,76 @@ module.exports = {
 
         console.log('Attempting user queue flush');
 
-        //check if the given queue is valid
         Settings.findOne({},function(err,settings){
             if(err){
                 return callback(err);
             }
             else{
-                for(var emailQueue in settings.emailQueue){
-                    if(typeof settings.emailQueue[emailQueue] !== "function"){
-                        for(var i=0; i < settings.emailQueue[emailQueue].length; i++){
-                            console.log(emailQueue + " " + email);
+
+                User.getByEmail(userEmail, function (error, user) {
+                    if(error){
+                        return callback({error: 'The provided email does not correspond to a user.'});
+                    }
+                    else{
+                        //define the dates
+                        date.setTime(settings.timeConfirm);
+                        let confirmByString = date.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        date.setTime(settings.timeClose);
+                        let submitByString = date.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        //fill dataPack
+                        var dataPack = {
+                            nickname: user['firstName'],
+                            confirmBy: confirmByString,
+                            dashUrl: process.env.ROOT_URL,
+                            submitBy: submitByString
+                        };
+                        for(var emailQueueName in settings.emailQueue){
+                            if(typeof settings.emailQueue[emailQueueName] === 'object'){
+                                console.log(typeof settings.emailQueue[emailQueueName]);
+                                for(var i=0; i < settings.emailQueue[emailQueueName].length; i++){
+                                    console.log(emailQueueName + " " + settings.emailQueue[emailQueueName][i]);
+                                    if(settings.emailQueue[emailQueueName][i] === userEmail){
+
+                                        //mailer
+                                        module.exports.sendTemplateEmail(userEmail,emailQueueName.toLowerCase(),dataPack);
+
+                                        //delete entry from db
+                                        var pullObj = {};
+                                        //kinda sketchy too
+                                        pullObj['emailQueue.'+emailQueueName] = userEmail;
+                                        //remove it from the queue
+
+                                        console.log(pullObj);
+
+                                        Settings.findOneAndUpdate({}, {
+                                            $pull : pullObj
+                                        }, {
+
+                                        }, function(err, settings) {
+                                            console.log(err, settings.emailQueue);
+                                        });
+
+
+                                    }
+                                }
+                            }
                         }
                     }
-                }
+
+                });
+
             }
         })
     }
