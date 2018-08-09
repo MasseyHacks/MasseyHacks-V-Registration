@@ -8,7 +8,7 @@
         <li>
             <router-link to="/organizer/users">Users</router-link>
         </li>
-        <li v-if="$parent.AuthService.isAuthorized('reviewer')">
+        <li v-if="$parent.user.permissions.reviewer">
             <router-link to="/organizer/review">Review</router-link>
         </li>
 

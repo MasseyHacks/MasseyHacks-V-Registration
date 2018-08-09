@@ -58,16 +58,27 @@ function requireAuth (to, from, next) {
     }
 }
 
-function isAuthorized (to, from, next, authCondition) {
-    if (!Session.loggedIn()) {
+function isAuthorized (to, from, next) {
+    var authorized = true
+
+    for (var key in to.meta) {
+        if (!Session.getUser() || !to['meta'][key] in Session.getUser()[key] || !Session.getUser()[key][to['meta'][key]]) {
+            authorized = false
+            break
+        }
+    }
+
+    //to.meta.permission in Session.getUser()['permissions'] && Session.getUser()['permissions'][to.meta.permission]
+
+    if (authorized) {
+        next()
+    } else if (!Session.loggedIn()) {
         next({
             path: '/login',
             query: {
                 redirect: to.fullPath
             }
         })
-    } else if (Session.getUser() && Session.getUser().permissions.level >= authCondition) {
-        next()
     } else {
         next({
             path: '/error',
@@ -76,55 +87,7 @@ function isAuthorized (to, from, next, authCondition) {
             }
         })
     }
-}
 
-/*
-function isAdmitted (to, from, next) {
-    if (!Session.loggedIn()) {
-        next({
-            path: '/login',
-            query: {
-                redirect: to.fullPath
-            }
-        })
-    } else if (Session.getUser() && Session.getUser().status.admitted) {
-        next()
-    } else {
-        next({
-            path: '/dashboard',
-            query: {
-                error: 'Access Denied'
-            }
-        })
-    }
-}*/
-
-function isVerified (to, from, next) {
-    isAuthorized(to, from, next, 1)
-}
-
-function isCheckin (to, from, next) {
-    isAuthorized(to, from, next, 2)
-}
-
-function isAdmin (to, from, next) {
-    isAuthorized(to, from, next, 3)
-}
-
-function isReviewer (to, from, next) {
-    isAuthorized(to, from, next, 4)
-}
-
-function isAdmin (to, from, next) {
-    isAuthorized(to, from, next, 5)
-}
-
-function isOwner (to, from, next) {
-    isAuthorized(to, from, next, 6)
-}
-
-function isDeveloper (to, from, next) {
-    isAuthorized(to, from, next, 7)
 }
 
 const router = new VueRouter({
@@ -154,22 +117,35 @@ const router = new VueRouter({
        {
            path: '/application',
            component: Application,
-           beforeEnter: isVerified
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'verified'
+           }
        },
        {
            path: '/confirmation',
            component: Confirmation,
-           beforeEnter: isVerified
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'verified',
+               status: 'admitted'
+           }
        },
        {
            path: '/checkin',
            component: Checkin,
-           beforeEnter: isCheckin
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'checkin'
+           }
        },
        {
            path: '/organizer',
            component: Organizer,
-           beforeEnter: isAdmin,
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'admin'
+           },
            children: [
                {
                    path: 'statistics', component: Statistics
@@ -185,7 +161,10 @@ const router = new VueRouter({
        {
            path: '/owner',
            component: Owner,
-           beforeEnter: isOwner,
+           beforeEnter:  isAuthorized,
+           meta: {
+               permissions: 'owner'
+           },
            children: [
                {
                    path: '/settings', component: Login

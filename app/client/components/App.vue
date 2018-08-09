@@ -6,16 +6,16 @@
                 <router-link v-if="loggedIn" to="/logout">Log out</router-link>
             </li>
 
-            <li  v-if="AuthService.isAuthorized('verified')">
+            <li  v-if="user.permissions.verified">
                 <router-link to="/application">Application</router-link>
             </li>
-            <li v-if="AuthService.isAuthorized('checkin')">
+            <li v-if="user.permissions.checkin">
                 <router-link to="/checkin">Check In</router-link>
             </li>
-            <li v-if="AuthService.isAuthorized('admin')">
+            <li v-if="user.permissions.admin">
                 <router-link to="/organizer">Organizer</router-link>
             </li>
-            <li v-if="AuthService.isAuthorized('owner')">
+            <li v-if="user.permissions.owner">
                 <router-link to="/owner">Owner</router-link>
             </li>
             <li v-if="user.status.admitted">
@@ -23,6 +23,9 @@
             </li>
             <li>
                 <router-link to="/dashboard">Dashboard</router-link>
+            </li>
+            <li>
+                <router-link to="/password">Change PW</router-link>
             </li>
         </ul>
 
