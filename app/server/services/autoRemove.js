@@ -1,6 +1,6 @@
-var _ = require('underscore');
-var async = require('async');
-var User = require('../models/User');
+const _     = require('underscore');
+const async = require('async');
+const User  = require('../models/User');
 
 function removeUnverifiedUser(){
     var now = Date.now();

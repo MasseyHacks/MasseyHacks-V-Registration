@@ -1,5 +1,5 @@
-var Settings = require('../app/server/models/Settings');
-var fs = require('fs');
+const Settings = require('../app/server/models/Settings');
+const fs       = require('fs');
 
 // Check if settings exists
 // If not, create new object

@@ -1,9 +1,9 @@
-var Imap = require('imap');
-var inspect = require('util').inspect;
-var Users = require('../models/User');
-var Settings = require('../models/Settings');
+const Imap     = require('imap');
+const inspect  = require('util').inspect;
+const Users    = require('../models/User');
+const Settings = require('../models/Settings');
 
-var imap = new Imap({
+const imap     = new Imap({
     user: process.env.waiverEmail,
     password: process.env.waiverPassword,
     host: process.env.waiverAddress,
@@ -31,19 +31,19 @@ imap.once('end', function() {
     console.log('Connection ended');
 });
 
-var fetch_email = function() {
+const fetch_email = function() {
     openInbox(function() {
         imap.search([ 'UNSEEN'], function(err, results) {
             if (!err && results.length !== 0) {
 
-                var f = imap.fetch(results, {
+                const f = imap.fetch(results, {
                     bodies: 'HEADER.FIELDS (FROM SUBJECT)',
                     markSeen: true,
                     struct: true
                 });
                 f.on('message', function (msg) {
                     msg.on('body', function (stream) {
-                        var buffer;
+                        const buffer;
                         stream.on('data', function (chunk) {
                             buffer = chunk.toString('utf8');
                         });
@@ -52,7 +52,7 @@ var fetch_email = function() {
 
                             if (buffer[0] === 'From: HelloSign <noreply@mail.hellosign.com>') {
                                 console.log(buffer[1]);
-                                var process = buffer[1].split(' ');
+                                const process = buffer[1].split(' ');
                                 if (process[process.length-1] === 'by') {
                                     process = [buffer[2].slice(1)];
                                 }

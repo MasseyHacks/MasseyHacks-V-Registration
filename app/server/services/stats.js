@@ -1,7 +1,7 @@
-var _ = require('underscore');
-var async = require('async');
-var User = require('../models/User');
-var Settings = require('../models/Settings')
+const _        = require('underscore');
+const async    = require('async');
+const User     = require('../models/User');
+const Settings = require('../models/Settings')
 
 // In memory stats.
 var stats = {};

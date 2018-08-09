@@ -1,13 +1,13 @@
-var fs = require('fs');
-var User = require('../app/server/models/User');
-var UserController = require('../app/server/controllers/UserController');
-var Mailer = require('../app/server/services/email');
+const fs             = require('fs');
+const User           = require('../app/server/models/User');
+const UserController = require('../app/server/controllers/UserController');
+const Mailer         = require('../app/server/services/email');
 
-var organizers = JSON.parse(fs.readFileSync('config/data/organizers.json', 'utf8'));
+const organizers     = JSON.parse(fs.readFileSync('config/data/organizers.json', 'utf8'));
 
 console.log('Trying to add organizers');
 
-for(var key in organizers) {
+for(const key in organizers) {
     email      = organizers[key]['email'];
     firstName  = organizers[key]['firstName'];
     lastName   = organizers[key]['lastName'];

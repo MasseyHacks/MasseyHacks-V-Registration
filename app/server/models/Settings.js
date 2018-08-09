@@ -1,7 +1,7 @@
 require('dotenv').load();
 
-var mongoose = require('mongoose');
-var userFields = require('../models/data/UserFields');
+const mongoose   = require('mongoose');
+const userFields = require('../models/data/UserFields');
 
 JWT_SECRET = process.env.JWT_SECRET;
 

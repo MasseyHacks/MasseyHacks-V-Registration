@@ -1,11 +1,11 @@
 require('dotenv').load();
 const nodemailer = require('nodemailer');
-const fs = require('fs');
+const fs         = require('fs');
 const handlebars = require('handlebars');
-const mongoose = require('mongoose');
-const Settings = require('../models/Settings');
-const User = require('../models/User');
-var date = new Date();
+const mongoose   = require('mongoose');
+const Settings   = require('../models/Settings');
+const User       = require('../models/User');
+var date         = new Date();
 
 
 var smtpConfig = {

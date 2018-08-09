@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var User  = require('../models/User');
+const mongoose = require('mongoose');
+const User     = require('../models/User');
 
 JWT_SECRET = process.env.JWT_SECRET;
 

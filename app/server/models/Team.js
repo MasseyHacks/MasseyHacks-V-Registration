@@ -1,9 +1,9 @@
 require('dotenv').load();
 
-var mongoose = require('mongoose'),
-    bcrypt = require('bcrypt-nodejs'),
-    validator = require('validator'),
-    jwt = require('jsonwebtoken');
+const mongoose  = require('mongoose');
+const bcrypt    = require('bcrypt-nodejs');
+const validator = require('validator');
+const jwt       = require('jsonwebtoken');
 
 var schema = new mongoose.Schema({
 

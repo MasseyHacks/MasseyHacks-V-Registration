@@ -1,17 +1,17 @@
 require('dotenv').load();
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt-nodejs');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
+const mongoose          = require('mongoose');
+const bcrypt            = require('bcrypt-nodejs');
+const validator         = require('validator');
+const jwt               = require('jsonwebtoken');
 
 const UNVERIFIED_HACKER = 0;
-const HACKER = 1;
-const CHECK_IN = 2;
-const ADMIN = 3;
-const REVIEW = 4;
-const OWNER = 5;
-const DEVELOPER = 6;
+const HACKER            = 1;
+const CHECK_IN          = 2;
+const ADMIN             = 3;
+const REVIEW            = 4;
+const OWNER             = 5;
+const DEVELOPER         = 6;
 
 JWT_SECRET = process.env.JWT_SECRET;
 
