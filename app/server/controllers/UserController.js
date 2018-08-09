@@ -271,16 +271,10 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             logger.logAction(user._id.email, user._id, 'Requested a password reset email.');
 
             console.log(resetURL);
-
-            mailer.sendTemplateEmail(email,'passwordresetemails',{
+            mailer.sendTemplateEmail(email,"passwordresetemails", {
                 nickname: user.firstName,
                 resetUrl: resetURL
             });
-
-            /*
-            mailer.flushQueue('acceptanceEmails', function(err, msg) {
-                console.log(err, msg)
-            });*/
         }
 
         return callback();
