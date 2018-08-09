@@ -187,7 +187,7 @@ schema.statics.getByToken = function (token, callback) {
     }.bind(this));
 };
 
-schema.statics.getByEmail = function (email, callback) {
+schema.statics.getByEmail = function (email, callback, permissionLevel) {
     this.findOne({
         email:  email ? email.toLowerCase() : email
     }, function(err, user) {
@@ -202,7 +202,11 @@ schema.statics.getByEmail = function (email, callback) {
             })
         }
 
-        return callback(null, user);
+        if (!permissionLevel) {
+            permissionLevel = 0
+        }
+
+        return callback(null, filterSensitive(user, permissionLevel));
     });
 };
 
@@ -289,11 +293,12 @@ schema.virtual('status.name').get(function () {
 
 });
 
+schema.statics.filterSensitive = function(user, permission) {
+    return filterSensitive(user, permission);
+}
+
 var filterSensitive = function (user, permission) {
     var u = user.toJSON();
-
-    console.log(u)
-
 
     var permissionLevel;
 

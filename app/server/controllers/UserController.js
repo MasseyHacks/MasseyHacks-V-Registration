@@ -392,7 +392,7 @@ UserController.loginWithToken = function(token, callback){
 
         logger.logAction(user._id, user._id, 'Logged in with token.');
 
-        return callback(err, token, user);
+        return callback(err, token, User.filterSensitive(user));
     });
 };
 
@@ -430,7 +430,7 @@ UserController.loginWithPassword = function(email, password, callback){
 
             var token = user.generateAuthToken();
 
-            return callback(null, user, token);
+            return callback(null, User.filterSensitive(user), token);
         });
 };
 

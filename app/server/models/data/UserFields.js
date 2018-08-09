@@ -24,7 +24,8 @@ var status = {
     passwordSuspension: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        permission: ADMIN
     },
     submittedApplication: {
         type: Boolean,
