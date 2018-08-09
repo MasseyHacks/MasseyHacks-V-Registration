@@ -8,6 +8,17 @@
             <p>hello</p>
         </div>
         <p>Logged in as: {{$parent.user.fullName}}</p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                   <h4>hi</h4>
+                </div>
+                <div class="col-md-6">
+                    <h4>hi</h4>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 

@@ -32,7 +32,7 @@
         </div>
 
         <!-- Router injects stuff in here -->
-        <div id="app">
+        <div id="app-view">
             <template v-if="$route.matched.length">
                 <transition :name="transitionName">
                     <router-view class="child-view"></router-view>
@@ -43,8 +43,9 @@
 </template>
 
 <script>
-    import AuthService from '../src/AuthService'
-    import Session     from '../src/Session'
+    import AuthService  from '../src/AuthService'
+    import Session      from '../src/Session'
+    import BootstrapVue from 'bootstrap-vue'
 
     export default {
         beforeRouteUpdate (to, from, next) {

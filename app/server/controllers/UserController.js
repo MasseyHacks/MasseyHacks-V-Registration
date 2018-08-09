@@ -280,7 +280,6 @@ UserController.sendPasswordResetEmail = function (email, callback) {
         return callback();
     });
 
-
 };
 
 UserController.createUser = function (email, firstName, lastName, password, callback) {

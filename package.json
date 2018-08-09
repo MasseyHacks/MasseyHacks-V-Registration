@@ -30,6 +30,7 @@
     "babel-preset-es2015": "^6.1.18",
     "babel-runtime": "^6.3.13",
     "bcrypt-nodejs": "0.0.3",
+    "bootstrap-vue": "^2.0.0-rc.11",
     "buble": "^0.19.3",
     "cluster": "^0.7.7",
     "cookie-parser": "^1.4.3",

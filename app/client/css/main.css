@@ -143,8 +143,9 @@ h2 {
     text-decoration: none;
 }
 
-#app {
+#app-view {
     position: relative;
+    left: calc(25vw+50px);
 }
 
 .app-screen {
