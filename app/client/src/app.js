@@ -68,8 +68,6 @@ function isAuthorized (to, from, next) {
         }
     }
 
-    //to.meta.permission in Session.getUser()['permissions'] && Session.getUser()['permissions'][to.meta.permission]
-
     if (authorized) {
         next()
     } else if (!Session.loggedIn()) {
@@ -148,20 +146,35 @@ const router = new VueRouter({
            },
            children: [
                {
-                   path: 'statistics', component: Statistics
+                   path: 'statistics',
+                   component: Statistics,
+                   beforeEnter: isAuthorized,
+                   meta: {
+                       permissions: 'admin'
+                   }
                },
                {
-                   path: 'users', component: Dashboard
+                   path: 'users',
+                   component: Dashboard,
+                   beforeEnter: isAuthorized,
+                   meta: {
+                       permissions: 'admin'
+                   }
                },
                {
-                   path: 'review', component: Checkin
+                   path: 'review',
+                   component: Checkin,
+                   beforeEnter: isAuthorized,
+                   meta: {
+                       permissions: 'reviewer'
+                   }
                }
            ]
        },
        {
            path: '/owner',
            component: Owner,
-           beforeEnter:  isAuthorized,
+           beforeEnter: isAuthorized,
            meta: {
                permissions: 'owner'
            },

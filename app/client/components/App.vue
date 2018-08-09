@@ -1,40 +1,44 @@
 <template>
     <div id="app">
         <!-- Common elements -->
-        <ul v-if="loggedIn">
-            <li>
-                <router-link v-if="loggedIn" to="/logout">Log out</router-link>
-            </li>
+        <div id="main-sidebar" v-if="loggedIn">
+            <ul>
+                <li>
+                    <router-link v-if="loggedIn" to="/logout">Log out</router-link>
+                </li>
 
-            <li  v-if="user.permissions.verified">
-                <router-link to="/application">Application</router-link>
-            </li>
-            <li v-if="user.permissions.checkin">
-                <router-link to="/checkin">Check In</router-link>
-            </li>
-            <li v-if="user.permissions.admin">
-                <router-link to="/organizer">Organizer</router-link>
-            </li>
-            <li v-if="user.permissions.owner">
-                <router-link to="/owner">Owner</router-link>
-            </li>
-            <li v-if="user.status.admitted">
-                <router-link to="/confirmation">Confirmation</router-link>
-            </li>
-            <li>
-                <router-link to="/dashboard">Dashboard</router-link>
-            </li>
-            <li>
-                <router-link to="/password">Change PW</router-link>
-            </li>
-        </ul>
+                <li v-if="user.permissions.verified">
+                    <router-link to="/application">Application</router-link>
+                </li>
+                <li v-if="user.permissions.checkin">
+                    <router-link to="/checkin">Check In</router-link>
+                </li>
+                <li v-if="user.permissions.admin">
+                    <router-link to="/organizer">Organizer</router-link>
+                </li>
+                <li v-if="user.permissions.owner">
+                    <router-link to="/owner">Owner</router-link>
+                </li>
+                <li v-if="user.status.admitted">
+                    <router-link to="/confirmation">Confirmation</router-link>
+                </li>
+                <li>
+                    <router-link to="/dashboard">Dashboard</router-link>
+                </li>
+                <li>
+                    <router-link to="/password">Change PW</router-link>
+                </li>
+            </ul>
+        </div>
 
         <!-- Router injects stuff in here -->
-        <template v-if="$route.matched.length">
-            <transition :name="transitionName">
-                <router-view class="child-view"></router-view>
-            </transition>
-        </template>
+        <div id="app">
+            <template v-if="$route.matched.length">
+                <transition :name="transitionName">
+                    <router-view class="child-view"></router-view>
+                </transition>
+            </template>
+        </div>
     </div>
 </template>
 

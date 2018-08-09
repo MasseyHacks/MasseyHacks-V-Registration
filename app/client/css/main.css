@@ -12,7 +12,9 @@
     font-family: "Futura";
     font-weight: normal;
 }
-
+h2 {
+    font-family: 'Futura Bold';
+}
 .spacer {
     height: 50vh;
 }
@@ -120,6 +122,48 @@
         font-size: 3rem;
     }
 }
+.grid-layout-main {
+    display: flex;
+}
+
+#main-sidebar {
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: absolute;
+    width: 20vw;
+}
+
+#main-sidebar ul {
+    list-style: none;
+}
+
+#main-sidebar router-link {
+    color: white;
+    text-decoration: none;
+}
+
+#app {
+    position: relative;
+}
+
+.app-screen {
+    display: grid;
+    margin: auto;
+}
+
+.title-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
+    padding: 1%;
+    color: white;
+    text-align: center;
+    width: 60vw;
+}
+
+.title-card h2 {
+    font-size: 2em;
+}
+
 
 /* State transitions */
 .child-view {

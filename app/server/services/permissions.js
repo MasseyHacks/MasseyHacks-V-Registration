@@ -10,26 +10,21 @@ const User = require('../models/User');
 // 5 - Owner
 // 6 - Developer
 
-function getToken(req) {
-
-    var token = req.headers.cookie ? req.headers.cookie.split(';')[0].trim() : false;
-
-    if (!token) {
-        token = req.body.token;
-    }
-
-    return token;
-}
-
 module.exports = {
 
     getToken : function (req)
     {
-        return getToken(req);
+        var token = req.headers.cookie ? req.headers.cookie.split(';')[0].trim() : false;
+
+        if (!token) {
+            token = req.body.token;
+        }
+
+        return token;;
     },
 
     isUser : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
         var userID = req.params.userID == null ? req.body.userID : req.params.userID;
 
         User.getByToken(token, function (err, user) {
@@ -50,7 +45,7 @@ module.exports = {
     },
 
     isVerified : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
@@ -70,7 +65,7 @@ module.exports = {
     },
 
     isCheckin : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
@@ -90,7 +85,7 @@ module.exports = {
     },
 
     isAdmin : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
@@ -110,7 +105,7 @@ module.exports = {
     },
 
     isReviewer : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
@@ -130,7 +125,7 @@ module.exports = {
     },
 
     isOwner : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
@@ -150,7 +145,7 @@ module.exports = {
     },
 
     isDeveloper : function (req, res, next) {
-        var token = getToken(req);
+        var token = this.getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
