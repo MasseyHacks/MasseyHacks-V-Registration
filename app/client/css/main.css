@@ -14,6 +14,7 @@
 }
 h2 {
     font-family: 'Futura Bold';
+    font-weight: normal;
 }
 .spacer {
     height: 50vh;
@@ -144,14 +145,14 @@ h2 {
 }
 
 #app-view {
-
+    position: relative;
+    left: 20vw;
 }
 
 .app-screen {
     width: 75vw
     margin: 0 auto;
-    position: relative;
-    left: 20vw;
+
 }
 
 .ui-card {
@@ -170,9 +171,11 @@ h2 {
     font-size: 3.5em;
     letter-spacing: 0.1em;
     text-align: center;
+    font-family: 'Futura' !important;
 }
 .title-card h3 {
     font-size: 2em;
+    font-family: 'Futura' !important;
 }
 
 
