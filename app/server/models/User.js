@@ -81,45 +81,6 @@ schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-/*
-function filterSensitive(user, permissionLevel) {
-    var u = user.toJSON();
-
-    // No one gets this...
-    delete u.password;
-
-    // Less than Owner
-    if (permissionLevel < 5) {
-        delete u.applicationAdmit;
-        delete u.applicationReject;
-    }
-
-    // Less than Admin
-    if (permissionLevel < 3) {
-        delete u.applicationVotes;
-        delete u.numVotes;
-        delete u.status.admittedBy;
-        delete u.lastUpdated;
-    }
-
-    // Mask status
-    if (!user.status.statusReleased && permissionLevel < 3) {
-        u.status.admitted = false;
-        u.status.declined = false;
-        u.status.waitlisted = false;
-        u.status.rejected = false;
-        u.status.waitlisted = false;
-    }
-
-    return u;
-}
-*/
-
-// Helper function
-schema.statics.filterSensitive = function(user, permissionLevel) {
-    return filterSenstive(user, permissionLevel);
-};
-
 schema.statics.getByID = function(id, callback, permissionLevel) {
 
     if (permissionLevel == null) {

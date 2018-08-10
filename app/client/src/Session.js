@@ -10,9 +10,6 @@ module.exports = {
                             url: url,
                             contentType: 'application/json; charset=utf-8',
                             dataType: 'json',
-                            beforeSend: xhr => {
-                                xhr.setRequestHeader('x-access-token', this.getToken())
-                            },
                             success: data => {
                                 if (callback) callback(null, data)
                             },
@@ -24,6 +21,12 @@ module.exports = {
         if (data) {
             console.log('data', data)
             request['data'] = data
+        }
+
+        if (this.loggedIn()) {
+            request['beforeSend'] = xhr => {
+                                        xhr.setRequestHeader('x-access-token', this.getToken())
+                                    }
         }
 
         $.ajax(request);
