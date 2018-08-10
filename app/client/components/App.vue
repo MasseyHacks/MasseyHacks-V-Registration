@@ -7,25 +7,25 @@
                     <router-link to="/dashboard">Dashboard</router-link>
                 </li>
                 <li v-if="user.permissions.verified">
-                    <router-link to="/application">Application</router-link>
+                    <router-link to="/application" tag="a">Application</router-link>
                 </li>
                 <li v-if="user.status.admitted">
-                    <router-link to="/confirmation">Confirmation</router-link>
+                    <router-link to="/confirmation" tag="a">Confirmation</router-link>
                 </li>
                 <li v-if="user.permissions.checkin">
-                    <router-link to="/checkin">Check In</router-link>
+                    <router-link to="/checkin" tag="a">Check In</router-link>
                 </li>
                 <li v-if="user.permissions.admin">
-                    <router-link to="/organizer">Organizer</router-link>
+                    <router-link to="/organizer" tag="a">Organizer</router-link>
                 </li>
                 <li v-if="user.permissions.owner">
-                    <router-link to="/owner">Owner</router-link>
+                    <router-link to="/owner" tag="a">Owner</router-link>
                 </li>
                 <li v-if="user.permissions.developer">
-                    <router-link to="/owner">Developer</router-link>
+                    <router-link to="/owner" tag="a">Developer</router-link>
                 </li>
                 <li>
-                    <router-link to="/password">Change PW</router-link>
+                    <router-link to="/password" tag="a">Change PW</router-link>
                 </li>
                 <li>
                     <router-link v-if="loggedIn" to="/logout">Log out</router-link>
@@ -49,6 +49,7 @@
     import AuthService  from '../src/AuthService'
     import Session      from '../src/Session'
     import BootstrapVue from 'bootstrap-vue'
+    import ApiService   from '../src/ApiService.js'
 
     export default {
         beforeRouteUpdate (to, from, next) {
@@ -71,7 +72,8 @@
                 settings: Session.getSettings(),
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
-                transitionName: 'slide-left'
+                transitionName: 'slide-left',
+                ApiService: ApiService
             }
         },
         created() {

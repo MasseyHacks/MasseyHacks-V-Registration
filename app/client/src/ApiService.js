@@ -14,5 +14,11 @@ module.exports = {
         Session.sendRequest('GET', '/api/users', query, (err, data) => {
             return callback(err, data)
         })
+    },
+
+    resendEmail(query, callback) {
+        Session.sendRequest('POST', '/auth/requestVerify', query, (err, data) => {
+            return callback(err, data)
+        })
     }
 }

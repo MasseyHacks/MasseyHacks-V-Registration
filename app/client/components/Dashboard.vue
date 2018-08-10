@@ -4,14 +4,22 @@
             <div class="row">
                 <div class="title-card col-md-12">
                     <h2>DASHBOARD</h2>
-                    <h3>STATUS: {{$parent.user.status.name.toUpperCase()}}</h3>
                 </div>
             </div>
             <div class="row">
-                <b-card>
-                    <h3 class="card-title">Status</h3>
-                    <p class="card-text">Logged in as: {{$parent.user.fullName}}</p>
-                </b-card>
+                <div class="ui-card" id="dash-card">
+                    <h3>YOUR STATUS:</h3>
+                    <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
+                    <hr>
+                    <p><span class="emphasis">Welcome {{$parent.user.status.fullName}},</span>
+                        This is the MasseyHacks V Dashboard
+                    </p>
+                    <hr>
+                    <div id="noPerms" v-if="$parent.user.permissions.level == 0">
+                        <h4>You still haven't verified your email!</h4>
+                        <button class="generic-button">Resend</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

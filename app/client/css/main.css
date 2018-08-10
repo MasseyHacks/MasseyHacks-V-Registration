@@ -123,63 +123,96 @@ h2 {
         font-size: 3rem;
     }
 }
-.grid-layout-main {
-    display: flex;
-}
 
 #main-sidebar {
     height: 100vh;
     background: rgb(8,27,74);
     position: absolute;
-    width: 20vw;
+    width: 300px;
     z-index: 9000;
 }
 
 #main-sidebar ul {
     list-style: none;
     color: white
+    left: 0px;
+    padding-left: 0px;
+}
+
+#main-sidebar a {
+    color: white;
+    text-decoration: none;
+    align-items: center;
+}
+
+#main-sidebar a.router-link-active {
 }
 
 #main-sidebar li {
-    color: white;
-    text-decoration: none;
+    margin-top: 50px;
+    position: relative;
+    border: 2px solid red;
+    height: 5vh;
+    width: 300px
+    padding-left: 10%;
 }
 
 #app-view {
     position: relative;
     left: 20vw;
-    max-width: 80vw;
+    max-width: calc(100vw - 300px);
 }
 
 .app-screen {
     width: 80vw
     margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
 
 }
 
 .ui-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    height: 20vh;
-    width: 20vh;
+    background: rgb(230,230,230);
+    color: black;
+    padding: 20px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
+}
+
+.ui-card h3 {
+    font-family: 'Futura Bold';
+    font-size: 1.5em;
+    letter-spacing: 0.3em;
 }
 
 .title-card {
-/*    padding: 1%;
-*/    text-align: center;
+/*    padding: 1%;*/
+    text-align: center;
+    margin-top: 50px;
+    border-bottom: 2px solid black;
 }
 
 .title-card h2 {
     font-size: 3.5em;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.3em;
     text-align: center;
-    font-family: 'Futura' !important;
-}
-.title-card h3 {
-    font-size: 2em;
-    font-family: 'Futura' !important;
+    font-family: 'Futura Bold' !important;
 }
 
+#dash-card {
+    width: 600px;
+    margin-top: 50px;
+}
+
+.generic-button {
+    border-radius: 2em;
+    padding: 10px;
+    min-width: 10rem;
+    background-color: black;
+    color: white;
+    border-color: transparent;
+}
 
 /* State transitions */
 .child-view {
