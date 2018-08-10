@@ -19,8 +19,10 @@ module.exports = {
                         }
 
         if (data) {
-            request['data'] = data
+            request['data'] = type == 'POST' ? JSON.stringify(data) : data
         }
+
+        console.log(request)
 
         if (this.loggedIn()) {
             request['beforeSend'] = xhr => {

@@ -164,7 +164,7 @@ module.exports = function(router) {
 
     // Send verify email
     router.post('/requestVerify', function (req, res) {
-        var token = req.body.token;
+        var token = permissions.getToken(req);
 
         if (!token) {
             return res.status(400).json({error: 'Error: Invalid token'});
