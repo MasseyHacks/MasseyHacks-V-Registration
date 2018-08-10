@@ -313,12 +313,17 @@ var filterSensitive = function (user, permission) {
 
         for (var i = 0; i < keys.length; i++) {
             if('type' in runner[keys[i]]) {
-                if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel){
+                if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
                     try {
                         delete userpath[keys[i]];
                     } catch (e) {
                         console.log(e)
                     }
+                }
+
+                if (runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+                    userpath[keys[i]] = runner[keys[i]].default;
+
                 }
             } else {
                 if(userpath[keys[i]]) {
@@ -330,5 +335,16 @@ var filterSensitive = function (user, permission) {
 
     return u;
 };
+
+var navigate = function(dictionary, path) {
+    var runner = dictionary;
+    path = path.split(".");
+
+    for (var i = 0; i < path.length - 1; i++) {
+        runner = runner[path[i]];
+    }
+
+    return runner[path[path.length - 1]];
+}
 
 module.exports = mongoose.model('User', schema);
