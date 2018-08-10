@@ -14,6 +14,7 @@
 }
 h2 {
     font-family: 'Futura Bold';
+    font-weight: normal;
 }
 .spacer {
     height: 50vh;
@@ -143,27 +144,39 @@ h2 {
     text-decoration: none;
 }
 
-#app {
+#app-view {
     position: relative;
+    left: 20vw;
+    max-width: 80vw;
 }
 
 .app-screen {
-    display: grid;
-    margin: auto;
+    width: 80vw
+    margin: 0 auto;
+
+}
+
+.ui-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    height: 20vh;
+    width: 20vh;
 }
 
 .title-card {
-    padding: 1%;
-    text-align: center;
-    width: 60vw;
+/*    padding: 1%;
+*/    text-align: center;
 }
 
 .title-card h2 {
     font-size: 3.5em;
     letter-spacing: 0.1em;
+    text-align: center;
+    font-family: 'Futura' !important;
 }
 .title-card h3 {
     font-size: 2em;
+    font-family: 'Futura' !important;
 }
 
 
