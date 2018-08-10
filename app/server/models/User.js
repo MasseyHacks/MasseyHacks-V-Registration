@@ -210,6 +210,34 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
     });
 };
 
+schema.statics.validateProfile = function(id, profile, callback) {
+
+    var queue = [[fields.profile, profile]];
+    var runner;
+    var userpath;
+    var keys;
+
+    while (queue.length !== 0) {
+        runner = queue[0][0];
+        userpath = queue.shift()[1];
+        keys = Object.keys(runner);
+
+        for (var i = 0; i < keys.length; i++) {
+            if('type' in runner[keys[i]]) {
+                if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== ''){
+                    return callback({message: 'Field ' + key + ' is required'})
+                }
+            } else {
+                if(userpath[keys[i]]) {
+                    queue.push([runner[keys[i]], userpath[keys[i]]])
+                }
+            }
+        }
+    }
+
+    return callback();
+}
+
 
 schema.virtual('lowerCaseName').get(function() {
     if (this.firstName && this.lastName) {
@@ -292,6 +320,10 @@ schema.virtual('status.name').get(function () {
     return 'incomplete';
 
 });
+
+schema.virtual('profile.isSigned').get(function () {
+    return this.profile.signature !== -1;
+})
 
 schema.statics.filterSensitive = function(user, permission) {
     return filterSensitive(user, permission);

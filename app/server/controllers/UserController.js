@@ -448,6 +448,24 @@ UserController.updateProfile = function (id, profile, callback){
 
             // Check if its within the registration window.
             Settings.getRegistrationTimes(function(err, times){
+                if (profileValidated.signature === -1) {
+                    return User.findOneAndUpdate({
+                            _id: id,
+                            verified: true
+                        },
+                        {
+                            $set: {
+                                'sname': profile.name.toLowerCase(),
+                                'lastUpdated': Date.now(),
+                                'profile': profileValidated
+                            }
+                        },
+                        {
+                            new: true
+                        },
+                        callback);
+                }
+
                 if (err) {
                     callback(err);
                 }
@@ -474,16 +492,6 @@ UserController.updateProfile = function (id, profile, callback){
                         }
                         Mailer.sendApplicationEmail(user);
                     });
-                }
-
-                var keys = Object.keys(UserFields.profile);
-
-                for (var i = 0; i < keys.length; i++) {
-                    if(UserFields.profile[keys[i]].required){
-                        if (profileValidated[keys[i]] && profileValidated[keys[i]] !== '') {
-                            return callback({message: 'Field ' + key + ' is required'})
-                        }
-                    }
                 }
 
                 User.findOne(

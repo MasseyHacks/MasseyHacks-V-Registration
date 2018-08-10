@@ -127,7 +127,11 @@ var workshopHost = {
 var profile = {
     hacker: hackerApplication,
     mentor: mentorApplication,
-    workshop: workshopHost
+    workshop: workshopHost,
+    signature: {
+        type: Number,
+        default: -1
+    }
 };
 
 var confirmation = {
