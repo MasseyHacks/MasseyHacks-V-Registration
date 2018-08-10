@@ -11,7 +11,7 @@ const User = require('../models/User');
 // 6 - Developer
 
 function getToken(req) {
-    var token = req.headers.token ? req.headers.token : false;
+    var token = req['headers']['x-access-token'] ? req['headers']['x-access-token'] : false;
 
     if (!token) {
         token = req.body.token;

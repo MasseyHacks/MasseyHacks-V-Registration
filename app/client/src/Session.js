@@ -1,7 +1,33 @@
 import Raven        from 'raven-js'
 import RavenVue     from 'raven-js/plugins/vue'
+import $ from "jquery";
 
 module.exports = {
+
+    sendRequest (type, url, data, callback) {
+        var request =   {
+                            type: type,
+                            url: url,
+                            contentType: 'application/json; charset=utf-8',
+                            dataType: 'json',
+                            beforeSend: xhr => {
+                                xhr.setRequestHeader('x-access-token', this.getToken())
+                            },
+                            success: data => {
+                                if (callback) callback(null, data)
+                            },
+                            error: data => {
+                                if (callback) callback(data)
+                            }
+                        }
+
+        if (data) {
+            console.log('data', data)
+            request['data'] = data
+        }
+
+        $.ajax(request);
+    },
 
     setSettings(settings) {
         sessionStorage.settings = JSON.stringify(settings)
@@ -38,18 +64,6 @@ module.exports = {
             callback();
         }
     },
-
-    /*
-    clearCookies() {
-        var cookies = document.cookie.includes(';') ? document.cookie.split(';') : [document.cookie]
-
-        for (var entry in cookies) {
-
-            entry = entry.includes('=') ? entry.split('='): entry
-
-            document.cookie = entry + '=; expires=Thu, 01-Jan-70 00:00:01 GMT;'
-        }
-    },*/
 
     getTokenData() {
         const token = this.getToken();

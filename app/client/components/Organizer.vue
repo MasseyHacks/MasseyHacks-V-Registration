@@ -38,7 +38,9 @@
             }
         },
         created() {
-            this.$router.replace('/organizer/statistics')
+            if (this.$router.currentRoute == '/organizer') {
+                this.$router.replace('/organizer/statistics')
+            }
         }
     }
 </script>

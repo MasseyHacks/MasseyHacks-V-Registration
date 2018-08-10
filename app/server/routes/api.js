@@ -74,8 +74,8 @@ module.exports = function(router) {
     // Data varies depending on permission
     // Get all users
     router.get('/users', permissions.isCheckin, function(req, res) {
-        var query  = req.params.query;
-        UserController.getByQuery(query, logger.defaultResponse(req, res));
+        var query  = req.query;
+        UserController.getByQuery(req.userExecute, query, logger.defaultResponse(req, res));
     });
 
     // Owner
@@ -98,10 +98,6 @@ module.exports = function(router) {
         var userID = req.body.userID;
         UserController.resetAdmissionState(req.userExecute, userID, logger.defaultResponse(req, res));
     });
-
-    /**
-     * To-Do: Resetting admission state should also remove emails from queue
-     */
 
     // Owner
     // Flush email queue for user
@@ -266,6 +262,7 @@ module.exports = function(router) {
             console.log(users);
 
             logger.logAction(req.userExecute.email, user.email, 'Rejected everyone without state.');
+
             /**
              * To-Do: Add async for each here
              */

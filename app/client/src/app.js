@@ -18,6 +18,7 @@ import Organizer      from '../components/Organizer.vue'
 import Owner          from '../components/Owner.vue'
 import Checkin        from '../components/Checkin.vue'
 import Statistics     from '../components/Statistics.vue'
+import Users          from '../components/Users.vue'
 import Application    from '../components/Application.vue'
 import Confirmation   from '../components/Confirmation.vue'
 import Error          from '../components/Error.vue'
@@ -155,7 +156,7 @@ const router = new VueRouter({
                },
                {
                    path: 'users',
-                   component: Dashboard,
+                   component: Users,
                    beforeEnter: isAuthorized,
                    meta: {
                        permissions: 'admin'

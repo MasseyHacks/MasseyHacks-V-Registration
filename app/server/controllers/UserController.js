@@ -22,11 +22,43 @@ var UserController   = {};
 
 UserController.getStats = function (callback) {
     callback(null, stats.getUserStats())
-}
+};
 
-UserController.getByQuery = function (query, callback) {
+UserController.getByQuery = function (adminUser, query, callback) {
 
-}
+    if (!query || !query.page || !query.size) {
+        return callback({error : 'Error: Invalid arguments'});
+    }
+
+    var page = query.page;
+    var size = query.size;
+    var text = query.text;
+    var and  = query.and;
+    var or   = query.or;
+
+    var params = {
+        $and: [
+            or ? {$or: or} : {},
+            and ? {$and: and} : {}
+        ]
+    };
+
+    User
+        .find({})
+        /*.sort()
+        .skip(page * size)
+        .limit(size)*/
+        .exec(function(err, users) {
+            console.log(users)
+
+            for (var i = 0; i < users.length; i++) {
+                users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+            }
+
+            return callback(null, users)
+        });
+
+};
 
 UserController.verify = function (token, callback) {
 
@@ -758,8 +790,30 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
+
             return callback({ error: 'Error: Unable to perform action.', code: 500})
         }
+
+        Settings.findOneAndUpdate({
+
+        }, {
+            $pull: {
+                'emailQueue.acceptanceEmails': user.email,
+                'emailQueue.rejectionEmails': user.email,
+                'emailQueue.waitlistEmails': user.email,
+                'emailQueue.laggerEmails': user.email,
+                'emailQueue.laggerConfirmEmails': user.email
+            }
+        }, function(err, settings) {
+            if (err || !settings) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback({ error: 'Error: Unable to perform action.', code: 500})
+            }
+        });
+
 
         logger.logAction(adminUser._id, user._id, 'Reset admission status.');
 
@@ -774,46 +828,44 @@ UserController.admitUser = function(adminUser, userID, callback) {
         return callback({error : 'Error: Invalid arguments'});
     }
 
-    User.findOneAndUpdate({
-        _id : userID,
-        'permissions.verified': true,
-        'status.rejected': false,
-        'status.admitted': false
-    }, {
-        $set: {
-            'status.admitted': true,
+    Settings.findOne({}, function(err, settings) {
+        User.findOneAndUpdate({
+            _id: userID,
+            'permissions.verified': true,
             'status.rejected': false,
-            'status.waitlisted': false,
-            'statusReleased': false,
-            'status.admittedBy': adminUser.email,
-            'status.confirmBy': Date.now() + 604800000
-
-            /**
-             * To-Do: Change confirm by to setting's confirmBy date
-             */
-        }
-    }, {
-        new: true
-    }, function(err, user) {
-
-        if (err || !user) {
-            if (err) {
-                return callback(err);
+            'status.admitted': false
+        }, {
+            $set: {
+                'status.admitted': true,
+                'status.rejected': false,
+                'status.waitlisted': false,
+                'statusReleased': false,
+                'status.admittedBy': adminUser.email,
+                'status.confirmBy': settings.timeConfirm
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
-        }
+        }, {
+            new: true
+        }, function (err, user) {
 
-        logger.logAction(adminUser._id, user._id, 'Admitted user.');
-
-        //send the email
-        mailer.queueEmail(user.email,'acceptanceemails',function(err){
-            if(err){
-                return callback(err);
+            if (err || !user) {
+                if (err) {
+                    return callback(err);
+                }
+                return callback({error: 'Error: Unable to perform action.', code: 500})
             }
+
+            logger.logAction(adminUser._id, user._id, 'Admitted user.');
+
+            //send the email
+            mailer.queueEmail(user.email, 'acceptanceemails', function (err) {
+                if (err) {
+                    return callback(err);
+                }
+            });
+
+            return callback(err, user);
+
         });
-
-        return callback(err, user);
-
     });
 };
 

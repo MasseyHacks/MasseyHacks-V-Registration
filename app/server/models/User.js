@@ -302,7 +302,7 @@ var filterSensitive = function (user, permission) {
 
     var permissionLevel;
 
-    if (permissionLevel) {
+    if (permission) {
         permissionLevel = permission;
     } else {
         permissionLevel = 0;
