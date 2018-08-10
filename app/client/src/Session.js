@@ -19,7 +19,6 @@ module.exports = {
                         }
 
         if (data) {
-            console.log('data', data)
             request['data'] = data
         }
 

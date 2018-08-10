@@ -178,15 +178,15 @@ const router = new VueRouter({
            beforeEnter: isAuthorized,
            meta: {
                permissions: 'owner'
-           },
-           children: [
-               {
-                   path: '/settings', component: Login
-               },
-               {
-                   path: '/log', component: Login
-               }
-           ]
+           }
+       },
+       {
+           path: '/developer',
+           component: Owner,
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'developer'
+           }
        },
        {
            path: '/register',

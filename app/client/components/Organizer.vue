@@ -24,8 +24,9 @@
 
     export default {
         beforeRouteUpdate (to, from, next) {
-            const toDepth = to.path.split('/').length
-            const fromDepth = from.path.split('/').length
+            const pageLayout = ['statistics', 'users', 'review']
+            const toDepth = pageLayout.indexOf(to.path.split('/')[2])
+            const fromDepth = pageLayout.indexOf(from.path.split('/')[2])
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
             next()
         },
@@ -37,8 +38,8 @@
                 transitionName: 'slide-left'
             }
         },
-        created() {
-            if (this.$router.currentRoute == '/organizer') {
+        beforeMount() {
+            if (this.$router.currentRoute.path == '/organizer') {
                 this.$router.replace('/organizer/statistics')
             }
         }

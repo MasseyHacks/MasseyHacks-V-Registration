@@ -132,6 +132,7 @@ h2 {
     background: rgb(8,27,74);
     position: absolute;
     width: 20vw;
+    z-index: 9000;
 }
 
 #main-sidebar ul {
@@ -182,8 +183,8 @@ h2 {
 
 /* State transitions */
 .child-view {
-
-    transition: all .5s cubic-bezier(.55,0,.1,1);
+    transition: all .3s cubic-bezier(.55,0,.1,1);
+    position: absolute;
 }
 .slide-left-enter, .slide-right-leave-active {
     opacity: 0;
