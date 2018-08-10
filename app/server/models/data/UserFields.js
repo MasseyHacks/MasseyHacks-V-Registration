@@ -44,7 +44,8 @@ var status = {
     admitted: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        condition: 'status.statusReleased'
     },
     admittedBy: {
         type: String,
@@ -73,7 +74,8 @@ var status = {
     rejected: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        condition: 'status.statusReleased'
     },
     checkedIn: {
         type: Boolean,
