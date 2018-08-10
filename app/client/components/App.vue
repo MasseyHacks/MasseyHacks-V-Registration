@@ -88,7 +88,7 @@
 
             // Login with token if it exists
             if (Session.loggedIn()) {
-                AuthService.loginWithToken(Session.getToken())
+                AuthService.loginWithToken()
             }
         }
     }
