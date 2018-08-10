@@ -147,6 +147,7 @@ h2 {
 #app-view {
     position: relative;
     left: 20vw;
+    max-width: 80vw;
 }
 
 .app-screen {
