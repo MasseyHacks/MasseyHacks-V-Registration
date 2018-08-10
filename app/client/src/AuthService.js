@@ -3,13 +3,6 @@
 import $       from 'jquery';
 import Session from './Session';
 
-/*
-*
-beforeSend: xhr => {
-    xhr.setRequestHeader('x-access-token', Session.getToken())
-}
-* */
-
 module.exports = {
 
     changePassword(oldPassword, newPassword, callback) {
@@ -18,6 +11,9 @@ module.exports = {
             url: '/auth/changePassword',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
+            beforeSend: xhr => {
+                xhr.setRequestHeader('token', Session.getToken())
+            },
             data: JSON.stringify({
                 token: Session.getToken(),
                 oldPassword: oldPassword,

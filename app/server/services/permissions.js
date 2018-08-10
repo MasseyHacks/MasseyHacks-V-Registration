@@ -10,26 +10,30 @@ const User = require('../models/User');
 // 5 - Owner
 // 6 - Developer
 
+function getToken(req) {
+    var token = req.headers.token ? req.headers.token : false;
+
+    if (!token) {
+        token = req.body.token;
+    }
+
+    return token;
+}
+
 module.exports = {
 
     getToken : function (req)
     {
-        var token = req.headers.cookie ? req.headers.cookie.split(';')[0].trim() : false;
-
-        if (!token) {
-            token = req.body.token;
-        }
-
-        return token;;
+        return getToken(req);
     },
 
     isUser : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
         var userID = req.params.userID == null ? req.body.userID : req.params.userID;
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (userID && user && (user._id == userID || user.permissions.level >= 3)) {
@@ -38,18 +42,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isVerified : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level > 0) {
@@ -58,18 +62,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isCheckin : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level >= 2) {
@@ -78,18 +82,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isAdmin : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level >= 3) {
@@ -98,18 +102,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isReviewer : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level >= 4) {
@@ -118,18 +122,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isOwner : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level >= 5) {
@@ -138,18 +142,18 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });
     },
 
     isDeveloper : function (req, res, next) {
-        var token = this.getToken(req);
+        var token = getToken(req);
 
         User.getByToken(token, function (err, user) {
             if (err) {
-                return res.status(500).send(err);
+                return res.status(403).send(err);
             }
 
             if (user && user.permissions.level == 6) {
@@ -158,7 +162,7 @@ module.exports = {
                 return next();
             }
 
-            return res.status(401).send({
+            return res.status(403).send({
                 message: 'Access Denied'
             });
         });

@@ -3,7 +3,7 @@
         <h1>Success!</h1>
     </div>
     <div v-else-if="status == 'invalid'">
-        <h1>Token is invalid.</h1>
+        <h1>Invalid Token</h1>
     </div>
     <div v-else>
         <h1>Loading...</h1>

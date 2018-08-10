@@ -30,6 +30,7 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                 'status.admitted': true,
                 'status.confirmed': true,
                 'status.statusReleased': true,
+                'status.timestamp': Date.now(),
                 'status.admittedBy': 'MasseyHacks Internal Authority',
                 'verified': true
             }, function(err, userNew) {

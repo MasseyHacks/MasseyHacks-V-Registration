@@ -170,14 +170,14 @@ schema.statics.getByToken = function (token, callback) {
                 }
 
                 return callback({
-                    error: 'Error: Token is invalid.',
+                    error: 'Error: Invalid Token',
                     code: 401
                 });
             }
 
             if (payload.iat * 1000 < user.passwordLastUpdated) {
                 return callback({
-                    error: 'Error: Token is invalid.',
+                    error: 'Error: Invalid Token',
                     code: 401
                 });
             }

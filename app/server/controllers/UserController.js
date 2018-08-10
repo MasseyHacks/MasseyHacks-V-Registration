@@ -137,8 +137,8 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 }
                 logger.logAction(userFromToken._id, userFromToken._id, 'Changed their password with existing.');
                 return callback(null, {
-                    token: user.generateAuthToken(),
-                    user: user
+                    token: userFromToken.generateAuthToken(),
+                    user: User.filterSensitive(userFromToken)
                 });
             });
         });
@@ -181,7 +181,7 @@ UserController.changePassword = function (email, password, callback) {
     }, {
             $set : {
                 'status.passwordSuspension': false,
-                passwordLastUpdated: Date.now(),
+                passwordLastUpdated: Date.now() - 10000,
                 password: User.generateHash(password)
             }
     }, {
@@ -237,7 +237,7 @@ UserController.resetPassword = function (token, password, callback) {
 
                 if (payload.iat * 1000 < user.passwordLastUpdated) {
                     return callback({
-                        error: 'Error: Token is invalid.',
+                        error: 'Error: Invalid Token',
                         code: 401
                     });
                 }
