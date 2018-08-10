@@ -49,6 +49,8 @@
                                 text: 'Password changed!',
                                 type: 'success'
                             })
+
+                            this.$router.replace('/login')
                         }
                     })
                 }

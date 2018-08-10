@@ -9,6 +9,7 @@
 
 <script>
     import Session from '../src/Session'
+    import ApiService from '../src/ApiService'
     import $ from 'jquery';
 
     export default {
@@ -19,23 +20,16 @@
                 statistics: {}
             }
         },
-        created() {
-            $.ajax({
-                type: 'GET',
-                url: '/api/stats',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: data => {
-                    console.log(data)
+        beforeMount() {
+            ApiService.getStatistics((err, statistics) => {
+                this.loading = false
 
-                    this.loading = false
-                    this.statistics = data
-                },
-                error: data => {
-                    this.loading = false
+                if (err || !statistics) {
                     this.fail = true
+                } else {
+                    this.statistics = statistics
                 }
-            });
+            })
         }
     }
 </script>

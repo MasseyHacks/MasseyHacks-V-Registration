@@ -2,6 +2,7 @@ import Raven        from 'raven-js'
 import RavenVue     from 'raven-js/plugins/vue'
 
 module.exports = {
+
     setSettings(settings) {
         sessionStorage.settings = JSON.stringify(settings)
     },
@@ -18,7 +19,6 @@ module.exports = {
         localStorage.token = token;
         localStorage.userID = user._id;
         localStorage.user = JSON.stringify(user);
-        document.cookie = 'token=' + token + ';expires=' + expiration + ';path=/';
 
         Raven.setUserContext({
             email: user.email,
@@ -31,8 +31,6 @@ module.exports = {
         delete localStorage.token;
         delete localStorage.userID;
         delete localStorage.user;
-
-        document.cookie = ''
 
         Raven.setUserContext()
 
