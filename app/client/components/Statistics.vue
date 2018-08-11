@@ -3,7 +3,7 @@
         <div class="row">
             <div class="ui-card dash-card-large">
                 <h3>WAVE {{statistics.wave}} AT A GLANCE:</h3>
-                <p>Last Updated: {{statistics.lastUpdated}}</p>
+                <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                 <hr>
                 <!--{{statistics}} {{loading}} {{fail}}-->
                 <div class="duo-col">
