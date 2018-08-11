@@ -8,6 +8,8 @@
             </div>
             <div class="row">
                 <div class="ui-card" id="dash-card">
+                    <h3>YOUR STATUS:</h3>
+                    <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
                     <hr>
                     <p><span class="emphasis">Welcome {{$parent.user.fullName}},</span><br>
                         This is the MasseyHacks V Dashboard

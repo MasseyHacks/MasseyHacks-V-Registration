@@ -248,6 +248,14 @@ h2 {
     color: white;
 }
 
+#stats {
+    list-style: none;
+}
+
+#stats i {
+    margin-right: 10px;
+}
+
 .generic-button {
     border-radius: 2em;
     padding: 10px;
