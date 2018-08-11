@@ -139,7 +139,7 @@ h2 {
 #main-sidebar {
     height: 100vh;
     background: rgb(8,27,74);
-    position: absolute;
+    position: fixed;
     width: 250px;
     z-index: 9000;
 }
