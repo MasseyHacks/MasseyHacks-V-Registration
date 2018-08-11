@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="ui-card" id="dash-card">
+                <div class="ui-card dash-card">
                     <h3>YOUR STATUS:</h3>
                     <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
                     <hr>
