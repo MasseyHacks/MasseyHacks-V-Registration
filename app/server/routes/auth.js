@@ -48,7 +48,7 @@ module.exports = function(router) {
 
                 return res.json({
                     token: token,
-                    user: User.filterSensitive(user)
+                    user: user
                 });
         })
     });

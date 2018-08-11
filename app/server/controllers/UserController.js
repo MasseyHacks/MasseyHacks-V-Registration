@@ -390,7 +390,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
                                 verifyUrl: verificationURL
                             });
 
-                            user = user.toJSON();
+                            user = User.filterSensitive(user);
                             delete user.password;
 
                             logger.logAction(user._id, user._id, 'Created an account.');
