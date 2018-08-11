@@ -66,18 +66,25 @@
                 atGlanceStuff : {}
             }
         },
-        beforeMount() {
-            ApiService.getStatistics((err, statistics) => {
-                this.loading = false
 
-                if (err || !statistics) {
-                    this.fail = true
-                } else {
-                    this.statistics = statistics
-                }
-            })
+        beforeMount() {
+            this.getStat()
+            setInterval(this.getStat(), 5000)
         },
 
+        methods: {
+            getStat: function() {
+                ApiService.getStatistics((err, statistics) => {
+                    this.loading = false
+
+                    if (err || !statistics) {
+                        this.fail = true
+                    } else {
+                        this.statistics = statistics
+                    }
+                })
+            }
+        },
 
         computed: {
             atGlance: function() {
