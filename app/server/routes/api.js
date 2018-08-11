@@ -139,7 +139,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : 'Error: Unable to create team' } );
+                return logger.defaultResponse(req, res)( { error : 'Unable to create team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -158,7 +158,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : 'Error: Unable to join team' } );
+                return logger.defaultResponse(req, res)( { error : 'Unable to join team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -176,7 +176,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : 'Error: Unable to leave team' } );
+                return logger.defaultResponse(req, res)( { error : 'Unable to leave team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -194,7 +194,7 @@ module.exports = function(router) {
                     return logger.defaultResponse(req, res)(err);
                 }
 
-                return logger.defaultResponse(req, res)( { error : 'Error: Unable to get team' } );
+                return logger.defaultResponse(req, res)( { error : 'Unable to get team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);

@@ -45,7 +45,7 @@
         methods: {
             register () {
                 if (this.password1 != this.password2) {
-                    this.error = 'Error: Passwords don\'t match!'
+                    this.error = 'Passwords don\'t match!'
                 } else {
                     AuthService.register(this.email, this.firstName, this.lastName, this.password1, (err, data) => {
                         if (err) {
