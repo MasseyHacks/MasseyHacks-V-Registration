@@ -21,19 +21,19 @@ module.exports = function(router) {
         var lastName = req.body.lastName;
 
         if (!email) {
-            return res.status(400).json({error: 'Error: No email provided'});
+            return res.status(400).json({error: 'No email provided'});
         }
 
         if (!password) {
-            return res.status(400).json({error: 'Error: No password provided'});
+            return res.status(400).json({error: 'No password provided'});
         }
 
         if (!firstName) {
-            return res.status(400).json({error: 'Error: No first name provided'});
+            return res.status(400).json({error: 'No first name provided'});
         }
 
         if (!lastName) {
-            return res.status(400).json({error: 'Error: No last name provided'});
+            return res.status(400).json({error: 'No last name provided'});
         }
 
         UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
@@ -41,7 +41,7 @@ module.exports = function(router) {
                     if (err) {
                         return res.status(500).json(err);
                     }
-                    return res.status(500).json({error: 'Error: Unable to process request'});
+                    return res.status(500).json({error: 'Unable to process request'});
                 }
 
                 console.log(req.body.email + ' registered.');
@@ -72,7 +72,7 @@ module.exports = function(router) {
                         return res.status(400).json(err);
                     }
 
-                    return res.status(401).json({error: 'Error: Invalid Token'});
+                    return res.status(401).json({error: 'Invalid Token'});
                 }
                 return res.json({
                     token: token,
@@ -102,7 +102,7 @@ module.exports = function(router) {
         var password = req.body.password;
 
         if (!token) {
-            return res.status(400).json({error: 'Error: Invalid token'});
+            return res.status(400).json({error: 'Invalid token'});
         }
 
         UserController.resetPassword(token, password, function (err, msg) {
@@ -111,7 +111,7 @@ module.exports = function(router) {
                     return res.status(400).json(err);
                 }
 
-                return res.status(400).json({error: 'Error: Invalid token'});
+                return res.status(400).json({error: 'Invalid token'});
             }
 
             return res.json(msg);
@@ -125,12 +125,12 @@ module.exports = function(router) {
         console.log(req.body.email + ' requesting reset email.');
 
         if (!email || !validator.isEmail(email)) {
-            return res.status(400).json({error: 'Error: Invalid email'});
+            return res.status(400).json({error: 'Invalid email'});
         }
 
         UserController.sendPasswordResetEmail(email, function (err) {
             if (err) {
-                return res.status(400).json({error: 'Error: Something went wrong.'});
+                return res.status(400).json({error: 'Something went wrong.'});
             }
 
             return res.json({
@@ -144,7 +144,7 @@ module.exports = function(router) {
         var token = req.body.token;
 
         if (!token) {
-            return res.status(400).json({error: 'Error: Invalid token'});
+            return res.status(400).json({error: 'Invalid token'});
         }
 
         UserController.verify(token, function (err, msg) {
@@ -153,7 +153,7 @@ module.exports = function(router) {
                     return res.status(400).json(err);
                 }
 
-                return res.status(400).json({error: 'Error: Invalid token'});
+                return res.status(400).json({error: 'Invalid token'});
             }
 
             return res.json({
@@ -167,12 +167,12 @@ module.exports = function(router) {
         var token = permissions.getToken(req);
 
         if (!token) {
-            return res.status(400).json({error: 'Error: Invalid token'});
+            return res.status(400).json({error: 'Invalid token'});
         }
 
         UserController.sendVerificationEmail(email, function (err) {
             if (err) {
-                return res.status(400).json({error: 'Error: Something went wrong.'});
+                return res.status(400).json({error: 'Something went wrong.'});
             }
 
             return res.json({

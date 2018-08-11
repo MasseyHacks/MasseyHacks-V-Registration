@@ -97,7 +97,7 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
             }
 
             return callback({
-                error: 'Error: User not found.',
+                error: 'User not found.',
                 code: 404
             })
 
@@ -112,14 +112,14 @@ schema.statics.getByToken = function (token, callback) {
         if (err || !payload) {
             console.log('ur bad');
             return callback({
-                error: 'Error: Invalid Token',
+                error: 'Invalid Token',
                 code: 401
             });
         }
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Error: Token is invalid for this operation',
+                error: 'Token is invalid for this operation',
                 code: 403
             });
         }
@@ -132,14 +132,14 @@ schema.statics.getByToken = function (token, callback) {
                 }
 
                 return callback({
-                    error: 'Error: Invalid Token',
+                    error: 'Invalid Token',
                     code: 401
                 });
             }
 
             if (payload.iat * 1000 < user.passwordLastUpdated) {
                 return callback({
-                    error: 'Error: Invalid Token',
+                    error: 'Invalid Token',
                     code: 401
                 });
             }
@@ -159,7 +159,7 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
             }
 
             return callback({
-                error: 'Error: User not found',
+                error: 'User not found',
                 code: 404
             })
         }
@@ -168,7 +168,7 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
             permissionLevel = 0
         }
 
-        return callback(null, filterSensitive(user, permissionLevel));
+        return callback(null, user); //filterSensitive(user, permissionLevel));
     });
 };
 

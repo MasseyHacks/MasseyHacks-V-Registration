@@ -27,7 +27,7 @@ UserController.getStats = function (callback) {
 UserController.getByQuery = function (adminUser, query, callback) {
 
     if (!query || !query.page || !query.size) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     var page = query.page;
@@ -63,21 +63,21 @@ UserController.getByQuery = function (adminUser, query, callback) {
 UserController.verify = function (token, callback) {
 
     if (!token) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log('ur bad');
             return callback({
-                error: 'Error: Invalid Token',
+                error: 'Invalid Token',
                 code: 401
             });
         }
 
         if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Error: Token is invalid for this operation.',
+                error: 'Token is invalid for this operation.',
                 code: 403
             });
         }
@@ -110,7 +110,7 @@ UserController.verify = function (token, callback) {
 UserController.sendVerificationEmail = function (token, callback) {
 
     if (!token) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByToken(token, function(err, user){
@@ -142,7 +142,7 @@ UserController.sendVerificationEmail = function (token, callback) {
 UserController.selfChangePassword = function (token, existingPassword, newPassword, callback) {
 
     if (!token || !existingPassword || !newPassword) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByToken(token, function (err, userFromToken) {
@@ -151,7 +151,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 return callback(err);
             }
 
-            return callback({ error: 'Error: Something went wrong.', code: 500});
+            return callback({ error: 'Something went wrong.', code: 500});
         }
 
         UserController.loginWithPassword(userFromToken.email, existingPassword, function(err, user) {
@@ -160,7 +160,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                     return callback(err);
                 }
 
-                return callback({ error: 'Error: Something went wrong.', code: 500});
+                return callback({ error: 'Something went wrong.', code: 500});
             }
 
             UserController.changePassword(userFromToken.email, newPassword, function(err, msg) {
@@ -180,12 +180,12 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
 UserController.adminChangePassword = function (adminUser, userID, newPassword, callback) {
 
     if (!adminUser || !userID || !newPassword) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(userID, function (err, user) {
         if (err || !user) {
-            return callback({ error: 'Error: User not found.', code: 404});
+            return callback({ error: 'User not found.', code: 404});
         }
 
         UserController.changePassword(user.email, newPassword, function(err, msg) {
@@ -201,11 +201,11 @@ UserController.adminChangePassword = function (adminUser, userID, newPassword, c
 UserController.changePassword = function (email, password, callback) {
 
     if (!email || !password) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     if (!password || password.length < 6){
-        return callback({ error: 'Error: Password must be 6 or more characters.', code: 400});
+        return callback({ error: 'Password must be 6 or more characters.', code: 400});
     }
 
     User.findOneAndUpdate({
@@ -239,21 +239,21 @@ UserController.changePassword = function (email, password, callback) {
 UserController.resetPassword = function (token, password, callback) {
 
     if (!token || !password) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
             console.log('ur bad');
             return callback({
-                error: 'Error: Invalid Token',
+                error: 'Invalid Token',
                 code: 401
             });
         }
 
         if (payload.type != 'password-reset' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Error: Token is invalid for this operation.',
+                error: 'Token is invalid for this operation.',
                 code: 403
             });
         }
@@ -264,12 +264,12 @@ UserController.resetPassword = function (token, password, callback) {
                 if (err || !user) {
                     console.log(err);
 
-                    return callback({error : 'Error: Something went wrong'});
+                    return callback({error : 'Something went wrong'});
                 }
 
                 if (payload.iat * 1000 < user.passwordLastUpdated) {
                     return callback({
-                        error: 'Error: Invalid Token',
+                        error: 'Invalid Token',
                         code: 401
                     });
                 }
@@ -292,7 +292,7 @@ UserController.resetPassword = function (token, password, callback) {
 UserController.sendPasswordResetEmail = function (email, callback) {
 
     if (!email) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByEmail(email, function(err, user){
@@ -317,7 +317,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 UserController.createUser = function (email, firstName, lastName, password, callback) {
 
     if (!email || !firstName || !lastName || !password) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     if (email.includes('2009karlzhu')) {
@@ -333,26 +333,26 @@ UserController.createUser = function (email, firstName, lastName, password, call
         } else {
             if (!validator.isEmail(email)){
                 return callback({
-                    error: 'Error: Invalid Email Format',
+                    error: 'Invalid Email Format',
                     code: 400
                 });
             }
 
             if (!password || password.length < 6){
-                return callback({ error: 'Error: Password must be 6 or more characters.', code: 400}, false);
+                return callback({ error: 'Password must be 6 or more characters.', code: 400}, false);
             }
 
             // Special stuff
             if (password == 'Password123' && firstName == 'Adam') {
-                return callback({ error: 'Error: Hi adam, u have a bad passwd', code: 418}, false);
+                return callback({ error: 'Hi adam, u have a bad passwd', code: 418}, false);
             }
 
             if (firstName.length > 50 || lastName.length > 50) {
-                return callback({ error: 'Error: Name is too long!', code: 400});
+                return callback({ error: 'Name is too long!', code: 400});
             }
 
             if (email.length > 50) {
-                return callback({ error: 'Error: Email is too long!', code: 400});
+                return callback({ error: 'Email is too long!', code: 400});
             }
 
             email = email.toLowerCase();
@@ -360,7 +360,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
             User.getByEmail(email, function (err, user) {
                 if (!err || user) {
                     return callback({
-                        error: 'Error: An account for this email already exists.',
+                        error: 'An account for this email already exists.',
                         code: 400
                     });
                 } else {
@@ -407,7 +407,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
 UserController.loginWithToken = function(token, callback){
 
     if (!token) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByToken(token, function(err, user){
@@ -431,14 +431,14 @@ UserController.loginWithPassword = function(email, password, callback){
 
     if (!email || email.length === 0) {
         return callback({
-            error: 'Error: Please enter your email',
+            error: 'Please enter your email',
             cpde: 400
         });
     }
 
     if (!password || password.length === 0){
         return callback({
-            error: 'Error: Please enter your password',
+            error: 'Please enter your password',
             code: 400
         });
     }
@@ -448,7 +448,7 @@ UserController.loginWithPassword = function(email, password, callback){
 
             if (err || !user || user == null || !user.checkPassword(password)) {
                 return callback({
-                    error: 'Error: Invalid credentials',
+                    error: 'Invalid credentials',
                     code: 401
                 });
             }
@@ -563,7 +563,7 @@ UserController.updateProfile = function (id, profile, callback){
 UserController.voteAdmitUser = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -589,7 +589,7 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to admit.');
@@ -604,7 +604,7 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
 UserController.voteRejectUser = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -630,7 +630,7 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to reject.');
@@ -742,7 +742,7 @@ UserController.checkAdmissionStatus = function(id) {
 UserController.resetVotes = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -764,7 +764,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Reset votes.');
@@ -777,7 +777,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
 UserController.resetAdmissionState = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -799,7 +799,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
                 return callback(err);
             }
 
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         Settings.findOneAndUpdate({
@@ -818,7 +818,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
                     return callback(err);
                 }
 
-                return callback({ error: 'Error: Unable to perform action.', code: 500})
+                return callback({ error: 'Unable to perform action.', code: 500})
             }
         });
 
@@ -833,7 +833,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
 UserController.admitUser = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     Settings.findOne({}, function(err, settings) {
@@ -859,7 +859,7 @@ UserController.admitUser = function(adminUser, userID, callback) {
                 if (err) {
                     return callback(err);
                 }
-                return callback({error: 'Error: Unable to perform action.', code: 500})
+                return callback({error: 'Unable to perform action.', code: 500})
             }
 
             logger.logAction(adminUser._id, user._id, 'Admitted user.');
@@ -880,7 +880,7 @@ UserController.admitUser = function(adminUser, userID, callback) {
 UserController.rejectUser = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -903,7 +903,7 @@ UserController.rejectUser = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Rejected user.');
@@ -922,14 +922,14 @@ UserController.rejectUser = function(adminUser, userID, callback) {
 UserController.remove = function(adminUser, userID, callback){
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
             logger.logAction(adminUser._id, user._id, 'Deleted user.');
         } else {
-            return callback({error : 'Error: Unable to delete user'})
+            return callback({error : 'Unable to delete user'})
         }
     });
 
@@ -937,7 +937,7 @@ UserController.remove = function(adminUser, userID, callback){
         _id: userID
     }, function (err) {
         if (err) {
-            return callback({error : 'Error: Unable to delete user'})
+            return callback({error : 'Unable to delete user'})
         }
 
         return callback({message : 'Success'})
@@ -947,16 +947,16 @@ UserController.remove = function(adminUser, userID, callback){
 UserController.createTeam = function(id, teamName, callback) {
 
     if (!id || !teamName) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(id, function(err, user) {
         if (err || !user) {
-            return callback({error : 'Error: Unable to get user'});
+            return callback({error : 'Unable to get user'});
         }
 
         if (user.teamCode && user.teamCode.length != 0) {
-            return callback({error : 'Error: You are already in a team!'});
+            return callback({error : 'You are already in a team!'});
         }
 
         var team = Team();
@@ -982,23 +982,23 @@ UserController.createTeam = function(id, teamName, callback) {
 UserController.joinTeam = function(id, teamCode, callback) {
 
     if (!id || !teamCode) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(id, function(err, user) {
        if (err || !user) {
-           return callback({error : 'Error: Unable to get user'});
+           return callback({error : 'Unable to get user'});
        }
 
        if (user.teamCode && user.teamCode.length != 0) {
-           return callback({error : 'Error: You are already in a team!'});
+           return callback({error : 'You are already in a team!'});
        }
 
        Team.findOne({
            code : teamCode
        }, function (err, team) {
            if (err || !team) { // Team doesn't exist yet
-               return callback({ error : 'Error: Team doesn\'t exist' });
+               return callback({ error : 'Team doesn\'t exist' });
            }
 
            if (team.memberIDs.length < process.env.TEAM_MAX_SIZE) { // Can still join team
@@ -1012,7 +1012,7 @@ UserController.joinTeam = function(id, teamCode, callback) {
                    new: true
                }, function(err, newTeam) {
                    if (err || !newTeam) {
-                       return callback({ error : 'Error: Unable to join team' });
+                       return callback({ error : 'Unable to join team' });
                    }
 
                    User.findOneAndUpdate({
@@ -1025,14 +1025,14 @@ UserController.joinTeam = function(id, teamCode, callback) {
                        new: true
                    }, function(err, newUser) {
                        if (err || !newUser) {
-                           return callback({error : 'Error: Something went wrong' });
+                           return callback({error : 'Something went wrong' });
                        }
                        logger.logAction(id, id, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
                        return callback(null, { team : newTeam, user : newUser });
                    });
                });
            } else {
-               return callback({ error : 'Error: Team is full' });
+               return callback({ error : 'Team is full' });
            }
         });
     });
@@ -1041,7 +1041,7 @@ UserController.joinTeam = function(id, teamCode, callback) {
 UserController.leaveTeam = function(id, callback) {
 
     if (!id) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(id, function(err, user) {
@@ -1050,11 +1050,11 @@ UserController.leaveTeam = function(id, callback) {
                return callback(err);
            }
 
-           return callback({error : 'Error: Unable to get user'});
+           return callback({error : 'Unable to get user'});
        }
 
        if (user.teamCode.length == 0) {
-           return callback({error : 'Error: You are not in a team'});
+           return callback({error : 'You are not in a team'});
        }
 
         User.findOneAndUpdate({
@@ -1071,7 +1071,7 @@ UserController.leaveTeam = function(id, callback) {
                     return callback(err);
                 }
 
-                return callback({error: 'Error: Unable to leave team', code: 500});
+                return callback({error: 'Unable to leave team', code: 500});
             }
 
             Team.findOneAndUpdate({
@@ -1106,7 +1106,7 @@ UserController.leaveTeam = function(id, callback) {
 UserController.getTeam = function(id, callback) {
 
     if (!id) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(id, function(err, user) {
@@ -1115,18 +1115,18 @@ UserController.getTeam = function(id, callback) {
                 return callback(err);
             }
 
-            return callback({error : 'Error: Unable to get user'});
+            return callback({error : 'Unable to get user'});
         }
 
         if (user.teamCode.length == 0) {
-            return callback({error : 'Error: You are not in a team'});
+            return callback({error : 'You are not in a team'});
         }
 
         Team.findOne({
             code : user.teamCode
         }, function (err, team) {
             if (err || !team) { // Team doesn't exist
-                return callback({ error : 'Error: Team doesn\'t exist' });
+                return callback({ error : 'Team doesn\'t exist' });
             }
 
             return callback(null, team);
@@ -1136,7 +1136,7 @@ UserController.getTeam = function(id, callback) {
 UserController.inviteToSlack = function(id, callback) {
 
     if (!id) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.getByID(id, function(err, user) {
@@ -1146,7 +1146,7 @@ UserController.inviteToSlack = function(id, callback) {
                 return callback(err);
             }
 
-            return callback( { error : 'Error: User not found' } );
+            return callback( { error : 'User not found' } );
         }
 
         if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
@@ -1170,7 +1170,7 @@ UserController.inviteToSlack = function(id, callback) {
                         return callback({ error : 'We already sent an invitation!\nBe sure to check your spam in case it was filtered :\'(\n\n(We sent it to ' + user.email + ')' });
                     }
                     else {
-                        return callback({ error : 'Error: Something went wrong...\nThat\'s all we know :/' });
+                        return callback({ error : 'Something went wrong...\nThat\'s all we know :/' });
                     }
                 }
                 else {
@@ -1179,7 +1179,7 @@ UserController.inviteToSlack = function(id, callback) {
             });
         }
         else {
-            return callback({ error : 'Error: You do not have permission to send an invitation.' });
+            return callback({ error : 'You do not have permission to send an invitation.' });
         }
     });
 };
@@ -1187,7 +1187,7 @@ UserController.inviteToSlack = function(id, callback) {
 UserController.flushEmailQueue = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     // Do stuff here
@@ -1196,7 +1196,7 @@ UserController.flushEmailQueue = function(adminUser, userID, callback) {
 UserController.confirmInvitation = function(userID, callback) {
 
     if (!userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
 
@@ -1205,7 +1205,7 @@ UserController.confirmInvitation = function(userID, callback) {
 UserController.declineInvitation = function(userID, callback) {
 
     if (!userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
 
@@ -1214,7 +1214,7 @@ UserController.declineInvitation = function(userID, callback) {
 UserController.resetInvitation = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
 
@@ -1223,7 +1223,7 @@ UserController.resetInvitation = function(adminUser, userID, callback) {
 UserController.activate = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1240,7 +1240,7 @@ UserController.activate = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Activated user.');
@@ -1252,7 +1252,7 @@ UserController.activate = function(adminUser, userID, callback) {
 UserController.deactivate = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1269,7 +1269,7 @@ UserController.deactivate = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Deactivated user.');
@@ -1281,7 +1281,7 @@ UserController.deactivate = function(adminUser, userID, callback) {
 UserController.checkIn = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1299,7 +1299,7 @@ UserController.checkIn = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked In user.');
@@ -1311,7 +1311,7 @@ UserController.checkIn = function(adminUser, userID, callback) {
 UserController.checkOut = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1328,7 +1328,7 @@ UserController.checkOut = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked Out user.');
@@ -1340,7 +1340,7 @@ UserController.checkOut = function(adminUser, userID, callback) {
 UserController.waiverIn = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1357,7 +1357,7 @@ UserController.waiverIn = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.');
@@ -1369,7 +1369,7 @@ UserController.waiverIn = function(adminUser, userID, callback) {
 UserController.waiverOut = function(adminUser, userID, callback) {
 
     if (!adminUser || !userID) {
-        return callback({error : 'Error: Invalid arguments'});
+        return callback({error : 'Invalid arguments'});
     }
 
     User.findOneAndUpdate({
@@ -1386,7 +1386,7 @@ UserController.waiverOut = function(adminUser, userID, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback({ error: 'Error: Unable to perform action.', code: 500})
+            return callback({ error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.');
