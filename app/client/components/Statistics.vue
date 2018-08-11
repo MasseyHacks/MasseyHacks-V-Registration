@@ -108,7 +108,7 @@
                 for (var key in this.statistics.demo.gender) {
                     totalCount += this.statistics.demo.gender[key];
                 }
-                returnObject["Total"] += this.statistics.total;
+                returnObject["Total"] += totalCount;
                 returnObject["Male"] += "Male: " + Math.round(this.statistics.demo.gender.M / totalCount) + "%";
                 returnObject["Female"] += "Female: " + Math.round(this.statistics.demo.gender.F / totalCount) + "%";
                 returnObject["Other"] += "Other: " + Math.round(this.statistics.demo.gender.O / totalCount) + "%";
