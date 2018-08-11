@@ -5,6 +5,7 @@ const bcrypt      = require('bcrypt-nodejs');
 const validator   = require('validator');
 const jwt         = require('jsonwebtoken');
 const fields      = require('../models/data/UserFields');
+const Raven       = require('raven');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -291,49 +292,55 @@ schema.statics.filterSensitive = function(user, permission) {
 }
 
 var filterSensitive = function (user, permission) {
-    var u = user.toJSON();
 
-    var permissionLevel;
+    try {
+        var u = user.toJSON();
 
-    if (permission) {
-        permissionLevel = permission;
-    } else {
-        permissionLevel = 0;
-    }
+        var permissionLevel;
 
-    var queue = [[fields, u]];
-    var runner;
-    var userpath;
-    var keys;
+        if (permission) {
+            permissionLevel = permission;
+        } else {
+            permissionLevel = 0;
+        }
 
-    while (queue.length !== 0) {
-        runner = queue[0][0];
-        userpath = queue.shift()[1];
-        keys = Object.keys(runner);
+        var queue = [[fields, u]];
+        var runner;
+        var userpath;
+        var keys;
 
-        for (var i = 0; i < keys.length; i++) {
-            if('type' in runner[keys[i]]) {
-                if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
-                    try {
-                        delete userpath[keys[i]];
-                    } catch (e) {
-                        console.log(e)
+        while (queue.length !== 0) {
+            runner = queue[0][0];
+            userpath = queue.shift()[1];
+            keys = Object.keys(runner);
+
+            for (var i = 0; i < keys.length; i++) {
+                if ('type' in runner[keys[i]]) {
+                    if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
+                        try {
+                            delete userpath[keys[i]];
+                        } catch (e) {
+                            console.log(e)
+                        }
                     }
-                }
 
-                if (runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
-                    userpath[keys[i]] = runner[keys[i]].default;
+                    if (runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+                        userpath[keys[i]] = runner[keys[i]].default;
 
-                }
-            } else {
-                if(userpath[keys[i]]) {
-                    queue.push([runner[keys[i]], userpath[keys[i]]])
+                    }
+                } else {
+                    if (userpath[keys[i]]) {
+                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                    }
                 }
             }
         }
-    }
 
-    return u;
+        return u;
+    } catch(e) {
+        Raven.captureException(e);
+        return {};
+    }
 };
 
 var navigate = function(dictionary, path) {

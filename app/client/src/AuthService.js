@@ -10,12 +10,14 @@ module.exports = {
             oldPassword: oldPassword,
             newPassword: newPassword
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
 
-            Session.create(data['token'], data['user']);
-            this.updateLoginState(true)
-
-            if (callback) callback(null, data)
+                if (callback) callback(null, data)
+            }
         })
     },
 
@@ -26,12 +28,14 @@ module.exports = {
             firstName: firstName,
             lastName: lastName
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
 
-            Session.create(data['token'], data['user']);
-            this.updateLoginState(true)
-
-            if (callback) callback(null, data)
+                if (callback) callback(null, data)
+            }
         })
     },
 
@@ -40,12 +44,14 @@ module.exports = {
             email: email,
             password: password
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
 
-            Session.create(data['token'], data['user']);
-            this.updateLoginState(true)
-
-            if (callback) callback(null, data)
+                if (callback) callback(null, data)
+            }
         })
     },
 
@@ -53,12 +59,14 @@ module.exports = {
         Session.sendRequest('POST', '/auth/login', {
 
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true)
 
-            Session.create(data['token'], data['user']);
-            this.updateLoginState(true)
-
-            if (callback) callback(null, data)
+                if (callback) callback(null, data)
+            }
         })
     },
 
@@ -66,9 +74,11 @@ module.exports = {
         Session.sendRequest('POST', '/auth/verify', {
             token: token
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
-
-            if (callback) callback(null)
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                if (callback) callback(null)
+            }
         })
     },
 
@@ -77,10 +87,12 @@ module.exports = {
             token: token,
             password: password
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
-
-            this.logout()
-            if (callback) callback(null, data)
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                this.logout()
+                if (callback) callback(null, data)
+            }
         })
     },
 
@@ -88,16 +100,23 @@ module.exports = {
         Session.sendRequest('POST', '/auth/requestReset', {
             email: email
         }, (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
-            if (callback) callback(null, data)
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                if (callback) callback(null, data)
+            }
         })
     },
 
     requestVerify(callback) {
-        Session.sendRequest('POST', '/auth/requestVerify', {}, 
-            (err, data) => {
-            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
-            if (callback) callback(null, data)
+        Session.sendRequest('POST', '/auth/requestVerify', {
+
+        }, (err, data) => {
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
+                if (callback) callback(null, data)
+            }
         })
     },
 

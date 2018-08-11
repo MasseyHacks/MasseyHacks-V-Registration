@@ -22,12 +22,8 @@ module.exports = {
             request['data'] = type == 'POST' ? JSON.stringify(data) : data
         }
 
-        console.log(request)
-
         if (this.loggedIn()) {
-            request['beforeSend'] = xhr => {
-                                        xhr.setRequestHeader('x-access-token', this.getToken())
-                                    }
+            request['beforeSend'] = xhr => {xhr.setRequestHeader('x-access-token', this.getToken())}
         }
 
         $.ajax(request);
