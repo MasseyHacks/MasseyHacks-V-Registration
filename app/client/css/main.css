@@ -162,6 +162,14 @@ h2 {
     border-color: #764ba2;
 }
 
+#main-sidebar a.router-link-active button:focus {
+    outline: none;
+}
+
+#main-sidebar button {
+    outline: none;
+}
+
 #main-sidebar li {
     margin-top: 30px;
     position: relative;
