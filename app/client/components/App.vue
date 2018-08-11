@@ -7,10 +7,10 @@
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
                 </li>
-                <li v-if="user.permissions.verified">
+                <li v-if="user.permissions.verified/* && (user.permissions.developer || !users.permissions.admin)*/">
                     <router-link to="/application" tag="a"><button class="menu-button">Application</button></router-link>
                 </li>
-                <li v-if="user.status.admitted">
+                <li v-if="user.status.admitted/* && (user.permissions.developer || !users.permissions.admin)*/">
                     <router-link to="/confirmation" tag="a"><button class="menu-button">Confirmation</button></router-link>
                 </li>
                 <li v-if="user.permissions.checkin">
@@ -23,7 +23,7 @@
                     <router-link to="/owner" tag="a"><button class="menu-button">Owner</button></router-link>
                 </li>
                 <li v-if="user.permissions.developer">
-                    <router-link to="/owner" tag="a"><button class="menu-button">Owner</button></router-link>
+                    <router-link to="/developer" tag="a"><button class="menu-button">Developer</button></router-link>
                 </li>
                 <li>
                     <router-link to="/password" tag="a"><button class="menu-button">Change PW</button></router-link>

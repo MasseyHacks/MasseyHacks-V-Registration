@@ -15,7 +15,7 @@
                     <hr>
                     <div id="noPerms" v-if="$parent.user.permissions.level == 0">
                         <h4>You still haven't verified your email!</h4>
-                        <button class="generic-button" v-on:click="resend">Resend</button>
+                        <button class="generic-button" v-on:click="resendVerify">Resend</button>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
             }
         },
         methods: {
-            resend() {
+            resendVerify() {
                 AuthService.requestVerify((err,data) => {
                     if (err) {
                         this.error = err;
@@ -44,20 +44,16 @@
                             text: 'There was an error!',
                             type: 'error'
                         });
-                        swal.close()
                     }
                     else {
                         this.error = null;
                         swal({
                             title: 'Success!',
-                            text: 'Another email was sent to ' + $parent.user.email + '!',
+                            text: 'Another email was sent to ' + this.$parent.user.email + '!',
                             type: 'success'
                         })
-                        swal.close();
-
                     }
-                });
-                console.log("SENT");
+                });;
             }
         }
     }

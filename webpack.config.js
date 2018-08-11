@@ -15,11 +15,11 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules|vue\/src|vue-router\//,
                 loader: 'babel'
-            },
+            },/*
             {
                 test: /\.css$/,
                 loaders: ['style', 'css', 'sass']
-            },
+            },*/
             {
                 test: /\.vue$/,
                 loader: 'vue'
