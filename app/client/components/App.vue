@@ -2,7 +2,8 @@
     <div id="app">
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
-            <ul>
+<!--             <img src="/logo/logo.svg" width="250" height="250">
+ -->            <ul>
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
                 </li>
