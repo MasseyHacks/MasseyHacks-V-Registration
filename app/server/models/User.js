@@ -110,7 +110,6 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
 schema.statics.getByToken = function (token, callback) {
     jwt.verify(token, JWT_SECRET, function (err, payload) {
         if (err || !payload) {
-            console.log('ur bad');
             return callback({
                 error: 'Invalid Token',
                 code: 401

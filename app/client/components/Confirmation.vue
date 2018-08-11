@@ -1,7 +1,12 @@
 <template>
-    <div>
-        <h2>Confirmation</h2>
-        <p>Current status: {{$parent.user.status.name.toUpperCase()}}<br>Logged in as: {{$parent.user.fullName}}</p>
+    <div class="app-screen">
+        <div class="container">
+            <div class="row">
+                <div class="title-card col-md-12">
+                    <h2>CONFIRMATION</h2>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

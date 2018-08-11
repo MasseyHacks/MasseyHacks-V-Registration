@@ -170,9 +170,9 @@ module.exports = function(router) {
             return res.status(400).json({error: 'Invalid token'});
         }
 
-        UserController.sendVerificationEmail(email, function (err) {
+        UserController.sendVerificationEmail(token, function (err) {
             if (err) {
-                return res.status(400).json({error: 'Something went wrong.'});
+                return res.status(err.code).json(err)
             }
 
             return res.json({
