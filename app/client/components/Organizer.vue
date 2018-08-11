@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="title-card col-md-12">
-                    <h2>OWNER</h2>
+                    <h2>ORGANIZER</h2>
                 </div>
             </div>
 

@@ -276,6 +276,7 @@ h2 {
     background-color: rgba(255,255,255,0.2);
 }
 
+
 /* State transitions */
 .child-view {
     transition: all .3s cubic-bezier(.55,0,.1,1);
