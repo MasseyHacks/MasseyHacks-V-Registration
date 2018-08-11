@@ -1,9 +1,13 @@
 <template>
     <div>
-        <h2>Statistics</h2>
-        <p>O wow i like statistics!</p>
-
-        {{statistics}} {{loading}} {{fail}}
+        <div class="row">
+            <div class="ui-card" id="dash-card-large">
+                <h3>STATISTICS:</h3>
+                <hr>
+                {{statistics}} {{loading}} {{fail}}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
