@@ -22,7 +22,7 @@ h2 {
 
 #logo {
     height: 250px;
-    width: 250px
+    width: 250px;
     background-image: url(https://beta.masseyhacks.ca/images/logo/logo.svg);
     z-index: 90001;
     background-size: cover;
@@ -147,7 +147,7 @@ h2 {
 #main-sidebar ul {
     position: relative;
     list-style: none;
-    color: white
+    color: white;
     left: 0px;
     padding-left: 0px;
     top: calc(50vh - 50%);
@@ -190,7 +190,7 @@ h2 {
 #main-sidebar li {
     margin-top: 30px;
     position: relative;
-    width: 250px
+    width: 250px;
     padding-left: 10%;
 }
 

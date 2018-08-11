@@ -2,7 +2,7 @@
     <div>
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">Change Password</h2>
+            <h2 class="subtitle" style="padding-top:8px;">Change Password</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="changePassword">
                     <input v-model="oldPassword" placeholder="Old Password" type="password" required>
