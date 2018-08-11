@@ -1,5 +1,16 @@
 <template>
     <div id="app">
+        <button @click="flushAlerts">Click to insert</button>
+        <!-- errors -->
+        <div class="row">
+            <div class="col-md-9">
+                <div class="alerts">
+                    <div ref="container" style="position: absolute; width: 100vw; z-index: 99999">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
             <ul>
@@ -48,10 +59,13 @@
 <script>
     import AuthService  from '../src/AuthService'
     import Session      from '../src/Session'
-    import BootstrapVue from 'bootstrap-vue'
     import ApiService   from '../src/ApiService.js'
+    import danger       from '../components/Bootstrap-Alerts/danger.vue'
+    import Vue          from 'vue'
 
     export default {
+        components: {danger},
+
         beforeRouteUpdate (to, from, next) {
             const pageLayout = ['dashboard', 'application', 'confirmation', 'team', 'checkin', 'organizer', 'owner', 'developer', 'password']
 
@@ -64,6 +78,7 @@
             const toDepth = pageLayout.indexOf(toPath[toPath.length - 1])
             const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1])
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+
             next()
         },
         data() {
@@ -73,7 +88,8 @@
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
                 transitionName: 'slide-left',
-                ApiService: ApiService
+                ApiService: ApiService,
+                Alerts: [{}]
             }
         },
         created() {
@@ -91,6 +107,26 @@
             // Login with token if it exists
             if (Session.loggedIn()) {
                 AuthService.loginWithToken()
+            }
+
+        },
+        methods: {
+            flushAlerts(t) {
+                console.log("dank");
+                if (!t) {
+                    t = "specify message"
+                }
+                var ComponentClass = Vue.extend(danger);
+                var instance = new ComponentClass({
+                    propsData: { text: t}
+                });
+
+                instance.$mount(); // pass nothing
+
+                this.$refs.container.appendChild(instance.$el);
+            },
+            removeAlert(alert) {
+                this.$refs.container.removeChild(alert);
             }
         }
     }
