@@ -254,6 +254,7 @@ h2 {
 
 .duo-col {
     column-count: 2;
+    column-width: 200px;
 }
 
 .custom-ul {
@@ -274,11 +275,11 @@ h4 {
 }
 
 @media (max-width: 992px) {
-    #dash-card {
-        width: 90vw;
+    .dash-card {
+        width: 95vw;
     }
-    #dash-card-large {
-        width: 90vw;
+    .dash-card-large {
+        width: 95vw;
     }
 
     #app-view {

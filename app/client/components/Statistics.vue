@@ -36,8 +36,8 @@
                     </div>
                     <div class="card-col">
                         <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in genderSubmitted">
-                                <span v-html="key"></span>
+                            <li v-for="(key,value) in statistics.demo.grade">
+                                <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
                             </li>
                         </ul>
                     </div>
@@ -99,6 +99,7 @@
             genderSubmitted: function() {
                 var totalCount = 0;
                 var returnObject = {
+                    "Total" : '<i class="fas fa-check"></i>Total: ',
                     "Male" : '<i class="fas fa-male"></i>',
                     "Female" : '<i class="fas fa-female"></i>',
                     "Other" : '<i class="fas fa-question-circle"></i>',
@@ -107,6 +108,7 @@
                 for (var key in this.statistics.demo.gender) {
                     totalCount += this.statistics.demo.gender[key];
                 }
+                returnObject["Total"] += this.statistics.total;
                 returnObject["Male"] += "Male: " + Math.round(this.statistics.demo.gender.M / totalCount) + "%";
                 returnObject["Female"] += "Female: " + Math.round(this.statistics.demo.gender.F / totalCount) + "%";
                 returnObject["Other"] += "Other: " + Math.round(this.statistics.demo.gender.O / totalCount) + "%";
