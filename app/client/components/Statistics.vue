@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="ui-card" id="dash-card-large">
-                <h3>AT A GLANCE:</h3>
+                <h3>WAVE {{statistics.wave}} AT A GLANCE:</h3>
                 <p>Last Updated: {{statistics.lastUpdated}}</p>
                 <hr>
                 <!--{{statistics}} {{loading}} {{fail}}-->
@@ -22,9 +22,6 @@
                         </ul>
                     </div>
                 </div>              
-            </div>
-            <div class="ui-card" id="dash-card-large">
-                <h3>WAVE: {{statistics.wave}}</h3>
             </div>
             <div class="ui-card" id="dash-card-large">
                 <h3>DEMOGRAPHICS (SUBMITTED)</h3>

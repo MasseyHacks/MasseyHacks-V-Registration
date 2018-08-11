@@ -2,14 +2,14 @@
     <div id="app">
         <!--<button @click="flushAlerts">Flush</button>-->
         <!-- errors -->
-        <div class="row">
+<!--         <div class="row">
             <div class="col-md-12">
                 <div class="alerts">
                     <div ref="container" style="position: fixed; width: 100vw; z-index: 99999;top:0px;left:0px;">
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
