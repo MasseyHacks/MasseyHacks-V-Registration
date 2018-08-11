@@ -93,6 +93,14 @@ module.exports = {
         })
     },
 
+    requestVerify(callback) {
+        Session.sendRequest('POST', '/auth/requestVerify', {}, 
+            (err, data) => {
+            if (err && callback) return callback(JSON.parse(data.responseText)['error'])
+            if (callback) callback(null, data)
+        })
+    },
+
     logout (callback) {
         Session.destroy(callback)
         this.updateLoginState(false)

@@ -128,7 +128,7 @@ h2 {
     height: 100vh;
     background: rgb(8,27,74);
     position: absolute;
-    width: 300px;
+    width: 250px;
     z-index: 9000;
 }
 
@@ -137,34 +137,45 @@ h2 {
     color: white
     left: 0px;
     padding-left: 0px;
+    margin-top: 250px;
 }
 
-#main-sidebar a {
+#main-sidebar button {
+    position: relative;
     color: white;
     text-decoration: none;
     align-items: center;
+/*    top: 50%;
+    transform: translateY(-50%);*/
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #667eea;
+    width: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: right;
+    padding-top: 5%;
+    padding-bottom: 5%;
 }
 
-#main-sidebar a.router-link-active {
+#main-sidebar a.router-link-active button {
+    border-color: #764ba2;
 }
 
 #main-sidebar li {
-    margin-top: 50px;
+    margin-top: 30px;
     position: relative;
-    border: 2px solid red;
-    height: 5vh;
-    width: 300px
+    width: 250px
     padding-left: 10%;
 }
 
 #app-view {
     position: relative;
-    left: 20vw;
-    max-width: calc(100vw - 300px);
+    left: 250px;
+    max-width: calc(100vw - 250px);
 }
 
 .app-screen {
-    width: 80vw
     margin: 0 auto;
     left: 50%;
     transform: translateX(-50%);
@@ -212,6 +223,11 @@ h2 {
     background-color: black;
     color: white;
     border-color: transparent;
+    transition: background-color 0.1s;
+}
+
+.generic-button:hover {
+    background-color: rgba(0,0,0,0.7);
 }
 
 /* State transitions */
