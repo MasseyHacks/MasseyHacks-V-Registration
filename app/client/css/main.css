@@ -150,7 +150,6 @@ h2 {
     color: white;
     left: 0px;
     padding-left: 0px;
-    top: calc(50vh - 50%);
 }
 
 #main-sidebar button {
@@ -191,7 +190,6 @@ h2 {
     margin-top: 30px;
     position: relative;
     width: 250px;
-    padding-left: 10%;
 }
 
 #app-view {
