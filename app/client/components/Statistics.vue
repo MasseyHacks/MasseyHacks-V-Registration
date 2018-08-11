@@ -109,10 +109,10 @@
                     totalCount += this.statistics.demo.gender[key];
                 }
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + Math.round(this.statistics.demo.gender.M / totalCount) + "%";
-                returnObject["Female"] += "Female: " + Math.round(this.statistics.demo.gender.F / totalCount) + "%";
-                returnObject["Other"] += "Other: " + Math.round(this.statistics.demo.gender.O / totalCount) + "%";
-                returnObject["No Data"] += "No Data: " + Math.round(this.statistics.demo.gender.N / totalCount) + "%";
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.M / totalCount) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.F / totalCount) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.O / totalCount) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.N / totalCount) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 

@@ -30,8 +30,17 @@
     export default {
         beforeRouteUpdate (to, from, next) {
             const pageLayout = ['statistics', 'users', 'review']
-            const toDepth = pageLayout.indexOf(to.path.split('/')[2])
-            const fromDepth = pageLayout.indexOf(from.path.split('/')[2])
+            const toPath = to.path.split('/')
+            const fromPath = from.path.split('/')
+
+            console.log('dasd', toPath, fromPath)
+            console.log('Hello there')
+
+            const toDepth = pageLayout.indexOf(toPath[toPath.length - 1])
+            const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1])
+
+            console.log(toDepth, fromDepth)
+
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
             next()
         },
