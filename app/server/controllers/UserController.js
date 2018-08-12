@@ -70,21 +70,38 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
     console.log(query)
 
-    User
-        .find(params)
-        //.sort()
-        .skip((page - 1) * size)
-        .limit(size)
-        .exec(function(err, users) {
-            //console.log(users)
+    User.count(query, function(err, count) {
 
-            if (users) {
-                for (var i = 0; i < users.length; i++) {
-                    users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+        if (err) {
+            return callback(err);
+        }
+
+        User
+            .find(params)
+            //.sort()
+            .skip((page - 1) * size)
+            .limit(size)
+            .exec(function(err, users) {
+                if (err) {
+                    if (err) {
+                        console.log(err)
+                        return callback({error:err.message})
+                    }
                 }
-            }
 
-            return callback(null, users)
+                console.log(users)
+
+                if (users) {
+                    for (var i = 0; i < users.length; i++) {
+                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+                    }
+                }
+
+                    return callback(null, {
+                        users: users,
+                        totalPages: Math.ceil(count / size)
+                    })
+                });
         });
 
 };

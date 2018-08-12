@@ -1,5 +1,6 @@
 <template>
     <div>
+        {{loading}} {{fail}}
         <img src="/img/rolling.svg" height="50px" width="auto" class="loading-icon hidden">
         <div class="row">
             <div class="ui-card dash-card-large">
@@ -113,7 +114,7 @@
             }
         },
 
-        beforeMount() {
+        created() {
             this.getStat()
             setInterval(this.getStat(), 5000)
         },

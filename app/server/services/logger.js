@@ -4,6 +4,46 @@ const Raven           = require('raven');
 const permission      = require('../services/permissions');
 const User            = require('../models/User');
 
+var dataPack = {
+    ID : {
+        type: String,
+        required: true
+    },
+    Name : {
+        type: String,
+        required: true
+    },
+    Email : {
+        type: String,
+        required: true
+    }
+};
+
+function buildLoggingCore(id, name, email) {
+    var dp = dataPack;
+
+    dp.ID = id;
+    dp.Name = name;
+    dp.Email = email;
+
+    return dp;
+}
+
+function buildLoggingData(id) {
+    if (id == -1) {
+        return buildLoggingCore(-1, 'MasseyHacks Internal Authority', 'internal@masseyhacks.ca');
+    }
+
+    var user = User.getUser({_id : id});
+
+    if (!user) {
+        return buildLoggingCore(id, 'null name', 'null email');
+    } else {
+        return buildLoggingCore(id, user.fullName, user.email);
+    }
+};
+
+
 module.exports = {
     defaultResponse : function(req, res){
         return function(err, data){
@@ -63,39 +103,40 @@ module.exports = {
          * To-Do: Fix this bash...
          */
 
-        // Creates log object
-        LogEvent.buildLoggingData(actionFrom, function(dataFrom) {
-            LogEvent.buildLoggingData(actionTo, function(dataTo) {
+        dataFrom = buildLoggingData(actionFrom);
 
-                LogEvent.create({
-                    'to': dataTo,
-                    'from': dataFrom,
-                    'message': message,
-                    'timestamp': Date.now()
-                }, function (err, event) {
-                    console.log(event);
+        console.log(dataFrom)
 
-                    if (process.env.NODE_ENV === 'production' && process.env.AUDIT_SLACK_HOOK){
-                        console.log('Sending audit log...');
+        dataTo = buildLoggingData(actionTo);
+        console.log(dataFrom)
+        LogEvent.create({
+            'to': dataTo,
+            'from': dataFrom,
+            'message': message,
+            'timestamp': Date.now()
+        }, function (err, event) {
+            console.log(event);
 
-                        request.post(process.env.AUDIT_SLACK_HOOK,
-                            {
-                                form: {
-                                    payload: JSON.stringify({
-                                        'icon_emoji': ':pcedoris:',
-                                        'username': 'AuditBot',
-                                        'text': '```' + event + '```'
-                                    })
-                                }
-                            },
-                            function (error, response, body) {
-                                console.log('Message sent to slack');
-                            }
-                        );
+            if (process.env.NODE_ENV === 'production' && process.env.AUDIT_SLACK_HOOK){
+                console.log('Sending audit log...');
 
+                request.post(process.env.AUDIT_SLACK_HOOK,
+                    {
+                        form: {
+                            payload: JSON.stringify({
+                                'icon_emoji': ':pcedoris:',
+                                'username': 'AuditBot',
+                                'text': '```' + event + '```'
+                            })
+                        }
+                    },
+                    function (error, response, body) {
+                        console.log('Message sent to slack');
                     }
-                });
-            });
+                );
+
+            }
         });
+
     }
 };

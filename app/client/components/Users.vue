@@ -5,6 +5,9 @@
                 <!--<h3>USERS:</h3>-->
                 <input v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r">
                 <hr>
+                {{this.err}}
+                <!--<button v-for=""></button>-->
+                <hr>
                 <table>
                     <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td></tr>
                     <tr v-for="user in users">
@@ -30,31 +33,34 @@
         data() {
             return {
                 page: 1,
+                totalPages: 1,
                 filters: [],
                 searchQuery: '',
                 loading: true,
-                fail: false,
+                err: '',
                 users: {}
             }
         },
         beforeMount() {
-            ApiService.getUsers({ page: this.page, size: 100 }, (err, users) => {
+            ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
                 this.loading = false
 
-                if (err || !users) {
-                    this.fail = true
+                if (err || !data) {
+                    this.err = err ? err : 'Unable to process request'
                 } else {
-                    this.users = users
+                    this.users = data.users
+                    this.totalPages = data.totalPages
                 }
             })
         },
         methods : {
             updateSearch: function() {
-                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, users) => {
-                    if (err || !users) {
-                        this.fail = true
+                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, data) => {
+                    if (err || !data) {
+                        this.err = err ? err : 'Unable to process request'
                     } else {
-                        this.users = users
+                        this.users = data.users
+                        this.totalPages = data.totalPages
                     }
                 })
             },

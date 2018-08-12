@@ -84,9 +84,10 @@ schema.statics.generateHash = function (password) {
 
 schema.statics.getByID = function(id, callback, permissionLevel) {
 
+    /*
     if (permissionLevel == null) {
         permissionLevel = 1;
-    }
+    }*/
 
     this.findOne({
         _id:  id
@@ -103,7 +104,7 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
 
         }
 
-        return callback(null, filterSensitive(user, permissionLevel));
+        return callback(null, user); //filterSensitive(user, permissionLevel));
     });
 };
 
@@ -148,6 +149,10 @@ schema.statics.getByToken = function (token, callback) {
     }.bind(this));
 };
 
+schema.statics.getUser = async function(query) {
+    return await this.findOne(query);
+};
+
 schema.statics.getByEmail = function (email, callback, permissionLevel) {
     this.findOne({
         email:  email ? email.toLowerCase() : email
@@ -163,9 +168,10 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
             })
         }
 
+        /*
         if (!permissionLevel) {
             permissionLevel = 0
-        }
+        }*/
 
         return callback(null, user); //filterSensitive(user, permissionLevel));
     });

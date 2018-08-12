@@ -119,7 +119,7 @@ SettingsController.modifyTime = function(user, newTime, callback) {
                 return callback({'error':'Unable to update time'})
             }
 
-            logger.logAction(user._id, -1, 'Requested to modify time to ' + newTime + '.');
+            logger.logAction(user._id, -1, 'Modified time to ' + JSON.stringify(newTime) + '.');
 
             return callback(null, settings)
         })
