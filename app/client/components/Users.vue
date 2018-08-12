@@ -17,6 +17,7 @@
             </ul>
 
         </div>
+        <button v-on:click="genCSV">Generate CSV</button>
     </div>
 </template>
 
@@ -43,6 +44,36 @@
                     this.users = users
                 }
             })
+        },
+        methods :{
+            exportUsersCSV: function (){
+                ApiService.getUsers({ page: 1, size: 100 }, (err, users) => {
+                    for(var s of users){
+                        for(var [key,value] of s){
+                            if(a.constructor === Object){
+                                //iterate through the obj
+                            }
+                            else{
+                                //add to csv obj
+                            }
+                        }
+                    }
+                })
+            },
+            genCSV: function(jsonData) {
+                    var json = jsonData;
+                    var fields = Object.keys(json[0]);
+                    var replacer = function(key, value) { return value === null ? '' : value };
+                    var csv = json.map(function(row){
+                        return fields.map(function(fieldName){
+                            return JSON.stringify(row[fieldName], replacer)
+                        }).join(',')
+                    });
+                    csv.unshift(fields.join(',')); // add header column
+
+                    return(csv.join('\r\n'));
+            }
+
         }
     }
 </script>
