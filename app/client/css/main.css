@@ -20,6 +20,18 @@ h2 {
     height: 50vh;
 }
 
+.hidden {
+    display: none;
+}
+
+.loading-icon {
+    position: absolute !important;
+    top: 0px;
+    left: 0px;
+    transform: translateY(-50%);
+    transform: translateX(-50%);
+}
+
 #logo {
     height: 250px;
     width: 250px;
@@ -264,6 +276,65 @@ h2 {
     margin-right: 10px;
     width: 15px;
     text-align: center;
+}
+
+#users-table {
+    margin-bottom: 50px;
+}
+
+#users-table table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    color: white;
+    text-align: center;
+}
+
+#users-table tr {
+    vertical-align: center;
+    border-bottom: 1px solid white;
+
+}
+
+#users-table td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#users-table tr:hover {
+    border-color: #f78ca0;
+}
+
+#users-table i {
+    letter-spacing: 0.7em;
+    text-align: center;
+}
+
+i.fa-ban {
+    color: #f6d365;
+}
+
+i.fa-check {
+    color: #96e6a1;
+}
+
+i.fa-male {
+    color: #c2e9fb;
+}
+
+i.fa-female {
+    color: #f093fb;
+}
+
+#table-header {
+    font-family: 'Futura Bold';
+    font-size: 1.2em;
+    border-color: transparent !important;
+}
+
+#table-header td {
+    font-family: 'Futura Bold';
+    letter-spacing: 0.2em;
 }
 
 h4 {
