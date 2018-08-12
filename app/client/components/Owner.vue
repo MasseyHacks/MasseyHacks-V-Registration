@@ -17,11 +17,11 @@
                         <input type="datetime-local" v-model="timeOpen"/>
                     </p>
                     <p>
-                        Registration Open: {{moment(settings.timeClose)}}
+                        Registration Close: {{moment(settings.timeClose)}}
                         <input type="datetime-local" v-model="timeClose"/>
                     </p>
                     <p>
-                        Registration Open: {{moment(settings.timeConfirm)}}
+                        Confirmation Deadline: {{moment(settings.timeConfirm)}}
                         <input type="datetime-local" v-model="timeConfirm"/>
                     </p>
 
