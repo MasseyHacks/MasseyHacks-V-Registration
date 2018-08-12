@@ -20,7 +20,7 @@
                 </table>
             </div>
         </div>
-        <button v-on:click="genCSV">Generate CSV</button>
+        <button v-on:click="exportUsersCSV">Generate CSV</button>
     </div>
 </template>
 
@@ -28,6 +28,7 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import $ from 'jquery';
+    import { saveAs } from 'file-saver/FileSaver';
 
     export default {
         data() {
@@ -59,39 +60,96 @@
                     if (err || !data) {
                         this.err = err ? err : 'Unable to process request'
                     } else {
-                        this.users = data.users
+                        this.users = data.users;
                         this.totalPages = data.totalPages
                     }
                 })
             },
             exportUsersCSV: function () {
                 ApiService.getUsers({page: 1, size: 100}, (err, users) => {
-                    for (var s of users) {
-                        for (var [key, value] of s) {
-                            if (a.constructor === Object) {
-                                //iterate through the obj
-                            }
-                            else {
-                                //add to csv obj
-                            }
-                        }
+                    var csvArray = [];
+                    for(var i=0;i<users.users.length;i++){
+                        //console.log(users.users[i]);
+                        csvArray[i] = this.flattenObject(users.users[i]);
                     }
+                    this.genCSV(csvArray);
                 })
             },
-            genCSV: function (jsonData) {
-                var json = jsonData;
-                var fields = Object.keys(json[0]);
-                var replacer = function (key, value) {
-                    return value === null ? '' : value
-                };
-                var csv = json.map(function (row) {
-                    return fields.map(function (fieldName) {
-                        return JSON.stringify(row[fieldName], replacer)
-                    }).join(',')
-                });
-                csv.unshift(fields.join(',')); // add header column
+            flattenObject: function (data,prefix="",level=0){
+                var tempObj = {};
+                if(level < 6){
+                    Object.keys(data).forEach((key) => {
+                        if(data[key] === Object(data[key])){
+                            //iterate again!
+                            tempObj = Object.assign(tempObj,this.flattenObject(data[key],prefix+key+"/",level+=1));
+                        }
+                        else{
+                            //log the value
+                            tempObj[prefix+key] = data[key];
+                        }
+                    });
+                    if(prefix === "") {
+                        tempObj["documentKeys"] = Object.keys(tempObj);
+                    }
+                    return tempObj;
+                }
+                else{
+                    console.log("recursion limit reached!");
+                    return {};
+                }
+            },
+            genCSV: function (objArray) {
+                var output = [];
+                var headers = [];
 
-                return (csv.join('\r\n'));
+                //get all the headers
+                for(var i=0;i<objArray.length;i++){
+                    headers = this.mergeArray(headers,objArray[i]["documentKeys"]);
+                }
+
+                output[0] = headers.toString();
+
+                //generate the output
+                for(var i=0;i<objArray.length;i++){
+                    output[i+1] = "";
+                    for(var j=0;j<headers.length;j++){
+                        if(objArray[i][headers[j]] !== undefined){
+                            output[i+1] += objArray[i][headers[j]]+",";
+                        }
+                        else{
+                            output[i+1] += ",";
+                        }
+                    }
+                    output[i+1] = output[i+1].slice(0,-1);
+                }
+
+                var outputStr = "";
+                for(var i=0;i<output.length;i++){
+                    outputStr += output[i]+"\n";
+                }
+
+                var filename = "Users-export-" + new Date().getMilliseconds() + ".csv";
+                var blob = new Blob([outputStr], {
+                    type: "text/csv;charset=utf-8"
+                });
+
+                saveAs(blob,filename);
+
+            },
+            mergeArray: function (){
+                /** Courtesy of George Ruth on Stack Overflow **/
+                var args = arguments;
+                var hash = {};
+                var arr = [];
+                for (var i = 0; i < args.length; i++) {
+                    for (var j = 0; j < args[i].length; j++) {
+                        if (hash[args[i][j]] !== true) {
+                            arr[arr.length] = args[i][j];
+                            hash[args[i][j]] = true;
+                        }
+                    }
+                }
+                return arr;
             },
             userStatusConverter: function (user) {
                 var repsonseArray = {
