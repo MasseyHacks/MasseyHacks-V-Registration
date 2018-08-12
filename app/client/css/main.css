@@ -208,6 +208,7 @@ h2 {
     position: relative;
     left: 250px;
     max-width: calc(100vw - 250px);
+    padding-bottom: 30px;
 }
 
 .app-screen {
