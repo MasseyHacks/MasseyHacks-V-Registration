@@ -5,10 +5,11 @@
                 <h3>USERS:</h3>
                 <hr>
                 <table>
-                    <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>EMAIL</td><td>SCHOOL</td></tr>
+                    <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td></tr>
                     <tr v-for="user in users">
                         <td>{{user.fullName}}</td>
                         <td><span v-html="userStatusConverter(user)"></span></td>
+                        <td>{{user.numVotes}}</td>
                         <td>{{user.email}}</td>
                         <td>N/A</td>
                     </tr>
