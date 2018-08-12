@@ -7,6 +7,7 @@
                 <hr>
                 {{this.err}}
                 <!--<button v-for=""></button>-->
+                <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                 <hr>
                 <table>
                     <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td></tr>
@@ -192,6 +193,10 @@
                     finalReponse += repsonseArray[str]
                 }
                 return finalReponse
+            },
+
+            switchPage: function(page) {
+                this.page = page
             }
         }
     }
