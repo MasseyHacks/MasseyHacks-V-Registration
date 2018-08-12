@@ -273,5 +273,15 @@ module.exports = {
 
             }
         });
+    },
+
+    returnTemplates : function(templateName){
+        templateName = templateName.toLowerCase();
+        if(templateName == "base"){
+            //return base.hbs
+        }
+        else {
+            //return the hbs based on the value in the config
+        }
     }
 };
