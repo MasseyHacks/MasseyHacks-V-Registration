@@ -100,13 +100,15 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'Why do you want to come to MasseyHacks V?'
+        question: 'Why do you want to come to MasseyHacks V?',
+        mandatory: true
     },
 
     skillQuestion: {
         type: Boolean,
         questionType: 'boolean',
-        question: 'Are bananas yellow?'
+        question: 'Are bananas yellow?',
+        mandatory: true
     },
 
     grade: {
@@ -114,7 +116,15 @@ var hackerApplication = {
         questionType: 'dropdown',
         enum: {
             values: '<=8 9 10 11 12'
-        }
+        },
+        mandatory: true
+    },
+
+    school: {
+        type: String,
+        questionType: 'school',
+        maxlength: 100,
+        mandatory: true
     }
 };
 
