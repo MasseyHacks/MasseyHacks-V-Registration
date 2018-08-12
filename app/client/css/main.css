@@ -344,6 +344,19 @@ h4 {
     letter-spacing: 0.3em;
 }
 
+.ui-grid {
+    margin-top: 50px;
+    grid-column-gap: 50px;
+    display: grid;
+    grid-template-columns: 25vw 25vw;
+
+}
+
+.ui-grid-item{
+    margin-bottom: 50px;
+}
+
+
 @media (max-width: 992px) {
     .dash-card {
         width: 95vw;
@@ -393,6 +406,20 @@ h4 {
 
 .generic-button-light:hover {
     background-color: rgba(255,255,255,0.2);
+}
+
+.generic-button-dark {
+    border-radius: 2em;
+    padding: 10px;
+    min-width: 10rem;
+    background-color: transparent;
+    color: black;
+    border: 2px solid black;
+    transition: background-color 0.1s;
+}
+
+.generic-button-dark:hover {
+    background-color: rgba(0,0,0,0.2);
 }
 
 

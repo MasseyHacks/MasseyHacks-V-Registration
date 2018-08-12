@@ -121,7 +121,7 @@ SettingsController.modifyTime = function(user, newTime, callback) {
 
             logger.logAction(user._id, -1, 'Requested to modify time to ' + newTime + '.');
 
-            return callback(null, {'message':'Success'})
+            return callback(null, settings)
         })
 };
 
