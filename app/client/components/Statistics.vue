@@ -1,5 +1,6 @@
 <template>
     <div>
+        <img src="/img/rolling.svg" height="50px" width="auto" class="loading-icon hidden">
         <div class="row">
             <div class="ui-card dash-card-large">
                 <h3>WAVE {{statistics.wave}} AT A GLANCE:</h3>
@@ -24,6 +25,9 @@
                 </div>              
             </div>
             <div class="ui-card dash-card-large">
+                <h3>{{statistics.checkedIn}} CHECKED IN</h3>
+            </div>
+            <div class="ui-card dash-card-large">
                 <h3>DEMOGRAPHICS (SUBMITTED)</h3>
                 <hr>
                 <div class="duo-col">
@@ -46,6 +50,22 @@
             <div class="ui-card dash-card-large">
                 <h3>DEMOGRAPHICS (CONFIRMED)</h3>
                 <hr>
+                <div class="duo-col">
+                    <div class="card-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li v-for="(key,value) in genderSubmitted">
+                                <span v-html="key"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li v-for="(key,value) in statistics.confirmedStat.demo.grade">
+                                <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         {{statistics}}
         </div>
@@ -56,6 +76,7 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import $ from 'jquery';
+    import swal from 'sweetalert2'
 
     export default {
         data() {
@@ -72,6 +93,7 @@
             setInterval(this.getStat(), 5000)
         },
 
+
         methods: {
             getStat: function() {
                 ApiService.getStatistics((err, statistics) => {
@@ -79,6 +101,11 @@
 
                     if (err || !statistics) {
                         this.fail = true
+                        swal({
+                            title: 'Sorry!',
+                            text: 'There was an error!',
+                            type: 'error'
+                        })
                     } else {
                         this.statistics = statistics
                     }
@@ -120,6 +147,28 @@
                 returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.F / totalCount) : 0) + "%";
                 returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.O / totalCount) : 0) + "%";
                 returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.N / totalCount) : 0) + "%";
+                console.log(returnObject);
+                return returnObject;
+
+            },
+
+            genderConfirmed: function() {
+                var totalCount = 0;
+                var returnObject = {
+                    "Total" : '<i class="fas fa-check"></i>Total: ',
+                    "Male" : '<i class="fas fa-male"></i>',
+                    "Female" : '<i class="fas fa-female"></i>',
+                    "Other" : '<i class="fas fa-question-circle"></i>',
+                    "No Data" : '<i class="fas fa-ban"></i>'
+                };
+                for (var key in this.statistics.confirmedStat.gender) {
+                    totalCount += this.statistics.confirmedStat.gender[key];
+                }
+                returnObject["Total"] += totalCount;
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.M / totalCount) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.F / totalCount) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.O / totalCount) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.N / totalCount) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 
