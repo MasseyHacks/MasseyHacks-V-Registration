@@ -70,7 +70,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
     console.log(query)
 
-    User.count(query, function(err, count) {
+    User.count(params, function(err, count) {
 
         if (err) {
             return callback(err);
@@ -89,7 +89,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
                     }
                 }
 
-                console.log(users)
+                console.log(users, count, size)
 
                 if (users) {
                     for (var i = 0; i < users.length; i++) {
@@ -97,11 +97,11 @@ UserController.getByQuery = function (adminUser, query, callback) {
                     }
                 }
 
-                    return callback(null, {
-                        users: users,
-                        totalPages: Math.ceil(count / size)
-                    })
-                });
+                return callback(null, {
+                    users: users,
+                    totalPages: Math.ceil(count / size)
+                })
+            });
         });
 
 };

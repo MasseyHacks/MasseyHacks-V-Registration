@@ -3,22 +3,29 @@
         <div class="row">
             <div class="ui-card dash-card-large" id="users-table">
                 <!--<h3>USERS:</h3>-->
-                <input v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r">
+
+                <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r" type="text">
+
+                <!--<input v-model="advancedSearch" placeholder="Uber advanced">-->
                 <hr>
                 {{this.err}}
                 <!--<button v-for=""></button>-->
                 <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                 <hr>
-                <table>
-                    <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td></tr>
+                <table v-if="users.length != 0">
+                    <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
                     <tr v-for="user in users">
                         <td>{{user.fullName}}</td>
                         <td><span v-html="userStatusConverter(user)"></span></td>
                         <td>{{user.numVotes}}</td>
                         <td>{{user.email}}</td>
                         <td>N/A</td>
+                        <td>N/A</td>
                     </tr>
                 </table>
+                <p v-else>
+                    No results match this query
+                </p>
             </div>
         </div>
         <button v-on:click="exportUsersCSV">Generate CSV</button>
@@ -38,6 +45,7 @@
                 totalPages: 1,
                 filters: [],
                 searchQuery: '',
+                advancedSearch: '',
                 loading: true,
                 err: '',
                 users: {}
@@ -67,13 +75,16 @@
                 })
             },
             exportUsersCSV: function () {
-                ApiService.getUsers({page: 1, size: 100}, (err, users) => {
-                    var csvArray = [];
-                    for(var i=0;i<users.users.length;i++){
-                        //console.log(users.users[i]);
-                        csvArray[i] = this.flattenObject(users.users[i]);
+                ApiService.getUsers({ page: 1, size: 100000, text: this.searchQuery }, (err, data) => {
+                    if (err || !data) {
+                        this.err = err ? err : 'Unable to process request'
+                    } else {
+                        var csvArray = [];
+                        for(var i = 0; i < data.users.length; i++){
+                            csvArray[i] = this.flattenObject(data.users[i]);
+                        }
+                        this.genCSV(csvArray);
                     }
-                    this.genCSV(csvArray);
                 })
             },
             flattenObject: function (data,prefix="",level=0){
@@ -129,7 +140,7 @@
                     outputStr += output[i]+"\n";
                 }
 
-                var filename = "Users-export-" + new Date().getMilliseconds() + ".csv";
+                var filename = "Users-export-" + new Date() + ".csv";
                 var blob = new Blob([outputStr], {
                     type: "text/csv;charset=utf-8"
                 });
