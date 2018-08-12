@@ -52,6 +52,8 @@ Raven
 
 Vue.use(VueRouter)
 
+Vue.use(require('vue-moment'));
+
 function requireAuth (to, from, next) {
     if (!Session.loggedIn()) {
         next({

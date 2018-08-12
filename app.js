@@ -22,12 +22,14 @@ const settings        = require('./config/settings');
 const autoRemove      = require('./app/server/services/autoRemove');
 const waiverReceiver  = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
+const stats           = require('./app/server/services/stats');
 
 Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
 
     var app = express();
     mongoose.connect(database);
+    stats.startService();
 
     if (cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);

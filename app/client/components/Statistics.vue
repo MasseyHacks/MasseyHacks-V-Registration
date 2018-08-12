@@ -1,21 +1,21 @@
 <template>
     <div>
         <div class="row">
-            <div class="ui-card" id="dash-card-large">
+            <div class="ui-card dash-card-large">
                 <h3>WAVE {{statistics.wave}} AT A GLANCE:</h3>
-                <p>Last Updated: {{statistics.lastUpdated}}</p>
+                <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                 <hr>
                 <!--{{statistics}} {{loading}} {{fail}}-->
-                <div style="column-count: 2;">
+                <div class="duo-col">
                     <div class="card-col">
-                        <ul id="stats" style="text-align: left;">
+                        <ul class="custom-ul" style="text-align: left;">
                             <li v-for="(value, key) in atGlance">
                                 <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
                             </li>
                         </ul>
                     </div>
                     <div class="card-col">
-                        <ul id="stats" style="text-align: left;">
+                        <ul class="custom-ul" style="text-align: left;">
                             <li v-for="(value, key) in atGlance2">
                                 <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
                             </li>
@@ -23,16 +23,32 @@
                     </div>
                 </div>              
             </div>
-            <div class="ui-card" id="dash-card-large">
+            <div class="ui-card dash-card-large">
                 <h3>DEMOGRAPHICS (SUBMITTED)</h3>
                 <hr>
+                <div class="duo-col">
+                    <div class="card-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li v-for="(key,value) in genderSubmitted">
+                                <span v-html="key"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li v-for="(key,value) in statistics.demo.grade">
+                                <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="ui-card" id="dash-card-large">
+            <div class="ui-card dash-card-large">
                 <h3>DEMOGRAPHICS (CONFIRMED)</h3>
                 <hr>
             </div>
-        </div>
         {{statistics}}
+        </div>
     </div>
 </template>
 
@@ -50,18 +66,25 @@
                 atGlanceStuff : {}
             }
         },
-        beforeMount() {
-            ApiService.getStatistics((err, statistics) => {
-                this.loading = false
 
-                if (err || !statistics) {
-                    this.fail = true
-                } else {
-                    this.statistics = statistics
-                }
-            })
+        beforeMount() {
+            this.getStat()
+            setInterval(this.getStat(), 5000)
         },
 
+        methods: {
+            getStat: function() {
+                ApiService.getStatistics((err, statistics) => {
+                    this.loading = false
+
+                    if (err || !statistics) {
+                        this.fail = true
+                    } else {
+                        this.statistics = statistics
+                    }
+                })
+            }
+        },
 
         computed: {
             atGlance: function() {
@@ -78,6 +101,28 @@
                     "Waitlisted": this.statistics.waitlisted,
                     "Rejected" : this.statistics.rejected
                 }
+            },
+
+            genderSubmitted: function() {
+                var totalCount = 0;
+                var returnObject = {
+                    "Total" : '<i class="fas fa-check"></i>Total: ',
+                    "Male" : '<i class="fas fa-male"></i>',
+                    "Female" : '<i class="fas fa-female"></i>',
+                    "Other" : '<i class="fas fa-question-circle"></i>',
+                    "No Data" : '<i class="fas fa-ban"></i>'
+                };
+                for (var key in this.statistics.demo.gender) {
+                    totalCount += this.statistics.demo.gender[key];
+                }
+                returnObject["Total"] += totalCount;
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.M / totalCount) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.F / totalCount) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.O / totalCount) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.N / totalCount) : 0) + "%";
+                console.log(returnObject);
+                return returnObject;
+
             }
         }
     }

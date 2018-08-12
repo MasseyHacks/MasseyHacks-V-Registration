@@ -276,16 +276,17 @@ function calculateStats(settings){
         });
 }
 
-setInterval(function() {
-    calculateStats();
-}, 600000);
-
-
 var Stats = {};
 
 Stats.getUserStats = function(){
     return stats;
 };
 
-calculateStats();
+Stats.startService = function() {
+    calculateStats();
+    setInterval(function () {
+        calculateStats();
+    }, 600000);
+};
+
 module.exports = Stats;
