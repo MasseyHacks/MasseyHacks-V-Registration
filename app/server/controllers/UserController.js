@@ -34,8 +34,8 @@ UserController.getByQuery = function (adminUser, query, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
-    var page = query.page;
-    var size = query.size;
+    var page = parseInt(query.page);
+    var size = parseInt(query.size);
     var text = query.text;
     var and  = query.and ? query.and : [];
     var or   = query.or ? query.or : [];
@@ -68,13 +68,15 @@ UserController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
+    console.log(query)
+
     User
         .find(params)
         //.sort()
-        //.skip((page - 1) * size)
-        //.limit(size)
+        .skip((page - 1) * size)
+        .limit(size)
         .exec(function(err, users) {
-            console.log(users)
+            //console.log(users)
 
             if (users) {
                 for (var i = 0; i < users.length; i++) {
