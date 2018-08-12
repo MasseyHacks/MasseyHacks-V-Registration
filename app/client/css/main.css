@@ -281,7 +281,7 @@ h2 {
 
 #users-table {
     margin-bottom: 30px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 #users-table table {
