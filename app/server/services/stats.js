@@ -1,7 +1,9 @@
 const _        = require('underscore');
 const async    = require('async');
 const User     = require('../models/User');
-const Settings = require('../models/Settings')
+const Settings = require('../models/Settings');
+const Sheets   = require('./sheets');
+const fs       = require('fs');
 
 // In memory stats.
 var stats = {};
@@ -285,6 +287,6 @@ Stats.startService = function() {
     setInterval(function () {
         calculateStats();
     }, 600000);
-}
+};
 
 module.exports = Stats;
