@@ -13,15 +13,15 @@
 
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
-<!--             <img src="/logo/logo.svg" width="250" height="250">
- -->            <ul>
+             <!--<img src="/logo/logo.svg" width="250" height="250"> -->
+             <ul>
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
                 </li>
-                <li v-if="user.permissions.verified/* && (user.permissions.developer || !users.permissions.admin)*/">
+                <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
                     <router-link to="/application" tag="a"><button class="menu-button">Application</button></router-link>
                 </li>
-                <li v-if="user.status.admitted/* && (user.permissions.developer || !users.permissions.admin)*/">
+                <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
                     <router-link to="/confirmation" tag="a"><button class="menu-button">Confirmation</button></router-link>
                 </li>
                 <li v-if="user.permissions.checkin">
@@ -37,7 +37,7 @@
                     <router-link to="/developer" tag="a"><button class="menu-button">Developer</button></router-link>
                 </li>
                 <li>
-                    <router-link to="/password" tag="a"><button class="menu-button">Change PW</button></router-link>
+                    <router-link to="/password" tag="a"><button class="menu-button">Change Password</button></router-link>
                 </li>
                 <li>
                     <router-link v-if="loggedIn" to="/logout" tag="a"><button class="menu-button">Logout</button></router-link>

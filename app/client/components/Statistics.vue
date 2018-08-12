@@ -1,13 +1,11 @@
 <template>
     <div>
-        {{loading}} {{fail}}
         <img src="/img/rolling.svg" height="50px" width="auto" class="loading-icon hidden">
         <div class="row">
             <div class="ui-card dash-card-large">
-                <h3>WAVE {{statistics.wave}} AT A GLANCE:</h3>
+                <h3>AT A GLANCE:</h3>
                 <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                 <hr>
-                <!--{{statistics}} {{loading}} {{fail}}-->
                 <div class="duo-col">
                     <div class="card-col">
                         <ul class="custom-ul" style="text-align: left;">
@@ -93,7 +91,6 @@
                     </ul>
                 </div>
             </div>
-        {{statistics}}
         </div>
     </div>
 </template>
