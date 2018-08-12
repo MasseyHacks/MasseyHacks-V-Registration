@@ -46,6 +46,19 @@
                         </ul>
                     </div>
                 </div>
+                <div class="duo-col">
+                    <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-bus"></i>Bus: {{statistics.bus}}</li>
+                        <li><i class="fas fa-home"></i>Massey: {{statistics.demo.massey}}</li>
+                        <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.demo.nonmassey}}</li>
+                    </ul>
+                    <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
+                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
+                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                    </ul>
+                </div>
+
             </div>
             <div class="ui-card dash-card-large">
                 <h3>DEMOGRAPHICS (CONFIRMED)</h3>
@@ -65,6 +78,18 @@
                             </li>
                         </ul>
                     </div>
+                </div>
+                <div class="duo-col">
+                    <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-bus"></i>Bus: {{statistics.confirmedStat.bus}}</li>
+                        <li><i class="fas fa-home"></i>Massey: {{statistics.confirmedStat.demo.massey}}</li>
+                        <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.confirmedStat.demo.nonmassey}}</li>
+                    </ul>
+                    <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
+                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
+                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                    </ul>
                 </div>
             </div>
         {{statistics}}
