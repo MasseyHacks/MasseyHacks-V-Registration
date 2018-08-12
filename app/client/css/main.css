@@ -354,6 +354,22 @@ h4 {
 
 .ui-grid-item{
     margin-bottom: 50px;
+    align-items: left;
+}
+
+.ui-grid-item input {
+    padding: 2%;
+    border: 0px;
+    width: 90%;
+    background: transparent;
+    border-bottom: 2px solid gray;
+    color: black;
+    text-align: left;
+}
+
+.ui-grid-item input:focus {
+    outline: 0px;
+    border-bottom: 2px solid black;
 }
 
 

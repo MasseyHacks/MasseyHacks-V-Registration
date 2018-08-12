@@ -44,13 +44,11 @@
                         This is the MasseyHacks V Dashboard
                     </p>
                 </div>
-                <div class="ui-card ui-grid-item" id="dash-card">
-                    <h3>Log</h3>
-                    <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
-                    <hr>
-                    <p><span class="emphasis">Welcome {{$parent.user.fullName}},</span><br>
-                        This is the MasseyHacks V Dashboard
-                    </p>
+            </div>
+            <div class="ui-card" style="height: auto">
+                <h3>Email Editor</h3>
+                <hr>
+                <div id="email-editor">
                 </div>
             </div>
         </div>
@@ -60,6 +58,12 @@
 <script>
     import Session from '../src/Session'
     import moment  from 'moment'
+    import swal    from 'sweetalert2'
+
+    import hljs from 'highlight.js'
+    import 'highlight.js/styles/monokai-sublime.css'
+    import 'quill/dist/quill.snow.css'
+    import Quill   from 'quill'
 
     export default {
         data() {
@@ -67,11 +71,44 @@
                 timeOpen: 0,
                 timeClose: 0,
                 timeConfirm: 0,
-                settings: 0
+                settings: 0,
+                editor: null
             }
         },
         beforeMount() {
             this.convertTimes()
+        },
+        mounted() {
+            this.editor = new Quill('#email-editor', {
+                modules: {
+
+                    syntax: {
+                        highlight: text => hljs.highlightAuto(text).value
+                    },
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                        ['blockquote', 'code-block'],
+
+                        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                        [{ 'direction': 'rtl' }],                         // text direction
+
+                        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+
+                        ['clean', 'code-block']                                         // remove formatting button
+                    ]
+                },
+                theme: 'snow'
+            })
+
+            this.editor.setText("")
         },
         methods: {
             convertTimes() {
@@ -84,20 +121,39 @@
                 return moment(date).format('MMMM Do YYYY, h:mm:ss')
             },
             changeTimes () {
-                Session.sendRequest("POST", "/api/updateRegistrationTime", {
-                    timeOpen: moment(this.timeOpen).unix() * 1000,
-                    timeClose: moment(this.timeClose).unix() * 1000,
-                    timeConfirm: moment(this.timeConfirm).unix() * 1000
-                }, (err, setting) => {
-                    if (err || !setting) {
-                        console.log("error " + err.error)
-                    } else {
-                        console.log("success")
-                        Session.setSettings(setting)
-                        this.convertTimes()
+                swal({
+                    title: 'Are you sure?',
+                    text: "This edit will affect all hackers!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        Session.sendRequest("POST", "/api/updateRegistrationTime", {
+                            timeOpen: moment(this.timeOpen).unix() * 1000,
+                            timeClose: moment(this.timeClose).unix() * 1000,
+                            timeConfirm: moment(this.timeConfirm).unix() * 1000
+                        }, (err, setting) => {
+                            if (err || !setting) {
+                                swal("Error", err.error, "error")
+                            } else {
+                                swal("Success", "Application times has been changed", "success")
+                                Session.setSettings(setting)
+                                this.convertTimes()
+                            }
+                        })
                     }
                 })
-            }
+            },
         }
     }
 </script>
+
+<style>
+    .ql-editor {
+        height: 50vh !important;
+    }
+</style>

@@ -16,6 +16,7 @@ import Verify         from '../components/Verify.vue'
 import Dashboard      from '../components/Dashboard.vue'
 import Organizer      from '../components/Organizer.vue'
 import Owner          from '../components/Owner.vue'
+import Developer      from '../components/Developer.vue'
 import Checkin        from '../components/Checkin.vue'
 import Statistics     from '../components/Statistics.vue'
 import Users          from '../components/Users.vue'
@@ -27,11 +28,11 @@ import PasswordChange from '../components/PasswordChange.vue'
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
 
-import BootstrapVue from 'bootstrap-vue'
+//import BootstrapVue from 'bootstrap-vue'
 /*import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'*/
 
-Vue.use(BootstrapVue);
+//Vue.use(BootstrapVue);
 
 $.ajax({
     type: 'GET',
@@ -190,7 +191,7 @@ const router = new VueRouter({
        },
        {
            path: '/developer',
-           component: Owner,
+           component: Developer,
            beforeEnter: isAuthorized,
            meta: {
                permissions: 'developer'

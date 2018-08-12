@@ -31,7 +31,7 @@ Raven.context(function() {
     mongoose.connect(database);
     stats.startService();
 
-    if (cluster.isMaster) {
+    if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
 
         for (let i = 0; i < cpuCount; i++) {
