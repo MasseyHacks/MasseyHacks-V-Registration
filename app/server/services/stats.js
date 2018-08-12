@@ -1,7 +1,9 @@
 const _        = require('underscore');
 const async    = require('async');
 const User     = require('../models/User');
-const Settings = require('../models/Settings')
+const Settings = require('../models/Settings');
+const Sheets   = require('./sheets');
+const fs       = require('fs');
 
 // In memory stats.
 var stats = {};
@@ -286,5 +288,4 @@ Stats.getUserStats = function(){
 };
 
 calculateStats();
-
 module.exports = Stats;
