@@ -20,6 +20,10 @@ const FilterFields   = require('../models/data/FilterFields');
 
 var UserController   = {};
 
+function escapeRegExp(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
 UserController.getStats = function (callback) {
     callback(null, stats.getUserStats())
 };
@@ -33,26 +37,49 @@ UserController.getByQuery = function (adminUser, query, callback) {
     var page = query.page;
     var size = query.size;
     var text = query.text;
-    var and  = query.and;
-    var or   = query.or;
+    var and  = query.and ? query.and : [];
+    var or   = query.or ? query.or : [];
+    var params = {};
 
-    var params = {
-        $and: [
-            or ? {$or: or} : {},
-            and ? {$and: and} : {}
-        ]
-    };
+    if (text) {
+        var regex = new RegExp(escapeRegExp(text), 'i'); // Filter regex chars
+
+        or.push({ email: regex });
+        or.push({ 'firstName': regex });
+        or.push({ 'lastName': regex });
+        or.push({ 'teamCode': regex });
+        or.push({ 'profile.school': regex });
+        or.push({ 'profile.departing': regex });
+    }
+
+    if (or && or.length) {
+        if ('$or' in params) {
+            params['$or'].concat(or)
+        } else {
+            params['$or'] = or
+        }
+    }
+
+    if (and && and.length) {
+        if ('$and' in params) {
+            params['$and'].concat(and)
+        } else {
+            params['$and'] = and
+        }
+    }
 
     User
-        .find({})
-        /*.sort()
-        .skip(page * size)
-        .limit(size)*/
+        .find(params)
+        //.sort()
+        //.skip((page - 1) * size)
+        //.limit(size)
         .exec(function(err, users) {
             console.log(users)
 
-            for (var i = 0; i < users.length; i++) {
-                users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+            if (users) {
+                for (var i = 0; i < users.length; i++) {
+                    users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+                }
             }
 
             return callback(null, users)

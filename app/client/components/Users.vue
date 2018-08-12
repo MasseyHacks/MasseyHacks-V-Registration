@@ -2,7 +2,8 @@
     <div>
         <div class="row">
             <div class="ui-card dash-card-large" id="users-table">
-                <h3>USERS:</h3>
+                <!--<h3>USERS:</h3>-->
+                <input v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r">
                 <hr>
                 <table>
                     <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td></tr>
@@ -28,14 +29,17 @@
     export default {
         data() {
             return {
+                page: 1,
+                filters: [],
+                searchQuery: '',
                 loading: true,
                 fail: false,
                 users: {}
             }
         },
         beforeMount() {
-            ApiService.getUsers({ page: 1, size: 100 }, (err, users) => {
-                this.loading = false;
+            ApiService.getUsers({ page: this.page, size: 100 }, (err, users) => {
+                this.loading = false
 
                 if (err || !users) {
                     this.fail = true
@@ -45,6 +49,15 @@
             })
         },
         methods : {
+            updateSearch: function() {
+                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, users) => {
+                    if (err || !users) {
+                        this.fail = true
+                    } else {
+                        this.users = users
+                    }
+                })
+            },
             exportUsersCSV: function () {
                 ApiService.getUsers({page: 1, size: 100}, (err, users) => {
                     for (var s of users) {

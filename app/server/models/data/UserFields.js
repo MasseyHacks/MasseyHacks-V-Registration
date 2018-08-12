@@ -257,18 +257,18 @@ var schema = {
 
     applicationReject: {
         type: [String],
-        permission: ADMIN
+        permission: OWNER
     },
 
     applicationVotes: {
         type: [String],
-        permission: ADMIN
+        permission: OWNER
     },
 
     numVotes : {
         type: Number,
         default: 0,
-        permission: REVIEW
+        permission: ADMIN
     },
 
     status: status,
