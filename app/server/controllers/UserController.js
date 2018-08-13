@@ -536,7 +536,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
 };
 
-UserController.updateProfile = function (id, profile, callback){
+UserController.updateProfile = function (userExcuted, id, profile, callback){
 
     // Validate the user profile, and mark the user as profile completed
     // when successful.
