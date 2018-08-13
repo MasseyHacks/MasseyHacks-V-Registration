@@ -10,7 +10,7 @@
                     {{err}}
                 </div>
                 <div v-else>
-                    <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r" type="text">
+                    <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                     <div v-if="users.length != 0">
                         <button v-on:click="exportUsersCSV">Generate CSV</button>
