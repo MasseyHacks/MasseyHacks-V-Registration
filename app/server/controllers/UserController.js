@@ -24,6 +24,30 @@ function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
+UserController.getUserFields = function(userExecute, callback) {
+
+    var fieldsOut = [];
+    var queue = [[UserFields, '']];
+
+    while (queue.length !=0) {
+        var data = queue.pop();
+        var current = data[0]
+        var header = data[1]
+
+        for (var runner in current) {
+            if (current[runner]['type']) {
+                if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
+                    fieldsOut.push({'name' : (header ? header + '.' : '') + runner, 'type' : current[runner]['type'].name});
+                }
+            } else {
+                queue.push([current[runner], (header ? header + '.' : '') + runner])
+            }
+        }
+    }
+
+    callback(null, fieldsOut)
+};
+
 UserController.getStats = function (callback) {
     callback(null, stats.getUserStats())
 };
@@ -34,16 +58,16 @@ UserController.getByQuery = function (adminUser, query, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
-    var sort = query.sort;
-    var page = parseInt(query.page);
-    var size = parseInt(query.size);
-    var text = query.text;
-    var and  = query.and ? query.and : [];
-    var or   = query.or ? query.or : [];
-    var params = {};
+    var page    = parseInt(query.page);
+    var size    = parseInt(query.size);
+    var text    = query.text;
+    var sort    = query.sort;
+    var filters = query.filters ? query.filters : {};
+    var and     = [];
+    var or      = [];
 
     if (text) {
-        var regex = new RegExp(escapeRegExp(text), 'i'); // Filter regex chars, sets to case insensitive
+        var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
 
         or.push({ email: regex });
         or.push({ 'firstName': regex });
@@ -54,31 +78,31 @@ UserController.getByQuery = function (adminUser, query, callback) {
     }
 
     if (or && or.length) {
-        if ('$or' in params) {
-            params['$or'].concat(or)
+        if ('$or' in filters) {
+            filters['$or'].concat(or)
         } else {
-            params['$or'] = or
+            filters['$or'] = or
         }
     }
 
     if (and && and.length) {
-        if ('$and' in params) {
-            params['$and'].concat(and)
+        if ('$and' in filters) {
+            filters['$and'].concat(and)
         } else {
-            params['$and'] = and
+            filters['$and'] = and
         }
     }
 
-    console.log(query)
+    console.log(filters)
 
-    User.count(params, function(err, count) {
+    User.count(filters, function(err, count) {
 
         if (err) {
             return callback(err);
         }
 
         User
-            .find(params)
+            .find(filters)
             .sort()
             .skip((page - 1) * size)
             .limit(size)

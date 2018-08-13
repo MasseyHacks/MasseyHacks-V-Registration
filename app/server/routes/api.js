@@ -43,6 +43,12 @@ module.exports = function(router) {
         mailer.setTemplate(req.body.templateName,req.body.templateHTML,logger.defaultResponse(req,res));
     });
 
+    // Admin
+    // Get list of user fields
+    router.get('/fields', permissions.isAdmin, function (req, res) {
+        UserController.getUserFields(req.userExecute, logger.defaultResponse(req, res));
+    });
+
     // Public
     // Get global settings
     router.get('/settings', function (req, res) {

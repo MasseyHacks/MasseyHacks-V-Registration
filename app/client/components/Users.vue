@@ -12,9 +12,29 @@
                 <div v-else>
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
+                    <!-- Field Name -->
+                    <select style="margin: 10px;" v-model="queryFieldName">
+                        <option value="" v-bind:value="[]">Select a field</option>
+                        <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
+                    </select>
+
+                    <select style="margin: 10px;" v-model="queryRequirement">
+                        <option value="$and">and</option>
+                        <option value="$or">or</option>
+                    </select>
+
+                    <br>
+                    <div v-for="(criteria, requirement) in filters" style="text-align: left">
+                        {{requirement}}
+
+                        <div v-for="c in criteria">
+                            {{c}}
+                        </div>
+                    </div>
+
                     <div v-if="users.length != 0">
-                        <button v-on:click="exportUsersCSV">Generate CSV</button>
                         <hr>
+                        <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                         <hr>
                         <table>
@@ -49,14 +69,32 @@
             return {
                 page: 1,
                 totalPages: 1,
-                filters: [],
+
+                filters: {"$and":[{"status.rejected": false}], "$or":[{"status.rejected": true}]},
                 searchQuery: '',
+
+                fields: {},
+                queryFieldName: [],
+                queryRequirement: '', // and, or
+                queryOperator: '', // equals, contains, greater, less
+                queryInvert: '', // not
+                queryTargetValue: '', // 5 apples
+
                 loading: true,
                 err: '',
+
                 users: {}
             }
         },
         beforeMount() {
+            ApiService.getFields((err, data) => {
+                if (err || !data) {
+                    this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                } else {
+                    this.fields = data
+                }
+            })
+
             ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
                 this.loading = false
 
@@ -72,7 +110,7 @@
             updateSearch: function() {
                 this.page = 1
 
-                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, data) => {
+                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
                     if (err || !data) {
                         this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {

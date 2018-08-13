@@ -24,7 +24,7 @@ let validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json
 module.exports = {
     assembleTemplate : function(queueName){
         let templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
-        let baseHTML = fs.readFileSync(validTemplates['base']['templateLocations'],'utf8');
+        let baseHTML = fs.readFileSync(validTemplates['base']['templateLocation'],'utf8');
 
         let template = baseHTML.replace('{{emailData}}',templateHTML);
         console.log(template);
