@@ -202,7 +202,7 @@ schema.statics.validateProfile = function(id, profile, callback) {
         }
     }
 
-    return callback();
+    return callback(null, profile);
 }
 
 
