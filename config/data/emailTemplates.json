@@ -1,4 +1,10 @@
 {
+  "base":{
+    "queueName":"base",
+    "templateLocation":"./app/server/templates/base.hbs",
+    "emailTitle":"An error occurred!",
+    "canQueue":false
+  },
   "acceptanceemails":{
     "queueName":"acceptanceEmails",
     "templateLocation":"./app/server/templates/email-admittance/html.hbs",

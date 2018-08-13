@@ -45,7 +45,7 @@ function buildLoggingData(id) {
 
 
 module.exports = {
-    defaultResponse : function(req, res){
+    defaultResponse : function(req, res, responseJSON = true){
         return function(err, data){
             if (err){
                 // Only send error to slack if in production
@@ -91,7 +91,12 @@ module.exports = {
 
                 return res.status(err.code ? err.code : 500).json(err);
             } else {
-                return res.json(data);
+                if(responseJSON){
+                    return res.json(data);
+                }
+                else{
+                    return res.send(data);
+                }
             }
         };
     },

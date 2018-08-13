@@ -24,7 +24,7 @@ let validTemplates = JSON.parse(fs.readFileSync('config/data/emailTemplates.json
 module.exports = {
     assembleTemplate : function(queueName){
         let templateHTML = fs.readFileSync(validTemplates[queueName]['templateLocation'],'utf8');
-        let baseHTML = fs.readFileSync('./app/server/templates/base.hbs','utf8');
+        let baseHTML = fs.readFileSync(validTemplates['base']['templateLocations'],'utf8');
 
         let template = baseHTML.replace('{{emailData}}',templateHTML);
         console.log(template);
@@ -275,13 +275,23 @@ module.exports = {
         });
     },
 
-    returnTemplates : function(templateName){
+    returnTemplate : function(templateName,callback){
         templateName = templateName.toLowerCase();
-        if(templateName == "base"){
-            //return base.hbs
+        if(!templateName || validTemplates[templateName] == null){//invalid
+            console.log('Invalid email queue!');
+            return callback("Invalid email template!");
         }
-        else {
-            //return the hbs based on the value in the config
+        else{
+            fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',function (err,data) {
+                return callback(err,data);
+            });
         }
+    },
+
+    listTemplates : function(callback){
+        var response = {
+            validTemplates: Object.keys(validTemplates)
+        };
+        return callback(null,response);
     }
 };

@@ -10,6 +10,7 @@ const SettingsController = require('../controllers/SettingsController');
 
 const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
+const mailer             = require('../services/email');
 
 require('dotenv').load();
 
@@ -22,6 +23,18 @@ module.exports = function(router) {
     // View system log
     router.get('/log', permissions.isDeveloper, function (req, res) {
         LogEvent.getLog(logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    //List emails
+    router.get('/email/listTemplates', permissions.isOwner, function (req,res){
+        mailer.listTemplates(logger.defaultResponse(req,res));
+    });
+
+    // Owner
+    //Return emails
+    router.get('/email/:templateName', permissions.isOwner, function (req,res){
+        mailer.returnTemplate(req.params.templateName,logger.defaultResponse(req,res,false));
     });
 
     // Public
