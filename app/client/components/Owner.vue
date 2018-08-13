@@ -39,12 +39,12 @@
                     <button class="generic-button-dark" @click="getTemplate">Get Template</button>
                 </div>
             </div>
-            <div class="ui-card" id="dash-card" style="margin-bottom: 50px">
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
                 <h3>Email Preview</h3>
                 <hr>
                 <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>
             </div>
-            <div class="ui-card" style="height: auto">
+            <div class="ui-card" style="height: auto" :style="{display: emailHTML?'block':'none'}">
                 <h3>Email Editor</h3>
                 <hr>
                 <div id="email-editor">
@@ -76,7 +76,8 @@
                 editor: null,
                 emailHTML: "",
                 previewHTML: "",
-                baseHTML: "",
+                baseHTMLFront: "",
+                baseHTMLBack: "",
                 templateOptions: [],
                 selected: ""
             }
@@ -95,7 +96,9 @@
                 if (err) {
                     swal("Error", err, "error")
                 } else {
-                    this.baseHTML = data.email
+                    let base = data.email.split("{{emailData}}");
+                    this.baseHTMLFront = base[0]
+                    this.baseHTMLBack = base[1]
                 }
             })
         },
@@ -106,23 +109,7 @@
                         highlight: text => hljs.highlightAuto(text).value
                     },
                     toolbar: [
-                        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-                        ['blockquote', 'code-block'],
-
-                        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-                        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-                        [{ 'direction': 'rtl' }],                         // text direction
-
-                        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-                        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                        [{ 'font': [] }],
-                        [{ 'align': [] }],
-
-                        ['clean', 'code-block']                                         // remove formatting button
+                        ['clean', 'code-block']
                     ]
                 },
                 theme: 'snow'
@@ -216,7 +203,7 @@
                 })
             },
             generatePreview () {
-                this.previewHTML = this.baseHTML.replace('{{emailData}}', this.emailHTML)
+                this.previewHTML = this.baseHTMLBack + this.emailHTML + this.baseHTMLFront
             }
         }
     }
