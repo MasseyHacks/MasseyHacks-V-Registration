@@ -11,21 +11,24 @@
                 </div>
                 <div v-else>
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r" type="text">
-                    <button v-on:click="exportUsersCSV">Generate CSV</button>
-                    <hr>
-                    <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
-                    <hr>
-                    <table v-if="users.length != 0">
-                        <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                        <tr v-for="user in users">
-                            <td>{{user.fullName}}</td>
-                            <td><span v-html="userStatusConverter(user)"></span></td>
-                            <td>{{user.numVotes}}</td>
-                            <td>{{user.email}}</td>
-                            <td>N/A</td>
-                            <td>N/A</td>
-                        </tr>
-                    </table>
+
+                    <div v-if="users.length != 0">
+                        <button v-on:click="exportUsersCSV">Generate CSV</button>
+                        <hr>
+                        <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
+                        <hr>
+                        <table>
+                            <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
+                            <tr v-for="user in users">
+                                <td>{{user.fullName}}</td>
+                                <td><span v-html="userStatusConverter(user)"></span></td>
+                                <td>{{user.numVotes}}</td>
+                                <td>{{user.email}}</td>
+                                <td>N/A</td>
+                                <td>N/A</td>
+                            </tr>
+                        </table>
+                    </div>
                     <p v-else>
                         No results match this query
                     </p>
@@ -68,11 +71,8 @@
         methods : {
             updateSearch: function() {
                 this.page = 1
-                this.loading = true
 
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, data) => {
-                    this.loading = false
-
                     if (err || !data) {
                         this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
