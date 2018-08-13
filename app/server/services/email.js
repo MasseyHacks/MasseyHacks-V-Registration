@@ -279,10 +279,16 @@ module.exports = {
         templateName = templateName.toLowerCase();
         if(!templateName || validTemplates[templateName] == null){//invalid
             console.log('Invalid email queue!');
-            return callback("Invalid email template!");
+            return callback({error: "Invalid email template!"});
         }
         else{
-            fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',callback);
+            fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',function(err, data) {
+                if (err){
+                    return callback({error: "File read failed"});
+                } else {
+                    return callback(null, {email: data})
+                }
+            });
         }
     },
 

@@ -29,21 +29,20 @@
                 </div>
 
                 <div class="ui-card ui-grid-item" id="dash-card">
-                    <h3>Log</h3>
-                    <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
+                    <h3>Email Templates</h3>
                     <hr>
-                    <p><span class="emphasis">Welcome {{$parent.user.fullName}},</span><br>
-                        This is the MasseyHacks V Dashboard
-                    </p>
+                    <select v-model="selected">
+                        <option disabled value="">Select a template</option>
+                        <option v-for="option in templateOptions.length">{{templateOptions[option]}}</option>
+                    </select>
+
+                    <button class="generic-button-dark" @click="getTemplate">Get Template</button>
                 </div>
-                <div class="ui-card ui-grid-item" id="dash-card">
-                    <h3>Log</h3>
-                    <h4>{{$parent.user.status.name.toUpperCase()}}</h4>
-                    <hr>
-                    <p><span class="emphasis">Welcome {{$parent.user.fullName}},</span><br>
-                        This is the MasseyHacks V Dashboard
-                    </p>
-                </div>
+            </div>
+            <div class="ui-card ui-grid-item" id="dash-card">
+                <h3>Email Preview</h3>
+                <hr>
+                <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>
             </div>
             <div class="ui-card" style="height: auto">
                 <h3>Email Editor</h3>
@@ -72,16 +71,26 @@
                 timeClose: 0,
                 timeConfirm: 0,
                 settings: 0,
-                editor: null
+                editor: null,
+                emailHTML: "",
+                previewHTML: "",
+                templateOptions: [],
+                selected: ""
             }
         },
         beforeMount() {
             this.convertTimes()
+            Session.sendRequest("GET", "http://localhost:3005/api/email/listTemplates", null, (err, data) => {
+                if (err) {
+                    console.log("Error while getting template")
+                } else {
+                    this.templateOptions = data.validTemplates
+                }
+            })
         },
         mounted() {
             this.editor = new Quill('#email-editor', {
                 modules: {
-
                     syntax: {
                         highlight: text => hljs.highlightAuto(text).value
                     },
@@ -108,7 +117,11 @@
                 theme: 'snow'
             })
 
-            this.editor.setText("")
+            this.editor.on('text-change', (delta, oldDelta, source) => {
+                this.emailHTML = this.editor.getText()
+                this.generatePreview()
+            })
+
         },
         methods: {
             convertTimes() {
@@ -148,6 +161,131 @@
                     }
                 })
             },
+            getTemplate () {
+                if (this.selected == "") {
+                    swal("Error", "You must select an email first", "error")
+                } else {
+                    swal.showLoading()
+
+                    Session.sendRequest("GET", "http://localhost:3005/api/email/get/" + this.selected, null, (err, data) => {
+                        if (err) {
+                            swal("Error", err, "error")
+                        } else {
+                            swal("Success", "Your Preview and Editor has been updated", "success")
+                            this.emailHTML = data.email
+                            this.editor.setText(this.emailHTML);
+                            this.editor.formatLine(0, this.editor.getLength(), { 'code-block': true });
+                        }
+                    })
+                }
+            },
+            generatePreview () {
+                this.previewHTML = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
+                    "<html data-editor-version=\"2\" class=\"sg-campaigns\" xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
+                    "<head>\n" +
+                    "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n" +
+                    "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1\" /><!--[if !mso]><!-->\n" +
+                    "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\" /><!--<![endif]-->\n" +
+                    "    <!--[if (gte mso 9)|(IE)]>\n" +
+                    "    <xml>\n" +
+                    "        <o:OfficeDocumentSettings>\n" +
+                    "            <o:AllowPNG/>\n" +
+                    "            <o:PixelsPerInch>96</o:PixelsPerInch>\n" +
+                    "        </o:OfficeDocumentSettings>\n" +
+                    "    </xml>\n" +
+                    "    <![endif]-->\n" +
+                    "    <!--[if (gte mso 9)|(IE)]>\n" +
+                    "    <style type=\"text/css\">\n" +
+                    "        body {width: 600px;margin: 0 auto;}\n" +
+                    "        table {border-collapse: collapse;}\n" +
+                    "        table, td {mso-table-lspace: 0pt;mso-table-rspace: 0pt;}\n" +
+                    "        img {-ms-interpolation-mode: bicubic;}\n" +
+                    "    </style>\n" +
+                    "    <![endif]-->\n" +
+                    "\n" +
+                    "    <style type=\"text/css\">\n" +
+                    "        body, p, div {\n" +
+                    "            font-family: helvetica,arial,sans-serif;\n" +
+                    "            font-size: 16px;\n" +
+                    "        }\n" +
+                    "        body {\n" +
+                    "            color: #232323;\n" +
+                    "        }\n" +
+                    "        body a {\n" +
+                    "            color: #232323;\n" +
+                    "            text-decoration: none;\n" +
+                    "        }\n" +
+                    "        p { margin: 0; padding: 0; }\n" +
+                    "        table.wrapper {\n" +
+                    "            width:100% !important;\n" +
+                    "            table-layout: fixed;\n" +
+                    "            -webkit-font-smoothing: antialiased;\n" +
+                    "            -webkit-text-size-adjust: 100%;\n" +
+                    "            -moz-text-size-adjust: 100%;\n" +
+                    "            -ms-text-size-adjust: 100%;\n" +
+                    "        }\n" +
+                    "        img.max-width {\n" +
+                    "            max-width: 100% !important;\n" +
+                    "        }\n" +
+                    "        .column.of-2 {\n" +
+                    "            width: 50%;\n" +
+                    "        }\n" +
+                    "        .column.of-3 {\n" +
+                    "            width: 33.333%;\n" +
+                    "        }\n" +
+                    "        .column.of-4 {\n" +
+                    "            width: 25%;\n" +
+                    "        }\n" +
+                    "        @media screen and (max-width:480px) {\n" +
+                    "            .preheader .rightColumnContent,\n" +
+                    "            .footer .rightColumnContent {\n" +
+                    "                text-align: left !important;\n" +
+                    "            }\n" +
+                    "            .preheader .rightColumnContent div,\n" +
+                    "            .preheader .rightColumnContent span,\n" +
+                    "            .footer .rightColumnContent div,\n" +
+                    "            .footer .rightColumnContent span {\n" +
+                    "                text-align: left !important;\n" +
+                    "            }\n" +
+                    "            .preheader .rightColumnContent,\n" +
+                    "            .preheader .leftColumnContent {\n" +
+                    "                font-size: 80% !important;\n" +
+                    "                padding: 5px 0;\n" +
+                    "            }\n" +
+                    "            table.wrapper-mobile {\n" +
+                    "                width: 100% !important;\n" +
+                    "                table-layout: fixed;\n" +
+                    "            }\n" +
+                    "            img.max-width {\n" +
+                    "                height: auto !important;\n" +
+                    "                max-width: 480px !important;\n" +
+                    "            }\n" +
+                    "            a.bulletproof-button {\n" +
+                    "                display: block !important;\n" +
+                    "                width: auto !important;\n" +
+                    "                font-size: 80%;\n" +
+                    "                padding-left: 0 !important;\n" +
+                    "                padding-right: 0 !important;\n" +
+                    "            }\n" +
+                    "            .columns {\n" +
+                    "                width: 100% !important;\n" +
+                    "            }\n" +
+                    "            .column {\n" +
+                    "                display: block !important;\n" +
+                    "                width: 100% !important;\n" +
+                    "                padding-left: 0 !important;\n" +
+                    "                padding-right: 0 !important;\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    </style>\n" +
+                    "    <!--user entered Head Start-->\n" +
+                    "\n" +
+                    "    <link href=\"https://use.fontawesome.com/releases/v5.0.2/css/all.css\" rel=\"stylesheet\">\n" +
+                    "    <link href=\"https://fonts.googleapis.com/css?family=Raleway:300,400,700\" rel=\"stylesheet\">\n" +
+                    "    <!--End Head user entered-->\n" +
+                    "</head>\n" +
+                    "<body>\n" + this.emailHTML + "</body>\n" +"</html>"
+            }
         }
     }
 </script>
