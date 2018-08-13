@@ -31,7 +31,7 @@
                 <div class="ui-card ui-grid-item" id="dash-card">
                     <h3>Email Templates</h3>
                     <hr>
-                    <select v-model="selected">
+                    <select style="margin-bottom: 10px;" v-model="selected">
                         <option disabled value="">Select a template</option>
                         <option v-for="option in templateOptions.length">{{templateOptions[option-1]}}</option>
                     </select>
