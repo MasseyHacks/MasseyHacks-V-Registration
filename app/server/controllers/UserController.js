@@ -612,7 +612,6 @@ UserController.updateProfile = function (id, profile, callback){
                         },
                         {
                             $set: {
-                                'sname': profile.name.toLowerCase(),
                                 'lastUpdated': Date.now(),
                                 'profile': profileValidated,
                                 'status.completedProfile': true
