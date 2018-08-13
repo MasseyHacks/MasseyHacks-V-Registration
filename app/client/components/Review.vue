@@ -8,7 +8,8 @@
                 </div>
 
                 <div v-else>
-                    <div v-if="applicationsLeft > 0"><h2>There are {{this.applicationsLeft}} application(s) remaining</h2></div>
+                    <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
+                    <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
                     <button v-on:click="startReview" class="generic-button-light">
                         <span v-if="applicationsLeft < 1">No Applications!</span>
                         <span v-else>Start reviewing!</span></button>
