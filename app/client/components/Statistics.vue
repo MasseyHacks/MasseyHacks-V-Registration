@@ -1,94 +1,108 @@
 <template>
     <div>
         <img src="/img/rolling.svg" height="50px" width="auto" class="loading-icon hidden">
-        <div class="row">
-            <div class="ui-card dash-card-large">
-                <h3>AT A GLANCE:</h3>
-                <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
-                <hr>
-                <div class="duo-col">
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(value, key) in atGlance">
-                                <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(value, key) in atGlance2">
-                                <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>              
-            </div>
-            <div class="ui-card dash-card-large">
-                <h3>{{statistics.checkedIn}} CHECKED IN</h3>
-            </div>
-            <div class="ui-card dash-card-large">
-                <h3>DEMOGRAPHICS (SUBMITTED)</h3>
-                <hr>
-                <div class="duo-col">
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in genderSubmitted">
-                                <span v-html="key"></span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in statistics.demo.grade">
-                                <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="duo-col">
-                    <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-bus"></i>Bus: {{statistics.bus}}</li>
-                        <li><i class="fas fa-home"></i>Massey: {{statistics.demo.massey}}</li>
-                        <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.demo.nonmassey}}</li>
-                    </ul>
-                    <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
-                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
-                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
-                    </ul>
-                </div>
 
+        <div class="row">
+
+            <div v-if="loading">
+                <div class="ui-card dash-card-large">
+                    Loading...
+                </div>
             </div>
-            <div class="ui-card dash-card-large">
-                <h3>DEMOGRAPHICS (CONFIRMED)</h3>
-                <hr>
-                <div class="duo-col">
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in genderSubmitted">
-                                <span v-html="key"></span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-col">
-                        <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in statistics.confirmedStat.demo.grade">
-                                <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
-                            </li>
-                        </ul>
+            <div v-else-if="err">
+                <div class="ui-card dash-card-large">
+                    {{err}}
+                </div>
+            </div>
+            <div v-else>
+                <div class="ui-card dash-card-large">
+                    <h3>AT A GLANCE:</h3>
+                    <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
+                    <hr>
+                    <div class="duo-col">
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(value, key) in atGlance">
+                                    <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(value, key) in atGlance2">
+                                    <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <div class="duo-col">
-                    <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-bus"></i>Bus: {{statistics.confirmedStat.bus}}</li>
-                        <li><i class="fas fa-home"></i>Massey: {{statistics.confirmedStat.demo.massey}}</li>
-                        <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.confirmedStat.demo.nonmassey}}</li>
-                    </ul>
-                    <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
-                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
-                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
-                    </ul>
+                <div class="ui-card dash-card-large">
+                    <h3>{{statistics.checkedIn}} CHECKED IN</h3>
+                </div>
+                <div class="ui-card dash-card-large">
+                    <h3>DEMOGRAPHICS (SUBMITTED)</h3>
+                    <hr>
+                    <div class="duo-col">
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(key,value) in genderSubmitted">
+                                    <span v-html="key"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(key,value) in statistics.demo.grade">
+                                    <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="duo-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li><i class="fas fa-bus"></i>Bus: {{statistics.bus}}</li>
+                            <li><i class="fas fa-home"></i>Massey: {{statistics.demo.massey}}</li>
+                            <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.demo.nonmassey}}</li>
+                        </ul>
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
+                            <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
+                            <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="ui-card dash-card-large">
+                    <h3>DEMOGRAPHICS (CONFIRMED)</h3>
+                    <hr>
+                    <div class="duo-col">
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(key,value) in genderSubmitted">
+                                    <span v-html="key"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-col">
+                            <ul class="custom-ul" style="text-align: left;">
+                                <li v-for="(key,value) in statistics.confirmedStat.demo.grade">
+                                    <i class="fas fa-user-graduate"></i>Grade {{value}}: {{key}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="duo-col">
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li><i class="fas fa-bus"></i>Bus: {{statistics.confirmedStat.bus}}</li>
+                            <li><i class="fas fa-home"></i>Massey: {{statistics.confirmedStat.demo.massey}}</li>
+                            <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.confirmedStat.demo.nonmassey}}</li>
+                        </ul>
+                        <ul class="custom-ul" style="text-align: left;">
+                            <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
+                            <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
+                            <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,7 +119,7 @@
         data() {
             return {
                 loading: true,
-                fail: false,
+                err: '',
                 statistics: {},
                 atGlanceStuff : {}
             }
@@ -123,12 +137,7 @@
                     this.loading = false
 
                     if (err || !statistics) {
-                        this.fail = true
-                        swal({
-                            title: 'Sorry!',
-                            text: 'There was an error!',
-                            type: 'error'
-                        })
+                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
                     }

@@ -3,32 +3,38 @@
         <div class="row">
             <div class="ui-card dash-card-large" id="users-table">
                 <!--<h3>USERS:</h3>-->
+                <div v-if="loading">
+                    Loading...
+                </div>
+                <div v-else-if="err">
+                    {{err}}
+                </div>
+                <div v-else>
+                    <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r" type="text">
 
-                <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" placeholder="Master Hax0r" type="text">
-
-                <!--<input v-model="advancedSearch" placeholder="Uber advanced">-->
-                <hr>
-                {{this.err}}
-                <!--<button v-for=""></button>-->
-                <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
-                <hr>
-                <table v-if="users.length != 0">
-                    <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                    <tr v-for="user in users">
-                        <td>{{user.fullName}}</td>
-                        <td><span v-html="userStatusConverter(user)"></span></td>
-                        <td>{{user.numVotes}}</td>
-                        <td>{{user.email}}</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                    </tr>
-                </table>
-                <p v-else>
-                    No results match this query
-                </p>
+                    <div v-if="users.length != 0">
+                        <button v-on:click="exportUsersCSV">Generate CSV</button>
+                        <hr>
+                        <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
+                        <hr>
+                        <table>
+                            <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
+                            <tr v-for="user in users">
+                                <td>{{user.fullName}}</td>
+                                <td><span v-html="userStatusConverter(user)"></span></td>
+                                <td>{{user.numVotes}}</td>
+                                <td>{{user.email}}</td>
+                                <td>N/A</td>
+                                <td>N/A</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p v-else>
+                        No results match this query
+                    </p>
+                </div>
             </div>
         </div>
-        <button v-on:click="exportUsersCSV">Generate CSV</button>
     </div>
 </template>
 
@@ -45,7 +51,6 @@
                 totalPages: 1,
                 filters: [],
                 searchQuery: '',
-                advancedSearch: '',
                 loading: true,
                 err: '',
                 users: {}
@@ -56,7 +61,7 @@
                 this.loading = false
 
                 if (err || !data) {
-                    this.err = err ? err : 'Unable to process request'
+                    this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                 } else {
                     this.users = data.users
                     this.totalPages = data.totalPages
@@ -65,9 +70,11 @@
         },
         methods : {
             updateSearch: function() {
+                this.page = 1
+
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery }, (err, data) => {
                     if (err || !data) {
-                        this.err = err ? err : 'Unable to process request'
+                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
                         this.users = data.users;
                         this.totalPages = data.totalPages
@@ -77,7 +84,7 @@
             exportUsersCSV: function () {
                 ApiService.getUsers({ page: 1, size: 100000, text: this.searchQuery }, (err, data) => {
                     if (err || !data) {
-                        this.err = err ? err : 'Unable to process request'
+                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
                         var csvArray = [];
                         for(var i = 0; i < data.users.length; i++){
