@@ -12,22 +12,39 @@
                 <div v-else>
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
+                    <select style="margin: 10px;" v-model="queryLogical">
+                        <option value="$and">and</option>
+                        <option value="$or">or</option>
+                        <option value="$not">not</option>
+                        <option value="$nor">nor</option>
+                    </select>
+
+
                     <!-- Field Name -->
                     <select style="margin: 10px;" v-model="queryFieldName">
                         <option value="" v-bind:value="[]">Select a field</option>
                         <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
                     </select>
 
-                    <select style="margin: 10px;" v-model="queryRequirement">
-                        <option value="$and">and</option>
-                        <option value="$or">or</option>
+                    <select style="margin: 10px;" v-model="queryComparison" :disabled="queryFieldName.length">
+                        <option value="$eq">equal</option>
+                        <option value="$ne">not equal</option>
+                        <option value="$regex">contains (regex)</option>
+                        <option value="$gt">greater than</option>
+                        <option value="$gte">greater than or equal</option>
+                        <option value="$lt">less than</option>
+                        <option value="$lte">less than or equal</option>
                     </select>
 
-                    <br>
-                    <div v-for="(criteria, requirement) in filters" style="text-align: left">
-                        {{requirement}}
+                    <input v-model="queryTargetValue" type="text">
 
-                        <div v-for="c in criteria">
+                    <button class="generic-button-light" v-on:click="addQuery">Add</button>
+
+                    <br>
+                    <div v-for="(comparison, logical) in filters" style="text-align: left">
+                        {{logical}}
+
+                        <div v-for="c in comparison">
                             {{c}}
                         </div>
                     </div>
@@ -70,14 +87,13 @@
                 page: 1,
                 totalPages: 1,
 
-                filters: {"$and":[{"status.rejected": false}], "$or":[{"status.rejected": true}]},
+                filters: {"$and":[{}], "$or":[{}]},
                 searchQuery: '',
 
                 fields: {},
                 queryFieldName: [],
-                queryRequirement: '', // and, or
-                queryOperator: '', // equals, contains, greater, less
-                queryInvert: '', // not
+                queryLogical: '$and', // and, or, not, nor
+                queryComparison: 'equals', // equals, contains, greater, less, greater or equal, lesser or equal, not include, not in array
                 queryTargetValue: '', // 5 apples
 
                 loading: true,
@@ -107,6 +123,24 @@
             })
         },
         methods : {
+            addQuery: function() {
+
+
+                var query = {}
+                var subQuery = {}
+                subQuery[this.queryComparison] = this.queryTargetValue
+                query[this.queryFieldName.name] = subQuery
+
+                console.log(query)
+
+                if (this.queryLogical in this.filters) {
+                    this.filters[this.queryLogical].push(query)
+                } else {
+                    this.filters[this.queryLogical] = [query]
+                }
+
+                this.updateSearch()
+            },
             updateSearch: function() {
                 this.page = 1
 
