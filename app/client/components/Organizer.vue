@@ -42,6 +42,7 @@
             console.log(toDepth, fromDepth)
 
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+
             next()
         },
         data() {

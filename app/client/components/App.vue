@@ -1,15 +1,5 @@
 <template>
     <div id="app">
-        <!--<button @click="flushAlerts">Flush</button>-->
-        <!-- errors -->
-<!--         <div class="row">
-            <div class="col-md-12">
-                <div class="alerts">
-                    <div ref="container" style="position: fixed; width: 100vw; z-index: 99999;top:0px;left:0px;">
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
@@ -73,12 +63,12 @@
             const toPath = to.path.split('/')
             const fromPath = from.path.split('/')
 
-            console.log('dasd', toPath, fromPath)
-            console.log('Hello there')
+            console.log(fromPath, toPath)
 
-            const toDepth = pageLayout.indexOf(toPath[toPath.length - 1])
-            const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1])
-            this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+            const toDepth = pageLayout.indexOf(toPath[1])
+            const fromDepth = pageLayout.indexOf(fromPath[1])
+
+            this.transitionName = toDepth < fromDepth ? 'slide-up' : 'slide-down'
 
             next()
         },
@@ -88,7 +78,7 @@
                 settings: Session.getSettings(),
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
-                transitionName: 'slide-left',
+                transitionName: 'slide-up',
                 ApiService: ApiService,
                 Alerts: [{}]
             }
