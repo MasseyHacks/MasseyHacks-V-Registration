@@ -39,7 +39,7 @@
                     <button class="generic-button-dark" @click="getTemplate">Get Template</button>
                 </div>
             </div>
-            <div class="ui-card ui-grid-item" id="dash-card">
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px">
                 <h3>Email Preview</h3>
                 <hr>
                 <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>
@@ -49,6 +49,8 @@
                 <hr>
                 <div id="email-editor">
                 </div>
+
+                <button class="generic-button-dark" @click="saveTemplate">Save</button>
             </div>
         </div>
     </div>
@@ -167,7 +169,7 @@
                 } else {
                     swal.showLoading()
 
-                    Session.sendRequest("GET", "http://localhost:3005/api/email/get/" + this.selected, null, (err, data) => {
+                    Session.sendRequest("GET", "/api/email/get/" + this.selected, null, (err, data) => {
                         if (err) {
                             swal("Error", err, "error")
                         } else {
@@ -178,6 +180,31 @@
                         }
                     })
                 }
+            },
+            saveTemplate() {
+                swal({
+                    title: 'Are you sure?',
+                    text: "This edit will affect the template permanently!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        Session.sendRequest("POST", "api/email/set/" + this.selected, {
+                            templateHTML: this.emailHTML,
+                            templateName: this.selected
+                        }, (err, data) => {
+                            if (err || !data) {
+                                swal("Error", err.error, "error")
+                            } else {
+                                swal("Success", "Template set", "success")
+                            }
+                        })
+                    }
+                })
             },
             generatePreview () {
                 this.previewHTML = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" +
@@ -293,5 +320,18 @@
 <style>
     .ql-editor {
         height: 50vh !important;
+        width: 50vw !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
     }
+
+    .ql-syntax {
+        display: inline-block !important;
+    }
+
+    .ql-syntax span {
+        display: inline-block !important;
+        white-space: nowrap;
+    }
+
 </style>

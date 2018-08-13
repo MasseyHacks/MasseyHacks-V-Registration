@@ -355,6 +355,7 @@ h4 {
 
 .ui-grid-item{
     margin-bottom: 50px;
+    width: 25vw;
     align-items: left;
 }
 

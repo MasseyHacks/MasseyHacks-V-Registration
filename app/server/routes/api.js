@@ -40,7 +40,7 @@ module.exports = function(router) {
     // Owner
     //Set emails
     router.post('/email/set/:templateName', permissions.isOwner, function (req,res){
-        mailer.setTemplate(req.params.templateName,req.body.templateHTML,logger.defaultResponse(req,res));
+        mailer.setTemplate(req.body.templateName,req.body.templateHTML,logger.defaultResponse(req,res));
     });
 
     // Public

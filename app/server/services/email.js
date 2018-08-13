@@ -308,10 +308,10 @@ module.exports = {
         else{
             fs.writeFile(validTemplates[templateName]['templateLocation'],templateBody,function (err){
                 if(err){
-                    return callback(err);
+                    return callback({error:err});
                 }
                 else{
-                    return callback(null,"Success");
+                    return callback(null,{message:"Success"});
                 }
             });
         }

@@ -30,7 +30,7 @@
                         <div class="card-col">
                             <ul class="custom-ul" style="text-align: left;">
                                 <li v-for="(value, key) in atGlance2">
-                                    <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
+                                    <i class="fas fa-ban"></i>{{key.toUpperCase()}} : {{value}}
                                 </li>
                             </ul>
                         </div>
