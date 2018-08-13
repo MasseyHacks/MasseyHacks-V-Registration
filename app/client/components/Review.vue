@@ -22,7 +22,6 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import $ from 'jquery';
-    import { saveAs } from 'file-saver/FileSaver';
 
     export default {
         data() {
@@ -36,6 +35,7 @@
                 reviewingApplications: false,
                 err: '',
                 currentApplication: {},
+                userTimes: [],
                 users: {}
             }
         },
@@ -56,7 +56,27 @@
                 if(this.applicationsLeft > 0 || true){
                     console.log("Starting!");
                     this.reviewingApplications = true;
-                    nextApplication();
+
+                    //assemble the application array in order!
+                    ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
+                        if (err || !data) {
+                            this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                        } else {
+                            this.users = data.users;
+                            console.log(data.users);
+                            var userTimesList = [];
+                            data.users.forEach(function(user){
+                                console.log(user.lastUpdated);
+                                userTimesList.push([user.id,user.lastUpdated,user.profile]);
+                            });
+                            console.log(userTimesList);
+                            userTimesList.sort(function(a, b) {
+                                return a[1] - b[1];
+                            });
+                            this.userTimes = userTimesList;
+                            this.nextApplication(false);
+                        }
+                    });
                 }
             },
             stopReview: function(){
@@ -64,8 +84,12 @@
                     this.reviewingApplications = false;
                 }
             },
-            nextApplication: function(){
-
+            nextApplication: function(shift = true){
+                if(shift){
+                    this.userTimes.shift();
+                }
+                var application = this.userTimes[0][2]["hacker"];
+                console.log(application);
             },
             applicationVote: function(vote){
                 if(vote == "admit"){
