@@ -274,7 +274,7 @@ var schema = {
 
     applicationVotes: {
         type: [String],
-        permission: OWNER
+        permission: ADMIN
     },
 
     numVotes : {
