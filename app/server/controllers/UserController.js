@@ -547,7 +547,7 @@ UserController.updateProfile = function (id, profile, callback){
         }
 
         // Check if its within the registration window.
-        Settings.getRegistrationTimes(function(err, times){
+        Settings.getSettings(function(err, times){
             if (profileValidated.signature === -1) {
                 return User.findOneAndUpdate({
                         _id: id,
@@ -589,7 +589,10 @@ UserController.updateProfile = function (id, profile, callback){
                         console.log('Could not send email:');
                         console.log(err);
                     }
-                    Mailer.sendApplicationEmail(user);
+                    mailer.sendTemplateEmail(user.email,"applicationemails",{
+                        nickname: user['firstName'],
+                        dashUrl: process.env.ROOT_URL
+                    })
                 });
             }
 
