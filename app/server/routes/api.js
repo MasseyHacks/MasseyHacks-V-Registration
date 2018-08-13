@@ -26,13 +26,13 @@ module.exports = function(router) {
     });
 
     // Owner
-    //List emails
+    // List emails
     router.get('/email/listTemplates', permissions.isOwner, function (req,res){
         mailer.listTemplates(logger.defaultResponse(req,res));
     });
 
     // Owner
-    //Return emails
+    // Return emails
     router.get('/email/:templateName', permissions.isOwner, function (req,res){
         mailer.returnTemplate(req.params.templateName,logger.defaultResponse(req,res,false));
     });

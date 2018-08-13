@@ -34,6 +34,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
+    var sort = query.sort;
     var page = parseInt(query.page);
     var size = parseInt(query.size);
     var text = query.text;
@@ -42,7 +43,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
     var params = {};
 
     if (text) {
-        var regex = new RegExp(escapeRegExp(text), 'i'); // Filter regex chars
+        var regex = new RegExp(escapeRegExp(text), 'i'); // Filter regex chars, sets to case insensitive
 
         or.push({ email: regex });
         or.push({ 'firstName': regex });
@@ -78,7 +79,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
         User
             .find(params)
-            //.sort()
+            .sort()
             .skip((page - 1) * size)
             .limit(size)
             .exec(function(err, users) {
