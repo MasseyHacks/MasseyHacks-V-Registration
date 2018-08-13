@@ -282,9 +282,7 @@ module.exports = {
             return callback("Invalid email template!");
         }
         else{
-            fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',function (err,data) {
-                return callback(err,data);
-            });
+            fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',callback);
         }
     },
 
@@ -293,5 +291,23 @@ module.exports = {
             validTemplates: Object.keys(validTemplates)
         };
         return callback(null,response);
+    },
+
+    setTemplate : function(templateName,templateBody,callback){
+        templateName = templateName.toLowerCase();
+        if(!templateName || validTemplates[templateName] == null){//invalid
+            console.log('Invalid email queue!');
+            return callback("Invalid email template!");
+        }
+        else{
+            fs.writeFile(validTemplates[templateName]['templateLocation'],templateBody,function (err){
+                if(err){
+                    return callback(err);
+                }
+                else{
+                    return callback(null,"Success");
+                }
+            });
+        }
     }
 };

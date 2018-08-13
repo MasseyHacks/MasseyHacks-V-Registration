@@ -33,8 +33,14 @@ module.exports = function(router) {
 
     // Owner
     // Return emails
-    router.get('/email/:templateName', permissions.isOwner, function (req,res){
+    router.get('/email/get/:templateName', permissions.isOwner, function (req,res){
         mailer.returnTemplate(req.params.templateName,logger.defaultResponse(req,res,false));
+    });
+
+    // Owner
+    //Set emails
+    router.post('/email/set/:templateName', permissions.isOwner, function (req,res){
+        mailer.setTemplate(req.params.templateName,req.body.templateHTML,logger.defaultResponse(req,res));
     });
 
     // Public
