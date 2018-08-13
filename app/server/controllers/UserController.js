@@ -517,17 +517,72 @@ UserController.updateProfile = function (id, profile, callback){
     // Validate the user profile, and mark the user as profile completed
     // when successful.
     console.log('Updating ' + profile);
+    User.validateProfile(id, profile, function(err, profileValidated){
+        if (err){
+            return callback({message: 'invalid profile'});
+        }
 
-    csvValidation(profile, function(profileValidated){
-        User.validateProfile(id, profile, function(err){
-            if (err){
-                return callback({message: 'invalid profile'});
+        // Check if its within the registration window.
+        Settings.getRegistrationTimes(function(err, times){
+            if (profileValidated.signature === -1) {
+                return User.findOneAndUpdate({
+                        _id: id,
+                        verified: true
+                    },
+                    {
+                        $set: {
+                            'lastUpdated': Date.now(),
+                            'profile': profileValidated
+                        }
+                    },
+                    {
+                        new: true
+                    },
+                    callback);
             }
 
-            // Check if its within the registration window.
-            Settings.getRegistrationTimes(function(err, times){
-                if (profileValidated.signature === -1) {
-                    return User.findOneAndUpdate({
+            if (err) {
+                callback(err);
+            }
+
+            var now = Date.now();
+
+            if (now < times.timeOpen){
+                return callback({
+                    message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
+                });
+            }
+
+            if (now > times.timeClose){
+                return callback({
+                    message: 'Sorry, registration is closed.'
+                });
+            }
+
+            if (!profile.submittedApplication) {
+                User.findById(id, function(err, user) {
+                    if (err) {
+                        console.log('Could not send email:');
+                        console.log(err);
+                    }
+                    Mailer.sendApplicationEmail(user);
+                });
+            }
+
+            User.findOne(
+                {
+                    _id: id,
+                    verified: true
+                },
+                function (err, user) {
+
+                    if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
+                        return callback({
+                            message: 'Sorry, registration is closed.'
+                        });
+                    }
+
+                    User.findOneAndUpdate({
                             _id: id,
                             verified: true
                         },
@@ -535,74 +590,15 @@ UserController.updateProfile = function (id, profile, callback){
                             $set: {
                                 'sname': profile.name.toLowerCase(),
                                 'lastUpdated': Date.now(),
-                                'profile': profileValidated
+                                'profile': profileValidated,
+                                'status.completedProfile': true
                             }
                         },
                         {
                             new: true
                         },
                         callback);
-                }
-
-                if (err) {
-                    callback(err);
-                }
-
-                var now = Date.now();
-
-                if (now < times.timeOpen){
-                    return callback({
-                        message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
-                    });
-                }
-
-                if (now > times.timeClose){
-                    return callback({
-                        message: 'Sorry, registration is closed.'
-                    });
-                }
-
-                if (!profile.submittedApplication) {
-                    User.findById(id, function(err, user) {
-                        if (err) {
-                            console.log('Could not send email:');
-                            console.log(err);
-                        }
-                        Mailer.sendApplicationEmail(user);
-                    });
-                }
-
-                User.findOne(
-                    {
-                        _id: id,
-                        verified: true
-                    },
-                    function (err, user) {
-
-                        if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
-                            return callback({
-                                message: 'Sorry, registration is closed.'
-                            });
-                        }
-
-                        User.findOneAndUpdate({
-                                _id: id,
-                                verified: true
-                            },
-                            {
-                                $set: {
-                                    'sname': profile.name.toLowerCase(),
-                                    'lastUpdated': Date.now(),
-                                    'profile': profileValidated,
-                                    'status.completedProfile': true
-                                }
-                            },
-                            {
-                                new: true
-                            },
-                            callback);
-                    });
-            });
+                });
         });
     });
 };
