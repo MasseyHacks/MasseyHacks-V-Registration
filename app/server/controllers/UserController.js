@@ -550,8 +550,7 @@ UserController.updateProfile = function (id, profile, callback){
         Settings.getSettings(function(err, times){
             if (profileValidated.signature === -1) {
                 return User.findOneAndUpdate({
-                        _id: id,
-                        verified: true
+                        _id: id
                     },
                     {
                         $set: {
@@ -566,7 +565,7 @@ UserController.updateProfile = function (id, profile, callback){
             }
 
             if (err) {
-                callback(err);
+                return callback(err);
             }
 
             var now = Date.now();
@@ -598,10 +597,12 @@ UserController.updateProfile = function (id, profile, callback){
 
             User.findOne(
                 {
-                    _id: id,
-                    verified: true
+                    _id: id
                 },
                 function (err, user) {
+                    if (err) {
+                        return callback(err)
+                    }
 
                     if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
                         return callback({
@@ -611,7 +612,6 @@ UserController.updateProfile = function (id, profile, callback){
 
                     User.findOneAndUpdate({
                             _id: id,
-                            verified: true
                         },
                         {
                             $set: {
