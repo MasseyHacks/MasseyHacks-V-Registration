@@ -537,7 +537,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
 };
 
-UserController.updateProfile = function (id, profile, callback){
+UserController.updateProfile = function (userExcuted, id, profile, callback){
 
     // Validate the user profile, and mark the user as profile completed
     // when successful.
@@ -548,11 +548,10 @@ UserController.updateProfile = function (id, profile, callback){
         }
 
         // Check if its within the registration window.
-        Settings.getRegistrationTimes(function(err, times){
+        Settings.getSettings(function(err, times){
             if (profileValidated.signature === -1) {
                 return User.findOneAndUpdate({
-                        _id: id,
-                        verified: true
+                        _id: id
                     },
                     {
                         $set: {
@@ -567,7 +566,7 @@ UserController.updateProfile = function (id, profile, callback){
             }
 
             if (err) {
-                callback(err);
+                return callback(err);
             }
 
             var now = Date.now();
@@ -590,16 +589,21 @@ UserController.updateProfile = function (id, profile, callback){
                         console.log('Could not send email:');
                         console.log(err);
                     }
-                    Mailer.sendApplicationEmail(user);
+                    mailer.sendTemplateEmail(user.email,"applicationemails",{
+                        nickname: user['firstName'],
+                        dashUrl: process.env.ROOT_URL
+                    })
                 });
             }
 
             User.findOne(
                 {
-                    _id: id,
-                    verified: true
+                    _id: id
                 },
                 function (err, user) {
+                    if (err) {
+                        return callback(err)
+                    }
 
                     if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){
                         return callback({
@@ -609,7 +613,6 @@ UserController.updateProfile = function (id, profile, callback){
 
                     User.findOneAndUpdate({
                             _id: id,
-                            verified: true
                         },
                         {
                             $set: {
