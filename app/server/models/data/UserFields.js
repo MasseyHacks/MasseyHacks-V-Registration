@@ -12,6 +12,7 @@ const ADMIN             = 3;
 const REVIEW            = 4;
 const OWNER             = 5;
 const DEVELOPER         = 6;
+const INTERNAL          = 99999;
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -235,7 +236,8 @@ var schema = {
     password: {
         type: String,
         required: true,
-        select: false
+        select: false,
+        permission: INTERNAL
     },
 
     timestamp: {
@@ -262,7 +264,7 @@ var schema = {
 
     applicationAdmit: {
         type: [String],
-        permission: ADMIN
+        permission: OWNER
     },
 
     applicationReject: {
