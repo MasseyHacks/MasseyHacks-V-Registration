@@ -300,10 +300,7 @@ h2 {
 }
 
 #users-table td {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 12px;
 }
 
 #users-table tr:hover {
