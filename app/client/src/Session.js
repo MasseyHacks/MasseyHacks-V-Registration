@@ -22,7 +22,7 @@ module.exports = {
             request['data'] = type == 'POST' ? JSON.stringify(data) : data
         }
 
-        if (this.loggedIn()) {
+        if (this.loggedIn() || this.getToken()) {
             request['beforeSend'] = xhr => {xhr.setRequestHeader('x-access-token', this.getToken())}
         }
 
@@ -51,6 +51,16 @@ module.exports = {
             id: user._id,
             name: user.fullName
         })
+    },
+
+    create2FA(token, data) {
+        localStorage.token = token;
+        localStorage.qr = data.qr;
+        console.log(token)
+    },
+
+    getQR() {
+      return localStorage.qr;
     },
 
     destroy(callback) {
@@ -92,6 +102,6 @@ module.exports = {
     },
 
     loggedIn() {
-        return !!localStorage.token;
+        return !!localStorage.token && !!localStorage.user;
     }
 };

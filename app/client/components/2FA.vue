@@ -2,19 +2,13 @@
     <div id="main">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <p v-if="$route.query.redirect">
-                You need to login first.
-            </p>
-
-            <h2 class="subtitle">Login</h2>
+            <h2 class="subtitle">2FA</h2>
             <div id="login-form-elements">
-                <form @submit.prevent="login">
-                    <input v-model="email" placeholder="email" type="email" autofocus required>
-                    <input v-model="pass" placeholder="password" type="password" required><br>
+                <form @submit.prevent="codeLogin">
+                    <input v-model="code" placeholder="123456" type="number" autofocus required>
+                    <img v-bind:src="qr"/>
                     <div id="button-row">
                         <button type="submit" class="primary-button">sign in</button>
-                        <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
-                        <router-link to="/reset"><button>reset</button></router-link>
                     </div>
                     <p v-if="error" class="error">{{error}}</p>
                 </form>
@@ -31,8 +25,8 @@
     export default {
         data () {
             return {
-                email: '',
-                pass: '',
+                code: '',
+                qr:Session.getQR(),
                 error: false,
                 settings: Session.getSettings()
             }
@@ -43,17 +37,13 @@
             }
         },
         methods: {
-            login () {
-                AuthService.loginWithPassword(this.email, this.pass, (err, data) => {
+            codeLogin () {
+                AuthService.loginWithCode(this.code, (err, data) => {
                     if (err) {
                         this.error = err
                     } else {
                         this.error = null;
-                        if (data["2FA"]) {
-                            this.$router.replace("/2fa")
-                        } else {
-                            this.$router.replace(this.$route.query.redirect || '/')
-                        }
+                        this.$router.replace(this.$route.query.redirect || '/')
                     }
                 })
             }

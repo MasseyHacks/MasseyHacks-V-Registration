@@ -26,6 +26,7 @@ import Error          from '../components/Error.vue'
 import PasswordChange from '../components/PasswordChange.vue'
 import Review         from '../components/Review.vue'
 import UserView       from '../components/UserView.vue'
+import GoogleAuth     from '../components/2FA.vue'
 
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
@@ -222,6 +223,10 @@ const router = new VueRouter({
        {
            path: '/login',
            component: Login
+       },
+       {
+           path: '/2fa',
+           component: GoogleAuth
        },
        {
            path: '/logout',

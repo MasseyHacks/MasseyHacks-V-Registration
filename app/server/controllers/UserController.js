@@ -17,6 +17,7 @@ const stats          = require('../services/stats');
 
 const UserFields     = require('../models/data/UserFields');
 const FilterFields   = require('../models/data/FilterFields');
+const qrcode         = require('qrcode');
 
 var UserController   = {};
 
@@ -515,7 +516,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
     }
 
-    User.findOne({email : email.toLowerCase()}, '+password', function (err, user) {
+    User.findOne({email : email.toLowerCase()}, '+password +QRCode', function (err, user) {
             console.log(user);
 
             if (err || !user || user == null || !user.checkPassword(password)) {
@@ -529,12 +530,46 @@ UserController.loginWithPassword = function(email, password, callback){
                 return callback({ error: 'Account is not active. Please contact an administrator for assistance.', code: 403})
             }
 
-            logger.logAction(user._id, user._id, 'Logged in with password.');
+            if (user.permissions.admin) {
+                logger.logAction(user._id, user._id, "is logging in. Redirecting to 2FA")
 
-            var token = user.generateAuthToken();
+                var token = user.generate2FAToken();
 
-            return callback(null, User.filterSensitive(user), token);
+                return callback(null, {qr: user.QRCode, "2FA": true}, token);
+            } else {
+                logger.logAction(user._id, user._id, 'Logged in with password.');
+
+                var token = user.generateAuthToken();
+
+                return callback(null, User.filterSensitive(user), token);
+            }
         });
+};
+
+UserController.loginWith2FA = function(token, code, callback) {
+    if (!token) {
+        return callback({error : 'No token detected'});
+    }
+
+    User.get2FA(token, function(err, user){
+        if (!user || err) {
+            return callback(err);
+        }
+
+        if (!user.status.active) {
+            return callback({ error: 'Account is not active. Please contact developers for assistance.', code: 403 })
+        }
+
+        if (!user.checkCode(code)) {
+            return callback({ error: "Invalid Code!"})
+        }
+
+        var token = user.generateAuthToken();
+
+        logger.logAction(user._id, user._id, 'Logged in with 2FA.');
+
+        return callback(err, token, User.filterSensitive(user));
+    });
 };
 
 UserController.updateProfile = function (userExcuted, id, profile, callback){

@@ -6,6 +6,7 @@ const validator   = require('validator');
 const jwt         = require('jsonwebtoken');
 const fields      = require('../models/data/UserFields');
 const Raven       = require('raven');
+const speakeasy   = require('speakeasy');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -13,6 +14,12 @@ var schema = new mongoose.Schema(fields);
 
 schema.methods.checkPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
+};
+
+schema.methods.checkCode = function(code) {
+    return speakeasy.totp.verify({ secret: this.authSecret,
+                                   encoding: 'base32',
+                                   token: code});
 };
 
 schema.methods.generateAuthToken = function () {
@@ -30,6 +37,12 @@ schema.methods.generateVerificationToken = function() {
 schema.methods.generateResetToken = function() {
     return jwt.sign({id: this._id, type: 'password-reset'}, JWT_SECRET, {
         expiresIn: 3600
+    });
+};
+
+schema.methods.generate2FAToken = function() {
+    return jwt.sign({id: this._id, type: '2FA'}, JWT_SECRET, {
+        expiresIn: 600
     });
 };
 
@@ -125,6 +138,47 @@ schema.statics.getByToken = function (token, callback) {
         }
 
         this.findOne({_id: payload.id}, function(err, user) {
+
+            if (err || !user) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback({
+                    error: 'Invalid Token',
+                    code: 401
+                });
+            }
+
+            if (payload.iat * 1000 < user.passwordLastUpdated) {
+                return callback({
+                    error: 'Invalid Token',
+                    code: 401
+                });
+            }
+
+            return callback(err, user);
+        });
+    }.bind(this));
+};
+
+schema.statics.get2FA = function (token, callback) {
+    jwt.verify(token, JWT_SECRET, function (err, payload) {
+        if (err || !payload) {
+            return callback({
+                error: 'Invalid Token',
+                code: 401
+            });
+        }
+
+        if (payload.type != '2FA' || !payload.exp || Date.now() >= payload.exp * 1000) {
+            return callback({
+                error: 'Token is invalid for this operation',
+                code: 403
+            });
+        }
+
+        this.findOne({_id: payload.id}, '+QRCode +authSecret', function(err, user) {
 
             if (err || !user) {
                 if (err) {

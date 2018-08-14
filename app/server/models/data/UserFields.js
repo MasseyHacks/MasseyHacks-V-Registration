@@ -240,6 +240,18 @@ var schema = {
         permission: INTERNAL
     },
 
+    authSecret: {
+        type: String,
+        select: false,
+        permission: INTERNAL
+    },
+
+    QRCode: {
+        type: String,
+        select: false,
+        permission: INTERNAL
+    },
+
     timestamp: {
         type: Number,
         required: true,

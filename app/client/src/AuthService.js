@@ -47,6 +47,27 @@ module.exports = {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
+                console.log(data)
+                if (data["user"]["2FA"]) {
+                    Session.create2FA(data['token'], data["user"])
+                    return callback(null, data["user"])
+                } else {
+                    Session.create(data['token'], data['user']);
+                    this.updateLoginState(true)
+
+                    if (callback) callback(null, data)
+                }
+            }
+        })
+    },
+
+    loginWithToken (callback) {
+        Session.sendRequest('POST', '/auth/login', {
+
+        }, (err, data) => {
+            if (err) {
+                if (callback) callback(JSON.parse(err.responseText)['error'])
+            } else {
                 Session.create(data['token'], data['user']);
                 this.updateLoginState(true)
 
@@ -55,9 +76,9 @@ module.exports = {
         })
     },
 
-    loginWithToken (callback) {
-        Session.sendRequest('POST', '/auth/login', {
-
+    loginWithCode (code, callback) {
+        Session.sendRequest('POST', '/auth/2FA', {
+            "code":code
         }, (err, data) => {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])

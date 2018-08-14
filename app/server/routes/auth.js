@@ -96,6 +96,34 @@ module.exports = function(router) {
         }
     });
 
+    router.post('/2FA', function (req, res) {
+        var token = permissions.getToken(req);
+        var code = req.body.code;
+
+        console.log("2FA login detected");
+
+        if (token && code) {
+            console.log(token + " " + code);
+
+            UserController.loginWith2FA(token, code, function (err, token, user) {
+                if (err || !user || !token) {
+                    if (err) {
+                        console.log(err);
+                        return res.status(401).json(err);
+                    }
+
+                    return res.status(401).json({error: 'Invalid Code'});
+                }
+                return res.json({
+                    token: token,
+                    user: user
+                });
+            });
+        } else {
+            res.status(401).json({error: "Error, no token and/or code received!"})
+        }
+    });
+
     // Password reset
     router.post('/reset', function (req, res) {
         var token = req.body.token;
