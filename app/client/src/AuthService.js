@@ -39,10 +39,11 @@ module.exports = {
         })
     },
 
-    loginWithPassword (email, password, callback) {
+    loginWithPassword (email, password, recaptchaToken, callback) {
         Session.sendRequest('POST', '/auth/login', {
             email: email,
-            password: password
+            password: password,
+            recaptchaToken: recaptchaToken
         }, (err, data) => {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
