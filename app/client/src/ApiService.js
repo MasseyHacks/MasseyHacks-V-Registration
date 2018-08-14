@@ -20,5 +20,11 @@ module.exports = {
         Session.sendRequest('GET', '/api/users', query, (err, data) => {
             return callback(err, data)
         })
+    },
+
+    getUser(id, callback) {
+        Session.sendRequest('GET', '/api/user/' + id, {}, (err, data) => {
+            return callback(err, data)
+        })
     }
 }

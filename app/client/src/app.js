@@ -25,6 +25,7 @@ import Confirmation   from '../components/Confirmation.vue'
 import Error          from '../components/Error.vue'
 import PasswordChange from '../components/PasswordChange.vue'
 import Review         from '../components/Review.vue'
+import UserView       from '../components/UserView.vue'
 
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
@@ -187,6 +188,14 @@ const router = new VueRouter({
                    meta: {
                        permissions: 'reviewer'
                    }
+               },
+               {
+                    path: 'userview',
+                    component: UserView,
+                    beforeEnter: isAuthorized,
+                    meta: {
+                          permissions: 'admin'
+                    }
                }
            ]
        },
