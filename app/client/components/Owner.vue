@@ -91,7 +91,7 @@
         },
         beforeMount() {
             this.convertTimes()
-            Session.sendRequest("GET", "http://localhost:3005/api/email/listTemplates", null, (err, data) => {
+            Session.sendRequest("GET", "/api/email/listTemplates", null, (err, data) => {
                 if (err) {
                     console.log("Error while getting template")
                 } else {

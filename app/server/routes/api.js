@@ -105,6 +105,10 @@ module.exports = function(router) {
         UserController.getByQuery(req.userExecute, query, logger.defaultResponse(req, res));
     });
 
+    router.get('/getAdmins', permissions.isOwner, function (req, res) {
+       UserController.getAdmins(logger.defaultResponse(req, res));
+    });
+
     // Developer
     // View system log
     router.get('/systemLog', permissions.isDeveloper, function (req, res) {

@@ -35,6 +35,16 @@
                         </p>
                     </div>
                 </div>
+                <div class="ui-card dash-card">
+                    <h3>QR CODES</h3>
+                    <hr>
+                    <select style="margin-bottom: 10px;" v-model="selected">
+                        <option disabled value="">Select a Admin</option>
+                        <option v-for="option in dropdown.length">{{dropdown[option-1]}}</option>
+                    </select>
+                    <hr>
+                    <img v-bind:src="Admins[selected]" v-if="selected">
+                </div>
             </div>
         </div>
     </div>
@@ -58,11 +68,25 @@
                 loadingError: '',
                 queryError: '',
 
-                log: {}
+                log: {},
+
+                selected:"",
+                Admins:{},
+                dropdown: {},
             }
         },
         beforeMount() {
             this.updateSearch()
+
+            Session.sendRequest("GET", "api/getAdmins", null, (err, data) => {
+                console.log(data)
+                if (err) {
+                    console.log("Error while getting template")
+                } else {
+                    this.Admins = data
+                    this.dropdown = Object.keys(data)
+                }
+            })
         },
         methods: {
             switchPage: function (page) {

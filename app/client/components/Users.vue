@@ -44,12 +44,12 @@
 
                         <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
-                        <button class="generic-button-light" v-on:click="addQuery" :disabled="queryField.length">Add</button>
+                        <button class="generic-button-light" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
                     </div>
 
                     <br>
 
-                    <button class="generic-button-light" v-on:click="clearQuery" :disabled="queryField.length">Clear</button>
+                    <button class="generic-button-light" v-on:click="clearQuery">Clear</button>
                     <button class="generic-button-light" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ? "Simple" : "Advanced"}} Query</button>
 
                     <br>
@@ -123,6 +123,7 @@
                 users: {}
             }
         },
+
         beforeMount() {
             // Get fields for filters
             ApiService.getFields((err, data) => {
@@ -196,7 +197,7 @@
                 query[this.queryField.name] = this.queryField.type == 'Boolean' ? this.queryComparison : subQuery
 
                 if (this.queryLogical in this.filters) {
-                    if (!this.filters[this.queryLogical].includes(query)) { // Figure out why this doesn't work
+                    if (!this.filters[this.queryLogical].map(x => JSON.stringify(x)).includes(JSON.stringify(query))) { // Figure out why this doesn't work
                         this.filters[this.queryLogical].push(query)
                     } else {
                         swal('This filter already exists!')
@@ -218,6 +219,7 @@
             updateAdvancedFilter: function() {
                 try {
                     this.filters = JSON.parse(this.advancedQueryContent)
+                    this.updateSearch()
                 }  catch (e) {
                     this.queryError = 'Invalid Query'
                 }
@@ -385,3 +387,23 @@
         }
     }
 </script>
+
+
+<style>
+    .ql-editor {
+        height: 50vh !important;
+        width: 50vw !important;
+        overflow-y: auto !important;
+        overflow-x: auto !important;
+    }
+
+    .ql-syntax {
+        display: inline-block !important;
+    }
+
+    .ql-syntax span {
+        display: inline-block !important;
+        white-space: nowrap;
+    }
+
+</style>

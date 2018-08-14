@@ -49,6 +49,21 @@ UserController.getUserFields = function(userExecute, callback) {
     callback(null, fieldsOut)
 };
 
+UserController.getAdmins = function(callback) {
+    User.find({"permissions.admin":true}, "+QRCode", function(err, data) {
+        if (err) {
+            return callback({error: err})
+        }
+
+        var filtered = {}
+        for (var i = 0; i < data.length; i++) {
+            filtered[data[i].fullName] = data[i].QRCode
+        }
+
+        return callback(null, filtered)
+    })
+};
+
 UserController.getByQuery = function (adminUser, query, callback) {
 
     if (!query || !query.page || !query.size) {
@@ -649,7 +664,7 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
                             $set: {
                                 'lastUpdated': Date.now(),
                                 'profile': profileValidated,
-                                'status.completedProfile': true
+                                'status.submittedApplication': true
                             }
                         },
                         {
@@ -835,7 +850,7 @@ UserController.checkAdmissionStatus = function(id) {
 
                 User.findOneAndUpdate({
                         '_id': id,
-                        'verified': true,
+                        'permissions.verified': true,
                         'status.rejected': false,
                         'status.admitted': false,
                     },
