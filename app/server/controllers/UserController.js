@@ -848,7 +848,7 @@ UserController.checkAdmissionStatus = function(id) {
                         new: true
                     },
                     function (err, user) {
-                        return callback(err, user);
+                        //return callback(err, user);
                     });
             }
         }
