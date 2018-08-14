@@ -60,9 +60,10 @@
                 if (err || !data) {
                     this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                 } else {
-                    this.applicationsLeft = Object.keys(data).length;
+                    this.applicationsLeft = Object.keys(data.users).length;
                     this.users = data;
-                    console.log(data);
+                    console.log('data');
+                    console.log(Object.assign({}, data))
                 }
             });
 
@@ -74,7 +75,7 @@
                     this.reviewingApplications = true;
 
                     var userTimesList = [];
-                    this.users.forEach((user) =>{
+                    this.users.users.forEach((user) =>{
                         userTimesList.push([user.id,user.lastUpdated,user.profile]);
                     });
 
