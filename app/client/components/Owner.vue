@@ -37,6 +37,12 @@
                     </select>
 
                     <button class="generic-button-dark" @click="getTemplate">Get Template</button>
+                    <hr>
+                    <p>
+                        Current Participant Limit:
+                        <input type="number" v-model="maxParticipants" style="margin-bottom: 10px;">
+                        <button class="generic-button-dark" @click="changeLimit">Update Participant Limit</button>
+                    </p>
                 </div>
             </div>
             <div class="ui-card" id="dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
@@ -78,6 +84,7 @@
                 previewHTML: "",
                 baseHTMLFront: "",
                 baseHTMLBack: "",
+                maxParticipants: 0,
                 templateOptions: [],
                 selected: ""
             }
@@ -127,9 +134,36 @@
                 this.timeOpen = moment(this.settings.timeOpen).format("YYYY-MM-DDTHH:mm:ss")
                 this.timeClose = moment(this.settings.timeClose).format("YYYY-MM-DDTHH:mm:ss")
                 this.timeConfirm = moment(this.settings.timeConfirm).format("YYYY-MM-DDTHH:mm:ss")
+                this.maxParticipants = this.settings.maxParticipants
             },
             moment (date) {
                 return moment(date).format('MMMM Do YYYY, h:mm:ss')
+            },
+            changeLimit() {
+                swal({
+                    title: 'Are you sure?',
+                    text: "This edit could have devastating effects!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        Session.sendRequest("POST", "/api/updateParticipantLimit", {
+                            "maxParticipants": this.maxParticipants
+                        }, (err, setting) => {
+                            if (err || !setting) {
+                                swal("Error", err.error, "error")
+                            } else {
+                                swal("Success", "Limit has beens changed successfully", "success")
+                                Session.setSettings(setting)
+                                this.convertTimes()
+                            }
+                        })
+                    }
+                })
             },
             changeTimes () {
                 swal({

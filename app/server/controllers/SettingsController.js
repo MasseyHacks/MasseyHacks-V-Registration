@@ -126,6 +126,27 @@ SettingsController.modifyTime = function(user, newTime, callback) {
         })
 };
 
+SettingsController.modifyLimit = function(user, limit, callback) {
+    if (!limit.maxParticipants) {
+        return callback({'error': 'Data not found'})
+    }
+
+    Settings.findOneAndUpdate({},
+        {
+            maxParticipants : limit.maxParticipants,
+        }, {
+            new: true
+        }, function(err, settings) {
+            if (err || !settings) {
+                return callback({'error':'Unable to update limit'})
+            }
+
+            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.');
+
+            return callback(null, settings)
+        })
+};
+
 SettingsController.getLog = function(query, callback){
 
     var filter = {};

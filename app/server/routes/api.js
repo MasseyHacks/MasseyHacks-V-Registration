@@ -80,7 +80,14 @@ module.exports = function(router) {
     // Modify application time
     router.post('/updateRegistrationTime', permissions.isOwner, function (req, res) {
         var newTimes = req.body;
-        SettingsController.modifyTime(req.userExecute, newTimes,logger.defaultResponse(req, res));
+        SettingsController.modifyTime(req.userExecute, newTimes, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Modify application time
+    router.post('/updateParticipantLimit', permissions.isOwner, function (req, res) {
+        var limit = req.body;
+        SettingsController.modifyLimit(req.userExecute, limit, logger.defaultResponse(req, res));
     });
 
     // Self or admin
