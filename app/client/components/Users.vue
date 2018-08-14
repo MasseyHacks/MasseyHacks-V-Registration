@@ -125,7 +125,16 @@
                 }
             })
 
-            this.updateSearch()
+            ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
+                this.loading = false
+
+                if (err || !data) {
+                    this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                } else {
+                    this.users = data.users
+                    this.totalPages = data.totalPages
+                }
+            })
         },
         methods : {
             deleteFilter: function(logical, filter) {
