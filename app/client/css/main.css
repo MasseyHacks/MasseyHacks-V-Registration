@@ -341,7 +341,8 @@ i.fa-female {
 }
 
 #users-table td {
-    min-width: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 h4 {
