@@ -47,13 +47,20 @@
                     <button class="generic-button-light" v-on:click="clearQuery" :disabled="queryField.length">Clear</button>
 
                     <br>
-                    <div v-for="(comparison, logical) in filters" style="text-align: left">
-                        {{logical}}
 
-                        <div v-for="c in comparison">
-                            {{c}}
+                    <table>
+                        <div v-for="(comparison, logical) in filters">
+                            <tr>
+                                <div v-for="filter in comparison">
+                                    <td>{{logical}}</td>
+                                    <td>{{filter}}</td>
+                                    <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
+                                </div>
+                            </tr>
                         </div>
-                    </div>
+                    </table>
+
+
 
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
@@ -132,6 +139,11 @@
             })
         },
         methods : {
+            deleteFilter: function(logical, filter) {
+                this.filters[logical].splice(this.filters[logical].indexOf(filter), 1)
+                this.updateSearch()
+            },
+
             // Changes comparison operator to valid state
             changeFieldName: function() {
                 switch (this.queryField.type) {
@@ -193,7 +205,7 @@
             },
 
             clearQuery: function() {
-                this.filters = {"$and":[{}], "$or":[{}]}
+                this.filters = {}
                 this.updateSearch()
             },
 
