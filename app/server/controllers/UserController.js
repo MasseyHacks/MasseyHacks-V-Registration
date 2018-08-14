@@ -98,7 +98,8 @@ UserController.getByQuery = function (adminUser, query, callback) {
     User.count(filters, function(err, count) {
 
         if (err) {
-            return callback(err);
+            console.log(err)
+            return callback({error:err.message})
         }
 
         User

@@ -7,50 +7,73 @@
                     Loading...
                 </div>
                 <div v-else-if="err">
-                    {{err}}
+                    {{loadingError}}
                 </div>
                 <div v-else>
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
+                    <select style="margin: 10px;" v-model="queryLogical">
+                        <option value="$and">and</option>
+                        <option value="$or">or</option>
+                        <option value="$not">not</option>
+                        <option value="$nor">nor</option>
+                    </select>
+
+
                     <!-- Field Name -->
-                    <select style="margin: 10px;" v-model="queryFieldName">
-                        <option value="" v-bind:value="[]">Select a field</option>
+                    <select style="margin: 10px;" v-model="queryField" v-on:change="changeFieldName">
+                        <option v-bind:value="{}">Select a field</option>
                         <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
                     </select>
 
-                    <select style="margin: 10px;" v-model="queryRequirement">
-                        <option value="$and">and</option>
-                        <option value="$or">or</option>
+                    <select style="margin: 10px;" v-model="queryComparison" :disabled="queryField.length">
+                        <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
+                        <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
+                        <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
+                        <option value="$gt" :disabled="queryField.type=='Boolean'">greater than</option>
+                        <option value="$gte" :disabled="queryField.type=='Boolean'">greater than or equal</option>
+                        <option value="$lt" :disabled="queryField.type=='Boolean'">less than</option>
+                        <option value="$lte" :disabled="queryField.type=='Boolean'">less than or equal</option>
+
+                        <option value="true" :disabled="queryField.type!='Boolean'">True</option>
+                        <option value="false" :disabled="queryField.type!='Boolean'">False</option>
                     </select>
 
-                    <br>
-                    <div v-for="(criteria, requirement) in filters" style="text-align: left">
-                        {{requirement}}
+                    <input v-model="queryTargetValue" type="text" :disabled="queryField.length && queryField.type!='Boolean'">
 
-                        <div v-for="c in criteria">
+                    <br>
+
+                    <button class="generic-button-light" v-on:click="addQuery" :disabled="queryField.length">Add</button>
+                    <button class="generic-button-light" v-on:click="clearQuery" :disabled="queryField.length">Clear</button>
+
+                    <br>
+                    <div v-for="(comparison, logical) in filters" style="text-align: left">
+                        {{logical}}
+
+                        <div v-for="c in comparison">
                             {{c}}
                         </div>
                     </div>
 
-                    <div v-if="users.length != 0">
+                    <div v-if="users.length != 0 && !queryError">
                         <hr>
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                         <hr>
                         <table>
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                            <tr v-for="user in users">
+                            <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
                                 <td>{{user.fullName}}</td>
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
                                 <td>{{user.email}}</td>
                                 <td>N/A</td>
                                 <td>N/A</td>
-                            </tr>
+                            </router-link>
                         </table>
                     </div>
                     <p v-else>
-                        No results match this query
+                        {{queryError}}
                     </p>
                 </div>
             </div>
@@ -62,7 +85,8 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import $ from 'jquery';
-    import { saveAs } from 'file-saver/FileSaver';
+    import { saveAs } from 'file-saver/FileSaver'
+    import swal from 'sweetalert2'
 
     export default {
         data() {
@@ -70,26 +94,27 @@
                 page: 1,
                 totalPages: 1,
 
-                filters: {"$and":[{"status.rejected": false}], "$or":[{"status.rejected": true}]},
+                filters: {},
                 searchQuery: '',
 
                 fields: {},
-                queryFieldName: [],
-                queryRequirement: '', // and, or
-                queryOperator: '', // equals, contains, greater, less
-                queryInvert: '', // not
+                queryField: {},
+                queryLogical: '$and', // and, or, not, nor
+                queryComparison: '$eq', // equals, contains, greater, less, greater or equal, lesser or equal, not include, not in array
                 queryTargetValue: '', // 5 apples
 
                 loading: true,
-                err: '',
+                loadingError: '',
+                queryError: '',
 
                 users: {}
             }
         },
         beforeMount() {
+            // Get fields for filters
             ApiService.getFields((err, data) => {
                 if (err || !data) {
-                    this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                 } else {
                     this.fields = data
                 }
@@ -99,7 +124,7 @@
                 this.loading = false
 
                 if (err || !data) {
-                    this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                 } else {
                     this.users = data.users
                     this.totalPages = data.totalPages
@@ -107,22 +132,93 @@
             })
         },
         methods : {
+            // Changes comparison operator to valid state
+            changeFieldName: function() {
+                switch (this.queryField.type) {
+                    case "Boolean": // Only true/false are valid in this case
+                        if (['true', 'false'].indexOf(this.queryComparison) == -1) {
+                            this.queryComparison =  'true'
+                            this.queryTargetValue = ''
+                        }
+
+                        break
+                    case "Number": // Regex cannot be used with numbers
+                        if (this.queryComparison == '$regex') {
+                            this.queryComparison =  '$eq'
+                        }
+
+                        break
+                    default: // Strings
+                        if (['true', 'false'].indexOf(this.queryComparison) != -1) {
+                            this.queryComparison =  '$eq'
+                        }
+                }
+            },
+
+            resetQuery: function() {
+                this.queryLogical = '$and'
+                this.queryComparison =  this.queryField.type == 'Boolean' ? 'true' : '$eq'
+                this.queryTargetValue = ''
+            },
+
+            addQuery: function() {
+
+                var query = {}
+                var subQuery = {}
+
+                // Make it case insensitive
+                if (this.queryComparison == '$regex') {
+                    subQuery['$options'] = 'i'
+                }
+
+                // Generate inner query <'$eq':'foo'>
+                subQuery[this.queryComparison] = this.queryTargetValue
+
+                // Generate outer query <'firstName':subQuery>
+                query[this.queryField.name] = this.queryField.type == 'Boolean' ? this.queryComparison : subQuery
+
+                if (this.queryLogical in this.filters) {
+                    if (!this.filters[this.queryLogical].includes(query)) { // Figure out why this doesn't work
+                        this.filters[this.queryLogical].push(query)
+                    } else {
+                        swal('This filter already exists!')
+                    }
+                } else {
+                    this.filters[this.queryLogical] = [query]
+                }
+
+                this.updateSearch()
+                this.resetQuery()
+                this.queryField = {}
+            },
+
+            clearQuery: function() {
+                this.filters = {"$and":[{}], "$or":[{}]}
+                this.updateSearch()
+            },
+
             updateSearch: function() {
                 this.page = 1
 
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
+                    this.queryError = ''
                     if (err || !data) {
-                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                        this.queryError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
                         this.users = data.users;
                         this.totalPages = data.totalPages
+
+                        if (this.users.length == 0) {
+                            this.queryError = 'No results match this query'
+                        }
                     }
                 })
             },
+
             exportUsersCSV: function () {
                 ApiService.getUsers({ page: 1, size: 100000, text: this.searchQuery }, (err, data) => {
                     if (err || !data) {
-                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                        this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
                         var csvArray = [];
                         for(var i = 0; i < data.users.length; i++){
