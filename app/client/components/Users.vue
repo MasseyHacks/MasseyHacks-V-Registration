@@ -41,7 +41,10 @@
 
                     <input v-model="queryTargetValue" type="text" :disabled="queryField.length && queryField.type!='Boolean'">
 
+                    <br>
+
                     <button class="generic-button-light" v-on:click="addQuery" :disabled="queryField.length">Add</button>
+                    <button class="generic-button-light" v-on:click="clearQuery" :disabled="queryField.length">Clear</button>
 
                     <br>
                     <div v-for="(comparison, logical) in filters" style="text-align: left">
@@ -59,14 +62,14 @@
                         <hr>
                         <table>
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                            <tr v-for="user in users">
+                            <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
                                 <td>{{user.fullName}}</td>
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
                                 <td>{{user.email}}</td>
                                 <td>N/A</td>
                                 <td>N/A</td>
-                            </tr>
+                            </router-link>
                         </table>
                     </div>
                     <p v-else>
@@ -188,6 +191,12 @@
                 this.resetQuery()
                 this.queryField = {}
             },
+
+            clearQuery: function() {
+                this.filters = {"$and":[{}], "$or":[{}]}
+                this.updateSearch()
+            },
+
             updateSearch: function() {
                 this.page = 1
 
@@ -205,6 +214,7 @@
                     }
                 })
             },
+
             exportUsersCSV: function () {
                 ApiService.getUsers({ page: 1, size: 100000, text: this.searchQuery }, (err, data) => {
                     if (err || !data) {
