@@ -65,7 +65,7 @@
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                         <hr>
-                        <table>
+                        <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
                             <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
                                 <td>{{user.fullName}}</td>

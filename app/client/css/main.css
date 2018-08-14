@@ -340,6 +340,10 @@ i.fa-female {
     letter-spacing: 0.2em;
 }
 
+#users-table td {
+    min-width: 30px;
+}
+
 h4 {
     font-family: 'Futura Bold' !important;
     font-size: 0.8em;
