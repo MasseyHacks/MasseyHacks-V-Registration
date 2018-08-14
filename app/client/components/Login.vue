@@ -11,12 +11,24 @@
                 <form @submit.prevent="login">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
                     <input v-model="pass" placeholder="password" type="password" required><br>
+
                     <div id="button-row">
                         <button type="submit" class="primary-button">sign in</button>
                         <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
                         <router-link to="/reset"><button>reset</button></router-link>
                     </div>
+
                     <p v-if="error" class="error">{{error}}</p>
+
+                    <br>
+
+                    <vue-recaptcha
+                            v-bind:sitekey="key"
+                            ref="recaptchaSiteKey"
+                            @verify="onCaptchaVerified"
+                            @expired="onCaptchaExpired"
+                            size="invisible">
+                    </vue-recaptcha>
                 </form>
             </div>
         </div>
@@ -25,12 +37,18 @@
 </template>
 
 <script>
-    import AuthService from '../src/AuthService'
-    import Session     from '../src/Session'
+    import AuthService  from '../src/AuthService'
+    import Session      from '../src/Session'
+    import VueRecaptcha from 'vue-recaptcha'
 
     export default {
+        components: {
+            VueRecaptcha
+        },
+
         data () {
             return {
+                recaptchaSiteKey: RECAPTCHA_SITE_KEY,
                 email: '',
                 pass: '',
                 error: false,
@@ -43,8 +61,10 @@
             }
         },
         methods: {
-            login () {
-                AuthService.loginWithPassword(this.email, this.pass, (err, data) => {
+            onCaptchaVerified: function(recaptchaToken) {
+                this.$refs.recaptcha.reset();
+
+                AuthService.loginWithPassword(this.email, this.pass, recaptchaToken, (err, data) => {
                     if (err) {
                         this.error = err
                     } else {
@@ -56,6 +76,14 @@
                         }
                     }
                 })
+            },
+
+            login () {
+                this.$refs.recaptcha.execute()
+            },
+
+            onCaptchaExpired: function () {
+                this.$refs.recaptcha.reset();
             }
         }
     }

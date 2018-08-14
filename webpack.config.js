@@ -38,7 +38,8 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY)
+            CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY),
+            RECAPTCHA_SITE_KEY: JSON.stringify(process.env.RECAPTCHA_SITE_KEY)
         })
     ]
 }
