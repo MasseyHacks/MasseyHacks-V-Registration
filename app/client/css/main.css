@@ -293,6 +293,10 @@ h2 {
     overflow-x: auto;
 }
 
+#users-table td.email-col {
+    overflow-wrap: break-word;
+}
+
 #users-table tr {
     vertical-align: center;
     border-bottom: 1px solid white;

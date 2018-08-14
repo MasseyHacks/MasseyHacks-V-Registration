@@ -71,7 +71,7 @@
                                 <td>{{user.fullName}}</td>
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
-                                <td>{{user.email}}</td>
+                                <td class="email-col">{{user.email}}</td>
                                 <td>N/A</td>
                                 <td>N/A</td>
                             </router-link>
