@@ -4,7 +4,9 @@
             <div class="ui-card dash-card-large" id="users-table">
                 <div v-if="reviewingApplications">
                     <h2>Reviewing Application</h2>
+                    <div v-html="this.reviewBody"></div>
                     <button v-on:click="stopReview" class="generic-button-light">Exit</button>
+                    <button v-on:click="nextApplication" class="generic-button-light">Next</button>
                 </div>
 
                 <div v-else>
@@ -23,6 +25,7 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import $ from 'jquery';
+    import swal from 'sweetalert2'
 
     export default {
         data() {
@@ -36,21 +39,33 @@
                 reviewingApplications: false,
                 err: '',
                 currentApplication: {},
+                reviewBody: '',
                 userTimes: [],
-                users: {}
+                users: {},
+                user: null
             }
         },
         beforeMount() {
-            ApiService.getStatistics((err, data) => {
-                this.loading = false
+            this.user = Session.getUser();
+            console.log(this.user);
+            ApiService.getUsers({ page: 1, size: 10000, filter: {
+                $and:[{
+                    'status.admitted': false,
+                    'status.rejected': false,
+                    'status.waitlisted': false,
+                    'status.submittedApplication': true,
+                    applicationVotes: {$nin: [this.user.email]}
+                }]}}, (err, data) => {
 
                 if (err || !data) {
                     this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                 } else {
-                    this.applicationsLeft = 3;
-                    //this.applicationsLeft = data.submitted - data.admitted - data.waitlisted - data.rejected;
+                    this.applicationsLeft = Object.keys(data).length;
+                    this.users = data;
+                    console.log(data);
                 }
-            })
+            });
+
         },
         methods : {
             startReview: function(){
@@ -58,7 +73,20 @@
                     console.log("Starting!");
                     this.reviewingApplications = true;
 
+                    var userTimesList = [];
+                    this.users.forEach((user) =>{
+                        userTimesList.push([user.id,user.lastUpdated,user.profile]);
+                    });
+
+                    console.log(userTimesList);
+                    userTimesList.sort(function(a, b) {
+                        return a[1] - b[1];
+                    });
+                    this.userTimes = userTimesList;
+                    this.nextApplication(false);
+
                     //assemble the application array in order!
+                    /*
                     ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
                         if (err || !data) {
                             this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
@@ -67,8 +95,10 @@
                             console.log(data.users);
                             var userTimesList = [];
                             data.users.forEach(function(user){
-                                console.log(user.lastUpdated);
-                                userTimesList.push([user.id,user.lastUpdated,user.profile]);
+                                if(!user.status.admitted){
+                                    console.log(user.lastUpdated);
+                                    userTimesList.push([user.id,user.lastUpdated,user.profile]);
+                                }
                             });
                             console.log(userTimesList);
                             userTimesList.sort(function(a, b) {
@@ -77,7 +107,7 @@
                             this.userTimes = userTimesList;
                             this.nextApplication(false);
                         }
-                    });
+                    });*/
                 }
             },
             stopReview: function(){
@@ -89,8 +119,22 @@
                 if(shift){
                     this.userTimes.shift();
                 }
-                var application = this.userTimes[0][2]["hacker"];
-                console.log(application);
+
+                if(this.userTimes.length < 1){
+                    swal("Information","There are no more applications","info");
+                    this.applicationsLeft = 0;
+                    this.stopReview();
+                }
+                else{
+                    var application = this.userTimes[0][2]["hacker"];
+
+                    this.reviewBody = '';
+                    Object.keys(application).forEach((field) => {
+                        this.reviewBody+='<BR>'+field+' '+application[field];
+                    });
+                    console.log(application);
+                }
+
             },
             applicationVote: function(vote){
                 if(vote == "admit"){
