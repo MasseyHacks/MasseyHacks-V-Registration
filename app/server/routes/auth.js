@@ -14,7 +14,6 @@ const logger             = require('../services/logger');
 JWT_SECRET = process.env.JWT_SECRET;
 
 function verifyRecaptcha(req, res, next) {
-
     request.post({
         uri: "https://www.google.com/recaptcha/api/siteverify",
         json: true,
@@ -80,45 +79,45 @@ module.exports = function(router) {
 
     // Login and issue token
     router.post('/login', verifyRecaptcha, function (req, res) {
-
         var email = req.body.email;
         var password = req.body.password;
-        var token = permissions.getToken(req);
 
         console.log(req.body.email + ' attempting to login.');
 
-        if (token && !email && !password) {
-            console.log(token);
+        UserController.loginWithPassword(email, password, function (err, user, token) {
 
-            UserController.loginWithToken(token, function (err, token, user) {
-                if (err || !user || !token) {
-                    if (err) {
-                        console.log(err);
-                        return res.status(400).json(err);
-                    }
+            if (err || !user) {
+                console.log(err);
+                return res.status(401).json(err);
+            }
 
-                    return res.status(401).json({error: 'Invalid Token'});
-                }
-                return res.json({
-                    token: token,
-                    user: user
-                });
-            })
-        } else {
-            UserController.loginWithPassword(email, password, function (err, user, token) {
+            return res.json({
+                token: token,
+                user: user
+            });
 
-                if (err || !user) {
+        })
+
+    });
+
+
+    router.post('/tokenLogin', function (req, res) {
+        var token = permissions.getToken(req);
+
+        UserController.loginWithToken(token, function (err, token, user) {
+            if (err || !user || !token) {
+                if (err) {
                     console.log(err);
-                    return res.status(401).json(err);
+                    return res.status(400).json(err);
                 }
 
-                return res.json({
-                    token: token,
-                    user: user
-                });
-
-            })
-        }
+                return res.status(401).json({error: 'Invalid Token'});
+            }
+            return res.json({
+                token: token,
+                user: user
+            });
+        })
     });
 
     router.post('/2FA', function (req, res) {

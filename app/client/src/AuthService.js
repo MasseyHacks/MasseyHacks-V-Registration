@@ -63,7 +63,7 @@ module.exports = {
     },
 
     loginWithToken (callback) {
-        Session.sendRequest('POST', '/auth/login', {
+        Session.sendRequest('POST', '/auth/tokenLogin', {
 
         }, (err, data) => {
             if (err) {
