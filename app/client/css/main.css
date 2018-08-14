@@ -266,7 +266,16 @@ h2 {
 
 .duo-col {
     column-count: 2;
-    column-width: 200px;
+    column-width: 220px;
+}
+
+@media (max-width: 992px) {
+    * {
+        font-size: 1.1em;
+    }
+    .duo-col {
+        column-count: 1;
+    }
 }
 
 .custom-ul {
@@ -275,7 +284,7 @@ h2 {
 }
 
 .custom-ul i {
-    margin-right: 10px;
+    margin-right: 1em;
     width: 15px;
     text-align: center;
 }
@@ -293,6 +302,11 @@ h2 {
     text-align: center;
 }
 
+#users-table td.email-col {
+    max-width: 200px;
+    overflow-wrap: break-word;
+}
+
 #users-table tr {
     vertical-align: center;
     border-bottom: 1px solid white;
@@ -300,8 +314,7 @@ h2 {
 }
 
 #users-table td {
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px;
 }
 
 #users-table tr:hover {
@@ -339,6 +352,7 @@ i.fa-female {
     font-family: 'Futura Bold';
     letter-spacing: 0.2em;
 }
+
 
 h4 {
     font-family: 'Futura Bold' !important;

@@ -49,10 +49,6 @@ UserController.getUserFields = function(userExecute, callback) {
     callback(null, fieldsOut)
 };
 
-UserController.getStats = function (callback) {
-    callback(null, stats.getUserStats())
-};
-
 UserController.getByQuery = function (adminUser, query, callback) {
 
     if (!query || !query.page || !query.size) {

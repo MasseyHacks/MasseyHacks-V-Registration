@@ -11,6 +11,7 @@ const SettingsController = require('../controllers/SettingsController');
 const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
 const mailer             = require('../services/email');
+const stats              = require('../services/stats');
 
 require('dotenv').load();
 
@@ -52,7 +53,7 @@ module.exports = function(router) {
     // Admin
     // View current stats
     router.get('/stats', permissions.isAdmin, function (req, res) {
-        UserController.getStats(logger.defaultResponse(req, res))
+        logger.defaultResponse(req, res)(null, stats.getStats())
     })
 
     // Owner
@@ -102,6 +103,12 @@ module.exports = function(router) {
     router.get('/systemLog', permissions.isDeveloper, function (req, res) {
         var query  = req.query;
         SettingsController.getLog(query, logger.defaultResponse(req, res));
+    });
+
+    // Developer
+    // Refresh statistics
+    router.post('/refreshStatistics', permissions.isDeveloper, function (req, res) {
+        stats.refreshStats(logger.defaultResponse(req, res));
     });
 
     // Owner

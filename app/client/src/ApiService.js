@@ -16,6 +16,12 @@ module.exports = {
         })
     },
 
+    refreshStatistics(callback) {
+        Session.sendRequest('POST', '/api/refreshStatistics', {}, (err, data) => {
+            return callback(err, data)
+        })
+    },
+
     getUsers(query, callback) {
         Session.sendRequest('GET', '/api/users', query, (err, data) => {
             return callback(err, data)
@@ -29,9 +35,8 @@ module.exports = {
     },
 
     getLog(query, callback) {
-
         Session.sendRequest('GET', '/api/systemLog', query, (err, data) => {
             return callback(err, data)
         })
-    },
+    }
 }

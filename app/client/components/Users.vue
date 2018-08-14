@@ -12,39 +12,45 @@
                 <div v-else>
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
-                    <select style="margin: 10px;" v-model="queryLogical">
-                        <option value="$and">and</option>
-                        <option value="$or">or</option>
-                        <option value="$not">not</option>
-                        <option value="$nor">nor</option>
-                    </select>
+                    <div v-if="advancedQuery">
+                        <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter" placeholder="Enter query here"></textarea>
+                    </div>
+                    <div v-else>
+                        <select style="margin: 10px;" v-model="queryLogical">
+                            <option value="$and">and</option>
+                            <option value="$or">or</option>
+                            <option value="$not">not</option>
+                            <option value="$nor">nor</option>
+                        </select>
 
+                        <!-- Field Name -->
+                        <select style="margin: 10px;" v-model="queryField" v-on:change="changeFieldName">
+                            <option v-bind:value="{}">Select a field</option>
+                            <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
+                        </select>
 
-                    <!-- Field Name -->
-                    <select style="margin: 10px;" v-model="queryField" v-on:change="changeFieldName">
-                        <option v-bind:value="{}">Select a field</option>
-                        <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
-                    </select>
+                        <select style="margin: 10px;" v-model="queryComparison" :disabled="!queryField.name">
+                            <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
+                            <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
+                            <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
+                            <option value="$gt" :disabled="queryField.type=='Boolean'">greater than</option>
+                            <option value="$gte" :disabled="queryField.type=='Boolean'">greater than or equal</option>
+                            <option value="$lt" :disabled="queryField.type=='Boolean'">less than</option>
+                            <option value="$lte" :disabled="queryField.type=='Boolean'">less than or equal</option>
 
-                    <select style="margin: 10px;" v-model="queryComparison" :disabled="queryField.length">
-                        <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
-                        <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
-                        <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
-                        <option value="$gt" :disabled="queryField.type=='Boolean'">greater than</option>
-                        <option value="$gte" :disabled="queryField.type=='Boolean'">greater than or equal</option>
-                        <option value="$lt" :disabled="queryField.type=='Boolean'">less than</option>
-                        <option value="$lte" :disabled="queryField.type=='Boolean'">less than or equal</option>
+                            <option value="true" :disabled="queryField.type!='Boolean'">True</option>
+                            <option value="false" :disabled="queryField.type!='Boolean'">False</option>
+                        </select>
 
-                        <option value="true" :disabled="queryField.type!='Boolean'">True</option>
-                        <option value="false" :disabled="queryField.type!='Boolean'">False</option>
-                    </select>
+                        <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
-                    <input v-model="queryTargetValue" type="text" :disabled="queryField.length && queryField.type!='Boolean'">
+                        <button class="generic-button-light" v-on:click="addQuery" :disabled="queryField.length">Add</button>
+                    </div>
 
                     <br>
 
-                    <button class="generic-button-light" v-on:click="addQuery" :disabled="queryField.length">Add</button>
                     <button class="generic-button-light" v-on:click="clearQuery" :disabled="queryField.length">Clear</button>
+                    <button class="generic-button-light" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ? "Simple" : "Advanced"}} Query</button>
 
                     <br>
 
@@ -65,13 +71,13 @@
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                         <hr>
-                        <table>
+                        <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
                             <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
                                 <td>{{user.fullName}}</td>
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
-                                <td>{{user.email}}</td>
+                                <td class="email-col">{{user.email}}</td>
                                 <td>N/A</td>
                                 <td>N/A</td>
                             </router-link>
@@ -99,6 +105,7 @@
                 page: 1,
                 totalPages: 1,
 
+                advancedQueryContent: '',
                 filters: {},
                 searchQuery: '',
 
@@ -107,6 +114,7 @@
                 queryLogical: '$and', // and, or, not, nor
                 queryComparison: '$eq', // equals, contains, greater, less, greater or equal, lesser or equal, not include, not in array
                 queryTargetValue: '', // 5 apples
+                advancedQuery: false,
 
                 loading: true,
                 loadingError: '',
@@ -207,10 +215,21 @@
                 this.updateSearch()
             },
 
+            updateAdvancedFilter: function() {
+                try {
+                    this.filters = JSON.parse(this.advancedQueryContent)
+                }  catch (e) {
+                    this.queryError = 'Invalid Query'
+                }
+            },
+
             updateSearch: function(resetPage) {
                 if (!resetPage) {
                     this.page = 1
                 }
+
+                // Update content of advanced query box
+                this.advancedQueryContent = JSON.stringify(this.filters)
 
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
                     this.queryError = ''

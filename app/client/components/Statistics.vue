@@ -16,6 +16,8 @@
             </div>
             <div v-else>
                 <div class="ui-card dash-card-large">
+                    <button v-on:click="refreshStatistics" v-if="$parent.user.permissions.developer">Refresh</button>
+
                     <h3>AT A GLANCE:</h3>
                     <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                     <hr>
@@ -136,6 +138,15 @@
                 ApiService.getStatistics((loadingError, statistics) => {
                     this.loading = false
 
+                    if (loadingError || !statistics) {
+                        this.loadingError = loadingError ? JSON.parse(loadingError.responseText).err : 'Unable to process request'
+                    } else {
+                        this.statistics = statistics
+                    }
+                })
+            },
+            refreshStatistics: function() {
+                ApiService.refreshStatistics((loadingError, statistics) => {
                     if (loadingError || !statistics) {
                         this.loadingError = loadingError ? JSON.parse(loadingError.responseText).err : 'Unable to process request'
                     } else {

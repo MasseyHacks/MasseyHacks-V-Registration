@@ -7,7 +7,7 @@ const fs       = require('fs');
 
 // In memory stats.
 var stats = {};
-function calculateStats(settings){
+function calculateStats(callback){
     console.log('Calculating stats...');
     var newStats = {
         lastUpdated: 0,
@@ -271,6 +271,8 @@ function calculateStats(settings){
                         console.log('Stats updated!');
                         newStats.lastUpdated = new Date();
                         stats = newStats;
+
+                        if (callback) return callback(stats)
                     });
                 });
         });
@@ -278,7 +280,13 @@ function calculateStats(settings){
 
 var Stats = {};
 
-Stats.getUserStats = function(){
+Stats.refreshStats = function(callback) {
+    calculateStats(function(stats) {
+        return callback(null, stats);
+    });
+};
+
+Stats.getStats = function(){
     return stats;
 };
 
