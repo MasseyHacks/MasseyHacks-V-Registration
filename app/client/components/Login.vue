@@ -23,8 +23,8 @@
                     <br>
 
                     <vue-recaptcha
-                            v-bind:sitekey="key"
-                            ref="recaptchaSiteKey"
+                            v-bind:sitekey="recaptchaSiteKey"
+                            ref="recaptcha"
                             @verify="onCaptchaVerified"
                             @expired="onCaptchaExpired"
                             size="invisible">
