@@ -9,9 +9,9 @@
                     Loading...
                 </div>
             </div>
-            <div v-else-if="err">
+            <div v-else-if="loadingError">
                 <div class="ui-card dash-card-large">
-                    {{err}}
+                    {{loadingError}}
                 </div>
             </div>
             <div v-else>
@@ -119,7 +119,7 @@
         data() {
             return {
                 loading: true,
-                err: '',
+                loadingError: '',
                 statistics: {},
                 atGlanceStuff : {}
             }
@@ -133,11 +133,11 @@
 
         methods: {
             getStat: function() {
-                ApiService.getStatistics((err, statistics) => {
+                ApiService.getStatistics((loadingError, statistics) => {
                     this.loading = false
 
-                    if (err || !statistics) {
-                        this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    if (loadingError || !statistics) {
+                        this.loadingError = loadingError ? JSON.parse(loadingError.responseText).err : 'Unable to process request'
                     } else {
                         this.statistics = statistics
                     }
