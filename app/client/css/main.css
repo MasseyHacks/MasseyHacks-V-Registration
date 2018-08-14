@@ -219,7 +219,8 @@ h2 {
 }
 
 .ui-card {
-    background: rgb(230,230,230);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /*background: rgb(230,230,230);*/
     color: black;
     padding: 20px;
     margin: 0 auto;
@@ -255,7 +256,8 @@ h2 {
 .dash-card-large {
     width: 70vw;
     margin-top: 30px;
-    background-image: linear-gradient(#667eea,#667eea);
+    /*background-image: linear-gradient(#667eea,#667eea);*/
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
