@@ -282,6 +282,7 @@ h2 {
 
 #users-table {
     margin-bottom: 30px;
+    overflow-x: auto;
 }
 
 #users-table table {
@@ -290,7 +291,6 @@ h2 {
     width: 80%;
     color: white;
     text-align: center;
-    overflow-x: auto;
 }
 
 #users-table td.email-col {
