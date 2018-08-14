@@ -269,13 +269,22 @@ h2 {
     column-width: 220px;
 }
 
+@media (max-width: 992px) {
+    * {
+        font-size: 1.1em;
+    }
+    .duo-col {
+        column-count: 1;
+    }
+}
+
 .custom-ul {
     list-style: none;
     text-align: justify;
 }
 
 .custom-ul i {
-    margin-right: 10px;
+    margin-right: 1em;
     width: 15px;
     text-align: center;
 }
