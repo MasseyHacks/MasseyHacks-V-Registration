@@ -76,5 +76,11 @@
     "templateLocation":"./app/server/templates/email-verify/html.hbs",
     "emailTitle":"Please verify your email address!",
     "canQueue":false
+  },
+  "organizeremails":{
+    "queueName":"organizerEmails",
+    "templateLocation":"./app/server/templates/email-organizer/html.hbs",
+    "emailTitle":"Welcome to MasseyHacks V login",
+    "canQueue":false
   }
 }

@@ -5,7 +5,7 @@
             <h2 class="subtitle">2FA</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="codeLogin">
-                    <input v-model="code" placeholder="123456" type="number" autofocus required>
+                    <input v-model="code" type="number" maxlength="6" autofocus required>
                     <img v-bind:src="qr"/>
                     <div id="button-row">
                         <button type="submit" class="primary-button">sign in</button>
