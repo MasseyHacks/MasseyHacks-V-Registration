@@ -6,13 +6,17 @@
                     <h2>Reviewing Application</h2>
                     <div v-html="this.reviewBody"></div>
                     <button v-on:click="stopReview" class="generic-button-light">Exit</button>
-                    <button v-on:click="nextApplication" class="generic-button-light">Next</button>
+                    <button v-on:click="applicationVote('admit')" class="generic-button-light">Vote Admit</button>
+                    <button v-on:click="applicationVote('reject')" class="generic-button-light">Vote Reject</button>
+                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')" class="generic-button-light">Admit [FORCE]</button>
+                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')" class="generic-button-light">Reject [FORCE]</button>
+                    <button v-on:click="nextApplication(false)" class="generic-button-light">Pass</button>
                 </div>
 
                 <div v-else>
                     <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
                     <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
-                    <button v-on:click="startReview" class="generic-button-light">
+                    <button v-on:click="startReview" class="generic-button-light" :disabled="applicationsLeft < 1">
                         <span v-if="applicationsLeft < 1">No Applications!</span>
                         <span v-else>Start reviewing!</span></button>
                 </div>
@@ -32,7 +36,6 @@
             return {
                 page: 1,
                 totalPages: 1,
-                filters: [],
                 searchQuery: '',
                 loading: true,
                 applicationsLeft: 0,
@@ -40,6 +43,7 @@
                 err: '',
                 currentApplication: {},
                 reviewBody: '',
+                voted: false,
                 userTimes: [],
                 users: {},
                 user: null
@@ -48,7 +52,7 @@
         beforeMount() {
             this.user = Session.getUser();
             console.log(this.user);
-            ApiService.getUsers({ page: 1, size: 10000, filter: {
+            ApiService.getUsers({ page: 1, size: 10000, filters: {
                 $and:[{
                     'status.admitted': false,
                     'status.rejected': false,
@@ -70,64 +74,91 @@
         },
         methods : {
             startReview: function(){
-                if(this.applicationsLeft > 0 || true){
-                    console.log("Starting!");
-                    this.reviewingApplications = true;
+                swal({
+                    title: "Notice",
+                    html: "All votes are final and are immediately taken into<br>consideration. The next application will be displayed<br>immediately after the previous is processed.<br><br>Remember that this power is a privilege.",
+                    type: "warning",
+                    showConfirmButton: true,
+                    confirmButtonText: 'I accept',
+                    confirmButtonColor: '#d33',
+                    showCancelButton: true,
+                    focusCancel: true
+                }).then((userOK) =>{
+                    console.log(userOK);
+                    if(userOK.value){
+                        if(this.applicationsLeft > 0 || true){
+                            console.log("Starting!");
+                            this.reviewingApplications = true;
 
-                    var userTimesList = [];
-                    this.users.users.forEach((user) =>{
-                        userTimesList.push([user.id,user.lastUpdated,user.profile]);
-                    });
-
-                    console.log(userTimesList);
-                    userTimesList.sort(function(a, b) {
-                        return a[1] - b[1];
-                    });
-                    this.userTimes = userTimesList;
-                    this.nextApplication(false);
-
-                    //assemble the application array in order!
-                    /*
-                    ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
-                        if (err || !data) {
-                            this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
-                        } else {
-                            this.users = data.users;
-                            console.log(data.users);
                             var userTimesList = [];
-                            data.users.forEach(function(user){
-                                if(!user.status.admitted){
-                                    console.log(user.lastUpdated);
-                                    userTimesList.push([user.id,user.lastUpdated,user.profile]);
-                                }
+                            this.users.users.forEach((user) =>{
+                                userTimesList.push([user.id,user.lastUpdated,user]);
                             });
+
                             console.log(userTimesList);
                             userTimesList.sort(function(a, b) {
                                 return a[1] - b[1];
                             });
                             this.userTimes = userTimesList;
-                            this.nextApplication(false);
+                            this.nextApplication(true,false);
                         }
-                    });*/
-                }
+                    }
+                })
+
             },
             stopReview: function(){
                 if(this.reviewingApplications){
                     this.reviewingApplications = false;
                 }
             },
-            nextApplication: function(shift = true){
-                if(shift){
-                    this.userTimes.shift();
+            nextApplication: function(start = false,skipped = true){
+
+                if(skipped){
+                    swal({
+                        title: "Tsk tsk!",
+                        text: "As a reviewer, your job is to review applications!\nAre you sure you want to pass?",
+                        type: "warning",
+                        showConfirmButton: true,
+                        showCancelButton: true,
+                        focusCancel: true
+                    }).then((userOK) =>{
+                        console.log(userOK);
+                        if(userOK.value){
+                            if(!start){
+                                console.log("in here");
+                                this.userTimes.shift();
+                            }
+                            this.displayApplication();
+                        }
+                    })
+                }
+                else{
+                    if(!start){
+                        console.log("in here2");
+                        this.userTimes.shift();
+                    }
+                    this.displayApplication();
                 }
 
+            },
+            displayApplication: function(){
                 if(this.userTimes.length < 1){
-                    swal("Information","There are no more applications","info");
+                    if(this.voted){
+                        swal("Information","There are no more applications","info");
+                    }
+                    else{
+                        swal({
+                            title: "Good Job!",
+                            text: "You literally passed every single application!",
+                            type: "success"
+                        })
+                    }
                     this.applicationsLeft = 0;
                     this.stopReview();
                 }
+
                 else{
-                    var application = this.userTimes[0][2]["hacker"];
+                    var application = this.userTimes[0][2]["profile"]["hacker"];
 
                     this.reviewBody = '';
                     Object.keys(application).forEach((field) => {
@@ -135,14 +166,91 @@
                     });
                     console.log(application);
                 }
-
             },
             applicationVote: function(vote){
                 if(vote == "admit"){
+                    swal({
+                        title: "Confirm Your Vote [ADMIT]",
+                        html: 'Vote to <span style="color:#00FF00; font-weight:bold;">ADMIT</span> '+ this.userTimes[0][2]["fullName"] +
+                            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+                        type: "warning",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Yes, vote admit',
+                        confirmButtonColor: '#d33',
+                        showCancelButton: true,
+                        focusCancel: true
+                    }).then((userOK) =>{
+                        console.log(userOK);
+                        if(userOK.value){
+                            //register the vote
 
+                            this.voted = true;
+                            this.nextApplication(false,false);
+                        }
+                    })
                 }
                 else if(vote == "reject"){
+                    swal({
+                        title: "Confirm Your Vote [REJECT]",
+                        html: 'Vote to <span style="color:#d33; font-weight:bold;">REJECT</span> ' + this.userTimes[0][2]["fullName"] +
+                            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+                        type: "warning",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Yes, vote reject',
+                        confirmButtonColor: '#d33',
+                        showCancelButton: true,
+                        focusCancel: true
+                    }).then((userOK) =>{
+                        console.log(userOK);
+                        if(userOK.value){
+                            //register the vote
 
+                            this.voted = true;
+                            this.nextApplication(false,false);
+                        }
+                    })
+                }
+                else if(vote == "admit-force" && this.user.permissions.owner){
+                    swal({
+                        title: "Whoa, wait a minute!<br>[FORCE ACTION]",
+                        html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE</span> <span style="color:#00FF00; font-weight:bold;">ADMIT</span> ' + this.userTimes[0][2]["fullName"] +
+                                '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
+                        type: "warning",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> admit',
+                        confirmButtonColor: '#d33',
+                        showCancelButton: true,
+                        focusCancel: true
+                    }).then((userOK) =>{
+                        console.log(userOK);
+                        if(userOK.value){
+                            //register the vote
+
+                            this.voted = true;
+                            this.nextApplication(false,false);
+                        }
+                    })
+                }
+                else if(vote == "reject-force" && this.user.permissions.owner){
+                    swal({
+                        title: "Whoa, wait a minute!<br>[FORCE ACTION]",
+                        html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE REJECT</span> ' + this.userTimes[0][2]["fullName"] +
+                            '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
+                        type: "warning",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> reject',
+                        confirmButtonColor: '#d33',
+                        showCancelButton: true,
+                        focusCancel: true
+                    }).then((userOK) =>{
+                        console.log(userOK);
+                        if(userOK.value){
+                            //register the vote
+
+                            this.voted = true;
+                            this.nextApplication(false,false);
+                        }
+                    })
                 }
             },
             switchPage: function(page) {
