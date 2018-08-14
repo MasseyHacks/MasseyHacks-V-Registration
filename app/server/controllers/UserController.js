@@ -671,13 +671,13 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false,
+        'status.admitted': false,
         'applicationAdmit' : {$nin : [adminUser.email]},
         'applicationReject' : {$nin : [adminUser.email]}
     }, {
         $push: {
             'applicationAdmit': adminUser.email,
-            'votedBy': adminUser.email
+            'applicationVotes': adminUser.email
         },
         $inc : {
             'numVotes': 1
@@ -712,13 +712,13 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false,
+        'status.admitted': false,
         'applicationAdmit' : {$nin : [adminUser.email]},
         'applicationReject' : {$nin : [adminUser.email]}
     }, {
         $push: {
             'applicationReject': adminUser.email,
-            'votedBy': adminUser.email
+            'applicationVotes': adminUser.email
         },
         $inc : {
             'numVotes': 1
@@ -799,7 +799,7 @@ UserController.checkAdmissionStatus = function(id) {
 
                 } else {
                     console.log(user);
-                    console.log(user.votedBy);
+                    console.log(user.applicationVotes);
                     if (user.applicationAdmit.length >= 3) {
                         if (data < total) {
                             user.status.admitted = true;
@@ -850,11 +850,11 @@ UserController.resetVotes = function(adminUser, userID, callback) {
         _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false
+        'status.admitted': false
     }, {
         $set: {
             'applicationReject': [],
-            'votedBy': [],
+            'applicationVotes': [],
             'numVotes': 0
         }
     }, {

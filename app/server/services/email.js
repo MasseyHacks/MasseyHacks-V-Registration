@@ -27,7 +27,7 @@ module.exports = {
         let baseHTML = fs.readFileSync(validTemplates['base']['templateLocation'],'utf8');
 
         let template = baseHTML.replace('{{emailData}}',templateHTML);
-        console.log(template);
+        //console.log(template);
         return template;
 
     },

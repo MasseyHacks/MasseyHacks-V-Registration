@@ -116,7 +116,7 @@
                 if(skipped){
                     swal({
                         title: "Tsk tsk!",
-                        text: "As a reviewer, your job is to review applications!\nAre you sure you want to pass?",
+                        html: "As a reviewer, your job is to review applications!<br>Are you sure you want to pass?",
                         type: "warning",
                         showConfirmButton: true,
                         showCancelButton: true,
@@ -162,7 +162,7 @@
 
                     this.reviewBody = '';
                     Object.keys(application).forEach((field) => {
-                        this.reviewBody+='<BR>'+field+' '+application[field];
+                        this.reviewBody+=field+' '+application[field]+'<BR>';
                     });
                     console.log(application);
                 }
@@ -178,15 +178,27 @@
                         confirmButtonText: 'Yes, vote admit',
                         confirmButtonColor: '#d33',
                         showCancelButton: true,
-                        focusCancel: true
-                    }).then((userOK) =>{
-                        console.log(userOK);
-                        if(userOK.value){
-                            //register the vote
+                        focusCancel: true,
+                        showLoaderOnConfirm: true,
+                        preConfirm: (userOK) => {
+                            console.log(userOK);
+                            if(userOK){
+                                //register the vote
+                                Session.sendRequest('POST','/api/voteAdmit',{
+                                    userID: this.userTimes[0][2]["id"]
+                                }, (err,data) =>{
+                                    if(err){
+                                        swal("Error","Unable to notify the server","error");
+                                    }
+                                    else if(!err && data){
+                                        this.voted = true;
+                                        this.nextApplication(false,false);
+                                    }
+                                });
 
-                            this.voted = true;
-                            this.nextApplication(false,false);
-                        }
+                            }
+                        },
+                        allowOutsideClick: () => !swal.isLoading()
                     })
                 }
                 else if(vote == "reject"){
@@ -199,15 +211,27 @@
                         confirmButtonText: 'Yes, vote reject',
                         confirmButtonColor: '#d33',
                         showCancelButton: true,
-                        focusCancel: true
-                    }).then((userOK) =>{
-                        console.log(userOK);
-                        if(userOK.value){
-                            //register the vote
+                        focusCancel: true,
+                        showLoaderOnConfirm: true,
+                        preConfirm: (userOK) => {
+                            console.log(userOK);
+                            if(userOK){
+                                //register the vote
+                                Session.sendRequest('POST','/api/voteReject',{
+                                    userID: this.userTimes[0][2]["id"]
+                                }, (err,data) =>{
+                                    if(err){
+                                        swal("Error","Unable to notify the server","error");
+                                    }
+                                    else if(!err && data){
+                                        this.voted = true;
+                                        this.nextApplication(false,false);
+                                    }
+                                });
 
-                            this.voted = true;
-                            this.nextApplication(false,false);
-                        }
+                            }
+                        },
+                        allowOutsideClick: () => !swal.isLoading()
                     })
                 }
                 else if(vote == "admit-force" && this.user.permissions.owner){
@@ -220,15 +244,27 @@
                         confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> admit',
                         confirmButtonColor: '#d33',
                         showCancelButton: true,
-                        focusCancel: true
-                    }).then((userOK) =>{
-                        console.log(userOK);
-                        if(userOK.value){
-                            //register the vote
+                        focusCancel: true,
+                        showLoaderOnConfirm: true,
+                        preConfirm: (userOK) => {
+                            console.log(userOK);
+                            if(userOK){
+                                //register the vote
+                                Session.sendRequest('POST','/api/forceAdmit',{
+                                    userID: this.userTimes[0][2]["id"]
+                                }, (err,data) =>{
+                                    if(err){
+                                        swal("Error","Unable to notify the server","error");
+                                    }
+                                    else if(!err && data){
+                                        this.voted = true;
+                                        this.nextApplication(false,false);
+                                    }
+                                });
 
-                            this.voted = true;
-                            this.nextApplication(false,false);
-                        }
+                            }
+                        },
+                        allowOutsideClick: () => !swal.isLoading()
                     })
                 }
                 else if(vote == "reject-force" && this.user.permissions.owner){
@@ -241,15 +277,27 @@
                         confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> reject',
                         confirmButtonColor: '#d33',
                         showCancelButton: true,
-                        focusCancel: true
-                    }).then((userOK) =>{
-                        console.log(userOK);
-                        if(userOK.value){
-                            //register the vote
+                        focusCancel: true,
+                        showLoaderOnConfirm: true,
+                        preConfirm: (userOK) => {
+                            console.log(userOK);
+                            if(userOK){
+                                //register the vote
+                                Session.sendRequest('POST','/api/forceReject',{
+                                    userID: this.userTimes[0][2]["id"]
+                                }, (err,data) =>{
+                                    if(err){
+                                        swal("Error","Unable to notify the server","error");
+                                    }
+                                    else if(!err && data){
+                                        this.voted = true;
+                                        this.nextApplication(false,false);
+                                    }
+                                });
 
-                            this.voted = true;
-                            this.nextApplication(false,false);
-                        }
+                            }
+                        },
+                        allowOutsideClick: () => !swal.isLoading()
                     })
                 }
             },
