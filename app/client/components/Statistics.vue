@@ -16,23 +16,28 @@
             </div>
             <div v-else>
                 <div class="ui-card dash-card-large">
-                    <button v-on:click="refreshStatistics" v-if="$parent.user.permissions.developer">Refresh</button>
-
                     <h3>AT A GLANCE:</h3>
                     <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
+                    <button v-on:click="refreshStatistics" v-if="$parent.user.permissions.developer" class="generic-button-light">Refresh</button>
+                    <br>
                     <hr>
                     <div class="duo-col">
                         <div class="card-col">
                             <ul class="custom-ul" style="text-align: left;">
                                 <li v-for="(value, key) in atGlance">
-                                    <i class="fas fa-check"></i>{{key.toUpperCase()}} : {{value}}
+                                    <i class="fas fa-check"></i>{{key}} : {{value}}
                                 </li>
                             </ul>
                         </div>
                         <div class="card-col">
                             <ul class="custom-ul" style="text-align: left;">
                                 <li v-for="(value, key) in atGlance2">
-                                    <i class="fas fa-ban"></i>{{key.toUpperCase()}} : {{value}}
+                                    <span v-if="key.toLowerCase() != 'admitted'">
+                                        <i class="fas fa-ban"></i>{{key}} : {{value}}
+                                    </span>
+                                    <span v-else>
+                                        <i class="fas fa-check"></i>{{key}} : {{value}}
+                                    </span>
                                 </li>
                             </ul>
                         </div>

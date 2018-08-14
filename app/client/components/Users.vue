@@ -69,7 +69,7 @@
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
+                        <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">Page {{p}}</button>
                         <hr>
                         <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
