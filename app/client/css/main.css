@@ -294,6 +294,7 @@ h2 {
 }
 
 #users-table td.email-col {
+    max-width: 200px;
     overflow-wrap: break-word;
 }
 
