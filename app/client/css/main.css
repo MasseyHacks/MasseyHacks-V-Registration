@@ -282,7 +282,6 @@ h2 {
 
 #users-table {
     margin-bottom: 30px;
-    overflow-x: auto;
 }
 
 #users-table table {
@@ -291,6 +290,7 @@ h2 {
     width: 80%;
     color: white;
     text-align: center;
+    overflow-x: auto;
 }
 
 #users-table tr {
@@ -302,6 +302,8 @@ h2 {
 #users-table td {
     padding-top: 15px;
     padding-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 #users-table tr:hover {
@@ -340,10 +342,6 @@ i.fa-female {
     letter-spacing: 0.2em;
 }
 
-#users-table td {
-    padding-left: 15px;
-    padding-right: 15px;
-}
 
 h4 {
     font-family: 'Futura Bold' !important;
