@@ -1,6 +1,6 @@
 import Raven        from 'raven-js'
 import RavenVue     from 'raven-js/plugins/vue'
-import $ from "jquery";
+import $ from "jquery"
 
 module.exports = {
 
@@ -26,7 +26,7 @@ module.exports = {
             request['beforeSend'] = xhr => {xhr.setRequestHeader('x-access-token', this.getToken())}
         }
 
-        $.ajax(request);
+        $.ajax(request)
     },
 
     setSettings(settings) {
@@ -42,9 +42,9 @@ module.exports = {
         var date = new Date()
         var expiration = date.setMonth(date.getMonth() + 1)
 
-        localStorage.token = token;
-        localStorage.userID = user._id;
-        localStorage.user = JSON.stringify(user);
+        localStorage.token = token
+        localStorage.userID = user._id
+        localStorage.user = JSON.stringify(user)
 
         Raven.setUserContext({
             email: user.email,
@@ -54,29 +54,29 @@ module.exports = {
     },
 
     create2FA(token, data) {
-        localStorage.token = token;
-        localStorage.qr = data.qr;
+        localStorage.token = token
+        localStorage.qr = data.qr
         console.log(token)
     },
 
     getQR() {
-      return localStorage.qr;
+      return localStorage.qr
     },
 
     destroy(callback) {
-        delete localStorage.token;
-        delete localStorage.userID;
-        delete localStorage.user;
+        delete localStorage.token
+        delete localStorage.userID
+        delete localStorage.user
 
         Raven.setUserContext()
 
         if (callback) {
-            callback();
+            callback()
         }
     },
 
     getTokenData() {
-        const token = this.getToken();
+        const token = this.getToken()
 
         if (token) {
             return JSON.parse(atob(token.split('.')[1]))
@@ -86,22 +86,22 @@ module.exports = {
     },
 
     getToken() {
-        return localStorage.token;
+        return localStorage.token
     },
 
     getUserID() {
-        return localStorage.userID;
+        return localStorage.userID
     },
 
     getUser() {
-        return this.loggedIn() ? JSON.parse(localStorage.user) : null;
+        return this.loggedIn() ? JSON.parse(localStorage.user) : null
     },
 
     setUser(user) {
-        localStorage.user = JSON.stringify(user);
+        localStorage.user = JSON.stringify(user)
     },
 
     loggedIn() {
-        return !!localStorage.token && !!localStorage.user;
+        return !!localStorage.token && !!localStorage.user
     }
-};
+}

@@ -58,6 +58,16 @@ Vue.use(VueRouter)
 
 Vue.use(require('vue-moment'));
 
+function twoFactorPending(to, from, next) {
+    if (localStorage.token && Session.getTokenData().type == '2FA') {
+        next()
+    } else {
+        next({
+            path: '/'
+        })
+    }
+}
+
 function requireAuth (to, from, next) {
     if (!Session.loggedIn()) {
         next({
@@ -226,7 +236,8 @@ const router = new VueRouter({
        },
        {
            path: '/2fa',
-           component: GoogleAuth
+           component: GoogleAuth,
+           beforeEnter: twoFactorPending
        },
        {
            path: '/logout',

@@ -501,7 +501,7 @@ UserController.loginWithPassword = function(email, password, callback){
     if (!email || email.length === 0) {
         return callback({
             error: 'Please enter your email',
-            cpde: 400
+            code: 400
         });
     }
 
