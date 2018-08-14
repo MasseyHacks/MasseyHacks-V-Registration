@@ -19,12 +19,6 @@ JWT_SECRET             = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
-    // Developer
-    // View system log
-    router.get('/log', permissions.isDeveloper, function (req, res) {
-        LogEvent.getLog(logger.defaultResponse(req, res));
-    });
-
     // Owner
     // List emails
     router.get('/email/listTemplates', permissions.isOwner, function (req,res){
@@ -101,6 +95,13 @@ module.exports = function(router) {
     router.get('/users', permissions.isCheckin, function(req, res) {
         var query  = req.query;
         UserController.getByQuery(req.userExecute, query, logger.defaultResponse(req, res));
+    });
+
+    // Developer
+    // View system log
+    router.get('/systemLog', permissions.isDeveloper, function (req, res) {
+        var query  = req.query;
+        SettingsController.getLog(query, logger.defaultResponse(req, res));
     });
 
     // Owner

@@ -43,19 +43,4 @@ schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp);
 });
 
-schema.statics.getLog = function(callback){
-    this
-        .find({})
-        .exec(function (err, log) {
-            if (err || !log) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback(null, { log : [] });
-            }
-            return callback(null, {log : log});
-        });
-};
-
 module.exports = mongoose.model('LogEvent', schema);

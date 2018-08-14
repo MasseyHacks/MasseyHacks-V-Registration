@@ -60,8 +60,6 @@
                         </div>
                     </table>
 
-
-
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
@@ -127,16 +125,7 @@
                 }
             })
 
-            ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
-                this.loading = false
-
-                if (err || !data) {
-                    this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
-                } else {
-                    this.users = data.users
-                    this.totalPages = data.totalPages
-                }
-            })
+            this.updateSearch()
         },
         methods : {
             deleteFilter: function(logical, filter) {
@@ -209,8 +198,10 @@
                 this.updateSearch()
             },
 
-            updateSearch: function() {
-                this.page = 1
+            updateSearch: function(resetPage) {
+                if (!resetPage) {
+                    this.page = 1
+                }
 
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
                     this.queryError = ''
@@ -361,6 +352,7 @@
 
             switchPage: function(page) {
                 this.page = page
+                this.updateSearch()
             }
         }
     }

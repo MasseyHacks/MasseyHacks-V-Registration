@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const User = require('../models/User');
 const Settings = require('../models/Settings');
+const LogEvent = require('../models/LogEvent');
 
 const jwt       = require('jsonwebtoken');
 
@@ -125,8 +126,51 @@ SettingsController.modifyTime = function(user, newTime, callback) {
         })
 };
 
-SettingsController.getLog = function(callback) {
-    return callback(null, Settings.getLog());
+SettingsController.getLog = function(query, callback){
+
+    var filter = {};
+    var page = 0;
+    var size = 10000000000;
+
+    console.log('query', query)
+
+    if (query) {
+        //filter = query.filter ? query.filter : {};
+        page = parseInt(query.page);
+        size = parseInt(query.size);
+    }
+
+    LogEvent.count(filter, function(err, count) {
+        if (err) {
+            console.log(err)
+            return callback({error:err.message})
+        }
+
+        LogEvent
+            .find(filter)
+            .skip((page - 1) * size)
+            .limit(size)
+            .exec(function (err, log) {
+                if (err || !log) {
+                    if (err) {
+                        console.log(err)
+                        return callback({error:err.message})
+                    }
+                    return callback(null, {
+                        log : [],
+                        count: 0
+                    });
+                }
+
+                console.log(log, filter)
+
+                return callback(null, {
+                    log : log,
+                    totalPages: Math.ceil(count / size)
+                });
+            });
+    });
+
 };
 
 SettingsController.getSettings = function(callback){

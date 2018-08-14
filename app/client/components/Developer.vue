@@ -10,7 +10,30 @@
                 <div class="ui-card dash-card">
                     <h3>SERVER LOG</h3>
                     <hr>
-                    <span class="emphasis">Welcome {{$parent.user.fullName}},</span><br>
+                    <div v-if="loading">
+                        Loading...
+                    </div>
+                    <div v-else-if="err">
+                        {{loadingError}}
+                    </div>
+                    <div v-else>
+                        <div v-if="log.length != 0 && !queryError">
+                            <hr>
+                            <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
+                            <hr>
+                            <table>
+                                <tr id="table-header">
+                                    <td>EVENT?</td>
+                                </tr>
+                                <tr v-for="event in log">
+                                    <td>{{event}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p v-else>
+                            {{queryError}}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,34 +43,43 @@
 <script>
     import Session     from '../src/Session'
     import AuthService from '../src/AuthService.js'
+    import ApiService from '../src/ApiService.js'
     import swal        from 'sweetalert2'
 
     export default {
         data() {
             return {
-                error: ''
+                page: 1,
+                totalPages: 1,
+
+                filters: {},
+
+                loading: true,
+                loadingError: '',
+                queryError: '',
+
+                log: {}
             }
         },
+        beforeMount() {
+            this.updateSearch()
+        },
         methods: {
-            resendVerify() {
-                AuthService.requestVerify((err,data) => {
-                    if (err) {
-                        this.error = err;
-                        swal({
-                            title: 'Sorry!',
-                            text: 'There was an error!',
-                            type: 'error'
-                        });
+            switchPage: function (page) {
+                this.page = page
+                this.updateSearch()
+            },
+            updateSearch: function() {
+                ApiService.getLog({ page: this.page, size: 100 }, (err, data) => {
+                    this.loading = false
+
+                    if (err || !data) {
+                        this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    } else {
+                        this.log = data.log
+                        this.totalPages = data.totalPages
                     }
-                    else {
-                        this.error = null;
-                        swal({
-                            title: 'Success!',
-                            text: 'Another email was sent to ' + this.$parent.user.email + '!',
-                            type: 'success'
-                        })
-                    }
-                });;
+                })
             }
         }
     }
