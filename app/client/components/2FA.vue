@@ -6,7 +6,7 @@
             <p style="font-size: 1em">MasseyHacks Security Policy requires 2 factor authentication to uphold the security and privacy of our users.</p>
             <div id="login-form-elements">
                 <form @submit.prevent="codeLogin">
-                    <input v-model="code" type="number" autofocus required>
+                    <input v-model="code" type="number" maxlength="6" autofocus required>
                     <img v-bind:src="qr"/>
                     <div id="button-row">
                         <button type="submit" class="primary-button">sign in</button>
