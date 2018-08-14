@@ -47,6 +47,11 @@ var schema = new mongoose.Schema({
         type: Number,
         default: Date.now() + 31104000000,
         required: true
+    },
+    maxParticipants: {
+        type: Number,
+        default: 300,
+        required: true
     }
 });
 
@@ -97,7 +102,7 @@ schema.statics.confirmationOpen = function() {
 };
 
 schema.statics.getSettings = function(callback){
-    this.findOne({}, '-emailQueue -_id -__v -newSchools', callback);
+    this.findOne({}, '-emailQueue -_id -__v -newSchools -maxParticipants', callback);
 };
 
 module.exports = mongoose.model('Settings', schema);

@@ -1,6 +1,9 @@
+require('dotenv').load();
+
 const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
+const request            = require('request');
 
 const User               = require('../models/User');
 const UserController     = require('../controllers/UserController');
@@ -9,6 +12,28 @@ const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
 
 JWT_SECRET = process.env.JWT_SECRET;
+
+function verifyRecaptcha(req, res, next) {
+
+    request.post({
+        uri: "https://www.google.com/recaptcha/api/siteverify",
+        json: true,
+        form: {
+            secret: process.env.RECAPTCHA_SECRET_KEY,
+            response: req.body.recaptchaToken
+        }
+    }, function (err, response, body) {
+        if (err) {
+            return res.status(500).json({message: "Something went wrong on our end :("});
+        }
+
+        if (!body.success) {
+            return res.status(500).json({message: body["error-codes"].join(".")});
+        }
+
+        return next();
+    });
+}
 
 module.exports = function(router) {
     router.use(express.json());
@@ -54,7 +79,7 @@ module.exports = function(router) {
     });
 
     // Login and issue token
-    router.post('/login', function (req, res) {
+    router.post('/login', verifyRecaptcha, function (req, res) {
 
         var email = req.body.email;
         var password = req.body.password;

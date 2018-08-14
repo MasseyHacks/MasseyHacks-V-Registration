@@ -671,13 +671,13 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false,
+        'status.admitted': false,
         'applicationAdmit' : {$nin : [adminUser.email]},
         'applicationReject' : {$nin : [adminUser.email]}
     }, {
         $push: {
             'applicationAdmit': adminUser.email,
-            'votedBy': adminUser.email
+            'applicationVotes': adminUser.email
         },
         $inc : {
             'numVotes': 1
@@ -712,13 +712,13 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
        _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false,
+        'status.admitted': false,
         'applicationAdmit' : {$nin : [adminUser.email]},
         'applicationReject' : {$nin : [adminUser.email]}
     }, {
         $push: {
             'applicationReject': adminUser.email,
-            'votedBy': adminUser.email
+            'applicationVotes': adminUser.email
         },
         $inc : {
             'numVotes': 1
@@ -799,22 +799,37 @@ UserController.checkAdmissionStatus = function(id) {
 
                 } else {
                     console.log(user);
-                    console.log(user.votedBy);
+                    console.log(user.applicationVotes);
                     if (user.applicationAdmit.length >= 3) {
-                        if (data < total) {
-                            user.status.admitted = true;
-                            user.status.rejected = false;
-                            user.status.admittedBy = 'MasseyHacks Admission Authority';
-                            console.log('Admitted user');
+                        Settings.findOne({}, function(err, settings) {
 
-                            logger.logAction(-1, user._id, 'Accepted user.');
-                        } else {
-                            user.status.waitlisted = true;
-                            user.status.rejected = false;
-                            console.log('Waitlisted User');
+                            if (err || !settings) {
+                                console.log('Unable to get settings', err);
+                                return;
+                            }
 
-                            logger.logAction(-1, user._id, 'Waitlisted user.');
-                        }
+                            User.count({'status.admitted':true, 'status.declined':false, 'permissions.checkin': false}, function(err, count) {
+                                if (err) {
+                                    console.log('Unable to get count', err);
+                                    return;
+                                }
+
+                                if (count < settings.maxParticipants) {
+                                    user.status.admitted = true;
+                                    user.status.rejected = false;
+                                    user.status.admittedBy = 'MasseyHacks Admission Authority';
+                                    console.log('Admitted user');
+
+                                    logger.logAction(-1, user._id, 'Accepted user.');
+                                } else {
+                                    user.status.waitlisted = true;
+                                    user.status.rejected = false;
+                                    console.log('Waitlisted User');
+
+                                    logger.logAction(-1, user._id, 'Waitlisted user.');
+                                }
+                            });
+                        })
                     }
                 }
 
@@ -850,11 +865,11 @@ UserController.resetVotes = function(adminUser, userID, callback) {
         _id : userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.accepted': false
+        'status.admitted': false
     }, {
         $set: {
             'applicationReject': [],
-            'votedBy': [],
+            'applicationVotes': [],
             'numVotes': 0
         }
     }, {
