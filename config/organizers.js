@@ -33,6 +33,8 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                     'status.passwordSuspension': true,
                     'status.admitted': true,
                     'status.confirmed': true,
+                    'status.submittedApplication': true,
+                    'status.waiver': true,
                     'status.statusReleased': true,
                     'status.timestamp': Date.now(),
                     'status.admittedBy': 'MasseyHacks Internal Authority',

@@ -1,15 +1,16 @@
-const _ = require('underscore');
-const User = require('../models/User');
-const Settings = require('../models/Settings');
-const LogEvent = require('../models/LogEvent');
+const _          = require('underscore');
+const User       = require('../models/User');
+const Settings   = require('../models/Settings');
+const LogEvent   = require('../models/LogEvent');
+const UserFields = require('../models/data/UserFields')
 
-const jwt       = require('jsonwebtoken');
+const jwt        = require('jsonwebtoken');
 
-const request = require('request');
+const request    = require('request');
 
-const validator = require('validator');
-const moment = require('moment');
-const logger = require('../services/logger');
+const validator  = require('validator');
+const moment     = require('moment');
+const logger     = require('../services/logger');
 
 const SettingsController = {};
 
@@ -194,7 +195,21 @@ SettingsController.getLog = function(query, callback){
 
 };
 
-SettingsController.getSettings = function(callback){
+SettingsController.getApplications = function(req, callback) {
+    Settings.getSettings(function(err, settings) {
+        if (err || !settings) {
+            return callback({error:'Unable to get Settings', code: 500})
+        }
+
+        if (!req.userExecute.permissions.admin && !settings.applicationsReleased) {
+            return callback({error:'Access Denied', code:403})
+        }
+
+        return callback(null, UserFields.profile)
+    });
+};
+
+SettingsController.getSettings = function(callback) {
     Settings.getSettings(callback);
 };
 

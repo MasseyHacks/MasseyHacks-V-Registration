@@ -4,39 +4,32 @@ import $       from 'jquery'
 import Session from './Session'
 
 module.exports = {
+
+    getApplications(callback) {
+        Session.sendRequest('GET', '/api/applications', {}, callback)
+    },
+
     getFields(callback) {
-        Session.sendRequest('GET', '/api/fields', {}, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('GET', '/api/fields', {}, callback)
     },
 
     getStatistics(callback) {
-        Session.sendRequest('GET', '/api/stats', {}, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('GET', '/api/stats', {}, callback)
     },
 
     refreshStatistics(callback) {
-        Session.sendRequest('POST', '/api/refreshStatistics', {}, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('POST', '/api/refreshStatistics', {}, callback)
     },
 
     getUsers(query, callback) {
-        Session.sendRequest('GET', '/api/users', query, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('GET', '/api/users', query, callback)
     },
 
     getUser(id, callback) {
-        Session.sendRequest('GET', '/api/user/' + id, {}, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('GET', '/api/user/' + id, {}, callback)
     },
 
     getLog(query, callback) {
-        Session.sendRequest('GET', '/api/systemLog', query, (err, data) => {
-            return callback(err, data)
-        })
+        Session.sendRequest('GET', '/api/systemLog', query, callback)
     }
 }

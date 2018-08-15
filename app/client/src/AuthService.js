@@ -124,9 +124,9 @@ module.exports = {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
                 console.log(data)
-                if (data["user"]["2FA"]) {
-                    Session.create2FA(data['token'], data["user"])
-                    return callback(null, data["user"])
+                if (data['user']['2FA']) {
+                    Session.create2FA(data['token'], data['user'])
+                    return callback(null, data['user'])
                 } else {
                     Session.create(data['token'], data['user'])
                     this.updateLoginState(true)
@@ -152,7 +152,7 @@ module.exports = {
 
     loginWithCode (code, callback) {
         Session.sendRequest('POST', '/auth/2FA', {
-            "code":code
+            'code':code
         }, (err, data) => {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])

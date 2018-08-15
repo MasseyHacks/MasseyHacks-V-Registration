@@ -4,6 +4,7 @@ const express            = require('express');
 const request            = require('request');
 
 const User               = require('../models/User');
+const UserFields         = require('../models/data/UserFields');
 const Settings           = require('../models/Settings');
 const LogEvent           = require('../models/LogEvent');
 const UserController     = require('../controllers/UserController');
@@ -60,6 +61,12 @@ module.exports = function(router) {
     // Get list of user fields
     router.get('/fields', permissions.isAdmin, function (req, res) {
         UserController.getUserFields(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Public
+    // Get applications
+    router.get('/applications', permissions.isVerified, function (req, res) {
+        SettingsController.getApplications(req, logger.defaultResponse(req, res));
     });
 
     // Public

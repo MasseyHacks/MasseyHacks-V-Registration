@@ -67,8 +67,14 @@ schema.virtual('permissions').get(function() {
     return userFields.permissions;
 });
 
+/*
 schema.virtual('applications').get(function() {
     return Date.now() >= this.timeOpen ? userFields.profile : {'error':'Applications are not open yet'};
+});*/
+
+// If applications are publicly available
+schema.virtual('applicationsReleased').get(function() {
+   return Date.now() >= this.timeOpen;
 });
 
 schema.virtual('registrationOpen').get(function() {
