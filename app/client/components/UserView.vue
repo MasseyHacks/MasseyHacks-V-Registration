@@ -5,10 +5,14 @@
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
                     <li v-for="(value, key) in flatten(userObj)" style="overflow-wrap: break-word; text-align: left;">
-                        {{key}}: {{value}}
+                        <span v-if="key != Application">
+                            {{key}}: {{value}}
+                        </span>
                     </li>
                 </ul>
             </div>
+            <hr>
+            {{userApp}}
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
         </div>
     </div>
@@ -25,7 +29,8 @@
             return {
                 error : '',
                 userID : '',
-                userObj : {}
+                userObj : {},
+                userApp : {}
             }
         },
 
@@ -48,11 +53,12 @@
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
-                            if (!(keys == "profile")) {
+                            if (!(keys == "hacker")) {
                                 flattened[this.prettify(keys)] = obj[keys]
                             } else {
                                 var profileObj = this.flatten(obj[keys])
                                 flattened["Application"] = profileObj
+                                this.userApp = profileObj
                             }
                         }
                     } else {
