@@ -26,7 +26,7 @@ module.exports = {
             if (err) {
                 swal({
                     title: 'Disastrous Action Final Confirmation',
-                    text: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.',
+                    text: 'MasseyHacks Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',

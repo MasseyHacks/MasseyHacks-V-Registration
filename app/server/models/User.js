@@ -383,10 +383,10 @@ var filterSensitive = function (user, permission) {
                         }
                     }
 
-                    if (runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+                    if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
                         userpath[keys[i]] = runner[keys[i]].default;
-
                     }
+
                 } else {
                     if (userpath[keys[i]]) {
                         queue.push([runner[keys[i]], userpath[keys[i]]])

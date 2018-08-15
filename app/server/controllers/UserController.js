@@ -793,6 +793,26 @@ UserController.teamAccept = function(adminUser, userID, callback) {
     })
 };
 
+function updateStatus(id, status) {
+    User.findOneAndUpdate({
+            '_id': id,
+            'permissions.verified': true,
+            'status.rejected': false,
+            'status.admitted': false,
+        },
+        {
+            $set: {
+                'status': status
+            }
+        },
+        {
+            new: true
+        },
+        function (err, user) {
+            console.log(err, user)
+        });
+}
+
 UserController.checkAdmissionStatus = function(id) {
 
     User.getByID(id, function (err, user) {
@@ -812,18 +832,24 @@ UserController.checkAdmissionStatus = function(id) {
 
                     logger.logAction(-1, user._id, 'Soft rejected user.');
 
+                    updateStatus(id, user.status);
+
                 } else {
                     console.log(user);
                     console.log(user.applicationVotes);
                     if (user.applicationAdmit.length >= 3) {
-                        Settings.findOne({}, function(err, settings) {
+                        Settings.findOne({}, function (err, settings) {
 
                             if (err || !settings) {
                                 console.log('Unable to get settings', err);
                                 return;
                             }
 
-                            User.count({'status.admitted':true, 'status.declined':false, 'permissions.checkin': false}, function(err, count) {
+                            User.count({
+                                'status.admitted': true,
+                                'status.declined': false,
+                                'permissions.checkin': false
+                            }, function (err, count) {
                                 if (err) {
                                     console.log('Unable to get count', err);
                                     return;
@@ -843,28 +869,12 @@ UserController.checkAdmissionStatus = function(id) {
 
                                     logger.logAction(-1, user._id, 'Waitlisted user.');
                                 }
+
+                                updateStatus(id, user.status)
                             });
                         })
                     }
                 }
-
-                User.findOneAndUpdate({
-                        '_id': id,
-                        'permissions.verified': true,
-                        'status.rejected': false,
-                        'status.admitted': false,
-                    },
-                    {
-                        $set: {
-                            'status': user.status
-                        }
-                    },
-                    {
-                        new: true
-                    },
-                    function (err, user) {
-                        //return callback(err, user);
-                    });
             }
         }
     }, 1000);
