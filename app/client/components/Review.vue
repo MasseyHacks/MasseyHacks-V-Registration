@@ -16,9 +16,8 @@
                 <div v-else>
                     <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
                     <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
-                    <button v-on:click="startReview" class="generic-button-light" :disabled="applicationsLeft < 1">
-                        <span v-if="applicationsLeft < 1">No Applications!</span>
-                        <span v-else>Start reviewing!</span></button>
+                    <button v-if="applicationsLeft > 0" v-on:click="startReview" class="generic-button-light">Start reviewing!</button>
+                    <h2 v-else>There are no applications to review</h2>
                 </div>
             </div>
         </div>
