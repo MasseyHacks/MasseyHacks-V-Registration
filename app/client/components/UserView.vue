@@ -63,7 +63,7 @@
                             flattened[this.prettify(keys)] = obj[keys]
                         }
                     } else {
-                        if (key != "profile") {
+                        if (keys != "profile") {
                             for (var depthKey in obj[keys]) {
                                 flattened[this.prettify(depthKey)] = obj[keys][depthKey]
                             }
