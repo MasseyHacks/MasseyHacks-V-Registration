@@ -39,7 +39,7 @@
                     <h3>QR CODES</h3>
                     <hr>
                     <select style="margin-bottom: 10px;" v-model="selected">
-                        <option disabled value="">Select a Admin</option>
+                        <option disabled value="">Select an Admin</option>
                         <option v-for="option in dropdown.length">{{dropdown[option-1]}}</option>
                     </select>
                     <hr>
