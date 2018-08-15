@@ -1,7 +1,7 @@
 const fs             = require('fs');
 const User           = require('../app/server/models/User');
 const UserController = require('../app/server/controllers/UserController');
-const Mailer         = require('../app/server/services/email');
+const mailer         = require('../app/server/services/email');
 const speakeasy      = require('speakeasy');
 const QRCode         = require('qrcode');
 
@@ -60,8 +60,12 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                             {
                                 new: true
                             }, function (err, user) {
-                                console.log(process.env.ROOT_URL + "/magic?token=" + token)
-                                // TODO: send email
+                                console.log(userNew.email + ": " + process.env.ROOT_URL + "/magic?token=" + token)
+                                //send the email
+                                mailer.sendTemplateEmail(user.email,'magiclinkemails',{
+                                    nickname: userNew.firstName,
+                                    magicURL: process.env.ROOT_URL + "/magic?token=" + token
+                                });
                             })
                     }
 

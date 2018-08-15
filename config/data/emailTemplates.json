@@ -82,5 +82,11 @@
     "templateLocation":"./app/server/templates/email-organizer/html.hbs",
     "emailTitle":"Welcome to MasseyHacks V login",
     "canQueue":false
+  },
+  "magiclinkemails":{
+    "queueName":"magiclinkEmails",
+    "templateLocation":"./app/server/templates/email-magic-login/html.hbs",
+    "emailTitle":"Here is your magic login link",
+    "canQueue":false
   }
 }
