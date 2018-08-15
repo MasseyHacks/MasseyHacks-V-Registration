@@ -12,6 +12,11 @@
                 </ul>
             </div>
             <hr>
+            <ul>
+                <li v-for="(value, key) in userApp">
+                    {{key}}: {{value}}
+                </li>
+            </ul>
             <p>User Object: </p>
             {{userObj}}
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
@@ -55,7 +60,7 @@
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
                             console.log(keys)
-                            if (!(keys == "hacker")) {
+                            if (!(keys == "profile")) {
                                 flattened[this.prettify(keys)] = obj[keys]
                             } else {
                                 var profileObj = this.flatten(obj[keys])
