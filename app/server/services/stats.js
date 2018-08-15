@@ -91,7 +91,7 @@ function calculateStats(callback){
     var votes = {};
 
     User
-        .find({'reviewer':true, 'developer':false})
+        .find({'permissions.reviewer':true, 'permissions.developer':false})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {
                 throw err;
@@ -102,7 +102,7 @@ function calculateStats(callback){
             }
 
             User
-                .find({'admin': false,'owner':false,'volunteer':false})
+                .find({'permissions.checkin': false, 'permissions.admin': false,'permission.owner':false})
                 .exec(function(err, users){
                     if (err || !users){
                         throw err;
@@ -112,27 +112,13 @@ function calculateStats(callback){
 
                     async.each(users, function(user, callback){
 
-                        User.findOneAndUpdate({
-                                '_id': user._id
-                            },
-                            {
-                                $set: {
-                                    sname: user.profile.name.length > 0 ? user.profile.name.toLowerCase() : user.nickname.toLowerCase()
-                                }
-                            },
-                            {
-                                new: true
-                            }, function () {
-
-                            });
-
                         for (var i = 0; i < user.votedBy.length; i++) {
                             if (user.votedBy[i] in votes) {
                                 votes[user.votedBy[i]][user.wave] += 1;
                             }
                         }
                         // Count verified
-                        newStats.verified += user.verified ? 1 : 0;
+                        newStats.verified += user.permissions.verified ? 1 : 0;
 
                         newStats.rejected += user.status.rejected ? 1 : 0;
 
