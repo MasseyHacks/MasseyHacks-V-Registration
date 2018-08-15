@@ -12,13 +12,14 @@
                 </ul>
             </div>
             <hr>
-            <ul>
+            <h4>Application</h4>
+            <ul style="overflow-wrap: break-word; text-align: left;">
                 <li v-for="(value, key) in userApp">
                     {{key}}: {{value}}
                 </li>
             </ul>
-            <p>User Object: </p>
-            {{userObj}}
+<!--             <p>User Object: </p>
+            {{userObj}} -->
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
         </div>
     </div>
