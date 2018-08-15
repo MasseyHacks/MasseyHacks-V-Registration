@@ -12,6 +12,7 @@
                 </ul>
             </div>
             <hr>
+            <p>User Object: </p>
             {{userObj}}
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
         </div>
