@@ -869,6 +869,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
         'status.admitted': false
     }, {
         $set: {
+            'applicationAdmit': [],
             'applicationReject': [],
             'applicationVotes': [],
             'numVotes': 0

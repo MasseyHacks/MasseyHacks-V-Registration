@@ -250,7 +250,7 @@
                             console.log(userOK);
                             if(userOK){
                                 //register the vote
-                                Session.sendRequest('POST','/api/forceAdmit',{
+                                Session.sendRequest('POST','/api/forceAccept',{
                                     userID: this.userTimes[0][2]["id"]
                                 }, (err,data) =>{
                                     if(err){
