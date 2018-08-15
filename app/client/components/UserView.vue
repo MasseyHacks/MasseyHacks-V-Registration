@@ -5,7 +5,7 @@
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
                     <li v-for="(value, key) in flatten(userObj)" style="overflow-wrap: break-word; text-align: left;">
-                        <span v-if="key != Application">
+                        <span v-if="key != 'Application'">
                             {{key}}: {{value}}
                         </span>
                     </li>
@@ -53,6 +53,7 @@
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
+                            console.log(keys)
                             if (!(keys == "hacker")) {
                                 flattened[this.prettify(keys)] = obj[keys]
                             } else {
