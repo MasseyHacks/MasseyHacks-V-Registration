@@ -48,7 +48,12 @@
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
-                            flattened[this.prettify(keys)] = obj[keys]
+                            if (!(keys == "profile")) {
+                                flattened[this.prettify(keys)] = obj[keys]
+                            } else {
+                                var profileObj = this.flatten(obj[keys])
+                                flattened["Application"] = profileObj
+                            }
                         }
                     } else {
                         for (var depthKey in obj[keys]) {
@@ -60,23 +65,6 @@
             },
 
             prettify: function(str) {
-/*                var newWordIndex = []
-                for (var i in str.length) {
-                    char = str.charAt(i)
-                    if (isNaN(char * 1)) {
-                        if (char === char.toUpperCase()) {
-                            newWordIndex.push(i)
-                        }
-                    }
-                }
-
-                var newString = ''
-                for (var i in newWordIndex.length) {
-                    if (i == 0) {
-                        newString += str.splice(i, newWordIndex[i])
-                    }
-                }*/
-
                 return str.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
             }
         }
