@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="ui-card dash-card-large">
-            <h3>{{userObj.fullName}}</h3>
+            <h3>{{userObj.fullName.toUpperCase()}}</h3>
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
                     <li v-for="(value, key) in flatten(userObj)" style="overflow-wrap: break-word; text-align: left;">
@@ -12,7 +12,7 @@
                 </ul>
             </div>
             <hr>
-            <h4>Application</h4>
+            <h4>APPLICATION</h4>
             <ul style="overflow-wrap: break-word; text-align: left;">
                 <li v-for="(value, key) in userApp">
                     {{key}}: {{value}}
