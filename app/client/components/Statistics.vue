@@ -35,6 +35,9 @@
                                     <span v-if="key.toLowerCase() != 'admitted'">
                                         <i class="fas fa-ban"></i>{{key}} : {{value}}
                                     </span>
+                                    <span v-else-if="key.toLowerCase() == 'waitlisted'">
+                                        <i class="fas fa-user-clock"></i>{{key}} : {{value}}
+                                    </span>
                                     <span v-else>
                                         <i class="fas fa-check"></i>{{key}} : {{value}}
                                     </span>
