@@ -35,7 +35,7 @@ import RavenVue       from 'raven-js/plugins/vue'
 /*import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'*/
 
-//Vue.use(BootstrapVue);
+//Vue.use(BootstrapVue)
 
 $.ajax({
     type: 'GET',
@@ -47,16 +47,16 @@ $.ajax({
     error: data => {
         Raven.captureMessage(JSON.stringify(data))
     }
-});
+})
 
 Raven
     .config(CLIENT_RAVEN_KEY) //Sub in key with webpack
     .addPlugin(RavenVue, Vue)
-    .install();
+    .install()
 
 Vue.use(VueRouter)
 
-Vue.use(require('vue-moment'));
+Vue.use(require('vue-moment'))
 
 function twoFactorPending(to, from, next) {
     if (localStorage.token && Session.getTokenData().type == '2FA') {
@@ -254,7 +254,7 @@ const router = new VueRouter({
                        AuthService.logout()
                        next('/login')
                    }
-               });
+               })
            }
        },
        {
@@ -288,10 +288,10 @@ const router = new VueRouter({
        }
 
    ]
-});
+})
 
 new Vue({
    el: '#app',
    router,
    render: h => h(App)
-});
+})

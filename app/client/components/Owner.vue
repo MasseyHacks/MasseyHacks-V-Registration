@@ -63,6 +63,7 @@
 </template>
 
 <script>
+    import AuthService from '../src/AuthService'
     import Session from '../src/Session'
     import moment  from 'moment'
     import swal    from 'sweetalert2'
@@ -80,30 +81,30 @@
                 timeConfirm: 0,
                 settings: 0,
                 editor: null,
-                emailHTML: "",
-                previewHTML: "",
-                baseHTMLFront: "",
-                baseHTMLBack: "",
+                emailHTML: '',
+                previewHTML: '',
+                baseHTMLFront: '',
+                baseHTMLBack: '',
                 maxParticipants: 0,
                 templateOptions: [],
-                selected: ""
+                selected: ''
             }
         },
         beforeMount() {
             this.convertTimes()
-            Session.sendRequest("GET", "/api/email/listTemplates", null, (err, data) => {
+            Session.sendRequest('GET', '/api/email/listTemplates', null, (err, data) => {
                 if (err) {
-                    console.log("Error while getting template")
+                    console.log('Error while getting template')
                 } else {
                     this.templateOptions = data.validTemplates
                 }
             })
 
-            Session.sendRequest("GET", "/api/email/get/base", null, (err, data) => {
+            Session.sendRequest('GET', '/api/email/get/base', null, (err, data) => {
                 if (err) {
-                    swal("Error", err, "error")
+                    swal('Error', err, 'error')
                 } else {
-                    let base = data.email.split("{{emailData}}");
+                    let base = data.email.split('{{emailData}}');
                     this.baseHTMLFront = base[0]
                     this.baseHTMLBack = base[1]
                 }
@@ -131,9 +132,9 @@
         methods: {
             convertTimes() {
                 this.settings = Session.getSettings()
-                this.timeOpen = moment(this.settings.timeOpen).format("YYYY-MM-DDTHH:mm:ss")
-                this.timeClose = moment(this.settings.timeClose).format("YYYY-MM-DDTHH:mm:ss")
-                this.timeConfirm = moment(this.settings.timeConfirm).format("YYYY-MM-DDTHH:mm:ss")
+                this.timeOpen = moment(this.settings.timeOpen).format('YYYY-MM-DDTHH:mm:ss')
+                this.timeClose = moment(this.settings.timeClose).format('YYYY-MM-DDTHH:mm:ss')
+                this.timeConfirm = moment(this.settings.timeConfirm).format('YYYY-MM-DDTHH:mm:ss')
                 this.maxParticipants = this.settings.maxParticipants
             },
             moment (date) {
@@ -142,7 +143,7 @@
             changeLimit() {
                 swal({
                     title: 'Are you sure?',
-                    text: "This edit could have devastating effects!",
+                    text: 'This edit could have devastating effects!',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -150,17 +151,19 @@
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
-                        Session.sendRequest("POST", "/api/updateParticipantLimit", {
-                            "maxParticipants": this.maxParticipants
-                        }, (err, setting) => {
-                            if (err || !setting) {
-                                swal("Error", err.error, "error")
-                            } else {
-                                swal("Success", "Limit has beens changed successfully", "success")
-                                Session.setSettings(setting)
-                                this.convertTimes()
-                            }
+                        AuthService.skillTest(() => {
+                            swal.showLoading()
+                            Session.sendRequest('POST', '/api/updateParticipantLimit', {
+                                'maxParticipants': this.maxParticipants
+                            }, (err, setting) => {
+                                if (err || !setting) {
+                                    swal('Error', err.error, 'error')
+                                } else {
+                                    swal('Success', 'Limit has beens changed successfully', 'success')
+                                    Session.setSettings(setting)
+                                    this.convertTimes()
+                                }
+                            })
                         })
                     }
                 })
@@ -168,7 +171,7 @@
             changeTimes () {
                 swal({
                     title: 'Are you sure?',
-                    text: "This edit will affect all hackers!",
+                    text: 'This edit will affect all hackers!',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -176,34 +179,36 @@
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
-                        Session.sendRequest("POST", "/api/updateRegistrationTime", {
-                            timeOpen: moment(this.timeOpen).unix() * 1000,
-                            timeClose: moment(this.timeClose).unix() * 1000,
-                            timeConfirm: moment(this.timeConfirm).unix() * 1000
-                        }, (err, setting) => {
-                            if (err || !setting) {
-                                swal("Error", err.error, "error")
-                            } else {
-                                swal("Success", "Application times has been changed", "success")
-                                Session.setSettings(setting)
-                                this.convertTimes()
-                            }
+                        AuthService.skillTest(() => {
+                            swal.showLoading()
+                            Session.sendRequest('POST', '/api/updateRegistrationTime', {
+                                timeOpen: moment(this.timeOpen).unix() * 1000,
+                                timeClose: moment(this.timeClose).unix() * 1000,
+                                timeConfirm: moment(this.timeConfirm).unix() * 1000
+                            }, (err, setting) => {
+                                if (err || !setting) {
+                                    swal('Error', err.error, 'error')
+                                } else {
+                                    swal('Success', 'Application times has been changed', 'success')
+                                    Session.setSettings(setting)
+                                    this.convertTimes()
+                                }
+                            })
                         })
                     }
                 })
             },
             getTemplate () {
-                if (this.selected == "") {
-                    swal("Error", "You must select an email first", "error")
+                if (this.selected == '') {
+                    swal('Error', 'You must select an email first', 'error')
                 } else {
                     swal.showLoading()
 
-                    Session.sendRequest("GET", "/api/email/get/" + this.selected, null, (err, data) => {
+                    Session.sendRequest('GET', '/api/email/get/' + this.selected, null, (err, data) => {
                         if (err) {
-                            swal("Error", err, "error")
+                            swal('Error', err, 'error')
                         } else {
-                            swal("Success", "Your Preview and Editor has been updated", "success")
+                            swal('Success', 'Your Preview and Editor has been updated', 'success')
                             this.emailHTML = data.email
                             this.editor.setText(this.emailHTML);
                             this.editor.formatLine(0, this.editor.getLength(), { 'code-block': true });
@@ -214,7 +219,7 @@
             saveTemplate() {
                 swal({
                     title: 'Are you sure?',
-                    text: "This edit will affect the template permanently!",
+                    text: 'This edit will affect the template permanently!',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -222,16 +227,18 @@
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
-                        Session.sendRequest("POST", "api/email/set/" + this.selected, {
-                            templateHTML: this.emailHTML,
-                            templateName: this.selected
-                        }, (err, data) => {
-                            if (err || !data) {
-                                swal("Error", err.error, "error")
-                            } else {
-                                swal("Success", "Template set", "success")
-                            }
+                        AuthService.skillTest(() => {
+                            swal.showLoading()
+                            Session.sendRequest('POST', 'api/email/set/' + this.selected, {
+                                templateHTML: this.emailHTML,
+                                templateName: this.selected
+                            }, (err, data) => {
+                                if (err || !data) {
+                                    swal('Error', err.error, 'error')
+                                } else {
+                                    swal('Success', 'Template set', 'success')
+                                }
+                            })
                         })
                     }
                 })

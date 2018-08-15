@@ -40,6 +40,7 @@
     import AuthService  from '../src/AuthService'
     import Session      from '../src/Session'
     import VueRecaptcha from 'vue-recaptcha'
+    import Recaptcha    from 'recaptcha'
 
     export default {
         components: {

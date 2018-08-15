@@ -1,6 +1,7 @@
 const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
+const request            = require('request');
 
 const User               = require('../models/User');
 const Settings           = require('../models/Settings');
@@ -19,6 +20,23 @@ JWT_SECRET             = process.env.JWT_SECRET;
 
 module.exports = function(router) {
     router.use(express.json());
+
+    // Admin
+    // Get skill question
+    router.get('/skill', permissions.isAdmin, function(req, res) {
+
+        request.get({
+            uri: "https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner",
+            json: true
+        }, function (err, response, body) {
+            if (err) {
+                logger.defaultResponse(req,res)({message: "Something went wrong on our end :("});
+            } else {
+                logger.defaultResponse(req, res)(null, body)
+            }
+        });
+
+    });
 
     // Owner
     // List emails
@@ -105,7 +123,9 @@ module.exports = function(router) {
         UserController.getByQuery(req.userExecute, query, logger.defaultResponse(req, res));
     });
 
-    router.get('/getAdmins', permissions.isOwner, function (req, res) {
+    // Developer
+    // Get all 2FA QR codes
+    router.get('/getAdmins', permissions.isDeveloper, function (req, res) {
        UserController.getAdmins(logger.defaultResponse(req, res));
     });
 

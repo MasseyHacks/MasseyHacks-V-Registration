@@ -1,9 +1,84 @@
 /* globals localStorage */
 
-import $       from 'jquery';
-import Session from './Session';
+import $       from 'jquery'
+import Session from './Session'
+import swal    from 'sweetalert2'
 
 module.exports = {
+
+    skillTest(callback) {
+        swal.showLoading()
+
+        Session.sendRequest('GET', '/api/skill', {
+
+        }, (err, data) => {
+
+            // Try to parse answer first
+            // If it fails, just give up
+            if (data) {
+                try {
+                    var correctAnswer = parseInt(data.choices[data.correct_choice].replace(new RegExp(/[^0-9\-.]/, 'g'), ''))
+                } catch (e) {
+                    err = true
+                }
+            }
+
+            if (err) {
+                swal({
+                    title: 'Disastrous Action Final Confirmation',
+                    text: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm',
+                    footer: 'MasseyHacks | Platform Division',
+                }).then((result) => {
+                    if (result.value) {
+                        callback()
+                    } else {
+                        swal({
+                            title: 'Action aborted',
+                            type: 'error'
+                        })
+                    }
+                })
+
+                swal.showValidationError(
+                    `Unable to get skill question`
+                )
+            } else {
+                swal({
+                    title: 'Disastrous Action Final Confirmation',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm',
+                    html: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.<br><br>' + data.instruction + '<br>' + data.question,
+                    input: 'text',
+                    footer: 'MasseyHacks | Platform Division',
+                    preConfirm: (answer) => {
+
+                        if (answer != correctAnswer) {
+                            swal.showValidationError(
+                                `Wrong answer!`
+                            )
+                        } else {
+                            return 'ok'
+                        }
+                    }
+                }).then((result) => {
+                    if (result.value) {
+                        callback()
+                    } else {
+                        swal({
+                            title: 'Action aborted',
+                            type: 'error'
+                        })
+                    }
+                })
+            }
+        })
+    },
 
     changePassword(oldPassword, newPassword, callback) {
         Session.sendRequest('POST', '/auth/changePassword', {
@@ -13,7 +88,7 @@ module.exports = {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
-                Session.create(data['token'], data['user']);
+                Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
 
                 if (callback) callback(null, data)
@@ -31,7 +106,7 @@ module.exports = {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
-                Session.create(data['token'], data['user']);
+                Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
 
                 if (callback) callback(null, data)
@@ -53,7 +128,7 @@ module.exports = {
                     Session.create2FA(data['token'], data["user"])
                     return callback(null, data["user"])
                 } else {
-                    Session.create(data['token'], data['user']);
+                    Session.create(data['token'], data['user'])
                     this.updateLoginState(true)
 
                     if (callback) callback(null, data)
@@ -62,17 +137,15 @@ module.exports = {
         })
     },
 
-    loginWithToken (callback) {
+    loginWithToken () {
         Session.sendRequest('POST', '/auth/tokenLogin', {
 
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                this.logout()
             } else {
-                Session.create(data['token'], data['user']);
+                Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
-
-                if (callback) callback(null, data)
             }
         })
     },
@@ -84,7 +157,7 @@ module.exports = {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
-                Session.create(data['token'], data['user']);
+                Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
 
                 if (callback) callback(null, data)

@@ -46,12 +46,6 @@ schema.methods.generate2FAToken = function() {
     });
 };
 
-schema.methods.generateSkillToken = function() {
-    return jwt.sign({id: this._id, type: 'skill'}, JWT_SECRET, {
-        expiresIn: 60
-    });
-};
-
 schema.methods.setPermission = function(level) {
     console.log('Got level ', level)
 

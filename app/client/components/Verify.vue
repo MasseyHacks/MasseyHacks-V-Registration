@@ -32,9 +32,10 @@
                 } else {
                     this.status = 'success'
 
+                    /*
                     if (Session.loggedIn()) {
                         AuthService.loginWithToken(Session.getToken())
-                    }
+                    }*/
                 }
             })
         }

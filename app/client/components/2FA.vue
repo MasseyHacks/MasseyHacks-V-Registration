@@ -3,7 +3,7 @@
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
             <h2 class="subtitle">2FA</h2>
-            <p style="font-size: 1em">MasseyHacks Security Policy requires 2 factor authentication to uphold the security and privacy of our users.</p>
+            <p style="font-size: 1em">MasseyHacks Security Policy requires 2 factor authentication to protect the security and privacy of our users.</p>
             <div id="login-form-elements">
                 <form @submit.prevent="codeLogin">
                     <input v-model="code" type="number" maxlength="6" autofocus required>

@@ -1,7 +1,7 @@
 /* globals localStorage */
 
-import $       from 'jquery';
-import Session from './Session';
+import $       from 'jquery'
+import Session from './Session'
 
 module.exports = {
     getFields(callback) {
