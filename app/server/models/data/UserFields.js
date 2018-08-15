@@ -123,7 +123,7 @@ var hackerApplication = {
 
     school: {
         type: String,
-        questionType: 'school',
+        questionType: 'schoolSearch',
         maxlength: 100,
         mandatory: true
     }

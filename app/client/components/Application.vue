@@ -6,10 +6,9 @@
                     <h2>APPLICATION</h2>
                 </div>
 
-                <div v-for="question in $parent.user.profile">
-
+                <div v-for="question in applications.hacker">
+                    {{question}}
                 </div>
-
 
                 <input type="text" placeholder="hello">
 
@@ -38,15 +37,21 @@
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
 
-    ApiService.getApplications((err, apps) => {
-        console.log(apps)
-    });
-
     export default {
         data() {
             return {
-                error: ''
+                error: '',
+                applications: {}
             }
+        },
+        beforeMount() {
+            ApiService.getApplications((err, applications) => {
+                if (err || !applications) {
+                    this.error = err ? err : 'Something went wrong :\'('
+                } else {
+                    this.applications = applications
+                }
+            });
         }
     }
 </script>

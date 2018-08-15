@@ -121,10 +121,8 @@ UserController.getByQuery = function (adminUser, query, callback) {
             .limit(size)
             .exec(function(err, users) {
                 if (err) {
-                    if (err) {
-                        console.log(err)
-                        return callback({error:err.message})
-                    }
+                    console.log(err)
+                    return callback({error:err.message})
                 }
 
                 console.log(users, count, size)
@@ -231,20 +229,12 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
 
     User.getByToken(token, function (err, userFromToken) {
         if (err || !userFromToken) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback({ error: 'Something went wrong.', code: 500});
+            return callback(err ? err : { error: 'Something went wrong.', code: 500});
         }
 
         UserController.loginWithPassword(userFromToken.email, existingPassword, function(err, user) {
             if (err || !user) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback({ error: 'Something went wrong.', code: 500});
+                return callback(err ? err : { error: 'Something went wrong.', code: 500});
             }
 
             UserController.changePassword(userFromToken.email, newPassword, function(err, msg) {
@@ -702,10 +692,7 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to admit.');
@@ -743,10 +730,7 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to reject.');
@@ -761,17 +745,11 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
 UserController.teamAccept = function(adminUser, userID, callback) {
     User.getbyID(userID, function (err, user) {
         if (err || !user){
-            if (err) {
-                console.log(err)
-            }
             return callback(err, user);
         } else {
 
             Team.getByCode(user.teamCode, function (err, team) {
                 if (err || !team) {
-                    if (err) {
-                        console.log(err)
-                    }
                     return callback(err, user);
                 }
 
@@ -780,9 +758,7 @@ UserController.teamAccept = function(adminUser, userID, callback) {
                 for (id in team.memberIDs) {
                     UserController.admitUser(adminUser, id, function (err, user) {
                         if (err || !user){
-                            if (err) {
-                                console.log(err)
-                            }
+                            console.log(err)
                         }
                     })
                 }
@@ -902,10 +878,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Reset votes.');
@@ -936,11 +909,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         Settings.findOneAndUpdate({
@@ -955,11 +924,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
             }
         }, function(err, settings) {
             if (err || !settings) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback({ error: 'Unable to perform action.', code: 500})
+                return callback(err ? err : { error: 'Unable to perform action.', code: 500})
             }
         });
 
@@ -997,10 +962,7 @@ UserController.admitUser = function(adminUser, userID, callback) {
         }, function (err, user) {
 
             if (err || !user) {
-                if (err) {
-                    return callback(err);
-                }
-                return callback({error: 'Unable to perform action.', code: 500})
+                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
             }
 
             logger.logAction(adminUser._id, user._id, 'Admitted user.');
@@ -1041,16 +1003,13 @@ UserController.rejectUser = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Rejected user.');
 
         mailer.queueEmail(user.email,'rejectionemails',function(err){
-            if(err){
+            if (err){
                 return callback(err);
             }
         });
@@ -1187,11 +1146,7 @@ UserController.leaveTeam = function(id, callback) {
 
     User.getByID(id, function(err, user) {
        if (err || !user) {
-           if (err) {
-               return callback(err);
-           }
-
-           return callback({error : 'Unable to get user'});
+           return callback(err ? err : {error : 'Unable to get user'});
        }
 
        if (user.teamCode.length == 0) {
@@ -1208,11 +1163,7 @@ UserController.leaveTeam = function(id, callback) {
             new: true
         }, function(err, newUser) {
             if (err || !newUser) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback({error: 'Unable to leave team', code: 500});
+                return callback(err ? err : {error: 'Unable to leave team', code: 500});
             }
 
             Team.findOneAndUpdate({
@@ -1252,11 +1203,7 @@ UserController.getTeam = function(id, callback) {
 
     User.getByID(id, function(err, user) {
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback({error : 'Unable to get user'});
+            return callback(err ? err : {error : 'Unable to get user'});
         }
 
         if (user.teamCode.length == 0) {
@@ -1283,11 +1230,7 @@ UserController.inviteToSlack = function(id, callback) {
     User.getByID(id, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback( { error : 'User not found' } );
+            return callback(err ? err : { error : 'User not found' });
         }
 
         if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
@@ -1378,10 +1321,7 @@ UserController.activate = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Activated user.');
@@ -1407,10 +1347,7 @@ UserController.deactivate = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Deactivated user.');
@@ -1437,10 +1374,7 @@ UserController.checkIn = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked In user.');
@@ -1466,10 +1400,7 @@ UserController.checkOut = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked Out user.');
@@ -1495,10 +1426,7 @@ UserController.waiverIn = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.');
@@ -1524,10 +1452,7 @@ UserController.waiverOut = function(adminUser, userID, callback) {
     }, function(err, user) {
 
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-            return callback({ error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.');

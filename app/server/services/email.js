@@ -212,65 +212,63 @@ module.exports = {
                 return callback(err);
             }
             else{
-                User.getByEmail(userEmail, function (error, user) {
-                    if(error){
+                User.getByEmail(userEmail, function (err, user) {
+                    if(err){
                         return callback({error: 'The provided email does not correspond to a user.'});
                     }
-                    else {
-                        //define the dates
-                        date.setTime(settings.timeConfirm);
-                        let confirmByString = date.toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
 
-                        date.setTime(settings.timeClose);
-                        let submitByString = date.toLocaleDateString('en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
+                    //define the dates
+                    date.setTime(settings.timeConfirm);
+                    let confirmByString = date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
 
-                        //fill dataPack
-                        var dataPack = {
-                            nickname: user['firstName'],
-                            confirmBy: confirmByString,
-                            dashUrl: process.env.ROOT_URL,
-                            submitBy: submitByString
-                        };
-                        for (var emailQueueName in settings.emailQueue) {
-                            if (typeof settings.emailQueue[emailQueueName] === 'object') {
-                                console.log(typeof settings.emailQueue[emailQueueName]);
-                                for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
-                                    console.log(emailQueueName + " " + settings.emailQueue[emailQueueName][i]);
-                                    if (settings.emailQueue[emailQueueName][i] === userEmail) {
+                    date.setTime(settings.timeClose);
+                    let submitByString = date.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
 
-                                        //mailer
-                                        module.exports.sendTemplateEmail(userEmail, emailQueueName.toLowerCase(), dataPack);
+                    //fill dataPack
+                    var dataPack = {
+                        nickname: user['firstName'],
+                        confirmBy: confirmByString,
+                        dashUrl: process.env.ROOT_URL,
+                        submitBy: submitByString
+                    };
+                    for (var emailQueueName in settings.emailQueue) {
+                        if (typeof settings.emailQueue[emailQueueName] === 'object') {
+                            console.log(typeof settings.emailQueue[emailQueueName]);
+                            for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
+                                console.log(emailQueueName + " " + settings.emailQueue[emailQueueName][i]);
+                                if (settings.emailQueue[emailQueueName][i] === userEmail) {
 
-                                        //delete entry from db
-                                        var pullObj = {};
-                                        //kinda sketchy too
-                                        pullObj['emailQueue.' + emailQueueName] = userEmail;
-                                        //remove it from the queue
+                                    //mailer
+                                    module.exports.sendTemplateEmail(userEmail, emailQueueName.toLowerCase(), dataPack);
 
-                                        console.log(pullObj);
+                                    //delete entry from db
+                                    var pullObj = {};
+                                    //kinda sketchy too
+                                    pullObj['emailQueue.' + emailQueueName] = userEmail;
+                                    //remove it from the queue
 
-                                        Settings.findOneAndUpdate({}, {
-                                            $pull: pullObj
-                                        }, {}, function (err, settings) {
-                                            console.log(err, settings.emailQueue);
-                                        });
-                                    }
+                                    console.log(pullObj);
+
+                                    Settings.findOneAndUpdate({}, {
+                                        $pull: pullObj
+                                    }, {}, function (err, settings) {
+                                        console.log(err, settings.emailQueue);
+                                    });
                                 }
                             }
                         }
                     }
                 });
-
             }
         });
     },
@@ -310,9 +308,8 @@ module.exports = {
                 if(err){
                     return callback({error:err});
                 }
-                else{
-                    return callback(null,{message:"Success"});
-                }
+
+                return callback(null,{message:"Success"});
             });
         }
     }
