@@ -60,7 +60,6 @@
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
-                            console.log(keys)
                             flattened[this.prettify(keys)] = obj[keys]
                         }
                     } else {
