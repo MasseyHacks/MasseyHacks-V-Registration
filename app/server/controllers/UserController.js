@@ -189,6 +189,64 @@ UserController.verify = function (token, callback) {
     }.bind(this));
 };
 
+UserController.magicLogin = function (token, callback) {
+
+    if (!token) {
+        return callback({error : 'Invalid arguments'});
+    }
+
+    jwt.verify(token, JWT_SECRET, function (err, payload) {
+        if (err || !payload) {
+            console.log('ur bad');
+            return callback({
+                error: 'Invalid Token',
+                code: 401
+            });
+        }
+
+        if (payload.type != 'magicJWT' || !payload.exp || Date.now() >= payload.exp * 1000) {
+            return callback({
+                error: 'Token is invalid for this operation.',
+                code: 403
+            });
+        }
+
+        User.findOne({_id: payload.id}, "+magicJWT", function(err, user) {
+            console.log(user)
+            if (token === user.magicJWT) {
+                User.findOneAndUpdate({
+                        _id: payload.id
+                    },
+                    {
+                        $set: {
+                            'magicJWT': ""
+                        }
+                    },
+                    {
+                        new: true
+                    }, function (err, user) {
+                        if (err || !user) {
+                            console.log(err);
+
+                            return callback(err);
+                        }
+                        ;
+
+                        logger.logAction(user._id, user._id, 'Logged in using magic link.');
+
+                        return callback(null, {token: user.generateAuthToken(), user:User.filterSensitive(user)});
+                    });
+            } else {
+                return callback({
+                    error: 'Invalid Token',
+                    code: 401
+                });
+            }
+        });
+
+    }.bind(this));
+};
+
 UserController.sendVerificationEmail = function (token, callback) {
 
     if (!token) {

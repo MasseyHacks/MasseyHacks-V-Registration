@@ -27,6 +27,7 @@ import PasswordChange from '../components/PasswordChange.vue'
 import Review         from '../components/Review.vue'
 import UserView       from '../components/UserView.vue'
 import GoogleAuth     from '../components/2FA.vue'
+import MagicLogin     from '../components/Magic.vue'
 
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
@@ -124,6 +125,10 @@ const router = new VueRouter({
                    next('/login')
                }
            }
+       },
+       {
+           path: '/magic',
+           component: MagicLogin
        },
        {
            path: '/dashboard',

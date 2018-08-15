@@ -35,7 +35,7 @@ Raven.context(function() {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded());
 
-    if (cluster.isMaster) {
+    if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
 
         for (let i = 0; i < cpuCount; i++) {

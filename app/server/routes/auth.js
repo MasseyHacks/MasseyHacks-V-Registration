@@ -214,6 +214,27 @@ module.exports = function(router) {
         });
     });
 
+    router.post('/magicurl', function (req, res) {
+        var token = req.body.token;
+        console.log(token)
+
+        if (!token) {
+            return res.status(400).json({error: 'Invalid token'});
+        }
+
+        UserController.magicLogin(token, function (err, msg) {
+            if (err || !msg) {
+                if (err) {
+                    return res.status(400).json(err);
+                }
+
+                return res.status(400).json({error: 'Invalid token'});
+            }
+
+            return res.json(msg);
+        });
+    });
+
     // Send verify email
     router.post('/requestVerify', function (req, res) {
         var token = permissions.getToken(req);

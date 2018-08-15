@@ -252,6 +252,12 @@ var schema = {
         permission: INTERNAL
     },
 
+    magicJWT: {
+        type: String,
+        select: false,
+        permission: INTERNAL
+    },
+
     timestamp: {
         type: Number,
         required: true,

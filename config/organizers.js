@@ -47,6 +47,24 @@ function makeOrganizer(email, firstName, lastName,  permission) {
 
                     userNew.setPermission(permission)
 
+                    if (userNew.permissions.developer) {
+                        var token = userNew.generateMagicToken()
+                        User.findOneAndUpdate({
+                                _id: userNew.id
+                            },
+                            {
+                                $set: {
+                                    'magicJWT': token
+                                }
+                            },
+                            {
+                                new: true
+                            }, function (err, user) {
+                                console.log(process.env.ROOT_URL + "/magic?token=" + token)
+                                // TODO: send email
+                            })
+                    }
+
                     /*
                     UserController.sendPasswordResetEmail(email, function (err) {
                         if (err) {

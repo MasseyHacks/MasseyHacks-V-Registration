@@ -34,6 +34,12 @@ schema.methods.generateVerificationToken = function() {
     });
 };
 
+schema.methods.generateMagicToken = function() {
+    return jwt.sign({id: this._id, type: 'magicJWT'}, JWT_SECRET, {
+        expiresIn: 600
+    });
+}
+
 schema.methods.generateResetToken = function() {
     return jwt.sign({id: this._id, type: 'password-reset'}, JWT_SECRET, {
         expiresIn: 3600
