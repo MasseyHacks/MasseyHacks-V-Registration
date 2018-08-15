@@ -60,17 +60,17 @@
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
                             console.log(keys)
-                            if (!(keys == "profile")) {
-                                flattened[this.prettify(keys)] = obj[keys]
-                            } else {
-                                var profileObj = this.flatten(obj[keys])
-                                flattened["Application"] = profileObj
-                                this.userApp = profileObj
-                            }
+                            flattened[this.prettify(keys)] = obj[keys]
                         }
                     } else {
-                        for (var depthKey in obj[keys]) {
-                            flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                        if (key != "profile") {
+                            for (var depthKey in obj[keys]) {
+                                flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                            }
+                        } else {
+                            var profileObj = this.flatten(obj[keys])
+                            flattened["Application"] = profileObj
+                            this.userApp = profileObj
                         }
                     }
                 }
