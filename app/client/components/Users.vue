@@ -69,11 +69,12 @@
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">Page {{p}}</button>
+                        <button class="generic-button-light" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
+                        <button class="generic-button-light" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
                         <hr>
                         <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                            <tr v-for="user in users">
+                            <tr v-for="user in users" @contextmenu.prevent="$refs.menu.open($event, { foo: 'bar' })">
                                 <td>
                                     {{user.fullName}}
                                     <router-link :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="a">More...</router-link>
@@ -89,9 +90,16 @@
                     <p v-else>
                         {{queryError}}
                     </p>
+   
                 </div>
             </div>
         </div>
+        <vue-context ref="menu" style="position: absolute;">
+            <ul>
+                <li @click="onClick($event.target.innerText, child.data)">Option 1</li>
+                <li @click="onClick($event.target.innerText, child.data)">Option 2</li>
+            </ul>
+        </vue-context>
     </div>
 </template>
 
@@ -101,6 +109,7 @@
     import $ from 'jquery';
     import { saveAs } from 'file-saver/FileSaver'
     import swal from 'sweetalert2'
+    import { VueContext } from 'vue-context'
 
     export default {
         data() {
@@ -148,7 +157,17 @@
                 }
             })
         },
+
+        components: {
+            VueContext
+        },
+
         methods : {
+
+            onClick: function(text, data) {
+                swal('Hello')
+            },
+
             deleteFilter: function(logical, filter) {
                 this.filters[logical].splice(this.filters[logical].indexOf(filter), 1)
                 this.updateSearch()

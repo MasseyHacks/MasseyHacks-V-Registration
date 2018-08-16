@@ -58,6 +58,7 @@ Raven
 Vue.use(VueRouter)
 
 Vue.use(require('vue-moment'))
+Vue.use(require('vuejs-paginator'))
 
 function twoFactorPending(to, from, next) {
     if (localStorage.token && Session.getTokenData().type == '2FA') {
