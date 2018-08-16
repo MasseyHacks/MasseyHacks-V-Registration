@@ -126,7 +126,7 @@ function calculateStats(callback){
                         newStats.bus += user.confirmation.bus ? 1 : 0;
 
                         // Count submitted
-                        newStats.submitted += user.status.completedProfile ? 1 : 0;
+                        newStats.submitted += user.status.submittedApplication ? 1 : 0;
 
                         // Count accepted
                         newStats.admitted += user.status.admitted ? 1 : 0;
@@ -143,7 +143,7 @@ function calculateStats(callback){
                         newStats.checkedIn += user.status.checkedIn ? 1 : 0;
 
 
-                        if (user.status.completedProfile) {
+                        if (user.status.submittedApplication) {
 
                             // Add to the gender
                             newStats.demo.gender[user.profile.gender] += 1;
