@@ -73,10 +73,10 @@
                         <hr>
                         <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
-                            <tr>
+                            <tr v-for="user in users">
                                 <td>
                                     {{user.fullName}}
-                                    <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="a">View More...</router-link>
+                                    <router-link :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="a">View More...</router-link>
                                 </td>
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
