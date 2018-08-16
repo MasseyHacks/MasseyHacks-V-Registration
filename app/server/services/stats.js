@@ -101,8 +101,9 @@ function calculateStats(callback){
                 votes[adminUsers[i].email] = [adminUsers[i].profile.name ? adminUsers[i].profile.name : adminUsers[i].nickname, 0, 0, 0, 0];
             }
 
+
             User
-                .find({'permissions.checkin': false, 'permissions.admin': false,'permission.owner':false})
+                .find({'permissions.checkin': false, 'permissions.admin': false, 'permissions.owner':false})
                 .exec(function(err, users){
                     if (err || !users){
                         throw err;
@@ -111,19 +112,20 @@ function calculateStats(callback){
                     newStats.total = users.length;
 
                     async.each(users, function(user, callback){
-
+                        /*
                         for (var i = 0; i < user.votedBy.length; i++) {
                             if (user.votedBy[i] in votes) {
                                 votes[user.votedBy[i]][user.wave] += 1;
                             }
                         }
+                        */
                         // Count verified
                         newStats.verified += user.permissions.verified ? 1 : 0;
 
                         newStats.rejected += user.status.rejected ? 1 : 0;
 
                         newStats.waitlisted += user.status.waitlisted ? 1 : 0;
-                        newStats.bus += user.confirmation.bus ? 1 : 0;
+                        //newStats.bus += user.confirmation.bus ? 1 : 0;
 
                         // Count submitted
                         newStats.submitted += user.status.submittedApplication ? 1 : 0;
@@ -216,8 +218,6 @@ function calculateStats(callback){
 
                         callback(); // let async know we've finished
                     }, function() {
-
-                        console.log(votes);
 
                         for (var voter in votes) {
                             var line = votes[voter];

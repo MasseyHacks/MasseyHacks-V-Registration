@@ -30,7 +30,7 @@ schema.statics.getByCode = function(code, callback) {
                 return callback(err);
             }
 
-            return callback({ error: 'Team not found' })
+            return callback(err ? err : { error: 'Team not found' })
         }
 
         return callback(null, team);

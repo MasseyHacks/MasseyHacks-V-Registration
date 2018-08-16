@@ -1,14 +1,27 @@
 <template>
     <div>
         <div class="ui-card dash-card-large">
-            <h3>{{userObj.fullName}}</h3>
+            <h3>{{userObj.fullName.toUpperCase()}}</h3>
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
                     <li v-for="(value, key) in flatten(userObj)" style="overflow-wrap: break-word; text-align: left;">
-                        {{key}}: {{value}}
+                        <span v-if="key != 'Application'">
+                            {{key}}: {{value}}
+                        </span>
                     </li>
                 </ul>
             </div>
+            <hr>
+            <span v-if="$parent.user.permissions.owner">
+                <h4>APPLICATION</h4>
+                <ul style="overflow-wrap: break-word; text-align: left;">
+                    <li v-for="(value, key) in userApp">
+                        {{key}}: {{value}}
+                    </li>
+                </ul>
+            </span>
+<!--             <p>User Object: </p>
+            {{userObj}} -->
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
         </div>
     </div>
@@ -25,7 +38,8 @@
             return {
                 error : '',
                 userID : '',
-                userObj : {}
+                userObj : {},
+                userApp : {}
             }
         },
 
@@ -48,16 +62,17 @@
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
-                            if (!(keys == "profile")) {
-                                flattened[this.prettify(keys)] = obj[keys]
-                            } else {
-                                var profileObj = this.flatten(obj[keys])
-                                flattened["Application"] = profileObj
-                            }
+                            flattened[this.prettify(keys)] = obj[keys]
                         }
                     } else {
-                        for (var depthKey in obj[keys]) {
-                            flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                        if (keys != "profile") {
+                            for (var depthKey in obj[keys]) {
+                                flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                            }
+                        } else {
+                            var profileObj = this.flatten(obj[keys])
+                            flattened["Application"] = profileObj
+                            this.userApp = profileObj
                         }
                     }
                 }

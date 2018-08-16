@@ -112,11 +112,7 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
         _id:  id
     }, function(err, user) {
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback({
+            return callback(err ? err : {
                 error: 'User not found.',
                 code: 404
             })
@@ -146,11 +142,7 @@ schema.statics.getByToken = function (token, callback) {
         this.findOne({_id: payload.id}, function(err, user) {
 
             if (err || !user) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback({
+                return callback(err ? err : {
                     error: 'Invalid Token',
                     code: 401
                 });
@@ -187,11 +179,7 @@ schema.statics.get2FA = function (token, callback) {
         this.findOne({_id: payload.id}, '+QRCode +authSecret', function(err, user) {
 
             if (err || !user) {
-                if (err) {
-                    return callback(err);
-                }
-
-                return callback({
+                return callback(err ? err : {
                     error: 'Invalid Token',
                     code: 401
                 });
@@ -218,11 +206,7 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
         email:  email ? email.toLowerCase() : email
     }, function(err, user) {
         if (err || !user) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback({
+            return callback(err ? err : {
                 error: 'User not found',
                 code: 404
             })

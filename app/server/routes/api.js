@@ -206,11 +206,7 @@ module.exports = function(router) {
 
         UserController.createTeam(user._id, teamName, function(err, data){
             if (err || !data) {
-                if (err) {
-                    return logger.defaultResponse(req, res)(err);
-                }
-
-                return logger.defaultResponse(req, res)( { error : 'Unable to create team' } );
+                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to create team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -225,11 +221,7 @@ module.exports = function(router) {
 
         UserController.joinTeam(user._id, teamCode, function(err, data){
             if (err || !data) {
-                if (err) {
-                    return logger.defaultResponse(req, res)(err);
-                }
-
-                return logger.defaultResponse(req, res)( { error : 'Unable to join team' } );
+                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to join team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -243,11 +235,7 @@ module.exports = function(router) {
 
         UserController.leaveTeam(user._id, function(err, data){
             if (err || !data) {
-                if (err) {
-                    return logger.defaultResponse(req, res)(err);
-                }
-
-                return logger.defaultResponse(req, res)( { error : 'Unable to leave team' } );
+                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to leave team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);
@@ -261,11 +249,7 @@ module.exports = function(router) {
 
         UserController.getTeam(user._id, function(err, data){
             if (err || !data) {
-                if (err) {
-                    return logger.defaultResponse(req, res)(err);
-                }
-
-                return logger.defaultResponse(req, res)( { error : 'Unable to get team' } );
+                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to get team' } );
             }
 
             return logger.defaultResponse(req, res)(null, data);

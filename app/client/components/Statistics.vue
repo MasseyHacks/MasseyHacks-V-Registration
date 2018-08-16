@@ -32,8 +32,11 @@
                         <div class="card-col">
                             <ul class="custom-ul" style="text-align: left;">
                                 <li v-for="(value, key) in atGlance2">
-                                    <span v-if="key.toLowerCase() != 'admitted'">
+                                    <span v-if="key.toLowerCase() == 'rejected'">
                                         <i class="fas fa-ban"></i>{{key}} : {{value}}
+                                    </span>
+                                    <span v-else-if="key.toLowerCase() == 'waitlisted'">
+                                        <i class="fas fa-user-clock"></i>{{key}} : {{value}}
                                     </span>
                                     <span v-else>
                                         <i class="fas fa-check"></i>{{key}} : {{value}}
