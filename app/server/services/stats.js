@@ -150,8 +150,8 @@ function calculateStats(callback){
                             // Add to the gender
                             newStats.demo.gender[user.profile.gender] += 1;
 
-                            if (user.profile.grade) {
-                                newStats.demo.grade[user.profile.grade] += 1;
+                            if (user.profile.hacker.grade) {
+                                newStats.demo.grade[user.profile.hacker.grade] += 1;
                             }
 
                             // Count shirt sizes
@@ -186,8 +186,8 @@ function calculateStats(callback){
                             // Add to the gender
                             newStats.confirmedStat.demo.gender[user.profile.gender] += 1;
 
-                            if (user.profile.grade){
-                                newStats.confirmedStat.demo.grade[user.profile.grade] += 1;
+                            if (user.profile.hacker.grade){
+                                newStats.confirmedStat.demo.grade[user.profile.hacker.grade] += 1;
                             }
 
                             // Count shirt sizes
