@@ -12,12 +12,14 @@
                 </ul>
             </div>
             <hr>
-            <h4>APPLICATION</h4>
-            <ul style="overflow-wrap: break-word; text-align: left;">
-                <li v-for="(value, key) in userApp">
-                    {{key}}: {{value}}
-                </li>
-            </ul>
+            <span v-if="$parent.user.permissions.owner">
+                <h4>APPLICATION</h4>
+                <ul style="overflow-wrap: break-word; text-align: left;">
+                    <li v-for="(value, key) in userApp">
+                        {{key}}: {{value}}
+                    </li>
+                </ul>
+            </span>
 <!--             <p>User Object: </p>
             {{userObj}} -->
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
