@@ -19,7 +19,7 @@
                     <div v-else>
                         <div v-if="log.length != 0 && !queryError">
                             <hr>
-                            <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
+                            <button class="generic-button" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                             <hr>
                             <div id="log">
                                 <h3>EVENT LIST</h3>
