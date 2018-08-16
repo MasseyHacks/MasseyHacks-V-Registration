@@ -62,10 +62,7 @@ module.exports = function(router) {
 
         UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
                 if (err || !user) {
-                    if (err) {
-                        return res.status(500).json(err);
-                    }
-                    return res.status(500).json({error: 'Unable to process request'});
+                    return res.status(500).json(err ? err : {error: 'Unable to process request'});
                 }
 
                 console.log(req.body.email + ' registered.');
@@ -106,12 +103,7 @@ module.exports = function(router) {
 
         UserController.loginWithToken(token, function (err, token, user) {
             if (err || !user || !token) {
-                if (err) {
-                    console.log(err);
-                    return res.status(400).json(err);
-                }
-
-                return res.status(401).json({error: 'Invalid Token'});
+                return res.status(401).json(err ? err : {error: 'Invalid Token'});
             }
             return res.json({
                 token: token,
@@ -131,12 +123,7 @@ module.exports = function(router) {
 
             UserController.loginWith2FA(token, code, function (err, token, user) {
                 if (err || !user || !token) {
-                    if (err) {
-                        console.log(err);
-                        return res.status(401).json(err);
-                    }
-
-                    return res.status(401).json({error: 'Invalid Code'});
+                    return res.status(401).json(err ? err : {error: 'Invalid Code'});
                 }
                 return res.json({
                     token: token,
@@ -159,11 +146,7 @@ module.exports = function(router) {
 
         UserController.resetPassword(token, password, function (err, msg) {
             if (err || !msg) {
-                if (err) {
-                    return res.status(400).json(err);
-                }
-
-                return res.status(400).json({error: 'Invalid token'});
+                return res.status(400).json(err ? err : {error: 'Invalid token'});
             }
 
             return res.json(msg);
@@ -201,11 +184,7 @@ module.exports = function(router) {
 
         UserController.verify(token, function (err, msg) {
             if (err || !msg) {
-                if (err) {
-                    return res.status(400).json(err);
-                }
-
-                return res.status(400).json({error: 'Invalid token'});
+                return res.status(400).json(err ? err : {error: 'Invalid token'});
             }
 
             return res.json({
@@ -224,11 +203,7 @@ module.exports = function(router) {
 
         UserController.magicLogin(token, function (err, msg) {
             if (err || !msg) {
-                if (err) {
-                    return res.status(400).json(err);
-                }
-
-                return res.status(400).json({error: 'Invalid token'});
+                  return res.status(400).json(err ? err : {error: 'Invalid token'});
             }
 
             return res.json(msg);

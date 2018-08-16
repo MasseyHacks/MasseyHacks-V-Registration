@@ -92,11 +92,7 @@ schema.statics.requestSchool = function(schoolName, callback) {
         new: true
     }, function(err, settings) {
         if (err || !settings) {
-            if (err) {
-                return callback(err)
-            }
-
-            return callback({error: 'Unable to add school to pending list', code: 500})
+            return callback(err ? err : {error: 'Unable to add school to pending list', code: 500})
         }
 
         return callback(null, {message: 'Success'})
