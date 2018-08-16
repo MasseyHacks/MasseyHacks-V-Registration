@@ -419,11 +419,10 @@ h4 {
     border-radius: 2em;
     padding: 10px;
     min-width: 10rem;
-    background-color: black;
-    color: white;
-    border-color: transparent;
+    background-color: transparent;
+    color: black;
+    border: 2px solid black;
     transition: background-color 0.1s;
-    z-index: 90001;
 }
 
 .generic-button-small {
@@ -431,7 +430,7 @@ h4 {
 }
 
 .generic-button:hover {
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.2);
 }
 
 .generic-button-light {

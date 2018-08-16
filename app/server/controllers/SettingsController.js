@@ -170,6 +170,7 @@ SettingsController.getLog = function(query, callback){
 
         LogEvent
             .find(filter)
+            .sort({'timestamp': -1})
             .skip((page - 1) * size)
             .limit(size)
             .exec(function (err, log) {
