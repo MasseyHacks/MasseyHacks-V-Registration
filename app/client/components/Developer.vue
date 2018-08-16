@@ -21,14 +21,15 @@
                             <hr>
                             <button class="generic-button-light" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button>
                             <hr>
-                            <table>
-                                <tr id="table-header">
-                                    <td>EVENT?</td>
-                                </tr>
-                                <tr v-for="event in log">
-                                    <td>{{event}}</td>
-                                </tr>
-                            </table>
+                            <div id="log">
+                                <h3>EVENT LIST</h3>
+                                <div v-for="event in log" style="margin:0.5em;">
+                                    <button v-on:click="showDiv(event.timestamp)" class="collapsible">{{moment(event.timestampHuman)}}</button>
+                                    <div :id="event.timestamp" class="content" hidden>
+                                        <p style="margin-top:1rem; text-align:left;">{{event}}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <p v-else>
                             {{queryError}}
@@ -55,6 +56,8 @@
     import AuthService from '../src/AuthService.js'
     import ApiService from '../src/ApiService.js'
     import swal        from 'sweetalert2'
+    import moment  from 'moment'
+    import $ from 'jquery';
 
     export default {
         data() {
@@ -93,6 +96,33 @@
                 this.page = page
                 this.updateSearch()
             },
+            showDiv(id){
+                var children = document.getElementById(id).parentElement.parentElement.children;
+                console.log("parent");
+                console.log(document.getElementById(id).parentElement.parentElement);
+                for (var i = 0; i < children.length; i++) {
+                    console.log(children[i]);
+                    if(children[i].lastChild.id != id){
+                        children[i].lastChild.hidden = true;
+                        if($(children[i].firstChild).hasClass('active')){
+                            $(children[i].firstChild).removeClass('active');
+                        }
+
+                    }
+                }
+                document.getElementById(id).hidden = !document.getElementById(id).hidden;
+                if($(document.getElementById(id).parentElement.firstChild).hasClass('active')){
+                    $(document.getElementById(id).parentElement.firstChild).removeClass('active')
+                }else{
+                    $(document.getElementById(id).parentElement.firstChild).addClass('active')
+                }
+            },
+            moment (date) {
+                return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
+            },
+            reverseLog() {
+                return this.log.slice().reverse();
+            },
             updateSearch: function() {
                 ApiService.getLog({ page: this.page, size: 100 }, (err, data) => {
                     this.loading = false
@@ -110,4 +140,25 @@
 </script>
 
 <style>
+    .collapsible {
+        background-color: #777;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #555;
+    }
+
+    .content {
+        padding: 0 18px;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
 </style>
