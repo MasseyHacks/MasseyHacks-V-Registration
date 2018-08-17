@@ -9,11 +9,11 @@ var dataPack = {
         type: String,
         required: true
     },
-    Name : {
+    name : {
         type: String,
         required: true
     },
-    Email : {
+    email : {
         type: String,
         required: true
     }
@@ -23,8 +23,8 @@ function buildLoggingCore(id, name, email) {
     var dp = dataPack;
 
     dp.ID = id;
-    dp.Name = name;
-    dp.Email = email;
+    dp.name = name;
+    dp.email = email;
 
     return dp;
 }

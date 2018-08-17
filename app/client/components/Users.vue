@@ -118,7 +118,13 @@
                 totalPages: 1,
 
                 advancedQueryContent: '{}',
-                filters: {},
+                filters: {
+                    '$and':[
+                        {
+                            'permissions.checkin':'false'
+                        }
+                    ]
+                },
                 searchQuery: '',
 
                 fields: {},
@@ -146,7 +152,7 @@
                 }
             })
 
-            ApiService.getUsers({ page: this.page, size: 100 }, (err, data) => {
+            ApiService.getUsers({ page: this.page, size: 100, filters: this.filters }, (err, data) => {
                 this.loading = false
 
                 if (err || !data) {
@@ -260,8 +266,9 @@
                     if (err || !data) {
                         this.queryError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
                     } else {
-                        this.users = data.users;
+                        this.users = data.users
                         this.totalPages = data.totalPages
+                        this.loading = false
 
                         if (this.users.length == 0) {
                             this.queryError = 'No results match this query'

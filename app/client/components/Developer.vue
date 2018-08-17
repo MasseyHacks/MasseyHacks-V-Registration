@@ -25,9 +25,16 @@
                             <div id="log">
                                 <h3>EVENT LIST</h3>
                                 <div v-for="event in log" style="margin:0.5em;">
-                                    <button v-on:click="showDiv(event.timestamp)" class="collapsible">{{moment(event.timestampHuman)}}</button>
+                                    <button v-on:click="showDiv(event.timestamp)" class="collapsible" style="word-wrap: break-word">
+                                        {{moment(event.timestampHuman)}}<br>
+                                        <b>{{event.message}}</b><br>
+                                        {{event.from.name}} -> {{event.to.name}}
+                                    </button>
+
                                     <div :id="event.timestamp" class="content" hidden>
-                                        <p style="margin-top:1rem; text-align:left;">{{event}}</p>
+                                        <p style="margin-top:1rem; text-align:left;">
+                                            {{event}}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -120,9 +127,6 @@
             },
             moment (date) {
                 return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
-            },
-            reverseLog() {
-                return this.log.slice().reverse();
             },
             updateSearch: function() {
                 ApiService.getLog({ page: this.page, size: 100 }, (err, data) => {
