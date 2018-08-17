@@ -32,12 +32,6 @@ import MagicLogin     from '../components/Magic.vue'
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
 
-//import BootstrapVue from 'bootstrap-vue'
-/*import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'*/
-
-//Vue.use(BootstrapVue)
-
 $.ajax({
     type: 'GET',
     url: '/api/settings',
