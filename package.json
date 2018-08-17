@@ -82,6 +82,7 @@
     "vue-recaptcha": "^1.1.1",
     "vue-router": "^3.0.1",
     "vue-server-renderer": "^2.5.17",
+    "vuejs-paginator": "^2.0.2",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.12.0",
     "webpack-stream": "^2.3.0"
