@@ -115,6 +115,7 @@ var hackerApplication = {
     grade: {
         type: String,
         questionType: 'dropdown',
+        question: 'What grade are you in?',
         enum: {
             values: '<=8 9 10 11 12'
         },
@@ -124,9 +125,23 @@ var hackerApplication = {
     school: {
         type: String,
         questionType: 'schoolSearch',
+        question: 'Please select your school:',
         maxlength: 100,
         mandatory: true
     }
+
+    /*
+    multies:
+
+    enum: {
+        options: {
+            lol: {
+                id: id
+                text: text to be shown in label
+            }
+        }
+    }
+     */
 };
 
 var mentorApplication = {
