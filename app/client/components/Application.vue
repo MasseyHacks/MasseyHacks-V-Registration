@@ -76,6 +76,7 @@
             return {
                 error: '',
                 applications: {},
+                settings: Session.getSettings(),
                 applicationHTML: '',
                 applicationValue : {},
                 school: null,

@@ -22,13 +22,17 @@ function buildLoggingData(id) {
         return buildLoggingCore(-1, 'MasseyHacks Internal Authority', 'internal@masseyhacks.ca');
     }
 
-    var user = User.getUser({_id : id});
+    //var user = User.getUser({_id : id}).exec();
 
-    if (!user) {
-        return buildLoggingCore(id, 'null name', 'null email');
-    } else {
-        return buildLoggingCore(id, user.fullName, user.email);
-    }
+    User.findOne({_id:id}, (err, user) => {
+        console.log('lel', user)
+
+        if (!user) {
+            return buildLoggingCore(id, 'null name', 'null email');
+        } else {
+            return buildLoggingCore(id, user.fullName, user.email);
+        }
+    });
 };
 
 
@@ -101,7 +105,7 @@ module.exports = {
         console.log(dataFrom)
 
         dataTo = buildLoggingData(actionTo);
-        console.log(dataFrom)
+        console.log(dataTo)
         LogEvent.create({
             'to': dataTo,
             'from': dataFrom,

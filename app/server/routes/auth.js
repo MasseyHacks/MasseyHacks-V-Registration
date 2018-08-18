@@ -23,11 +23,11 @@ function verifyRecaptcha(req, res, next) {
         }
     }, function (err, response, body) {
         if (err) {
-            return res.status(500).json({message: "Something went wrong on our end :("});
+            return res.status(500).json({error: "Something went wrong on our end :("});
         }
 
         if (!body.success) {
-            return res.status(500).json({message: body["error-codes"].join(".")});
+            return res.status(500).json({error: body["error-codes"].join(".")});
         }
 
         return next();
@@ -154,7 +154,7 @@ module.exports = function(router) {
     });
 
     // Send password reset email
-    router.post('/requestReset', verifyRecaptcha, function (req, res) {
+    router.post('/requestReset', /*verifyRecaptcha,*/ function (req, res) {
         var email = req.body.email;
 
         console.log(req.body.email + ' requesting reset email.');
