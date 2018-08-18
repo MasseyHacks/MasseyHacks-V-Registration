@@ -173,7 +173,7 @@
             prettify: function(str) {
                 var strProc = str
                 if (str.indexOf('.') != -1) {
-                    strProc = str.slice(str.indexOf('.'))
+                    strProc = str.slice(str.indexOf('.')+1)
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
