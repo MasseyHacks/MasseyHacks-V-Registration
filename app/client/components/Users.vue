@@ -430,6 +430,7 @@
 
             toggleNormalOnly: function(status) {
                 this.filters['$and']['permissions.checkin'] = !(status).toString()
+                this.updateSearch()
             }
         }
     }
