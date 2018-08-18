@@ -12,6 +12,14 @@
                         <button type="submit" class="primary-button">sign in</button>
                     </div>
                     <p v-if="error" class="error">{{error}}</p>
+
+                    <vue-recaptcha
+                            v-bind:sitekey="recaptchaSiteKey"
+                            ref="recaptcha"
+                            @verify="onCaptchaVerified"
+                            @expired="onCaptchaExpired"
+                            size="invisible">
+                    </vue-recaptcha>
                 </form>
             </div>
         </div>
@@ -22,10 +30,21 @@
 <script>
     import AuthService from '../src/AuthService'
     import Session     from '../src/Session'
+    import VueRecaptcha from 'vue-recaptcha'
+    import Recaptcha    from 'recaptcha'
+
+    /**
+     * To-Do: Add Recaptcha fail
+     */
 
     export default {
+        components: {
+            VueRecaptcha
+        },
+
         data () {
             return {
+                recaptchaSiteKey: RECAPTCHA_SITE_KEY,
                 code: '',
                 qr:Session.getQR(),
                 error: false,
@@ -39,7 +58,17 @@
         },
         methods: {
             codeLogin () {
-                AuthService.loginWithCode(this.code, (err, data) => {
+                this.$refs.recaptcha.execute()
+            },
+
+            onCaptchaExpired: function () {
+                this.$refs.recaptcha.reset();
+            },
+
+            onCaptchaVerified: function(recaptchaToken) {
+                this.$refs.recaptcha.reset();
+
+                AuthService.loginWithCode(this.code, recaptchaToken, (err, data) => {
                     if (err) {
                         this.error = err
                     } else {

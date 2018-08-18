@@ -33,7 +33,21 @@
 
                                     <div :id="event.timestamp" class="content" hidden>
                                         <p style="margin-top:1rem; text-align:left;">
-                                            {{event}}
+                                            <b>FROM</b><br>
+                                            Name: {{event.from.name}}<br>
+                                            Email: {{event.from.email}}<br>
+                                            ID: {{event.from.ID}}<br>
+                                            <br>
+                                            <b>TO</b><br>
+                                            Name: {{event.to.name}}<br>
+                                            Email: {{event.to.email}}<br>
+                                            ID: {{event.to.ID}}<br>
+                                            <br>
+                                            <b>ACTION</b><br>
+                                            {{event.message}}<br>
+                                            <br>
+                                            <b>TIMESTAMP</b><br>
+                                            {{moment(event.timestampHuman)}}
                                         </p>
                                     </div>
                                 </div>
@@ -162,8 +176,10 @@
     }
 
     .content {
+        transition: all .5s;
         padding: 0 18px;
         overflow: hidden;
+        text-wrap: normal;
         background-color: #f1f1f1;
     }
 </style>

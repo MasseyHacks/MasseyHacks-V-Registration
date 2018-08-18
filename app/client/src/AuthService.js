@@ -96,12 +96,13 @@ module.exports = {
         })
     },
 
-    register(email, firstName, lastName, password, callback) {
+    register(email, firstName, lastName, password, recaptchaToken, callback) {
         Session.sendRequest('POST', '/auth/register', {
             email: email,
             password: password,
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
+            recaptchaToken: recaptchaToken
         }, (err, data) => {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
@@ -150,9 +151,10 @@ module.exports = {
         })
     },
 
-    loginWithCode (code, callback) {
+    loginWithCode (code, recaptchaToken, callback) {
         Session.sendRequest('POST', '/auth/2FA', {
-            'code':code
+            'code':code,
+            recaptchaToken: recaptchaToken
         }, (err, data) => {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])

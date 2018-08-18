@@ -1,7 +1,7 @@
 <template>
     <div class="app-screen">
         <div class="container">
-            <div class="row">
+            <div class="row" style="z-index: 200">
                 <div class="title-card col-md-12">
                     <h2>DASHBOARD</h2>
                 </div>

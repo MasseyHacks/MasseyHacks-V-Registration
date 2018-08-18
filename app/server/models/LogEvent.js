@@ -3,7 +3,7 @@ const User     = require('../models/User');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
-var dataPack = {
+var loggingTemplate = {
     ID : {
         type: String,
         required: true
@@ -23,8 +23,8 @@ var schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    from : dataPack,
-    to : dataPack,
+    from : loggingTemplate,
+    to : loggingTemplate,
     message : {
         type: String,
         required: true
@@ -38,6 +38,10 @@ schema.set('toJSON', {
 schema.set('toObject', {
     virtuals: true
 });
+
+schema.statics.getLoggingTemplate = function() {
+    return loggingTemplate
+};
 
 schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp)

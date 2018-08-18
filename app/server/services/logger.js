@@ -4,29 +4,17 @@ const Raven           = require('raven');
 const permission      = require('../services/permissions');
 const User            = require('../models/User');
 
-var dataPack = {
-    ID : {
-        type: String,
-        required: true
-    },
-    name : {
-        type: String,
-        required: true
-    },
-    email : {
-        type: String,
-        required: true
-    }
-};
+// Get loggingTemplate
+var loggingTemplate = LogEvent.getLoggingTemplate();
 
 function buildLoggingCore(id, name, email) {
-    var dp = dataPack;
+    var lt = loggingTemplate;
 
-    dp.ID = id;
-    dp.name = name;
-    dp.email = email;
+    lt.ID = id;
+    lt.name = name;
+    lt.email = email;
 
-    return dp;
+    return lt;
 }
 
 function buildLoggingData(id) {

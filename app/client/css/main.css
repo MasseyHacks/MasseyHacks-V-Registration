@@ -150,8 +150,12 @@ h2 {
     height: 100vh;
     background: rgb(8,27,74);
     position: fixed;
-    width: 250px;
+    min-width: 250px;
     z-index: 9000;
+    overflow-y: auto;
+
+    padding-bottom: 50px;
+    padding-top: 50px;
 }
 
 #main-sidebar ul {

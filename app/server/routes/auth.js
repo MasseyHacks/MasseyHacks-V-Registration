@@ -38,7 +38,7 @@ module.exports = function(router) {
     router.use(express.json());
 
     // Register user
-    router.post('/register', function (req, res) {
+    router.post('/register', verifyRecaptcha, function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
         var firstName = req.body.firstName;
@@ -112,7 +112,7 @@ module.exports = function(router) {
         })
     });
 
-    router.post('/2FA', function (req, res) {
+    router.post('/2FA', verifyRecaptcha, function (req, res) {
         var token = permissions.getToken(req);
         var code = req.body.code;
 
@@ -136,7 +136,7 @@ module.exports = function(router) {
     });
 
     // Password reset
-    router.post('/reset', function (req, res) {
+    router.post('/reset', verifyRecaptcha, function (req, res) {
         var token = req.body.token;
         var password = req.body.password;
 
@@ -154,7 +154,7 @@ module.exports = function(router) {
     });
 
     // Send password reset email
-    router.post('/requestReset', function (req, res) {
+    router.post('/requestReset', verifyRecaptcha, function (req, res) {
         var email = req.body.email;
 
         console.log(req.body.email + ' requesting reset email.');
