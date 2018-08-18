@@ -77,6 +77,9 @@ UserController.getByQuery = function (adminUser, query, callback) {
     var filters = query.filters ? query.filters : {};
     var and     = [];
     var or      = [];
+    var appPage = query.appPage ? query.appPage : null;
+
+    console.log(appPage)
 
     if (text) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
@@ -114,6 +117,10 @@ UserController.getByQuery = function (adminUser, query, callback) {
             return callback({error:err.message})
         }
 
+        if (size === 0) {
+            size = count
+        }
+
         User
             .find(filters)
             .sort()
@@ -129,7 +136,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
                 if (users) {
                     for (var i = 0; i < users.length; i++) {
-                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level)
+                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level, appPage)
                     }
                 }
 
