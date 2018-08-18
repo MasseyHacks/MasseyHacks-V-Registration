@@ -58,8 +58,10 @@
                         <div v-for="(comparison, logical) in filters">
                             <tr>
                                 <div v-for="filter in comparison">
-                                    <td>{{logical}}</td>
-                                    <td>{{filter}}</td>
+                                    <td>{{logical.slice(1).toUpperCase()}}</td>
+                                    <span v-for="(value, key) in filter">
+                                        <td>{{key}}: {{value}}</td>
+                                    </span>
                                     <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
                                 </div>
                             </tr>
