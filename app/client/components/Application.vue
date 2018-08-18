@@ -234,7 +234,6 @@
                             swal("Success","Your application has been submitted!","success");
                         }
                     });
-
                 }
             }
         },
