@@ -6,7 +6,7 @@
                     <h2>APPLICATION</h2>
                 </div>
                 <div style="width:100%; padding: 1em;">
-                    <form @submit.prevent="submitApplication">
+                    <form v-if="!user.permissions.checkin" @submit.prevent="submitApplication">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
                             <textarea class="form-control" v-if="question.questionType == 'fullResponse'" :id="questionName" :maxlength="question.maxlength"></textarea>
@@ -41,6 +41,7 @@
                         </div>
                         <button type="submit" class="generic-button-dark">Submit</button>
                     </form>
+                    <div v-else style="text-align:center; font-size:1.5em;"><span>You are not a hacker!</span></div>
                 </div>
 
             </div>
@@ -80,7 +81,8 @@
                 applicationHTML: '',
                 schoolPlaceholder: 'Select a school',
                 applicationValue : {},
-                school: null
+                school: null,
+                user: Session.getUser()
             }
         },
         components:{
@@ -95,7 +97,6 @@
                     this.applications = applications
                 }
             });
-            //this.buildApplication()
         },
         mounted(){
             this.$nextTick(function () {
@@ -103,7 +104,7 @@
                     if (err || !applications) {
                         this.error = err ? err : 'Something went wrong :\'('
                     } else {
-                        this.applications = applications
+                        this.applications = applications;
                         this.populateApplication();
                     }
                 });
@@ -111,11 +112,10 @@
         },
         methods: {
             populateApplication(){
-                var userData = Session.getUser();
-                if(userData.status.submittedApplication && userData.profile.hacker != null){
+                if(this.user.status.submittedApplication && this.user.profile.hacker != null){
                     console.log('adding values');
                   //populate the fields with what they submitted
-                    var userApp = userData.profile.hacker;
+                    var userApp = this.user.profile.hacker;
 
                     Object.keys(userApp).forEach((field) => {
                         console.log(field);
