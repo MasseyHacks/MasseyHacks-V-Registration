@@ -1,12 +1,19 @@
 <template>
-    <div v-if="status == 'success'">
-        <h1>Success!</h1>
-    </div>
-    <div v-else-if="status == 'invalid'">
-        <h1>Invalid Token</h1>
-    </div>
-    <div v-else>
-        <h1>Loading...</h1>
+    <div>
+        <div class="spacer"></div>
+        <div id="login-form-box" class="vertical-centered">
+            <div id="login-form-elements">
+                <div v-if="status == 'success'">
+                    <p>Success!</p>
+                </div>
+                <div v-else-if="status == 'invalid'">
+                    <p>Invalid Token</p>
+                </div>
+                <div v-else>
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

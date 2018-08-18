@@ -74,6 +74,7 @@
             return {
                 error: '',
                 applications: {},
+                settings: Session.getSettings(),
                 applicationHTML: '',
                 options: [
                     { countryCode: "AU", countryName: "Australia" },

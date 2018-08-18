@@ -411,7 +411,8 @@ h4 {
     }
 
     #main-sidebar {
-        display: none;
+        left: -100%;
+
     }
 
     .title-card h2 {
