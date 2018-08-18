@@ -151,11 +151,14 @@ h2 {
     background: rgb(8,27,74);
     position: fixed;
     min-width: 250px;
-    z-index: 9000;
+    z-index: 900;
     overflow-y: auto;
 
     padding-bottom: 50px;
     padding-top: 50px;
+
+    transition: all .5s;
+    left: 0;
 }
 
 #main-sidebar ul {
@@ -208,16 +211,21 @@ h2 {
 
 #app-view {
     position: relative;
+    padding-bottom: 30px;
+}
+
+.app-view-logged-in {
     left: 250px;
     max-width: calc(100vw - 250px);
-    padding-bottom: 30px;
 }
 
 .app-screen {
     margin: 0 auto;
-    left: 50%;
-    transform: translateX(-50%);
 
+    /*
+    left: 50%;
+    transform: translateX(calc((100vw - 250px)/-2));
+    */
 }
 
 .ui-card {
@@ -388,7 +396,7 @@ h4 {
     border-bottom: 2px solid gray;
     color: black;
     text-align: left;
-}
+    transition: all .5s;}
 
 .ui-grid-item input:focus {
     outline: 0px;
@@ -411,8 +419,7 @@ h4 {
     }
 
     #main-sidebar {
-        left: -100%;
-
+        left: -300px;
     }
 
     .title-card h2 {
@@ -476,8 +483,17 @@ h4 {
     transition: all .5s; cubic-bezier(.55,0,.1,1);
     position: absolute;
 
+    left: calc(((100vw - 250px)/2));
+
+    transform: translateX(-500px);
+
+    /*
+    transform: translateX(calc((100vw - 250px)/-4));*/
+
+
+    /*
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
 }
 
 .slide-left-enter, .slide-right-leave-active {
