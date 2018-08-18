@@ -105,6 +105,14 @@ var hackerApplication = {
         mandatory: true
     },
 
+    name: {
+        type: String,
+        maxlength: 10,
+        questionType: 'shortAnswer',
+        question: 'First Name',
+        mandatory: true
+    },
+
     skillQuestion: {
         type: Boolean,
         questionType: 'boolean',
@@ -127,6 +135,25 @@ var hackerApplication = {
         questionType: 'schoolSearch',
         question: 'Please select your school:',
         maxlength: 100,
+        mandatory: true
+    },
+
+    testradio: {
+        type: String,
+        questionType: 'multiradio',
+        question: 'What is 1 + 1?',
+        enum: {
+            values: '1 2 4 5'
+        },
+        mandatory: true
+    },
+    testcheck: {
+        type: String,
+        questionType: 'multicheck',
+        question: 'What is 2 + 1?',
+        enum: {
+            values: '2^2 1 4 3'
+        },
         mandatory: true
     }
 
