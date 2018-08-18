@@ -5,7 +5,7 @@
                 <div class="title-card col-md-12">
                     <h2>APPLICATION</h2>
                 </div>
-                <div style="width:100%;">
+                <div style="width:100%; padding: 1em;">
                     <form @submit.prevent="submitApplication">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
@@ -37,7 +37,7 @@
                                 <option v-for="option in question.enum.values.split(' ')">{{option}}
                                 </option>
                             </select>
-                            <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName" :options="settings.schools" v-model="school" taggable></v-select>
+                            <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName" :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school" taggable></v-select>
                         </div>
                         <button type="submit" class="generic-button-dark">Submit</button>
                     </form>
@@ -78,6 +78,7 @@
                 applications: {},
                 settings: Session.getSettings(),
                 applicationHTML: '',
+                schoolPlaceholder: 'Select a school',
                 applicationValue : {},
                 school: null
             }
@@ -96,10 +97,57 @@
             });
             //this.buildApplication()
         },
+        mounted(){
+            this.$nextTick(function () {
+                ApiService.getApplications((err, applications) => {
+                    if (err || !applications) {
+                        this.error = err ? err : 'Something went wrong :\'('
+                    } else {
+                        this.applications = applications
+                        this.populateApplication();
+                    }
+                });
+            })
+        },
         methods: {
-            populationApplication(){
-              if(Session.getUser().submittedApplication && !Session.getUser().permissions.checkin){
+            populateApplication(){
+                var userData = Session.getUser();
+                if(userData.status.submittedApplication && userData.profile.hacker != null){
+                    console.log('adding values');
                   //populate the fields with what they submitted
+                    var userApp = userData.profile.hacker;
+
+                    Object.keys(userApp).forEach((field) => {
+                        console.log(field);
+                        console.log(this.applications.hacker);
+                        if(this.applications.hacker[field].questionType == 'multicheck'){
+                            userApp[field].forEach((checkedBox) =>{
+                                //check 'em all!
+                                document.getElementById(field+checkedBox).checked = true;
+                            });
+                        }
+                        else if(this.applications.hacker[field].questionType == 'multiradio' || this.applications.hacker[field].questionType == 'boolean'){
+                            //check only the radio box that was checked
+
+                            if(this.applications.hacker[field].questionType == 'boolean'){
+                                if(userApp[field]){
+                                    userApp[field] = 1;
+                                }
+                                else{
+                                    userApp[field] = 0;
+                                }
+                            }
+                            console.log("field",field+userApp[field]);
+                            document.getElementById(field+userApp[field]).checked = "true";
+                        }
+                        else if(this.applications.hacker[field].questionType == 'schoolSearch'){
+                            this.schoolPlaceholder = userApp[field];
+                            this.school = userApp[field];
+                        }
+                        else{
+                            document.getElementById(field).value = userApp[field];
+                        }
+                  })
               }
             },
             submitApplication(){
