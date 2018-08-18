@@ -44,15 +44,14 @@
 
                         <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
-                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers" v-on:click="toggleNormalOnly">
+                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers" v-on:change="toggleNormalOnly">
 
                         <label for="displayOrganizers">Display organizers: {{displayOrganizers}}</label>
 
-                        <button class="generic-button-light" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
                     </div>
 
                     <br>
-
+                    <button class="generic-button-light" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
                     <button class="generic-button-light" v-on:click="clearQuery">Clear</button>
                     <button class="generic-button-light" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ? "Simple" : "Advanced"}} Query</button>
 
@@ -430,6 +429,7 @@
 
             toggleNormalOnly: function() {
                 this.filters['$and']['permissions.checkin'] = !(this.displayOrganizers).toString()
+                console.log(this.filters)
                 this.updateSearch()
             }
         }
