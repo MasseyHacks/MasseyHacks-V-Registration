@@ -430,6 +430,7 @@
                 if (this.filters.length > 0) {
                     if (this.filters['$and'].length > 0) {
                         this.filters['$and'][0]['permissions.checkin'] = this.displayOrganizers.toString()
+                        console.log(this.displayOrganizers)
                     }
                 }
                 console.log(this.filters)
