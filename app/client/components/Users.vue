@@ -44,6 +44,10 @@
 
                         <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
+                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers">
+
+                        <label for="displayOrganizers">Display organizers: {{displayOrganizers}}</label>
+
                         <button class="generic-button-light" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
                     </div>
 
@@ -58,9 +62,11 @@
                         <div v-for="(comparison, logical) in filters">
                             <tr>
                                 <div v-for="filter in comparison">
-                                    <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
-                                    <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
-                                    <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
+                                    <span v-if="Object.keys(filter)[0] != 'permissions.checkin'">
+                                        <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
+                                        <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
+                                        <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
+                                    </span>
                                 </div>
                             </tr>
                         </div>
@@ -116,12 +122,12 @@
             return {
                 page: 1,
                 totalPages: 1,
-
+                displayOrganizers: true,
                 advancedQueryContent: '{}',
                 filters: {
                     '$and':[
                         {
-                            'permissions.checkin':'false'
+                            'permissions.checkin': !(this.displayOrganizers.toString())
                         }
                     ]
                 },
