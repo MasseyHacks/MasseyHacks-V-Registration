@@ -175,7 +175,7 @@
                 if (str.indexOf('.') != -1) {
                     strProc = str.slice(str.indexOf('.'))
                 }
-                return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+                return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
 
             onClick: function(text, data) {
