@@ -44,7 +44,7 @@
 
                         <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
-                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers">
+                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers" v-on:click="toggleNormalOnly(displayOrganizers)">
 
                         <label for="displayOrganizers">Display organizers: {{displayOrganizers}}</label>
 
@@ -127,7 +127,7 @@
                 filters: {
                     '$and':[
                         {
-                            'permissions.checkin': !(this.displayOrganizers.toString())
+                            'permissions.checkin': 'true'
                         }
                     ]
                 },
@@ -426,6 +426,10 @@
             switchPage: function(page) {
                 this.page = page
                 this.updateSearch()
+            },
+
+            toggleNormalOnly: function(status) {
+                this.filters['$and']['permissions.checkin'] = !(status).toString()
             }
         }
     }
