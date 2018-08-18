@@ -5,7 +5,7 @@
                 <div class="title-card col-md-12">
                     <h2>APPLICATION</h2>
                 </div>
-                <div>
+                <div style="width:100%;">
                     <form @submit.prevent="submitApplication">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
@@ -37,7 +37,7 @@
                                 <option v-for="option in question.enum.values.split(' ')">{{option}}
                                 </option>
                             </select>
-                            <v-select v-if="question.questionType == 'schoolSearch'" label="schoolName" :id="questionName" :options="options" v-model="school" taggable></v-select>
+                            <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName" :options="settings.schools" v-model="school" taggable></v-select>
                         </div>
                         <button type="submit" class="generic-button-dark">Submit</button>
                     </form>
@@ -79,23 +79,14 @@
                 settings: Session.getSettings(),
                 applicationHTML: '',
                 applicationValue : {},
-                school: null,
-                options: [
-                    { countryCode: "AU", schoolName: "Australia" },
-                    { countryCode: "CA", schoolName: "Canada" },
-                    { countryCode: "CN", schoolName: "China" },
-                    { countryCode: "DE", schoolName: "Germany" },
-                    { countryCode: "JP", schoolName: "Japan" },
-                    { countryCode: "MX", schoolName: "Mexico" },
-                    { countryCode: "CH", schoolName: "Switzerland" },
-                    { countryCode: "US", schoolName: "United States" }
-                ]
+                school: null
             }
         },
         components:{
           vSelect
         },
         beforeMount() {
+            console.log(this.settings);
             ApiService.getApplications((err, applications) => {
                 if (err || !applications) {
                     this.error = err ? err : 'Something went wrong :\'('
@@ -106,6 +97,11 @@
             //this.buildApplication()
         },
         methods: {
+            populationApplication(){
+              if(Session.getUser().submittedApplication && !Session.getUser().permissions.checkin){
+                  //populate the fields with what they submitted
+              }
+            },
             submitApplication(){
                 var doNotSubmit = false;
                 Object.keys(this.applications.hacker).forEach((question) => {
@@ -139,7 +135,7 @@
                    }
                    else if(this.applications.hacker[question].questionType == 'schoolSearch'){
                        if(this.school){
-                           this.applicationValue[question] = this.school.schoolName;
+                           this.applicationValue[question] = this.school;
                        }
                        else{
                            //invalid
@@ -162,6 +158,9 @@
                                this.applicationValue[question] = null;
                            }
                        }
+                       else if(inputElement.value.length > this.applications.hacker[question].maxlength){
+                           doNotSubmit = true;
+                       }
                        else{
                            this.applicationValue[question] = inputElement.value;
                        }
@@ -171,10 +170,23 @@
                 });
                 console.log(this.applicationValue);
                 if(doNotSubmit){
-                    swal("Please check all the required fields and try again");
+                    swal("Error","Please check all the required fields and try again","error");
                 }
                 else{
                     //ajax submit code
+                    var data = {};
+                    data.userID = Session.getUserID();
+                    data.profile = {};
+                    data.profile.hacker = this.applicationValue;
+                    Session.sendRequest('POST','/api/updateProfile',data,(err) =>{
+                        if(err){
+                            swal("Error",err,"error");
+                        }
+                        else{
+                            swal("Success","Your application has been submitted!","success");
+                        }
+                    });
+
                 }
             }
         },

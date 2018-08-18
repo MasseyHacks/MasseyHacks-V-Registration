@@ -638,7 +638,7 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
     console.log('Updating ' + profile);
     User.validateProfile(id, profile, function(err, profileValidated){
         if (err){
-            return callback({message: 'invalid profile'});
+            return callback({message: 'Invalid profile!'});
         }
 
         // Check if its within the registration window.
@@ -677,19 +677,6 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
                 });
             }
 
-            if (!profile.submittedApplication) {
-                User.findById(id, function(err, user) {
-                    if (err) {
-                        console.log('Could not send email:');
-                        console.log(err);
-                    }
-                    mailer.sendTemplateEmail(user.email,"applicationemails",{
-                        nickname: user['firstName'],
-                        dashUrl: process.env.ROOT_URL
-                    })
-                });
-            }
-
             User.findOne(
                 {
                     _id: id
@@ -719,6 +706,20 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
                             new: true
                         },
                         callback);
+
+                    if (!user.status.submittedApplication) {
+                        User.findById(id, function(err, user) {
+                            if (err) {
+                                console.log('Could not send email:');
+                                console.log(err);
+                            }
+                            mailer.sendTemplateEmail(user.email,"applicationemails",{
+                                nickname: user['firstName'],
+                                dashUrl: process.env.ROOT_URL
+                            })
+                        });
+                    }
+
                 });
         });
     });

@@ -148,7 +148,7 @@ var hackerApplication = {
         mandatory: true
     },
     testcheck: {
-        type: String,
+        type: [String],
         questionType: 'multicheck',
         question: 'What is 2 + 1?',
         enum: {
