@@ -2,7 +2,7 @@
     <div id="app">
 
         <!-- Common elements -->
-        <div id="main-sidebar" v-if="loggedIn">
+        <div id="main-sidebar" v-if="loggedIn" v-bind:class="{display : 'none'}">
              <!--<img src="/logo/logo.svg" width="250" height="250"> -->
              <ul>
                 <li>
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Router injects stuff in here -->
-        <div id="app-view">
+        <div id="app-view" v-bind:class="{'app-view-logged-in' : loggedIn}">
             <template v-if="$route.matched.length">
                 <transition :name="transitionName">
                     <router-view class="child-view"></router-view>

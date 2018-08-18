@@ -336,13 +336,23 @@ schema.virtual('profile.isSigned').get(function () {
     return this.profile.signature !== -1;
 })
 
-schema.statics.filterSensitive = function(user, permission) {
-    return filterSensitive(user, permission);
+schema.statics.filterSensitive = function(user, permission, page) {
+    return filterSensitive(user, permission, page);
 }
 
-var filterSensitive = function (user, permission) {
+var filterSensitive = function (user, permission, page) {
 
     try {
+        console.log(page)
+        if (page === "checkin") {
+            return {
+                id: user.id,
+                name: user.fullName,
+                waiver: user.status.waiver,
+                checked: user.status.checkedIn,
+                email: user.email}
+        }
+
         var u = user.toJSON();
 
         var permissionLevel;
