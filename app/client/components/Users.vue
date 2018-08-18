@@ -427,7 +427,11 @@
             },
 
             toggleNormalOnly: function() {
-                this.filters['$and']['permissions.checkin'] = this.displayOrganizers.toString()
+                if (this.filters.length > 0) {
+                    if (this.filters['$and'].length > 0) {
+                        this.filters['$and'][0]['permissions.checkin'] = this.displayOrganizers.toString()
+                    }
+                }
                 console.log(this.filters)
                 this.updateSearch()
             }

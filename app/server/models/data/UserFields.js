@@ -152,7 +152,7 @@ var hackerApplication = {
         questionType: 'multicheck',
         question: 'What is 2 + 1?',
         enum: {
-            values: '2^2 1 4 3'
+            values: '5 1 4 3'
         },
         mandatory: true
     }
