@@ -26,21 +26,21 @@
                                     <button v-on:click="showDiv(event.timestamp)" class="collapsible" style="word-wrap: break-word">
                                         {{moment(event.timestampHuman)}}<br>
                                         <b>{{event.message}}</b><br>
-                                        <span v-if="event.from.name && event.to.name">
-                                            {{event.from.name}} -> {{event.to.name}}
+                                        <span v-if="event.from.Name && event.to.Name">
+                                            {{event.from.Name}} -> {{event.to.Name}}
                                         </span>
                                     </button>
 
                                     <div :id="event.timestamp" class="content" hidden>
                                         <p style="margin-top:1rem; text-align:left;">
                                             <b>FROM</b><br>
-                                            Name: {{event.from.name}}<br>
-                                            Email: {{event.from.email}}<br>
+                                            Name: {{event.from.Name}}<br>
+                                            Email: {{event.from.Email}}<br>
                                             ID: {{event.from.ID}}<br>
                                             <br>
                                             <b>TO</b><br>
-                                            Name: {{event.to.name}}<br>
-                                            Email: {{event.to.email}}<br>
+                                            Name: {{event.to.Name}}<br>
+                                            Email: {{event.to.Email}}<br>
                                             ID: {{event.to.ID}}<br>
                                             <br>
                                             <b>ACTION</b><br>

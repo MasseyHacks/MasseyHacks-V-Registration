@@ -118,8 +118,6 @@
                     var userApp = this.user.profile.hacker;
 
                     Object.keys(userApp).forEach((field) => {
-                        console.log(field);
-                        console.log(this.applications.hacker);
                         if(this.applications.hacker[field].questionType == 'multicheck'){
                             userApp[field].forEach((checkedBox) =>{
                                 //check 'em all!
@@ -216,7 +214,6 @@
 
                    }
                 });
-                console.log(this.applicationValue);
                 if(doNotSubmit){
                     swal("Error","Please check all the required fields and try again","error");
                 }
