@@ -26,7 +26,7 @@
                         <!-- Field Name -->
                         <select style="margin: 10px;" v-model="queryField" v-on:change="changeFieldName">
                             <option v-bind:value="{}">Select a field</option>
-                            <option v-for="field in fields" v-bind:value="field">{{field.name}}</option>
+                            <option v-for="field in fields" v-bind:value="field">{{prettify(field.name)}}</option>
                         </select>
 
                         <select style="margin: 10px;" v-model="queryComparison" :disabled="!queryField.name">
@@ -58,10 +58,8 @@
                         <div v-for="(comparison, logical) in filters">
                             <tr>
                                 <div v-for="filter in comparison">
-                                    <td>{{logical.slice(1).toUpperCase()}}</td>
-                                    <span v-for="(value, key) in filter">
-                                        <td>{{key}}: {{value}}</td>
-                                    </span>
+                                    <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
+                                    <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
                                     <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
                                 </div>
                             </tr>
@@ -171,6 +169,14 @@
         },
 
         methods : {
+
+            prettify: function(str) {
+                var strProc = str
+                if (str.indexOf('.') != -1) {
+                    strProc = str.slice(str.indexOf('.'))
+                }
+                return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+            },
 
             onClick: function(text, data) {
                 swal('Hello')
