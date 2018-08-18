@@ -439,10 +439,12 @@ h4 {
 
 .generic-button:disabled {
     background-color: rgba(255,255,255,0.2);
+    color: lightgrey;
 }
 
 .generic-button-light:disabled {
     background-color: rgba(0,0,0,0.2);
+    color: lightgrey;
 }
 
 .generic-button-small {
@@ -491,17 +493,12 @@ h4 {
     transition: all .5s; cubic-bezier(.55,0,.1,1);
     position: absolute;
 
-    left: calc(((100vw - 250px)/2));
-
-    transform: translateX(-500px);
-
     /*
+    left: calc(((100vw - 250px)/2));
     transform: translateX(calc((100vw - 250px)/-4));*/
 
-
-    /*
     left: 50%;
-    transform: translateX(-50%);*/
+    transform: translateX(-50%);
 }
 
 .slide-left-enter, .slide-right-leave-active {
