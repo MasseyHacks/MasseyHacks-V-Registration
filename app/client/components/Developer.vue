@@ -21,14 +21,14 @@
 <!--                             <button class="generic-button" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button> -->
                             <button class="generic-button" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
                             <button class="generic-button" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
-                            <hr>
                             <div id="log">
-                                <h3>EVENT LIST</h3>
                                 <div v-for="event in log" style="margin:0.5em;">
                                     <button v-on:click="showDiv(event.timestamp)" class="collapsible" style="word-wrap: break-word">
                                         {{moment(event.timestampHuman)}}<br>
                                         <b>{{event.message}}</b><br>
-                                        {{event.from.name}} -> {{event.to.name}}
+                                        <span v-if="event.from.name && event.to.name">
+                                            {{event.from.name}} -> {{event.to.name}}
+                                        </span>
                                     </button>
 
                                     <div :id="event.timestamp" class="content" hidden>
@@ -129,7 +129,7 @@
                 return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
             },
             updateSearch: function() {
-                ApiService.getLog({ page: this.page, size: 100 }, (err, data) => {
+                ApiService.getLog({ page: this.page, size: 30 }, (err, data) => {
                     this.loading = false
 
                     if (err || !data) {
