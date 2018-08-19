@@ -31,10 +31,6 @@ Raven.context(function() {
     mongoose.connect(database);
     stats.startService();
 
-    // For recaptcha
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded());
-
     if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
 

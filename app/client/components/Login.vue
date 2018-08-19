@@ -19,16 +19,6 @@
                     </div>
 
                     <p v-if="error" class="error">{{error}}</p>
-
-                    <br>
-
-                    <vue-recaptcha
-                            v-bind:sitekey="recaptchaSiteKey"
-                            ref="recaptcha"
-                            @verify="onCaptchaVerified"
-                            @expired="onCaptchaExpired"
-                            size="invisible">
-                    </vue-recaptcha>
                 </form>
             </div>
         </div>
@@ -39,17 +29,10 @@
 <script>
     import AuthService  from '../src/AuthService'
     import Session      from '../src/Session'
-    import VueRecaptcha from 'vue-recaptcha'
-    import Recaptcha    from 'recaptcha'
 
     export default {
-        components: {
-            VueRecaptcha
-        },
-
         data () {
             return {
-                recaptchaSiteKey: RECAPTCHA_SITE_KEY,
                 email: '',
                 pass: '',
                 error: false,
@@ -62,10 +45,8 @@
             }
         },
         methods: {
-            onCaptchaVerified: function(recaptchaToken) {
-                this.$refs.recaptcha.reset();
-
-                AuthService.loginWithPassword(this.email, this.pass, recaptchaToken, (err, data) => {
+            login () {
+                AuthService.loginWithPassword(this.email, this.pass, (err, data) => {
                     if (err) {
                         this.error = err
                     } else {
@@ -77,14 +58,6 @@
                         }
                     }
                 })
-            },
-
-            login () {
-                this.$refs.recaptcha.execute()
-            },
-
-            onCaptchaExpired: function () {
-                this.$refs.recaptcha.reset();
             }
         }
     }

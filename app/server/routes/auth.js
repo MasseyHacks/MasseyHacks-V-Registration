@@ -3,7 +3,6 @@ require('dotenv').load();
 const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
-const request            = require('request');
 
 const User               = require('../models/User');
 const UserController     = require('../controllers/UserController');
@@ -13,32 +12,11 @@ const logger             = require('../services/logger');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
-function verifyRecaptcha(req, res, next) {
-    request.post({
-        uri: "https://www.google.com/recaptcha/api/siteverify",
-        json: true,
-        form: {
-            secret: process.env.RECAPTCHA_SECRET_KEY,
-            response: req.body.recaptchaToken
-        }
-    }, function (err, response, body) {
-        if (err) {
-            return res.status(500).json({error: "Something went wrong on our end :("});
-        }
-
-        if (!body.success) {
-            return res.status(500).json({error: body["error-codes"].join(".")});
-        }
-
-        return next();
-    });
-}
-
 module.exports = function(router) {
     router.use(express.json());
 
     // Register user
-    router.post('/register', verifyRecaptcha, function (req, res) {
+    router.post('/register', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
         var firstName = req.body.firstName;
@@ -75,7 +53,7 @@ module.exports = function(router) {
     });
 
     // Login and issue token
-    router.post('/login', verifyRecaptcha, function (req, res) {
+    router.post('/login', function (req, res) {
         var email = req.body.email;
         var password = req.body.password;
 
@@ -112,7 +90,7 @@ module.exports = function(router) {
         })
     });
 
-    router.post('/2FA', verifyRecaptcha, function (req, res) {
+    router.post('/2FA', function (req, res) {
         var token = permissions.getToken(req);
         var code = req.body.code;
 
@@ -136,7 +114,7 @@ module.exports = function(router) {
     });
 
     // Password reset
-    router.post('/reset', verifyRecaptcha, function (req, res) {
+    router.post('/reset', function (req, res) {
         var token = req.body.token;
         var password = req.body.password;
 
@@ -154,7 +132,7 @@ module.exports = function(router) {
     });
 
     // Send password reset email
-    router.post('/requestReset', /*verifyRecaptcha,*/ function (req, res) {
+    router.post('/requestReset', function (req, res) {
         var email = req.body.email;
 
         console.log(req.body.email + ' requesting reset email.');
