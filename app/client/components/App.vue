@@ -84,40 +84,28 @@
             }
         },
         created() {
-            AuthService.updateLoginState = state => {
+            AuthService.updateLoginState = (state, message) => {
                 this.user = Session.getUser()
                 this.loggedIn = state
 
-                console.log('Setting state to', state)
+                console.log('Setting state to', state, message)
 
                 if (!state) {
-                    this.$router.replace('/login')
+                    this.$router.replace('/login' + message ? '?message=' + message : '')
                 }
             }
 
-            // Login with token if it exists
-            if (Session.loggedIn()) {
-                AuthService.loginWithToken()
-            }
-
+            setInterval(this.refreshToken(), 5000)
+            this.refreshToken()
         },
         methods: {
-            flushAlerts(t) {
-                console.log("dank");
-                if (!t) {
-                    t = "specify message"
+            refreshToken() {
+                console.log('Token refreshed!')
+
+                // Login with token if it exists
+                if (Session.loggedIn()) {
+                    AuthService.loginWithToken()
                 }
-                var ComponentClass = Vue.extend(danger);
-                var instance = new ComponentClass({
-                    propsData: { text: t}
-                });
-
-                instance.$mount(); // pass nothing
-
-                this.$refs.container.appendChild(instance.$el);
-            },
-            removeAlert(alert) {
-                this.$refs.container.removeChild(alert);
             }
         }
     }

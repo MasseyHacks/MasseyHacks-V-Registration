@@ -55,12 +55,7 @@ module.exports = {
 
     create2FA(token, data) {
         localStorage.token = token
-        localStorage.qr = data.qr
         console.log(token)
-    },
-
-    getQR() {
-      return localStorage.qr
     },
 
     destroy(callback) {

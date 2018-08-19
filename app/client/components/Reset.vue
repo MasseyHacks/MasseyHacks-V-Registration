@@ -70,9 +70,10 @@
                             title: 'Success!',
                             text: 'An email was sent to ' + this.email + '!',
                             type: 'success'
+                        }).then(() => {
+                            this.$router.replace('/login')
                         })
 
-                        this.$router.replace('/login')
                     }
                 })
             },

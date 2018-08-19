@@ -1,9 +1,14 @@
 <template>
-    <div id="main">
+    <div class="main"> <!--style="background-image: url('/img/background.svg'); background-position: center; background-size: cover;"-->
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
+
             <p v-if="$route.query.redirect">
                 You need to login first.
+            </p>
+
+            <p v-if="$route.query.message">
+                {{$route.query.message}}
             </p>
 
             <h2 class="subtitle">Login</h2>
@@ -22,7 +27,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 </template>
 

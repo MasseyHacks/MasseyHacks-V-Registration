@@ -7,6 +7,7 @@ const bodyParser      = require('body-parser');
 const methodOverride  = require('method-override');
 const morgan          = require('morgan');
 const cookieParser    = require('cookie-parser');
+const RateLimit          = require('express-rate-limit');
 const cluster         = require('cluster');
 const cpuCount        = require('os').cpus().length;
 
@@ -30,6 +31,20 @@ Raven.context(function() {
     var app = express();
     mongoose.connect(database);
     stats.startService();
+
+    app.enable('trust proxy')
+
+    var apiLimiter = new RateLimit({
+        windowMs: 15*60*1000,
+        max: 100,
+        delayMs: 0 // disabled
+    });
+
+    var authLimiter = new RateLimit({
+        windowMs: 15*60*1000, 
+        max: 100,
+        delayMs: 0 // disabled
+    });
 
     if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);

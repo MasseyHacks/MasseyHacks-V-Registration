@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="main">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">Registration System</h2>
+            <h2 class="subtitle">Register</h2>
             <div id="login-form-elements">
                 <form @submit.prevent="register">
                     <input v-model="firstName" placeholder="First Name" autofocus required>

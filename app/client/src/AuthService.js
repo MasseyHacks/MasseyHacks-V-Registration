@@ -174,7 +174,7 @@ module.exports = {
             if (err) {
                 if (callback) callback(JSON.parse(err.responseText)['error'])
             } else {
-                this.logout()
+                this.logout(null, 'The session has expired')
                 if (callback) callback(null, data)
             }
         })
@@ -204,9 +204,9 @@ module.exports = {
         })
     },
 
-    logout (callback) {
+    logout (callback, message) {
         Session.destroy(callback)
-        this.updateLoginState(false)
+        this.updateLoginState(false, message)
     },
 
     updateLoginState(state) {}

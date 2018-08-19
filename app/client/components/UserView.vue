@@ -12,7 +12,7 @@
                 </ul>
             </div>
             <hr>
-            <span v-if="$parent.user.permissions.owner">
+            <span v-if="user.permissions.owner">
                 <h4>APPLICATION</h4>
                 <ul style="overflow-wrap: break-word; text-align: left;">
                     <li v-for="(value, key) in userApp">
@@ -36,6 +36,7 @@
     export default {
         data() {
             return {
+                user: Session.getUser(),
                 error : '',
                 userID : '',
                 userObj : {},

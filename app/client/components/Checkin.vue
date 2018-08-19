@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row">
                 <div class="title-card col-md-12">
-                    <h2>Check In</h2>
+                    <h2>CHECK IN</h2>
                 </div>
             </div>
 

@@ -166,7 +166,7 @@ UserController.verify = function (token, callback) {
 
         if (payload.type != 'verification' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Token is invalid for this operation.',
+                error: ' Invalid Token.',
                 code: 403
             });
         }
@@ -213,7 +213,7 @@ UserController.magicLogin = function (token, callback) {
 
         if (payload.type != 'magicJWT' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Token is invalid for this operation.',
+                error: ' Invalid Token.',
                 code: 403
             });
         }
@@ -392,7 +392,7 @@ UserController.resetPassword = function (token, password, callback) {
 
         if (payload.type != 'password-reset' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Token is invalid for this operation.',
+                error: ' Invalid Token.',
                 code: 403
             });
         }
@@ -598,11 +598,11 @@ UserController.loginWithPassword = function(email, password, callback){
 
             console.log(process.env.TUFA_ENABLED)
             if (user.permissions.admin && process.env.TUFA_ENABLED === "true") {
-                logger.logAction(user._id, user._id, "is logging in. Redirecting to 2FA")
+                logger.logAction(user._id, user._id, "Organizer is logging in. Redirecting to 2FA.")
 
                 var token = user.generate2FAToken();
 
-                return callback(null, {qr: user.QRCode, "2FA": true}, token);
+                return callback(null, {"2FA": true}, token);
             } else {
                 logger.logAction(user._id, user._id, 'Logged in with password.');
 

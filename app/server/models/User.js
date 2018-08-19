@@ -134,7 +134,7 @@ schema.statics.getByToken = function (token, callback) {
 
         if (payload.type != 'authentication' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Token is invalid for this operation',
+                error: ' Invalid Token',
                 code: 403
             });
         }
@@ -171,7 +171,7 @@ schema.statics.get2FA = function (token, callback) {
 
         if (payload.type != '2FA' || !payload.exp || Date.now() >= payload.exp * 1000) {
             return callback({
-                error: 'Token is invalid for this operation',
+                error: 'Invalid Token',
                 code: 403
             });
         }

@@ -1,13 +1,12 @@
 <template>
-    <div id="main">
+    <div class="main">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">2FA</h2>
-            <p style="font-size: 1em">MasseyHacks Security Policy requires 2 factor authentication to protect the security and privacy of our users.</p>
+            <h2 class="subtitle">Security Check</h2>
+            <p>MasseyHacks Security Policy requires 2 factor authentication to protect the security and privacy of our users.</p>
             <div id="login-form-elements">
                 <form @submit.prevent="codeLogin">
                     <input v-model="code" type="number" maxlength="6" autofocus required>
-                    <img v-bind:src="qr"/>
                     <div id="button-row">
                         <button type="submit" class="primary-button">sign in</button>
                     </div>
@@ -27,7 +26,6 @@
         data () {
             return {
                 code: '',
-                qr:Session.getQR(),
                 error: false,
                 settings: Session.getSettings()
             }

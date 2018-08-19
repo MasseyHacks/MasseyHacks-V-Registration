@@ -18,7 +18,7 @@
                 <div class="ui-card dash-card-large">
                     <h3>AT A GLANCE:</h3>
                     <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
-                    <button v-on:click="refreshStatistics" v-if="$parent.user.permissions.developer" class="generic-button-light">Refresh</button>
+                    <button v-on:click="refreshStatistics" v-if="user.permissions.developer" class="generic-button-light">Refresh</button>
                     <br>
                     <hr>
                     <div class="duo-col">
@@ -128,6 +128,7 @@
     export default {
         data() {
             return {
+                user: Session.getUser(),
                 loading: true,
                 loadingError: '',
                 statistics: {},
