@@ -596,7 +596,8 @@ UserController.loginWithPassword = function(email, password, callback){
                 return callback({ error: 'Account is not active. Please contact an administrator for assistance.', code: 403})
             }
 
-            if (user.permissions.admin) {
+            console.log(process.env.TUFA_ENABLED)
+            if (user.permissions.admin && process.env.TUFA_ENABLED === "true") {
                 logger.logAction(user._id, user._id, "is logging in. Redirecting to 2FA")
 
                 var token = user.generate2FAToken();

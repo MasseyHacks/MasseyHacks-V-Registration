@@ -17,7 +17,7 @@
                         {{loadingError}}
                     </div>
                     <div v-else>
-                        <input class="round-input" style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
+                        <input class="round-input" style="width: 100%" placeholder="Search for hacker here" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                         <div v-if="users.length != 0 && !queryError">
                             <table id="users-table">
@@ -110,7 +110,7 @@
                         console.log(err)
                         swal("Error", "An error has occured, please contact an organizer immediately", "error")
                     } else {
-                        swal("Success", "Hacker " + data.name + " has been successfully checked in.")
+                        swal("Success", "Hacker " + data.name + " has been successfully checked in.", "success")
                         Vue.set(this.users, index, data)
                     }
                 })
@@ -122,7 +122,7 @@
                         console.log(err)
                         swal("Error", "An error has occured, please contact an organizer immediately", "error")
                     } else {
-                        swal("Success", "Hacker " + data.name + " has been successfully checked out.")
+                        swal("Success", "Hacker " + data.name + " has been successfully checked out.", "success")
                         Vue.set(this.users, index, data)
                     }
                 })
