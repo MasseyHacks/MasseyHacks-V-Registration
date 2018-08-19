@@ -438,12 +438,12 @@ h4 {
 }
 
 .generic-button:disabled {
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(0,0,0,0.2);
     color: lightgrey;
 }
 
 .generic-button-light:disabled {
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(255,255,255,0.2);
     color: lightgrey;
 }
 
