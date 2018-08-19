@@ -26,6 +26,13 @@ module.exports = function(router) {
     // Get skill question
     router.get('/skill', permissions.isAdmin, function(req, res) {
 
+        logger.defaultResponse(req, res)(null,  {
+            question: 'What is the meaning of life?',
+            instruction: 'Solve for `life`:',
+            answer: 42
+        })
+        
+        /*
         request.get({
             uri: "https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner",
             json: true
@@ -35,7 +42,7 @@ module.exports = function(router) {
             } else {
                 logger.defaultResponse(req, res)(null, body)
             }
-        });
+        });*/
 
     });
 
