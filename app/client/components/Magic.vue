@@ -8,17 +8,17 @@
     import AuthService  from '../src/AuthService'
 
     export default {
-        name: "Magic",
+        name: 'Magic',
         created () {
             swal.showLoading()
             console.log(this.$route.query.token)
-            Session.sendRequest("POST", '/auth/magicurl', {token: this.$route.query.token}, (err, data) => {
+            AuthService.sendRequest('POST', '/auth/magicurl', {token: this.$route.query.token}, (err, data) => {
                 if (err || !data) {
-                    swal("Error", "An error has occurred", "error")
-                    console.log(JSON.parse(err.responseText)['error'])
+                    swal('Error', 'An error has occurred', 'error')
+                    console.log(err.responseJSON['error'])
                     this.$router.replace('/login')
                 } else {
-                    swal("Success", "", "success")
+                    swal('Success', '', 'success')
                     console.log(data)
 
                     Session.create(data.token, data.user)

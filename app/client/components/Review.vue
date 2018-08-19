@@ -27,6 +27,7 @@
 <script>
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
+    import AuthService from '../src/AuthService'
     import $ from 'jquery';
     import swal from 'sweetalert2'
 
@@ -61,7 +62,7 @@
                 }]}}, (err, data) => {
 
                 if (err || !data) {
-                    this.err = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    this.err = err ? err.responseJSON.error : 'Unable to process request'
                 } else {
                     this.applicationsLeft = Object.keys(data.users).length;
                     this.users = data;
@@ -183,7 +184,7 @@
                             console.log(userOK);
                             if(userOK){
                                 //register the vote
-                                Session.sendRequest('POST','/api/voteAdmit',{
+                                AuthService.sendRequest('POST','/api/voteAdmit',{
                                     userID: this.userTimes[0][2]["id"]
                                 }, (err,data) =>{
                                     if(err){
@@ -216,7 +217,7 @@
                             console.log(userOK);
                             if(userOK){
                                 //register the vote
-                                Session.sendRequest('POST','/api/voteReject',{
+                                AuthService.sendRequest('POST','/api/voteReject',{
                                     userID: this.userTimes[0][2]["id"]
                                 }, (err,data) =>{
                                     if(err){
@@ -249,7 +250,7 @@
                             console.log(userOK);
                             if(userOK){
                                 //register the vote
-                                Session.sendRequest('POST','/api/forceAccept',{
+                                AuthService.sendRequest('POST','/api/forceAccept',{
                                     userID: this.userTimes[0][2]["id"]
                                 }, (err,data) =>{
                                     if(err){
@@ -282,7 +283,7 @@
                             console.log(userOK);
                             if(userOK){
                                 //register the vote
-                                Session.sendRequest('POST','/api/forceReject',{
+                                AuthService.sendRequest('POST','/api/forceReject',{
                                     userID: this.userTimes[0][2]["id"]
                                 }, (err,data) =>{
                                     if(err){

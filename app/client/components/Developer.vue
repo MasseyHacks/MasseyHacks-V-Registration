@@ -103,7 +103,7 @@
         beforeMount() {
             this.updateSearch()
 
-            Session.sendRequest("GET", "api/getAdmins", null, (err, data) => {
+            AuthService.sendRequest("GET", "api/getAdmins", null, (err, data) => {
                 console.log(data)
                 if (err) {
                     console.log("Error while getting template")
@@ -147,7 +147,7 @@
                     this.loading = false
 
                     if (err || !data) {
-                        this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                        this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
                         this.log = data.log
                         this.totalPages = data.totalPages

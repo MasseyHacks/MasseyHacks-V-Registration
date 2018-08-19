@@ -19,7 +19,7 @@ for(const key in organizers) {
 }
 
 function makeOrganizer(email, firstName, lastName,  permission) {
-    var authSecret = speakeasy.generateSecret({length: 100, name: "MasseyHacks V | GOOSE", issuer: "MasseyHacks V Platform Division"});
+    var authSecret = speakeasy.generateSecret({length: 100, name: 'MasseyHacks V | GOOSE', issuer: 'MasseyHacks V Platform Division'});
     QRCode.toDataURL(authSecret.otpauth_url, function(err, data_url) {
         User.getByEmail(email, function (err, user) {
             if (!user) {
@@ -60,11 +60,11 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                             {
                                 new: true
                             }, function (err, user) {
-                                console.log(userNew.email + ": " + process.env.ROOT_URL + "/magic?token=" + token)
+                                console.log(userNew.email + ': ' + process.env.ROOT_URL + '/magic?token=' + token)
                                 //send the email
                                 mailer.sendTemplateEmail(user.email,'magiclinkemails',{
                                     nickname: userNew.firstName,
-                                    magicURL: process.env.ROOT_URL + "/magic?token=" + token
+                                    magicURL: process.env.ROOT_URL + '/magic?token=' + token
                                 });
                             })
                     }

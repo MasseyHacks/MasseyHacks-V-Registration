@@ -94,7 +94,7 @@
                     console.log('?message=' + encodeURIComponent(message))
 
                     if (message) {
-                        this.$router.push({ path: '/login', query: {message: encodeURIComponent(message)}})
+                        this.$router.push({ path: '/login', query: {message: message}})
                     } else {
                         this.$router.push({path: '/login'})
                     }

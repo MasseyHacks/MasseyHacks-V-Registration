@@ -1,35 +1,34 @@
 /* globals localStorage */
 
-import $       from 'jquery'
-import Session from './Session'
+import AuthService from './AuthService'
 
 module.exports = {
 
     getApplications(callback) {
-        Session.sendRequest('GET', '/api/applications', {}, callback)
+        AuthService.sendRequest('GET', '/api/applications', {}, callback)
     },
 
     getFields(callback) {
-        Session.sendRequest('GET', '/api/fields', {}, callback)
+        AuthService.sendRequest('GET', '/api/fields', {}, callback)
     },
 
     getStatistics(callback) {
-        Session.sendRequest('GET', '/api/stats', {}, callback)
+        AuthService.sendRequest('GET', '/api/stats', {}, callback)
     },
 
     refreshStatistics(callback) {
-        Session.sendRequest('POST', '/api/refreshStatistics', {}, callback)
+        AuthService.sendRequest('POST', '/api/refreshStatistics', {}, callback)
     },
 
     getUsers(query, callback) {
-        Session.sendRequest('GET', '/api/users', query, callback)
+        AuthService.sendRequest('GET', '/api/users', query, callback)
     },
 
     getUser(id, callback) {
-        Session.sendRequest('GET', '/api/user/' + id, {}, callback)
+        AuthService.sendRequest('GET', '/api/user/' + id, {}, callback)
     },
 
     getLog(query, callback) {
-        Session.sendRequest('GET', '/api/systemLog', query, callback)
+        AuthService.sendRequest('GET', '/api/systemLog', query, callback)
     }
 }

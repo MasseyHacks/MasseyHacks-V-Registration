@@ -344,7 +344,7 @@ var filterSensitive = function (user, permission, page) {
 
     try {
         console.log(page)
-        if (page === "checkin") {
+        if (page === 'checkin') {
             return {
                 id: user.id,
                 name: user.fullName,
@@ -404,7 +404,7 @@ var filterSensitive = function (user, permission, page) {
 
 var navigate = function(dictionary, path) {
     var runner = dictionary;
-    path = path.split(".");
+    path = path.split('.');
 
     for (var i = 0; i < path.length - 1; i++) {
         runner = runner[path[i]];

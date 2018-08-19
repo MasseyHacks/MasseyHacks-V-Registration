@@ -99,17 +99,20 @@ module.exports = {
          * To-Do: Fix this bash...
          */
 
-        /*
         const dataFrom = await buildLoggingData(actionFrom);
-        console.log(dataFrom)
 
         const dataTo = await buildLoggingData(actionTo);
 
-        console.log(dataFrom, dataTo)*/
+        /*
+        dataTo.then((x) => {
+            console.log('wtf', x)
+        })*/
+
+        console.log(dataFrom, dataTo)
 
         LogEvent.create({
-            'to': await buildLoggingData(actionTo),
-            'from': await buildLoggingData(actionFrom),
+            'to': dataTo,
+            'from': dataFrom,
             'message': message,
             'timestamp': Date.now()
         }, function (err, event) {

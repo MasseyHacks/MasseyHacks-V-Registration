@@ -22,7 +22,7 @@ const qrcode         = require('qrcode');
 var UserController   = {};
 
 function escapeRegExp(str) {
-    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
 UserController.getUserFields = function(userExecute, callback) {
@@ -50,7 +50,7 @@ UserController.getUserFields = function(userExecute, callback) {
 };
 
 UserController.getAdmins = function(callback) {
-    User.find({"permissions.admin":true}, "+QRCode", function(err, data) {
+    User.find({'permissions.admin':true}, '+QRCode', function(err, data) {
         if (err) {
             return callback({error: err})
         }
@@ -218,7 +218,7 @@ UserController.magicLogin = function (token, callback) {
             });
         }
 
-        User.findOne({_id: payload.id}, "+magicJWT", function(err, user) {
+        User.findOne({_id: payload.id}, '+magicJWT', function(err, user) {
             console.log(user)
             if (token === user.magicJWT) {
                 User.findOneAndUpdate({
@@ -226,7 +226,7 @@ UserController.magicLogin = function (token, callback) {
                     },
                     {
                         $set: {
-                            'magicJWT': ""
+                            'magicJWT': ''
                         }
                     },
                     {
@@ -442,7 +442,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
             logger.logAction(user._id.email, user._id, 'Requested a password reset email.');
 
             console.log(resetURL);
-            mailer.sendTemplateEmail(email,"passwordresetemails", {
+            mailer.sendTemplateEmail(email,'passwordresetemails', {
                 nickname: user.firstName,
                 resetUrl: resetURL
             });
@@ -597,12 +597,12 @@ UserController.loginWithPassword = function(email, password, callback){
             }
 
             console.log(process.env.TUFA_ENABLED)
-            if (user.permissions.admin && process.env.TUFA_ENABLED === "true") {
-                logger.logAction(user._id, user._id, "Organizer is logging in. Redirecting to 2FA.")
+            if (user.permissions.admin && process.env.TUFA_ENABLED === 'true') {
+                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.')
 
                 var token = user.generate2FAToken();
 
-                return callback(null, {"2FA": true}, token);
+                return callback(null, {'2FA': true}, token);
             } else {
                 logger.logAction(user._id, user._id, 'Logged in with password.');
 
@@ -628,7 +628,7 @@ UserController.loginWith2FA = function(token, code, callback) {
         }
 
         if (!user.checkCode(code)) {
-            return callback({ error: "Invalid Code!"})
+            return callback({ error: 'Invalid Code!'})
         }
 
         var token = user.generateAuthToken();
@@ -721,7 +721,7 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
                                 console.log('Could not send email:');
                                 console.log(err);
                             }
-                            mailer.sendTemplateEmail(user.email,"applicationemails",{
+                            mailer.sendTemplateEmail(user.email,'applicationemails',{
                                 nickname: user['firstName'],
                                 dashUrl: process.env.ROOT_URL
                             })

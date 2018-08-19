@@ -92,7 +92,7 @@
         },
         beforeMount() {
             this.convertTimes()
-            Session.sendRequest('GET', '/api/email/listTemplates', null, (err, data) => {
+            AuthService.sendRequest('GET', '/api/email/listTemplates', null, (err, data) => {
                 if (err) {
                     console.log('Error while getting template')
                 } else {
@@ -100,7 +100,7 @@
                 }
             })
 
-            Session.sendRequest('GET', '/api/email/get/base', null, (err, data) => {
+            AuthService.sendRequest('GET', '/api/email/get/base', null, (err, data) => {
                 if (err) {
                     swal('Error', err, 'error')
                 } else {
@@ -153,7 +153,7 @@
                     if (result.value) {
                         AuthService.skillTest(() => {
                             swal.showLoading()
-                            Session.sendRequest('POST', '/api/updateParticipantLimit', {
+                            AuthService.sendRequest('POST', '/api/updateParticipantLimit', {
                                 'maxParticipants': this.maxParticipants
                             }, (err, setting) => {
                                 if (err || !setting) {
@@ -181,7 +181,7 @@
                     if (result.value) {
                         AuthService.skillTest(() => {
                             swal.showLoading()
-                            Session.sendRequest('POST', '/api/updateRegistrationTime', {
+                            AuthService.sendRequest('POST', '/api/updateRegistrationTime', {
                                 timeOpen: moment(this.timeOpen).unix() * 1000,
                                 timeClose: moment(this.timeClose).unix() * 1000,
                                 timeConfirm: moment(this.timeConfirm).unix() * 1000
@@ -204,7 +204,7 @@
                 } else {
                     swal.showLoading()
 
-                    Session.sendRequest('GET', '/api/email/get/' + this.selected, null, (err, data) => {
+                    AuthService.sendRequest('GET', '/api/email/get/' + this.selected, null, (err, data) => {
                         if (err) {
                             swal('Error', err, 'error')
                         } else {
@@ -229,7 +229,7 @@
                     if (result.value) {
                         AuthService.skillTest(() => {
                             swal.showLoading()
-                            Session.sendRequest('POST', 'api/email/set/' + this.selected, {
+                            AuthService.sendRequest('POST', 'api/email/set/' + this.selected, {
                                 templateHTML: this.emailHTML,
                                 templateName: this.selected
                             }, (err, data) => {

@@ -6,10 +6,39 @@ import swal    from 'sweetalert2'
 
 module.exports = {
 
+    sendRequest (type, url, data, callback) {
+        var request =   {
+            type: type,
+            url: url,
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: data => {
+                if (callback) callback(null, data)
+            },
+            error: data => {
+                if (data && (data.status == 401 || data.status == 403) && Session.loggedIn()) {
+                    this.logout(null, 'Permission error occurred. Please login again.')
+                }
+
+                if (callback) callback(data)
+            }
+        }
+
+        if (data) {
+            request['data'] = type == 'POST' ? JSON.stringify(data) : data
+        }
+
+        if (Session.loggedIn() || Session.getToken()) {
+            request['beforeSend'] = xhr => {xhr.setRequestHeader('x-access-token', Session.getToken())}
+        }
+
+        $.ajax(request)
+    },
+    
     skillTest(callback) {
         swal.showLoading()
 
-        Session.sendRequest('GET', '/api/skill', {
+        this.sendRequest('GET', '/api/skill', {
 
         }, (err, data) => {
 
@@ -71,12 +100,12 @@ module.exports = {
     },
 
     changePassword(oldPassword, newPassword, callback) {
-        Session.sendRequest('POST', '/auth/changePassword', {
+        this.sendRequest('POST', '/auth/changePassword', {
             oldPassword: oldPassword,
             newPassword: newPassword
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -87,14 +116,14 @@ module.exports = {
     },
 
     register(email, firstName, lastName, password, callback) {
-        Session.sendRequest('POST', '/auth/register', {
+        this.sendRequest('POST', '/auth/register', {
             email: email,
             password: password,
             firstName: firstName,
             lastName: lastName
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -105,12 +134,12 @@ module.exports = {
     },
 
     loginWithPassword (email, password, callback) {
-        Session.sendRequest('POST', '/auth/login', {
+        this.sendRequest('POST', '/auth/login', {
             email: email,
             password: password
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 console.log(data)
                 if (data['user']['2FA']) {
@@ -127,7 +156,7 @@ module.exports = {
     },
 
     loginWithToken () {
-        Session.sendRequest('POST', '/auth/tokenLogin', {
+        this.sendRequest('POST', '/auth/tokenLogin', {
 
         }, (err, data) => {
             if (err) {
@@ -140,11 +169,11 @@ module.exports = {
     },
 
     loginWithCode (code, callback) {
-        Session.sendRequest('POST', '/auth/2FA', {
+        this.sendRequest('POST', '/auth/2FA', {
             'code':code
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -155,11 +184,11 @@ module.exports = {
     },
 
     verify(token, callback) {
-        Session.sendRequest('POST', '/auth/verify', {
+        this.sendRequest('POST', '/auth/verify', {
             token: token
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 if (callback) callback(null)
             }
@@ -167,12 +196,12 @@ module.exports = {
     },
 
     resetPasswordWithToken(token, password, callback) {
-        Session.sendRequest('POST', '/auth/reset', {
+        this.sendRequest('POST', '/auth/reset', {
             token: token,
             password: password
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 this.logout(null, 'The session has expired')
                 if (callback) callback(null, data)
@@ -181,11 +210,11 @@ module.exports = {
     },
 
     requestReset (email, callback) {
-        Session.sendRequest('POST', '/auth/requestReset', {
+        this.sendRequest('POST', '/auth/requestReset', {
             email: email
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 if (callback) callback(null, data)
             }
@@ -193,11 +222,11 @@ module.exports = {
     },
 
     requestVerify(callback) {
-        Session.sendRequest('POST', '/auth/requestVerify', {
+        this.sendRequest('POST', '/auth/requestVerify', {
 
         }, (err, data) => {
             if (err) {
-                if (callback) callback(JSON.parse(err.responseText)['error'])
+                if (callback) callback(err.responseJSON['error'])
             } else {
                 if (callback) callback(null, data)
             }

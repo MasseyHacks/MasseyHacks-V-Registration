@@ -49,6 +49,7 @@
 <script>
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
+    import AuthService from '../src/AuthService'
     import $ from 'jquery';
     import swal from 'sweetalert2'
     import { VueContext } from 'vue-context'
@@ -82,7 +83,7 @@
                 this.loading = false
 
                 if (err || !data) {
-                    this.loadingError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                    this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {
                     this.users = data.users
                     this.totalPages = data.totalPages
@@ -104,7 +105,7 @@
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
             checkin: function(user, index) {
-                Session.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                AuthService.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
                     swal.showLoading()
                     if(err) {
                         console.log(err)
@@ -116,7 +117,7 @@
                 })
             },
             checkout: function(user, index) {
-                Session.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                AuthService.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
                     swal.showLoading()
                     if(err) {
                         console.log(err)
@@ -139,7 +140,7 @@
                 }).then((result) => {
                     if (result.value) {
                         swal.showLoading()
-                        Session.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: "checkin"}, (err, data) => {
+                        AuthService.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: "checkin"}, (err, data) => {
                             if (err || !data) {
                                 swal('Error', err.error, 'error')
                             } else {
@@ -164,7 +165,7 @@
                 ApiService.getUsers({ page: 1, size: 0, text: this.searchQuery, filters : this.filters, appPage: "checkin"}, (err, data) => {
                     this.queryError = ''
                     if (err || !data) {
-                        this.queryError = err ? JSON.parse(err.responseText).error : 'Unable to process request'
+                        this.queryError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
                         this.users = data.users
                         this.totalPages = data.totalPages

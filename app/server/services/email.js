@@ -245,7 +245,7 @@ module.exports = {
                         if (typeof settings.emailQueue[emailQueueName] === 'object') {
                             console.log(typeof settings.emailQueue[emailQueueName]);
                             for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
-                                console.log(emailQueueName + " " + settings.emailQueue[emailQueueName][i]);
+                                console.log(emailQueueName + ' ' + settings.emailQueue[emailQueueName][i]);
                                 if (settings.emailQueue[emailQueueName][i] === userEmail) {
 
                                     //mailer
@@ -277,12 +277,12 @@ module.exports = {
         templateName = templateName.toLowerCase();
         if(!templateName || validTemplates[templateName] == null){//invalid
             console.log('Invalid email queue!');
-            return callback({error: "Invalid email template!"});
+            return callback({error: 'Invalid email template!'});
         }
         else{
             fs.readFile(validTemplates[templateName]['templateLocation'],'utf8',function(err, data) {
                 if (err){
-                    return callback({error: "File read failed"});
+                    return callback({error: 'File read failed'});
                 } else {
                     return callback(null, {email: data})
                 }
@@ -301,7 +301,7 @@ module.exports = {
         templateName = templateName.toLowerCase();
         if(!templateName || validTemplates[templateName] == null){//invalid
             console.log('Invalid email queue!');
-            return callback("Invalid email template!");
+            return callback('Invalid email template!');
         }
         else{
             fs.writeFile(validTemplates[templateName]['templateLocation'],templateBody,function (err){
@@ -309,7 +309,7 @@ module.exports = {
                     return callback({error:err});
                 }
 
-                return callback(null,{message:"Success"});
+                return callback(null,{message:'Success'});
             });
         }
     }

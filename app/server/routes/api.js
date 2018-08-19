@@ -34,11 +34,11 @@ module.exports = function(router) {
         
         /*
         request.get({
-            uri: "https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner",
+            uri: 'https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner',
             json: true
         }, function (err, response, body) {
             if (err) {
-                logger.defaultResponse(req,res)({message: "Something went wrong on our end :("});
+                logger.defaultResponse(req,res)({message: 'Something went wrong on our end :('});
             } else {
                 logger.defaultResponse(req, res)(null, body)
             }

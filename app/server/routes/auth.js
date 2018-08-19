@@ -94,10 +94,10 @@ module.exports = function(router) {
         var token = permissions.getToken(req);
         var code = req.body.code;
 
-        console.log("2FA login detected");
+        console.log('2FA login detected');
 
         if (token && code) {
-            console.log(token + " " + code);
+            console.log(token + ' ' + code);
 
             UserController.loginWith2FA(token, code, function (err, token, user) {
                 if (err || !user || !token) {
@@ -109,7 +109,7 @@ module.exports = function(router) {
                 });
             });
         } else {
-            res.status(401).json({error: "Error, no token and/or code received!"})
+            res.status(401).json({error: 'Error, no token and/or code received!'})
         }
     });
 

@@ -68,6 +68,7 @@
 
     import Session from '../src/Session'
     import swal from 'sweetalert2'
+    import AuthService from '../src/AuthService'
     import ApiService from '../src/ApiService'
     import $ from 'jquery'
     import vSelect from 'vue-select'
@@ -223,7 +224,7 @@
                     data.userID = Session.getUserID();
                     data.profile = {};
                     data.profile.hacker = this.applicationValue;
-                    Session.sendRequest('POST','/api/updateProfile',data,(err) =>{
+                    AuthService.sendRequest('POST','/api/updateProfile',data,(err) =>{
                         if(err){
                             swal("Error",err,"error");
                         }
