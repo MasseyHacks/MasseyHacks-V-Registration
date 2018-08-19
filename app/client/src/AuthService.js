@@ -13,16 +13,6 @@ module.exports = {
 
         }, (err, data) => {
 
-            // Try to parse answer first
-            // If it fails, just give up
-            if (data) {
-                try {
-                    var correctAnswer = parseInt(data.choices[data.correct_choice].replace(new RegExp(/[^0-9\-.]/, 'g'), ''))
-                } catch (e) {
-                    err = true
-                }
-            }
-
             if (err) {
                 swal({
                     title: 'Disastrous Action Final Confirmation',
@@ -58,7 +48,7 @@ module.exports = {
                     footer: 'MasseyHacks | Platform Division',
                     preConfirm: (answer) => {
 
-                        if (answer != correctAnswer) {
+                        if (answer != data.answer) {
                             swal.showValidationError(
                                 `Wrong answer!`
                             )
