@@ -17,21 +17,21 @@
                         {{loadingError}}
                     </div>
                     <div v-else>
-                        <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
+                        <input class="round-input" style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                         <div v-if="users.length != 0 && !queryError">
                             <table id="users-table">
-                                <tr id="table-header"><td>NAME</td><td>Waiver</td><td>Checked in</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
-                                <tr v-for="user in users">
+                                <tr id="table-header"><td>NAME</td><td>WAIVER</td><td>CHECKED IN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
+                                <tr v-for="i in users.length">
                                     <td>
-                                        {{user.name}}
+                                        {{users[i-1].name}}
                                     </td>
-                                    <td><span v-html="userWaiverConverter(user)"></span></td>
-                                    <td><span v-html="userCheckinConverter(user)"></span></td>
-                                    <td class="email-col">{{user.email}}</td>
+                                    <td><span v-html="userWaiverConverter(users[i-1])"></span></td>
+                                    <td><span v-html="userCheckinConverter(users[i-1])"></span></td>
+                                    <td class="email-col">{{users[i-1].email}}</td>
                                     <td>N/A</td>
                                     <td>N/A</td>
-                                    <td><button class="generic-button-light" @click="checkin(user)" v-if="!user.checked">CHECK-IN</button><button class="generic-button-light" @click="checkout(user)" v-else>CHECK-OUT</button></td>
+                                    <td><button class="generic-button-light" @click="inputwaiver(users[i-1], i-1)" v-if="!users[i-1].waiver">WAIVER-IN</button><button class="generic-button-light" @click="checkin(users[i-1], i-1)" v-else-if="!users[i-1].checked">CHECK-IN</button><button class="generic-button-light" @click="checkout(users[i-1], i-1)" v-else>CHECK-OUT</button></td>
                                 </tr>
                             </table>
                         </div>
@@ -52,6 +52,7 @@
     import $ from 'jquery';
     import swal from 'sweetalert2'
     import { VueContext } from 'vue-context'
+    import Vue from 'vue'
 
     export default {
         data() {
@@ -102,25 +103,50 @@
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
-            checkin: function(user) {
-                Session.sendRequest("POST", "/api/checkIn", {userID: user.id}, function (err, data) {
+            checkin: function(user, index) {
+                Session.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
                     swal.showLoading()
                     if(err) {
                         console.log(err)
                         swal("Error", "An error has occured, please contact an organizer immediately", "error")
                     } else {
                         swal("Success", "Hacker " + data.name + " has been successfully checked in.")
+                        Vue.set(this.users, index, data)
                     }
                 })
             },
-            checkout: function(user) {
-                Session.sendRequest("POST", "/api/checkOut", {userID: user.id}, function (err, data) {
+            checkout: function(user, index) {
+                Session.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
                     swal.showLoading()
                     if(err) {
                         console.log(err)
                         swal("Error", "An error has occured, please contact an organizer immediately", "error")
                     } else {
                         swal("Success", "Hacker " + data.name + " has been successfully checked out.")
+                        Vue.set(this.users, index, data)
+                    }
+                })
+            },
+            inputwaiver: function(user, index) {
+                swal({
+                    title: 'Are you sure?',
+                    text: 'please confirm waiver is filled and all fields are correct',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        Session.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: "checkin"}, (err, data) => {
+                            if (err || !data) {
+                                swal('Error', err.error, 'error')
+                            } else {
+                                swal('Success', 'Waiver accepted', 'success')
+                                Vue.set(this.users, index, data)
+                            }
+                        })
                     }
                 })
             },

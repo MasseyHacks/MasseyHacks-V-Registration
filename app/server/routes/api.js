@@ -363,21 +363,24 @@ module.exports = function(router) {
     // Checkin user
     router.post('/checkIn', permissions.isCheckin, function (req, res) {
         var userID = req.body.userID;
-        UserController.checkIn(req.userExecute, userID, logger.defaultResponse(req, res));
+        var appPage = req.body.appPage ? req.body.appPage : null;
+        UserController.checkIn(req.userExecute, userID, appPage, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Checkout user
     router.post('/checkOut', permissions.isCheckin, function (req, res) {
         var userID = req.body.userID;
-        UserController.checkOut(req.userExecute, userID, logger.defaultResponse(req, res));
+        var appPage = req.body.appPage ? req.body.appPage : null;
+        UserController.checkOut(req.userExecute, userID, appPage, logger.defaultResponse(req, res));
     });
 
     // Checkin
     // Waiver in
-    router.post('/waiverIn', permissions.isCheckin, function (req, res) {
+    router.post('/waiverIn', permissions.isAdmin, function (req, res) {
         var userID = req.body.userID;
-        UserController.waiverIn(req.userExecute, userID, logger.defaultResponse(req, res));
+        var appPage = req.body.appPage ? req.body.appPage : null;
+        UserController.waiverIn(req.userExecute, userID, appPage, logger.defaultResponse(req, res));
     });
 
     // Checkin

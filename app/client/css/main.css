@@ -403,6 +403,19 @@ h4 {
     border-bottom: 2px solid black;
 }
 
+.round-input {
+    border-radius: 50px;
+    padding-left: 20px;
+    border: 3px white solid;
+    background: rgba(0,0,0,0);
+    color: white;
+    transition:color .2s ease-out, background .2s ease-in;
+}
+
+.round-input:focus {
+    background:white;
+    color: black;
+}
 
 @media (max-width: 992px) {
     .dash-card {

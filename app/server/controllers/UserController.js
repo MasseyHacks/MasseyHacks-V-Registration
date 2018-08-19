@@ -1423,7 +1423,7 @@ UserController.deactivate = function(adminUser, userID, callback) {
     });
 };
 
-UserController.checkIn = function(adminUser, userID, callback) {
+UserController.checkIn = function(adminUser, userID, page, callback) {
 
     if (!adminUser || !userID) {
         return callback({error : 'Invalid arguments'});
@@ -1446,11 +1446,11 @@ UserController.checkIn = function(adminUser, userID, callback) {
 
         logger.logAction(adminUser._id, user._id, 'Checked In user.');
 
-        return callback(err, user);
+        return callback(err, User.filterSensitive(user, 2, page));
     });
 };
 
-UserController.checkOut = function(adminUser, userID, callback) {
+UserController.checkOut = function(adminUser, userID, page, callback) {
 
     if (!adminUser || !userID) {
         return callback({error : 'Invalid arguments'});
@@ -1472,11 +1472,11 @@ UserController.checkOut = function(adminUser, userID, callback) {
 
         logger.logAction(adminUser._id, user._id, 'Checked Out user.');
 
-        return callback(err, user);
+        return callback(err, User.filterSensitive(user, 2, page));
     });
 };
 
-UserController.waiverIn = function(adminUser, userID, callback) {
+UserController.waiverIn = function(adminUser, userID, page, callback) {
 
     if (!adminUser || !userID) {
         return callback({error : 'Invalid arguments'});
@@ -1497,8 +1497,7 @@ UserController.waiverIn = function(adminUser, userID, callback) {
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.');
-
-        return callback(err, user);
+        return callback(err, User.filterSensitive(user, 2, page));
     });
 };
 
