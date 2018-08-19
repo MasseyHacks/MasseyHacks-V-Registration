@@ -91,7 +91,13 @@
                 console.log('Setting state to', state, message)
 
                 if (!state) {
-                    this.$router.replace('/login' + message ? '?message=' + message : '')
+                    console.log('?message=' + encodeURIComponent(message))
+
+                    if (message) {
+                        this.$router.push({ path: '/login', query: {message: encodeURIComponent(message)}})
+                    } else {
+                        this.$router.push({path: '/login'})
+                    }
                 }
             }
 
