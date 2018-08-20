@@ -2,6 +2,7 @@ Abbey Park High School
 Abington Senior High School
 Abraham Lincoln High School
 Abraham Lincoln High School - Philadelphia
+Académie Ste Cécile International School - Secondary
 Acardia High School, Arizona
 Acton-Boxborough Regional High School
 Adlai E. Stevenson High School
@@ -12,11 +13,13 @@ Ancaster High School
 Anchor Bay High School
 Andover Central High School
 Arcadia High School, California
+Assumption College Catholic High School
 Aviation Career & Technical Education High School
 Avon High School
 Battlefield High School
 Bayside High School
 Bayview Secondary School
+Belle River District High School
 Benjamin Franklin High School - Baltimore
 Benjamin Franklin High School - Philadelphia
 Bergen Catholic High School
@@ -28,10 +31,13 @@ Brentsville High School
 Brooklyn Technical High School
 Brookwood High School
 C. D. Hylton High School
+C.S. Viamonde - Collège Français
 CAPA - Philadelphia High School for Creative and Performing Arts
 California High School
+Cardinal Carter Catholic Secondary School
 Carteret High School
 Cathedral High School, Los Angeles
+Catholic Central High School
 Cedar Creek High School
 Cedar Ridge High School
 Centennial High School
@@ -68,12 +74,34 @@ East Brunswick High School
 East Chapel Hill High Schoo
 Eastern High School - Louisville
 Eastern Regional High School
+École secondaire Confédération
+École secondaire Franco-Jeunesse
+École secondaire Gabriel-Dumont
+École secondaire Gaétan-Gervais
+École secondaire Georges- P.-Vanier
+École secondaire Jeunes sans frontières
+École secondaire Le Caron
+École secondaire Norval-Morrisseau
+École secondaire Roméo-Dallaire
+École secondaire Ronald-Marion
+École secondaire Toronto Ouest
+École secondaire catholique E. J. Lajeunesse
+École secondaire catholique Monseigneur-Bruyère
+École secondaire catholique Notre-Dame
+École secondaire catholique Saint-Dominique-Savio
+École secondaire catholique Saint-François-Xavier
+École secondaire catholique de Pain Court
+École secondaire catholique l'Essor
+École secondaire de Lamothe-Cadillac
+École secondaire Étienne-Brûlé
 Edina High School
 Edison High School
 Edward R. Murrow High School
 Elizabeth High School
 Ernest Manning High School
+Essex District High School
 Evergreen Valley High School
+F. J. Brennan Catholic High School
 Fairview High School
 Forest Park High School - Baltimore
 Forest Park High School - Forest Park, GA
@@ -89,6 +117,7 @@ Freire Charter High School
 Fremont High School
 Gar-Field Senior High School
 Garnet Valley High School
+General Amherst High School
 George C. Marshall High School
 George Washington High School - Philadelphia
 Geroge Washington Carver High School - Philadelphia
@@ -106,7 +135,9 @@ High Technology High School
 Highland Park High School
 Hillsborough High School
 Hinsdale Central High School
+Holy Names Catholic High School
 Homestead High School
+Hon. W. C. Kennedy Collegiate Institute
 Horace Furness High School
 Houghton High School
 Hunter College High School
@@ -122,10 +153,12 @@ John P. Stevens High School
 Jules E. Mastbaum Technical High School
 Kennett High School
 Kensington High School Complex
+Kingsville District High School
 Lake Braddock Secondary School
 Lakeside High School
 Lampeter-Strasburg High School
 Lankenau High School
+Leamington District Secondary School
 Lehigh University
 Lexington High School
 Lick Wilmerding High School
@@ -140,6 +173,7 @@ MacArthur High School
 Maine South High School
 Manalapan High School
 Manhattan High School
+Maranatha Christian Academy - Secondary
 Marcellus High School
 Markham District High School
 Markville Secondary School
@@ -214,6 +248,7 @@ Richardson High School
 Richmond Hill High School
 Ridgewood High School
 River Dell High School
+Riverside Secondary School
 Rock Ridge High School
 Roosevelt High School
 Roxborough High School
@@ -223,6 +258,7 @@ Samuel Fels High School - Philadelphia
 San Marcos High School
 San Marin High School
 San Mateo High School
+Sandwich Secondary School
 Santa Margarita Catholic High School
 Saratoga High School
 Scranton High School
@@ -241,10 +277,13 @@ Spotswood High School
 St Brendan High School
 St Mary's CE High School – Cheshunt
 St Mary's Catholic High School – Croydon
+St. Anne Catholic High School
 St. David Catholic Secondary School
+St. Joseph's Catholic High School
 St. Mary's Ryken High School
 St. Raymond High School for Boys And Girls
 St. Theresa of Lisieux Catholic High School
+St. Thomas of Villanova Catholic High School
 St. Xavier's Senior Secondary School, Jaipur
 Staten Island Technical High School
 Stonewall Jackson High School - Manassas
@@ -253,6 +292,7 @@ Strawberry Mansion High School
 Stuyvesant High School
 Sulphur High School
 TECH Freire Charter High School
+Tecumseh Vista Academy - Secondary
 Tenafly High School
 The Bronx High School of Science
 Thomas A. Edison High School - Philadelphia
@@ -272,6 +312,8 @@ Valley High School
 Veterans Memorial Early College High School
 Vincent Massey Secondary School
 Virtual High School @ PWCS
+W.F. Herman Academy - Secondary
+Walkerville Collegiate Institute
 Walt Whitman High School
 Walter Biddle Saul High School
 Ward Melville High School
@@ -282,7 +324,9 @@ West Potomac High School
 West Scranton High School
 West Windsor-Plainsboro High School South
 Westdale Secondary School
+Western Secondary School
 Westfield High School
+Westview Freedom Academy Secondary School
 Westwood High School
 Wilbert Tucker Woodson High School
 William L. Sayre High School
