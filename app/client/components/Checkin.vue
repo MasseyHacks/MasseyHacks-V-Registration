@@ -72,7 +72,7 @@
 
                 loading: true,
                 loadingError: '',
-                queryError: '',
+                queryError: 'No users found',
 
                 users: {}
             }
@@ -109,7 +109,7 @@
                     swal.showLoading()
                     if(err) {
                         console.log(err)
-                        swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                        swal("Error", "An error has occurred, please contact an organizer immediately", "error")
                     } else {
                         swal("Success", "Hacker " + data.name + " has been successfully checked in.", "success")
                         Vue.set(this.users, index, data)
@@ -121,7 +121,7 @@
                     swal.showLoading()
                     if(err) {
                         console.log(err)
-                        swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                        swal("Error", "An error has occurred, please contact an organizer immediately", "error")
                     } else {
                         swal("Success", "Hacker " + data.name + " has been successfully checked out.", "success")
                         Vue.set(this.users, index, data)

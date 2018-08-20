@@ -251,11 +251,11 @@ module.exports = function(router) {
 
     // General
     // Get team
-    router.post('/getTeam', permissions.isVerified, function(req, res){
+    router.get('/getTeam', permissions.isVerified, function(req, res){
         var user = req.userExecute;
 
         UserController.getTeam(user._id, function(err, data){
-            if (err || !data) {
+            if (err) {
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to get team' } );
             }
 

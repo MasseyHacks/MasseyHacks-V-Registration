@@ -15,7 +15,7 @@
             AuthService.sendRequest('POST', '/auth/magicurl', {token: this.$route.query.token}, (err, data) => {
                 if (err || !data) {
                     swal('Error', 'An error has occurred', 'error')
-                    console.log(err.responseJSON['error'])
+                    console.log(err.responseJSON.error)
                     this.$router.replace('/login')
                 } else {
                     swal('Success', '', 'success')
