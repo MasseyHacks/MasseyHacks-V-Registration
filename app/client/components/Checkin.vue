@@ -21,7 +21,7 @@
 
                         <div v-if="users.length != 0 && !queryError">
                             <table id="users-table">
-                                <tr id="table-header"><td>NAME</td><td>WAIVER</td><td>CHECKED IN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
+                                <tr id="table-header"><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
                                 <tr v-for="i in users.length">
                                     <td>
                                         {{users[i-1].name}}
@@ -105,33 +105,57 @@
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
             checkin: function(user, index) {
-                AuthService.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
-                    swal.showLoading()
-                    if(err) {
-                        console.log(err)
-                        swal("Error", "An error has occured, please contact an organizer immediately", "error")
-                    } else {
-                        swal("Success", "Hacker " + data.name + " has been successfully checked in.", "success")
-                        Vue.set(this.users, index, data)
+                swal({
+                    title: 'Are you sure?',
+                    text: 'This action(Check-in) will be recorded!',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        AuthService.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                            if(err) {
+                                console.log(err)
+                                swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                            } else {
+                                swal("Success", "Hacker " + data.name + " has been successfully checked in.", "success")
+                                Vue.set(this.users, index, data)
+                            }
+                        })
                     }
                 })
             },
             checkout: function(user, index) {
-                AuthService.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
-                    swal.showLoading()
-                    if(err) {
-                        console.log(err)
-                        swal("Error", "An error has occured, please contact an organizer immediately", "error")
-                    } else {
-                        swal("Success", "Hacker " + data.name + " has been successfully checked out.", "success")
-                        Vue.set(this.users, index, data)
+                swal({
+                    title: 'Are you sure?',
+                    text: 'This action(Check-out) will be recorded!',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading()
+                        AuthService.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                            if(err) {
+                                console.log(err)
+                                swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                            } else {
+                                swal("Success", "Hacker " + data.name + " has been successfully checked out.", "success")
+                                Vue.set(this.users, index, data)
+                            }
+                        })
                     }
                 })
             },
             inputwaiver: function(user, index) {
                 swal({
                     title: 'Are you sure?',
-                    text: 'please confirm waiver is filled and all fields are correct',
+                    text: 'Please confirm waiver is filled and all fields are correct',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -181,14 +205,14 @@
                 if (user.waiver) {
                     return '<i class="fas fa-check"></i>'
                 } else {
-                    return '<i class="fas fa-ban"></i>'
+                    return '<i class="fas fa-times" style="color: red"></i>'
                 }
             },
             userCheckinConverter: function (user) {
                 if (user.checked) {
                     return '<i class="fas fa-check"></i>'
                 } else {
-                    return '<i class="fas fa-ban"></i>'
+                    return '<i class="fas fa-times" style="color: red"></i>'
                 }
             }
         }
