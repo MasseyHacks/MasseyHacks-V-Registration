@@ -49,8 +49,9 @@
                         Team Code: {{team.code}} <br>
                         <br>
 
-                        <span v-for="id in team.memberIDs">
-                            {{id}}
+                        Members:<br>
+                        <span v-for="id in team.memberNames">
+                            {{id}}<br>
                         </span>
 
                         <div class="button-row">
