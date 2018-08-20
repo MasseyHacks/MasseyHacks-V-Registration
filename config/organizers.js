@@ -19,7 +19,7 @@ for(const key in organizers) {
 }
 
 function makeOrganizer(email, firstName, lastName,  permission) {
-    var authSecret = speakeasy.generateSecret({length: 100, name: 'MasseyHacks V | GOOSE', issuer: 'MasseyHacks V Platform Division'});
+    var authSecret = speakeasy.generateSecret({length: 100, name: 'MasseyHacks V | GOOSE (' + email + ')', issuer: 'MasseyHacks V Platform Division'});
     QRCode.toDataURL(authSecret.otpauth_url, function(err, data_url) {
         User.getByEmail(email, function (err, user) {
             if (!user) {
@@ -69,14 +69,15 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                             })
                     }
 
-                    /*
-                    UserController.sendPasswordResetEmail(email, function (err) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log('Email successful.');
-                        }
-                    });*/
+                    if (process.env.NODE_ENV !== 'dev') {
+                        UserController.sendPasswordResetEmail(email, function (err) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log('Email successful.');
+                            }
+                        });
+                    }
                 });
             }
         });
