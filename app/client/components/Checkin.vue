@@ -216,16 +216,16 @@
             },
             userWaiverConverter: function (user) {
                 if (user.waiver) {
-                    return '<i class='fas fa-check'></i>'
+                    return '<i class="fas fa-check"></i>'
                 } else {
-                    return '<i class='fas fa-times' style='color: red'></i>'
+                    return '<i class="fas fa-times" style="color: red"></i>'
                 }
             },
             userCheckinConverter: function (user) {
                 if (user.checked) {
-                    return '<i class='fas fa-check'></i>'
+                    return '<i class="fas fa-check"></i>'
                 } else {
-                    return '<i class='fas fa-times' style='color: red'></i>'
+                    return '<i class="fas fa-times" style="color: red"></i>'
                 }
             }
         }
