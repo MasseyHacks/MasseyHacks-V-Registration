@@ -18,9 +18,11 @@
                     </div>
                     <div v-else>
                         <input class="round-input" style="width: 100%" placeholder="Search for hacker here" v-on:input="updateSearch" v-model="searchQuery" type="text">
-
+                        <hr>
+                        <button class="generic-button-light" @click="refresh()">Refresh Table</button>
+                        <hr>
                         <div v-if="users.length != 0 && !queryError">
-                            <table id="users-table">
+                            <table id="checkin-table">
                                 <tr id="table-header"><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
                                 <tr v-for="i in users.length">
                                     <td>
@@ -103,6 +105,17 @@
                     strProc = str.slice(str.indexOf('.')+1)
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
+            },
+            refresh: function() {
+                ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: "checkin"}, (err, data) => {
+
+                    if (err || !data) {
+                        this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                    } else {
+                        this.users = data.users
+                        this.totalPages = data.totalPages
+                    }
+                })
             },
             checkin: function(user, index) {
                 swal({
