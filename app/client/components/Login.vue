@@ -7,24 +7,31 @@
                 You need to login first.
             </p>
 
-            <p v-if="$route.query.message">
-                {{$route.query.message}}
-            </p>
+            <div v-if="$route.query.message" style="margin:5%;">
+                <p>{{$route.query.message}}</p>
+                <div id="login-form-elements">
+                  <div id="button-row">
+                      <router-link to="/login"><button>sign in</button></router-link>
+                  </div>
+              </div>
+          </div>
 
-            <h2 class="subtitle">Login</h2>
-            <div id="login-form-elements">
-                <form @submit.prevent="login">
-                    <input v-model="email" placeholder="email" type="email" autofocus required>
-                    <input v-model="pass" placeholder="password" type="password" required><br>
+            <div v-else>
+              <h2 class="subtitle">Login</h2>
+              <div id="login-form-elements">
+                  <form @submit.prevent="login">
+                      <input v-model="email" placeholder="email" type="email" autofocus required>
+                      <input v-model="pass" placeholder="password" type="password" required><br>
 
-                    <div id="button-row">
-                        <button type="submit" class="primary-button">sign in</button>
-                        <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
-                        <router-link to="/reset"><button>reset</button></router-link>
-                    </div>
+                      <div id="button-row">
+                          <button type="submit" class="primary-button">sign in</button>
+                          <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
+                          <router-link to="/reset"><button>reset</button></router-link>
+                      </div>
 
-                    <p v-if="error" class="error">{{error}}</p>
-                </form>
+                      <p v-if="error" class="error">{{error}}</p>
+                  </form>
+                </div>
             </div>
         </div>
     </div>
