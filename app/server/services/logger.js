@@ -60,7 +60,7 @@ module.exports = {
             }
         };
     },
-    logAction : function (actionFrom, actionTo, message) {
+    logAction : function (actionFrom, actionTo, message, detailedMessage) {
 
         // Start bash
 
@@ -71,6 +71,7 @@ module.exports = {
                 'to.ID': actionTo,
                 'from.ID': actionFrom,
                 'message': message,
+                'detailedMessage': detailedMessage,
                 'timestamp': Date.now()
             }, function (err, e) {
 

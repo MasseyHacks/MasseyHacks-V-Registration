@@ -37,7 +37,7 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
             return callback(err);
         };
 
-        logger.logAction(adminUser._id, userID, 'Modified a user manually: '+JSON.stringify(data));
+        logger.logAction(adminUser._id, userID, 'Modified a user manually.', JSON.stringify(data));
 
         return callback(null, 'Success');
     });

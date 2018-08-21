@@ -26,6 +26,9 @@ var schema = new mongoose.Schema({
     message : {
         type: String,
         required: true
+    },
+    detailedMessage : {
+        type: String
     }
 });
 

@@ -147,7 +147,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
                                 // Not populated yet
                                 newTeam.memberNames.push(newUser.fullName);
 
-                                logger.logAction(id, -1, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
+                                logger.logAction(id, -1, 'Joined the team: ' + newTeam.name + ' (' + newTeam.code + ')', newTeam);
                                 return callback(null, newTeam);
                             });
                         });

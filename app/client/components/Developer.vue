@@ -45,6 +45,11 @@
                                             <br>
                                             <b>ACTION</b><br>
                                             {{event.message}}<br>
+                                            <span v-if="event.detailedMessage">
+                                                <br>
+                                                <b>DETAILED EVENT</b><br>
+                                                {{event.detailedMessage}}<br>
+                                            </span>
                                             <br>
                                             <b>TIMESTAMP</b><br>
                                             {{moment(event.timestampHuman)}}
@@ -178,7 +183,7 @@
     .content {
         transition: all .5s;
         padding: 0 18px;
-        overflow: hidden;
+        overflow: auto;
         text-wrap: normal;
         background-color: #f1f1f1;
     }
