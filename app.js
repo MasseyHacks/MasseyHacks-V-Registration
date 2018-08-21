@@ -32,7 +32,7 @@ Raven.context(function() {
     mongoose.connect(database);
     stats.startService();
 
-    app.enable('trust proxy')
+    app.enable('trust proxy'); // For reverse proxy
 
     var apiLimiter = new RateLimit({
         windowMs: 15*60*1000,

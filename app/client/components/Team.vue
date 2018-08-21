@@ -74,6 +74,10 @@
     import $ from 'jquery'
     import vSelect from 'vue-select'
 
+    /**
+     * To-Do: Cleanup this code and streamline reset error process
+     */
+
     export default {
         data() {
             return {
@@ -119,6 +123,7 @@
                     } else {
                         this.team = team
                         this.createTeamState = false
+                        this.error = ''
                     }
                 })
             },
@@ -130,6 +135,7 @@
                     } else {
                         this.team = team
                         this.joinTeamState = false
+                        this.error = ''
                     }
 
                 })
@@ -153,8 +159,9 @@
                             }
 
                             this.team = null
-                            this.teamName = null
-                            this.teamCode = null
+                            this.teamName = ''
+                            this.teamCode = ''
+                            this.error = ''
                         })
                     }
                 })

@@ -7,16 +7,18 @@
                 You need to login first.
             </p>
 
-            <div v-if="$route.query.message" style="margin:5%;">
-                <p>{{$route.query.message}}</p>
+            <!--<div v-if="$route.query.message" style="margin:5%;">-->
+                <p v-if="$route.query.message">{{$route.query.message}}</p>
+
+                <!--
                 <div id="login-form-elements">
                   <div id="button-row">
                       <router-link to="/login"><button>sign in</button></router-link>
                   </div>
-              </div>
-          </div>
+                </div>
+            </div>-->
 
-            <div v-else>
+            <div>
               <h2 class="subtitle">Login</h2>
               <div id="login-form-elements">
                   <form @submit.prevent="login">

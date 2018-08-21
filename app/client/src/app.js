@@ -261,7 +261,7 @@ const router = new VueRouter({
                }).then(result => {
                    if (result.value) {
                        AuthService.logout(null, 'You have been logged out')
-                       next('/login?message=You have been logged out')
+                       //next('/login?message=You have been logged out')
                    }
                })
            }

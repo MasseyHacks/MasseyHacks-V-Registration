@@ -8,6 +8,7 @@ const UserFields         = require('../models/data/UserFields');
 const Settings           = require('../models/Settings');
 const LogEvent           = require('../models/LogEvent');
 const UserController     = require('../controllers/UserController');
+const TeamController     = require('../controllers/TeamController');
 const SettingsController = require('../controllers/SettingsController');
 
 const permissions        = require('../services/permissions');
@@ -129,6 +130,14 @@ module.exports = function(router) {
         User.getByID(userID, logger.defaultResponse(req, res), req.permissionLevel);
     });
 
+    // Admin
+    // Data varies depending on permission
+    // Get all users
+    router.get('/teams', permissions.isAdmin, function(req, res) {
+        var query  = req.query;
+        TeamController.getByQuery(req.userExecute, query, logger.defaultResponse(req, res));
+    });
+
     // Checkin
     // Data varies depending on permission
     // Get all users
@@ -211,7 +220,7 @@ module.exports = function(router) {
         var user = req.userExecute;
         var teamName = req.body.teamName;
 
-        UserController.createTeam(user._id, teamName, function(err, data){
+        TeamController.createTeam(user._id, teamName, function(err, data){
             if (err || !data) {
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to create team' } );
             }
@@ -226,8 +235,9 @@ module.exports = function(router) {
         var user = req.userExecute;
         var teamCode = req.body.teamCode;
 
-        UserController.joinTeam(user._id, teamCode, function(err, data){
+        TeamController.joinTeam(user._id, teamCode, function(err, data){
             if (err || !data) {
+                console.log(err)
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to join team' } );
             }
 
@@ -240,7 +250,7 @@ module.exports = function(router) {
     router.post('/leaveTeam', permissions.isVerified, function(req, res){
         var user = req.userExecute;
 
-        UserController.leaveTeam(user._id, function(err, data){
+        TeamController.leaveTeam(user._id, function(err, data){
             if (err || !data) {
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to leave team' } );
             }
@@ -254,7 +264,7 @@ module.exports = function(router) {
     router.get('/getTeam', permissions.isVerified, function(req, res){
         var user = req.userExecute;
 
-        UserController.getTeam(user._id, function(err, data){
+        TeamController.getTeam(user._id, function(err, data){
             if (err) {
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to get team' } );
             }
@@ -267,7 +277,7 @@ module.exports = function(router) {
     // Accept team
     router.post('/admitTeam', permissions.isReviewer, function (req, res) {
         var userID = req.body.userID;
-        UserController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
+        TeamController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // General

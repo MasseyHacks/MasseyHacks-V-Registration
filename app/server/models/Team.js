@@ -19,7 +19,6 @@ var schema = new mongoose.Schema({
     memberIDs : {
         type: [String]
     }
-
 });
 
 schema.set('toJSON', {
@@ -30,24 +29,11 @@ schema.set('toObject', {
     virtuals: true
 });
 
-schema.virtual('memberNames').get(function(callback) {
-    console.log(callback)
-
-    User.find({
-        _id : [this.memberIDs]
-    }, function (err, users) {
-        if (err || !users) {
-            return callback([])
-        }
-
-        var names = [];
-
-        for (var u in users) {
-            names.push(users[u].fullName);
-        }
-
-        return callback(names);
-    });
+schema.virtual('memberNames', {
+    ref: 'User',
+    localField: 'code',
+    foreignField: 'teamCode',
+    justOne: false
 });
 
 schema.statics.getByCode = function(code, callback) {
