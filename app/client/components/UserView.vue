@@ -23,6 +23,7 @@
 <!--             <p>User Object: </p>
             {{userObj}} -->
             <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
+            <button class="generic-button-light" v-on:click="editUser">Edit User</button>
         </div>
     </div>
 </template>
@@ -78,6 +79,105 @@
                     }
                 }
                 return flattened
+            },
+            editUser: async function(){
+                var flatWithHistory = this.flattenWithHistory(this.userObj)
+                var keys = flatWithHistory.documentKeys;
+                //remove values that cannot/should not be edited
+                keys.splice(keys.indexOf('__v'),1);
+                keys.splice(keys.indexOf('_id'),1);
+                keys.splice(keys.indexOf('lowerCaseName'),1);
+                keys.splice(keys.indexOf('fullName'),1);
+                keys.splice(keys.indexOf('permissions.level'),1);
+                keys.splice(keys.indexOf('status.name'),1);
+                keys.splice(keys.indexOf('profile.isSigned'),1);
+                keys.splice(keys.indexOf('lowerCaseName'),1);
+                console.log(keys);
+
+                const {value: field} = await swal({
+                  title: 'Select a field',
+                  input: 'select',
+                  inputOptions: keys,
+                  inputPlaceholder: 'Select a field',
+                  showCancelButton: true,
+                  inputValidator: (value) => {
+                    return new Promise((resolve) => {
+                      resolve();
+                    })
+                  }
+                })
+
+                if (field) {
+                  const {value: newValue} = await swal({
+                    title: 'Enter a value for '+keys[field],
+                    input: 'text',
+                    inputValue: flatWithHistory[keys[field]],
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                      return !value && 'You need to write something!'
+                    }
+                  })
+
+                  if (newValue) {
+                    swal({
+                      title: 'Are you sure?',
+                      type: 'warning',
+                      html: `You are directly modifying ${this.userObj.fullName}`+
+                            '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>'+
+                            '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation'+
+                            `<br><br>Field: ${keys[field]}`+
+                            `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}`+
+                            `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
+                      showCancelButton: true,
+                      confirmButtonColor: '#3085d6',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Yes!'
+                    }).then((result) => {
+                        if (result.value) {
+                            AuthService.skillTest(() => {
+                                swal.showLoading()
+
+                                //TODO: Actual api endpoint
+                                AuthService.sendRequest('POST', '/', {
+                                    'maxParticipants': this.maxParticipants
+                                }, (err, setting) => {
+                                    if (err || !setting) {
+                                        swal('Error', err.error, 'error')
+                                    } else {
+                                        swal('Success', 'Field has been changed', 'success')
+                                        Session.setSettings(setting)
+                                        this.convertTimes()
+                                    }
+                                })
+                            })
+                        }
+                    })
+                  }
+                }
+
+            },
+            flattenWithHistory: function (data,prefix="",level=0){
+                var tempObj = {};
+                if(level < 6){
+                    Object.keys(data).forEach((key) => {
+                        if(data[key] === Object(data[key])){
+                            //iterate again!
+                            tempObj = Object.assign(tempObj,this.flattenWithHistory(data[key],prefix+key+".",level+=1));
+                        }
+                        else{
+                            //log the value
+                            tempObj[prefix+key] = data[key];
+                        }
+                    });
+                    if(prefix === "") {
+                        tempObj["documentKeys"] = Object.keys(tempObj);
+                    }
+                    return tempObj;
+                }
+                else{
+                    console.log("recursion limit reached!");
+                    return {};
+                }
             },
 
             prettify: function(str) {

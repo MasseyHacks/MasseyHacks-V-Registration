@@ -159,7 +159,7 @@
                                 if (err || !setting) {
                                     swal('Error', err.error, 'error')
                                 } else {
-                                    swal('Success', 'Limit has beens changed successfully', 'success')
+                                    swal('Success', 'Limit has been changed successfully', 'success')
                                     Session.setSettings(setting)
                                     this.convertTimes()
                                 }

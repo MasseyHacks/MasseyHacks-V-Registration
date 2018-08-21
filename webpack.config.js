@@ -28,7 +28,7 @@ module.exports = {
     },
     babel: {
         presets: ['es2015'],
-        plugins: ['transform-runtime']
+        plugins: ['transform-runtime',"transform-async-to-generator"]
     },
     resolve: {
         modulesDirectories: ['node_modules'],
