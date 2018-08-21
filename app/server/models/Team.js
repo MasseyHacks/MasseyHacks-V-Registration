@@ -7,7 +7,6 @@ const jwt       = require('jsonwebtoken');
 const User      = require('./User');
 
 var schema = new mongoose.Schema({
-
     name : {
         type: String,
         required: true
@@ -17,7 +16,8 @@ var schema = new mongoose.Schema({
         required: true
     },
     memberIDs : {
-        type: [String]
+        type: [String],
+        select: false
     }
 });
 

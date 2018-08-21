@@ -19,7 +19,7 @@ TeamController.teamAccept = function(adminUser, userID, callback) {
             return callback(err, user);
         } else {
 
-            Team.getByCode(user.teamCode, function (err, team) {
+            Team.getByCode(user.teamCode, '+memberIDs', function (err, team) {
                 if (err || !team) {
                     return callback(err, user);
                 }
@@ -55,25 +55,30 @@ TeamController.createTeam = function(id, teamName, callback) {
             return callback({error : 'You are already in a team!'});
         }
 
-        var team = Team.create({
+        Team.create({
             name: teamName,
             code: uuidv4().substring(0, 7),
             memberIDs: [user._id]
-        });
+        }, function(err, team) {
 
-        User.findOneAndUpdate({
-            _id: id
-        }, {
-            teamCode: team.code
-        }, {
-            new: true
-        }, function(err, newUser) {
-            logger.logAction(id, id, 'Created the team: ' + teamName + ' (' + team.code + ')');
+            if (err) {
+                return callback({error: 'Unable to create team'})
+            }
 
-            team = team.toJSON();
-            team.memberNames = [newUser.fullName];
+            User.findOneAndUpdate({
+                _id: id
+            }, {
+                teamCode: team.code
+            }, {
+                new: true
+            }, function(err, newUser) {
+                logger.logAction(id, -1, 'Created the team: ' + teamName + ' (' + team.code + ')');
 
-            return callback(null, team);
+                team = team.toJSON();
+                team.memberNames = [newUser.fullName];
+
+                return callback(null, team);
+            });
         });
     });
 };
@@ -97,6 +102,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
             .findOne({
                 code : teamCode.trim()
             })
+            .select('+memberIDs')
             .exec(function (err, team) {
                 if (err || !team) { // Team doesn't exist yet
                     return callback({ error : 'Team doesn\'t exist' });
@@ -141,7 +147,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
                                 // Not populated yet
                                 newTeam.memberNames.push(newUser.fullName);
 
-                                logger.logAction(id, id, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
+                                logger.logAction(id, -1, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
                                 return callback(null, newTeam);
                             });
                         });
@@ -180,31 +186,33 @@ TeamController.leaveTeam = function(id, callback) {
                 return callback(err ? err : {error: 'Unable to leave team', code: 500});
             }
 
-            Team.findOneAndUpdate({
-                code : user.teamCode
-            }, {
-                $pull : {
-                    memberIDs : user._id
-                }
-            }, {
-                new: true
-            }, function(err, newTeam) {
+            Team
+                .findOneAndUpdate({
+                    code : user.teamCode
+                }, {
+                    $pull : {
+                        memberIDs : user._id
+                    }
+                }, {
+                    new: true
+                })
+                .select('+memberIDs')
+                .exec(function(err, newTeam) {
+                    if (newTeam && newTeam.memberIDs.length == 0) { // Team is dead, kill it for good
+                        Team.findOneAndRemove({
+                            _id : newTeam._id
+                        }, function(err) {
+                            logger.logAction(-1, -1, 'Deleted the team: ' + newTeam.name + ' (' + user.teamCode + ')');
+                        });
+                    }
 
-                if (newTeam && newTeam.memberIDs.length == 0) { // Team is dead, kill it for good
-                    Team.findOneAndRemove({
-                        _id : newTeam._id
-                    }, function(err) {
-                        logger.logAction(-1, -1, 'Deleted the team: ' + newTeam.name + ' (' + user.teamCode + ')');
-                    });
-                }
+                    if (!newTeam) {
+                        newTeam.name = 'null';
+                    }
 
-                if (!newTeam) {
-                    newTeam.name = 'null';
-                }
-
-                logger.logAction(id, id, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
-                return callback(null, {message:'Success'})
-            });
+                    logger.logAction(id, -1, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
+                    return callback(null, {message:'Success'})
+                });
         })
     });
 };

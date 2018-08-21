@@ -20,6 +20,10 @@ module.exports = {
                     this.logout(null, 'Permission error occurred. Please login again.')
                 }
 
+                if (!'error' in data) {
+                    data['error'] = 'Something went wrong'
+                }
+
                 if (callback) callback(data)
             }
         }
