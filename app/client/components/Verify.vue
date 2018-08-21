@@ -39,10 +39,7 @@
                 } else {
                     this.status = 'success'
 
-                    /*
-                    if (Session.loggedIn()) {
-                        AuthService.loginWithToken(Session.getToken())
-                    }*/
+                    AuthService.refreshToken() // Update dashboard status
                 }
             })
         }

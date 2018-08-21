@@ -159,6 +159,15 @@ module.exports = {
         })
     },
 
+    refreshToken() {
+        console.log('Token refreshed!')
+
+        // Login with token if it exists
+        if (Session.loggedIn()) {
+            this.loginWithToken()
+        }
+    },
+
     loginWithToken () {
         this.sendRequest('POST', '/auth/tokenLogin', {
 

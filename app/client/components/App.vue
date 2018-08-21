@@ -103,19 +103,6 @@
                     }
                 }
             }
-
-            setInterval(this.refreshToken(), 5000)
-            this.refreshToken()
-        },
-        methods: {
-            refreshToken() {
-                console.log('Token refreshed!')
-
-                // Login with token if it exists
-                if (Session.loggedIn()) {
-                    AuthService.loginWithToken()
-                }
-            }
         }
     }
 </script>
