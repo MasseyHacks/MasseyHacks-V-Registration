@@ -91,7 +91,7 @@ module.exports = {
             }
         };
     },
-    logAction : async function (actionFrom, actionTo, message) {
+    logAction : function (actionFrom, actionTo, message) {
 
         console.log(actionFrom, actionTo, message);
 
@@ -99,45 +99,56 @@ module.exports = {
          * To-Do: Fix this bash...
          */
 
-        const dataFrom = await buildLoggingData(actionFrom);
+        LogEvent
+            .create({
+                'to.ID': actionTo,
+                'from.ID': actionFrom,
+                'message': message,
+                'timestamp': Date.now()
+            }, function (err, e) {
+                LogEvent
+                    .findOne({_id:e._id})
+                    //.lean()
+                    .populate('fromUser')
+                    .populate('toUser')
+                    .exec(function (err, event) {
 
-        const dataTo = await buildLoggingData(actionTo);
+                        console.log(event)
 
-        /*
-        dataTo.then((x) => {
-            console.log('wtf', x)
-        })*/
+                        LogEvent.findOneAndUpdate({
+                            _id: event._id
+                        }, {
+                            'from.name': event.fromUser.fullName,
+                            'from.email': event.fromUser.email,
+                            'to.name': event.toUser.fullName,
+                            'to.email': event.toUser.email
+                        }, {
+                            new: true
+                        }, function(err, newEvent) {
 
-        console.log(dataFrom, dataTo)
+                            console.log(newEvent)
 
-        LogEvent.create({
-            'to': dataTo,
-            'from': dataFrom,
-            'message': message,
-            'timestamp': Date.now()
-        }, function (err, event) {
-            console.log(event);
+                            if (process.env.NODE_ENV === 'production' && process.env.AUDIT_SLACK_HOOK){
+                                console.log('Sending audit log...');
 
-            if (process.env.NODE_ENV === 'production' && process.env.AUDIT_SLACK_HOOK){
-                console.log('Sending audit log...');
+                                request.post(process.env.AUDIT_SLACK_HOOK,
+                                    {
+                                        form: {
+                                            payload: JSON.stringify({
+                                                'icon_emoji': ':pcedoris:',
+                                                'username': 'AuditBot',
+                                                'text': '```' + newEvent + '```'
+                                            })
+                                        }
+                                    },
+                                    function (error, response, body) {
+                                        console.log('Message sent to slack');
+                                    }
+                                );
 
-                request.post(process.env.AUDIT_SLACK_HOOK,
-                    {
-                        form: {
-                            payload: JSON.stringify({
-                                'icon_emoji': ':pcedoris:',
-                                'username': 'AuditBot',
-                                'text': '```' + event + '```'
-                            })
-                        }
-                    },
-                    function (error, response, body) {
-                        console.log('Message sent to slack');
-                    }
-                );
-
-            }
-        });
-
+                            }
+                        })
+                    });
+            })
     }
 };
