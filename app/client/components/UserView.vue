@@ -137,16 +137,17 @@
                             AuthService.skillTest(() => {
                                 swal.showLoading()
 
+                                var postData = {};
+                                postData[keys[field]] = newValue;
                                 //TODO: Actual api endpoint
-                                AuthService.sendRequest('POST', '/', {
-                                    'maxParticipants': this.maxParticipants
-                                }, (err, setting) => {
-                                    if (err || !setting) {
+                                AuthService.sendRequest('POST', '/api/modifyUser', {
+                                    userID: this.userObj._id,
+                                    data: postData
+                                }, (err) => {
+                                    if (err) {
                                         swal('Error', err.error, 'error')
                                     } else {
                                         swal('Success', 'Field has been changed', 'success')
-                                        Session.setSettings(setting)
-                                        this.convertTimes()
                                     }
                                 })
                             })

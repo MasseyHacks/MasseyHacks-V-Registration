@@ -32,7 +32,7 @@ module.exports = function(router) {
             instruction: 'Solve for `life`:',
             answer: 42
         })
-        
+
         /*
         request.get({
             uri: 'https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner',
@@ -49,6 +49,12 @@ module.exports = function(router) {
 
     // Owner
     // List emails
+    router.post('/modifyUser', permissions.isOwner, function (req,res){
+        UserController.modifyUser(req.userExecute,req.body.userID,req.body.data,logger.defaultResponse(req,res));
+    });
+
+    // Owner
+    // Manually modify user
     router.get('/email/listTemplates', permissions.isOwner, function (req,res){
         mailer.listTemplates(logger.defaultResponse(req,res));
     });
