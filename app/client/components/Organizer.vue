@@ -1,5 +1,5 @@
 <template>
-    <div class="app-screen" style="margin-bottom: 30px">
+    <div class="app-screen">
         <div class="container">
             <div class="row">
                 <div class="title-card col-md-12">

@@ -105,7 +105,7 @@ module.exports = {
             newPassword: newPassword
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -123,7 +123,7 @@ module.exports = {
             lastName: lastName
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -139,7 +139,7 @@ module.exports = {
             password: password
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 console.log(data)
                 if (data['user']['2FA']) {
@@ -173,7 +173,7 @@ module.exports = {
             'code':code
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 Session.create(data['token'], data['user'])
                 this.updateLoginState(true)
@@ -188,7 +188,7 @@ module.exports = {
             token: token
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 if (callback) callback(null)
             }
@@ -201,7 +201,7 @@ module.exports = {
             password: password
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 this.logout(null, 'The session has expired')
                 if (callback) callback(null, data)
@@ -214,7 +214,7 @@ module.exports = {
             email: email
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 if (callback) callback(null, data)
             }
@@ -226,7 +226,7 @@ module.exports = {
 
         }, (err, data) => {
             if (err) {
-                if (callback) callback(err.responseJSON['error'])
+                if (callback) callback(err.responseJSON.error)
             } else {
                 if (callback) callback(null, data)
             }

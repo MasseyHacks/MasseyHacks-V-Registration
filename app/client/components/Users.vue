@@ -125,7 +125,7 @@
                 filters: {
                     '$and':[
                         {
-                            'permissions.checkin': 'true'
+                            'permissions.checkin': 'false'
                         }
                     ]
                 },

@@ -21,6 +21,7 @@ import Checkin        from '../components/Checkin.vue'
 import Statistics     from '../components/Statistics.vue'
 import Users          from '../components/Users.vue'
 import Application    from '../components/Application.vue'
+import Team           from '../components/Team.vue'
 import Confirmation   from '../components/Confirmation.vue'
 import Error          from '../components/Error.vue'
 import PasswordChange from '../components/PasswordChange.vue'
@@ -138,6 +139,14 @@ const router = new VueRouter({
        {
            path: '/application',
            component: Application,
+           beforeEnter: isAuthorized,
+           meta: {
+               permissions: 'verified'
+           }
+       },
+       {
+           path: '/team',
+           component: Team,
            beforeEnter: isAuthorized,
            meta: {
                permissions: 'verified'

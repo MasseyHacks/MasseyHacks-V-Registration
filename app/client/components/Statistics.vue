@@ -148,7 +148,7 @@
                     this.loading = false
 
                     if (loadingError || !statistics) {
-                        this.loadingError = loadingError ? JSON.parse(loadingError.responseText).err : 'Unable to process request'
+                        this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
                     }
@@ -157,7 +157,7 @@
             refreshStatistics: function() {
                 ApiService.refreshStatistics((loadingError, statistics) => {
                     if (loadingError || !statistics) {
-                        this.loadingError = loadingError ? JSON.parse(loadingError.responseText).err : 'Unable to process request'
+                        this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
                     }

@@ -582,7 +582,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
     }
 
-    User.findOne({email : email.toLowerCase()}, '+password +QRCode', function (err, user) {
+    User.findOne({email : email.toLowerCase()}, '+password', function (err, user) {
             console.log(user);
 
             if (err || !user || user == null || !user.checkPassword(password)) {
@@ -1142,7 +1142,7 @@ UserController.createTeam = function(id, teamName, callback) {
             new: true
         }, function(err, newUser) {
             logger.logAction(id, id, 'Created the team: ' + teamName + ' (' + team.code + ')');
-            return callback(null, { team : team.toJSON(), user : newUser });
+            return callback(null, team.toJSON());
         });
     });
 };
@@ -1196,7 +1196,7 @@ UserController.joinTeam = function(id, teamCode, callback) {
                            return callback({error : 'Something went wrong' });
                        }
                        logger.logAction(id, id, 'Joined the team: ' + newTeam + ' (' + team.code + ')');
-                       return callback(null, { team : newTeam, user : newUser });
+                       return callback(null, newTeam);
                    });
                });
            } else {
@@ -1257,7 +1257,7 @@ UserController.leaveTeam = function(id, callback) {
                 }
 
                 logger.logAction(id, id, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
-                return callback(null, newUser)
+                return callback(null, {message:'Success'})
             });
         })
     });
@@ -1274,8 +1274,8 @@ UserController.getTeam = function(id, callback) {
             return callback(err ? err : {error : 'Unable to get user'});
         }
 
-        if (user.teamCode.length == 0) {
-            return callback({error : 'You are not in a team'});
+        if (!user.teamCode || user.teamCode.length == 0) {
+            return callback(null, null);
         }
 
         Team.findOne({

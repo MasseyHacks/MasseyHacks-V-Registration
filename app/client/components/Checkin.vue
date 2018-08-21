@@ -1,37 +1,39 @@
 <template>
-    <div class="app-screen">
-        <div class="container">
-            <div class="row">
-                <div class="title-card col-md-12">
+    <div class='app-screen'>
+        <div class='container'>
+            <div class='row'>
+                <div class='title-card col-md-12'>
                     <h2>CHECK IN</h2>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="ui-card dash-card-large" id="users-table">
+            <div class='row'>
+                <div class='ui-card dash-card-large' id='users-table'>
                     <!--<h3>USERS:</h3>-->
-                    <div v-if="loading">
+                    <div v-if='loading'>
                         Loading...
                     </div>
-                    <div v-else-if="err">
+                    <div v-else-if='err'>
                         {{loadingError}}
                     </div>
                     <div v-else>
-                        <input class="round-input" style="width: 100%" placeholder="Search for hacker here" v-on:input="updateSearch" v-model="searchQuery" type="text">
-
-                        <div v-if="users.length != 0 && !queryError">
-                            <table id="users-table">
-                                <tr id="table-header"><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
-                                <tr v-for="i in users.length">
+                        <input class='round-input' style='width: 100%' placeholder='Search for hacker here' v-on:input='updateSearch' v-model='searchQuery' type='text'>
+                        <hr>
+                        <button class='generic-button-light' @click='refresh()'>Refresh Table</button>
+                        <hr>
+                        <div v-if='users.length != 0 && !queryError'>
+                            <table id='checkin-table'>
+                                <tr id='table-header'><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
+                                <tr v-for='i in users.length'>
                                     <td>
                                         {{users[i-1].name}}
                                     </td>
-                                    <td><span v-html="userWaiverConverter(users[i-1])"></span></td>
-                                    <td><span v-html="userCheckinConverter(users[i-1])"></span></td>
-                                    <td class="email-col">{{users[i-1].email}}</td>
+                                    <td><span v-html='userWaiverConverter(users[i-1])'></span></td>
+                                    <td><span v-html='userCheckinConverter(users[i-1])'></span></td>
+                                    <td class='email-col'>{{users[i-1].email}}</td>
                                     <td>N/A</td>
                                     <td>N/A</td>
-                                    <td><button class="generic-button-light" @click="inputwaiver(users[i-1], i-1)" v-if="!users[i-1].waiver">WAIVER-IN</button><button class="generic-button-light" @click="checkin(users[i-1], i-1)" v-else-if="!users[i-1].checked">CHECK-IN</button><button class="generic-button-light" @click="checkout(users[i-1], i-1)" v-else>CHECK-OUT</button></td>
+                                    <td><button class='generic-button-light' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>WAIVER-IN</button><button class='generic-button-light' @click='checkin(users[i-1], i-1)' v-else-if='!users[i-1].checked'>CHECK-IN</button><button class='generic-button-light' @click='checkout(users[i-1], i-1)' v-else>CHECK-OUT</button></td>
                                 </tr>
                             </table>
                         </div>
@@ -72,14 +74,14 @@
 
                 loading: true,
                 loadingError: '',
-                queryError: '',
+                queryError: 'No users found',
 
                 users: {}
             }
         },
 
         beforeMount() {
-            ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: "checkin"}, (err, data) => {
+            ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin'}, (err, data) => {
                 this.loading = false
 
                 if (err || !data) {
@@ -104,6 +106,17 @@
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
             },
+            refresh: function() {
+                ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin'}, (err, data) => {
+
+                    if (err || !data) {
+                        this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                    } else {
+                        this.users = data.users
+                        this.totalPages = data.totalPages
+                    }
+                })
+            },
             checkin: function(user, index) {
                 swal({
                     title: 'Are you sure?',
@@ -116,12 +129,12 @@
                 }).then((result) => {
                     if (result.value) {
                         swal.showLoading()
-                        AuthService.sendRequest("POST", "/api/checkIn", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                        AuthService.sendRequest('POST', '/api/checkIn', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
                                 console.log(err)
-                                swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                                swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal("Success", "Hacker " + data.name + " has been successfully checked in.", "success")
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked in.', 'success')
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -140,12 +153,12 @@
                 }).then((result) => {
                     if (result.value) {
                         swal.showLoading()
-                        AuthService.sendRequest("POST", "/api/checkOut", {userID: user.id, appPage: "checkin"}, (err, data) => {
+                        AuthService.sendRequest('POST', '/api/checkOut', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
                                 console.log(err)
-                                swal("Error", "An error has occured, please contact an organizer immediately", "error")
+                                swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal("Success", "Hacker " + data.name + " has been successfully checked out.", "success")
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked out.', 'success')
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -164,7 +177,7 @@
                 }).then((result) => {
                     if (result.value) {
                         swal.showLoading()
-                        AuthService.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: "checkin"}, (err, data) => {
+                        AuthService.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: 'checkin'}, (err, data) => {
                             if (err || !data) {
                                 swal('Error', err.error, 'error')
                             } else {
@@ -186,7 +199,7 @@
                 // Update content of advanced query box
                 this.advancedQueryContent = JSON.stringify(this.filters)
 
-                ApiService.getUsers({ page: 1, size: 0, text: this.searchQuery, filters : this.filters, appPage: "checkin"}, (err, data) => {
+                ApiService.getUsers({ page: 1, size: 0, text: this.searchQuery, filters : this.filters, appPage: 'checkin'}, (err, data) => {
                     this.queryError = ''
                     if (err || !data) {
                         this.queryError = err ? err.responseJSON.error : 'Unable to process request'
