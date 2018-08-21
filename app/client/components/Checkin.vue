@@ -76,7 +76,7 @@
                 loadingError: '',
                 queryError: '',
 
-                users: {}
+                users: []
             }
         },
 

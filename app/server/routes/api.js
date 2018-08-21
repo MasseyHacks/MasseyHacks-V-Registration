@@ -50,7 +50,7 @@ module.exports = function(router) {
     // Owner
     // List emails
     router.post('/modifyUser', permissions.isOwner, function (req,res){
-        UserController.modifyUser(req.userExecute,req.body.userID,req.body.data,logger.defaultResponse(req,res));
+        UserController.modifyUser(req.userExecute, req.body.userID, req.body.data, logger.defaultResponse(req,res));
     });
 
     // Owner

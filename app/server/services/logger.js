@@ -62,6 +62,10 @@ module.exports = {
     },
     logAction : function (actionFrom, actionTo, message) {
 
+        // Start bash
+
+        console.log(actionFrom, actionTo, message)
+
         LogEvent
             .create({
                 'to.ID': actionTo,
@@ -69,22 +73,23 @@ module.exports = {
                 'message': message,
                 'timestamp': Date.now()
             }, function (err, e) {
-                try {
-                    LogEvent
-                        .findOne({_id: e._id})
-                        .populate(actionFrom == -1 ? '' : 'fromUser') // Only populate if user exists
-                        .populate(actionTo == -1 ? '' : 'toUser')
-                        .exec(function (err, event) {
 
-                            console.log(event)
+                LogEvent
+                    .findOne({_id: e._id})
+                    .populate(actionFrom === -1 ? '' : 'fromUser') // Only populate if user exists
+                    .populate(actionTo === -1 ? '' : 'toUser')
+                    .exec(function (err, event) {
 
+                        console.log(event)
+
+                        if (event) {
                             LogEvent.findOneAndUpdate({
                                 _id: event._id
                             }, {
-                                'from.name': actionFrom == -1 ? 'MasseyHacks Internal Authority' : event.fromUser.fullName,
-                                'from.email': actionFrom == -1 ? 'internal@masseyhacks.ca' : event.fromUser.email,
-                                'to.name': actionTo == -1 ? 'MasseyHacks Internal Authority' : event.toUser.fullName,
-                                'to.email': actionTo == -1 ? 'internal@masseyhacks.ca' : event.toUser.email
+                                'from.name': actionFrom === -1 ? 'MasseyHacks Internal Authority' : event.fromUser.fullName,
+                                'from.email': actionFrom === -1 ? 'internal@masseyhacks.ca' : event.fromUser.email,
+                                'to.name': actionTo === -1 ? 'MasseyHacks Internal Authority' : event.toUser.fullName,
+                                'to.email': actionTo === -1 ? 'internal@masseyhacks.ca' : event.toUser.email
                             }, {
                                 new: true
                             }, function (err, newEvent) {
@@ -111,10 +116,11 @@ module.exports = {
 
                                 }
                             })
-                        });
-                } catch (e) {
-                    Raven.captureException(e);
-                }
+                        } else {
+                            console.log('Logging fail.')
+                        }
+                    });
+
             })
     }
 };

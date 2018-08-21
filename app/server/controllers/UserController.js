@@ -24,7 +24,7 @@ function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
-UserController.modifyUser = function(adminID,userID,data,callback){
+UserController.modifyUser = function(adminUser,userID,data,callback){
     User.findOneAndUpdate({
         _id: userID
     },
@@ -37,7 +37,7 @@ UserController.modifyUser = function(adminID,userID,data,callback){
             return callback(err);
         };
 
-        logger.logAction(adminID, userID, 'Modified a user manually: '+JSON.stringify(data));
+        logger.logAction(adminUser._id, userID, 'Modified a user manually: '+JSON.stringify(data));
 
         return callback(null, 'Success');
     });
