@@ -4,7 +4,7 @@
             <h3>{{userObj.fullName.toUpperCase()}}</h3>
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
-                    <li v-for="(value, key) in flatten(userObj)" style="overflow-wrap: break-word; text-align: left;">
+                    <li v-for="(value, key) in flatten(userObj,false)" style="overflow-wrap: break-word; text-align: left;">
                         <span v-if="key != 'Application'">
                             {{key}}: {{value}}
                         </span>
@@ -59,7 +59,7 @@
         },
 
         methods: {
-            flatten: function(obj) {
+            flatten: function(obj,includeApplication = true) {
                 var flattened = {}
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
@@ -71,9 +71,11 @@
                             for (var depthKey in obj[keys]) {
                                 flattened[this.prettify(depthKey)] = obj[keys][depthKey]
                             }
-                        } else {
+                        } else{
                             var profileObj = this.flatten(obj[keys])
-                            flattened["Application"] = profileObj
+                            if(includeApplication){
+                                flattened["Application"] = profileObj
+                            }
                             this.userApp = profileObj
                         }
                     }
@@ -159,7 +161,7 @@
             },
             flattenWithHistory: function (data,prefix="",level=0){
                 var tempObj = {};
-                if(level < 6){
+                if(level < 7){
                     Object.keys(data).forEach((key) => {
                         if(data[key] === Object(data[key])){
                             //iterate again!
