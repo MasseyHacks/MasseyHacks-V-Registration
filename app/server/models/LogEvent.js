@@ -9,12 +9,10 @@ var loggingTemplate = {
         required: true
     },
     name : {
-        type: String,
-        required: true
+        type: String
     },
     email : {
-        type: String,
-        required: true
+        type: String
     }
 }
 
@@ -42,6 +40,20 @@ schema.set('toObject', {
 schema.statics.getLoggingTemplate = function() {
     return loggingTemplate
 };
+
+schema.virtual('fromUser', {
+    ref: 'User',
+    localField: 'from.ID',
+    foreignField: '_id',
+    justOne: true
+});
+
+schema.virtual('toUser', {
+    ref: 'User',
+    localField: 'to.ID',
+    foreignField: '_id',
+    justOne: true
+});
 
 schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp)

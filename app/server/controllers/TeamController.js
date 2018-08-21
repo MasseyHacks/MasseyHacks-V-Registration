@@ -55,12 +55,11 @@ TeamController.createTeam = function(id, teamName, callback) {
             return callback({error : 'You are already in a team!'});
         }
 
-        var team = Team();
-        team.name = teamName;
-        team.code = uuidv4().substring(0, 7);
-        team.memberIDs = [user._id];
-
-        team.save();
+        var team = Team.create({
+            name: teamName,
+            code: uuidv4().substring(0, 7),
+            memberIDs: [user._id]
+        });
 
         User.findOneAndUpdate({
             _id: id
@@ -307,6 +306,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
             .sort()
             .skip((page - 1) * size)
             .limit(size)
+            .populate('memberNames')
             .exec(function(err, teams) {
                 if (err) {
                     console.log(err)
