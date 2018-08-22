@@ -5,7 +5,14 @@
                 <div class="title-card col-md-12">
                     <h2>APPLICATION</h2>
                 </div>
-                <div style="width:100%; padding: 1em;">
+
+                <div v-if="loading">
+                    Loading...
+                </div>
+                <div v-else-if="loadingError">
+                    {{loadingError}}
+                </div>
+                <div v-else style="width:100%; padding: 1em;">
                     <form v-if="!user.permissions.checkin || user.permissions.developer" @submit.prevent="submitApplication">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
@@ -76,6 +83,9 @@
     export default {
         data() {
             return {
+                loading: true,
+                loadingError: '',
+
                 error: '',
                 applications: {},
                 settings: Session.getSettings(),
@@ -92,8 +102,10 @@
         beforeMount() {
             console.log(this.settings);
             ApiService.getApplications((err, applications) => {
+                this.loading = false
+
                 if (err || !applications) {
-                    this.error = err ? err : 'Something went wrong :\'('
+                    this.loadingError = err ? err : 'Something went wrong :\'('
                 } else {
                     this.applications = applications
                 }

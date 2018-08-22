@@ -172,6 +172,7 @@
 
                 ApiService.getLog({ page: this.page, size: 30, text: this.searchQuery }, (err, data) => {
                     this.loading = false
+                    this.queryError = ''
 
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
@@ -179,6 +180,10 @@
                         this.log = data.log
                         this.totalPages = data.totalPages
                         this.count = data.count
+
+                        if (this.log.length == 0) {
+                            this.queryError = 'No events found'
+                        }
                     }
                 })
             }

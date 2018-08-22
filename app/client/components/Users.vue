@@ -172,7 +172,7 @@
                     this.totalPages = data.totalPages
                     this.count = data.count
 
-                    if (!this.users.length == 0) {
+                    if (this.users.length == 0) {
                         this.queryError = 'No users found'
                     }
                 }
