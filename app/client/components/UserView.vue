@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="ui-card dash-card-large">
-            <h3>{{userObj.fullName.toUpperCase()}}</h3>
+            <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
             <div id="detailed-info" style="column-count: 3; column-width: 150px;">
                 <ul>
                     <li v-for="(value, key) in flatten(userObj,false)" style="overflow-wrap: break-word; text-align: left;">
