@@ -69,11 +69,11 @@ SettingsController.getVerificationProblem = function(callback){
     var oldCoef = expressionResult[1];
 
     var seed = Math.ceil(Math.random()*100);
+
     if(seed % 2 == 0){
-      var eq = new algebra.Equation(expression1,Math.floor(Math.random()*20));
-    }
-    else{
-      var eq = new algebra.Equation(expression1,generateExpression(letter,oldCoef)[0]);
+      var eq = new algebra.Equation(expression1,Math.floor(Math.random()*20)); // Equations on both side
+    } else{
+      var eq = new algebra.Equation(expression1,generateExpression(letter,oldCoef)[0]); // Equation and constant
     }
 
     returnData['question'] = eq.toString();
@@ -151,9 +151,12 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
 };
 
 SettingsController.requestSchool = function(user, schoolName, callback) {
+
     Settings.findOneAndUpdate(
         {
-
+            schools: {
+                $ne: schoolName
+            }
         }, {
             $push : {
                 pendingSchools : schoolName
@@ -162,10 +165,10 @@ SettingsController.requestSchool = function(user, schoolName, callback) {
             new: true
         }, function(err, settings) {
             if (err || !settings) {
-                return callback({'error':'Unable to add school ' + schoolName})
+                return callback({'error':'Unable to add school'})
             }
 
-            logger.logAction(user._id, -1, 'Requested to add school ' + schoolName + '.');
+            logger.logAction(user._id, -1, 'Requested to add school.', schoolName);
 
             return callback(null, {'message':'Success'})
         })

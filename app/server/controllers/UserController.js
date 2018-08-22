@@ -1,24 +1,25 @@
-const _              = require('underscore');
-const User           = require('../models/User');
-const Team           = require('../models/Team');
-const Settings       = require('../models/Settings');
+const _                  = require('underscore');
+const User               = require('../models/User');
+const Team               = require('../models/Team');
+const Settings           = require('../models/Settings');
+const SettingsController = require('./SettingsController');
 
-const jwt            = require('jsonwebtoken');
+const jwt                = require('jsonwebtoken');
 
-const request        = require('request');
+const request            = require('request');
 
-const validator      = require('validator');
-const moment         = require('moment');
+const validator          = require('validator');
+const moment             = require('moment');
 
-const logger         = require('../services/logger');
-const mailer         = require('../services/email');
-const stats          = require('../services/stats');
+const logger             = require('../services/logger');
+const mailer             = require('../services/email');
+const stats              = require('../services/stats');
 
-const UserFields     = require('../models/data/UserFields');
-const FilterFields   = require('../models/data/FilterFields');
-const qrcode         = require('qrcode');
+const UserFields         = require('../models/data/UserFields');
+const FilterFields       = require('../models/data/FilterFields');
+const qrcode             = require('qrcode');
 
-var UserController   = {};
+var UserController       = {};
 
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -660,7 +661,7 @@ UserController.loginWith2FA = function(token, code, callback) {
     });
 };
 
-UserController.updateProfile = function (userExcuted, id, profile, callback){
+UserController.updateProfile = function (userExecute, id, profile, callback){
 
     // Validate the user profile, and mark the user as profile completed
     // when successful.
@@ -694,13 +695,13 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
 
             var now = Date.now();
 
-            if (now < times.timeOpen){
+            if (!userExecute.admin && now < times.timeOpen){
                 return callback({
                     message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
                 });
             }
 
-            if (now > times.timeClose){
+            if (!userExecute.admin && now > times.timeClose){
                 return callback({
                     message: 'Sorry, registration is closed.'
                 });
@@ -735,6 +736,10 @@ UserController.updateProfile = function (userExcuted, id, profile, callback){
                             new: true
                         },
                         callback);
+
+                    SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function(err, msg) {
+                        console.log(err, msg);
+                    });
 
                     if (!user.status.submittedApplication) {
                         User.findById(id, function(err, user) {

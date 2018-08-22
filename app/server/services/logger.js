@@ -64,7 +64,7 @@ module.exports = {
 
         // Start bash
 
-        console.log(actionFrom, actionTo, message)
+        console.log(actionFrom, actionTo, message, detailedMessage)
 
         LogEvent
             .create({
