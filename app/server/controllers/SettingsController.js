@@ -1,4 +1,5 @@
 const _          = require('underscore');
+const algebra    = require("algebra.js");
 const User       = require('../models/User');
 const Settings   = require('../models/Settings');
 const LogEvent   = require('../models/LogEvent');
@@ -24,6 +25,72 @@ const SettingsController = {};
 
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+}
+
+function generateExpression(letter,otherCoef){
+  var expr = new algebra.Expression(letter);
+  var seed = Math.ceil(Math.random()*100);
+
+  if(seed % 2 == 0 || true){
+    expr = expr.subtract(Math.floor(Math.random()*20));
+  }
+  else{
+    expr = expr.add(Math.floor(Math.random()*20));
+  }
+
+  seed = Math.floor(Math.random()*100);
+
+  var coef = Math.floor(seed/20);
+  if(coef == otherCoef){
+    seed = Math.floor(Math.random()*100);
+    if(seed % 2 && coef > 1){
+      coef--;
+    }
+    else{
+      coef = coef+=2;
+    }
+  }
+
+  for(var i=0;i<coef;i++){
+    expr = expr.add(letter);
+  }
+  return [expr,coef];
+}
+
+SettingsController.getVerificationProblem = function(callback){
+    var alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    var returnData = {};
+
+    var letter = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+    returnData['instruction'] = `Solve for: ${letter}`;
+
+    var expressionResult = generateExpression(letter);
+    var expression1 = expressionResult[0];
+    var oldCoef = expressionResult[1];
+
+    var seed = Math.ceil(Math.random()*100);
+    if(seed % 2 == 0){
+      var eq = new algebra.Equation(expression1,Math.floor(Math.random()*20));
+    }
+    else{
+      var eq = new algebra.Equation(expression1,generateExpression(letter,oldCoef)[0]);
+    }
+
+    returnData['question'] = eq.toString();
+
+    console.log(eq.toString());
+    try{
+      returnData['answer'] = eq.solveFor(letter).toString();
+    }
+    catch(err){
+      returnData = {
+        instruction: 'Solve for `life`',
+        question: 'What is the meaning of life?',
+        answer: '42'
+      }
+    }
+
+    return callback(null,returnData);
 }
 
 SettingsController.getPendingSchools = function(callback) {
@@ -78,7 +145,7 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
             }
 
             logger.logAction(adminUser._id, -1, 'Rejected pending school ' + schoolName + '.');
-            
+
             return callback(null, {'message':'Success'})
         })
 };

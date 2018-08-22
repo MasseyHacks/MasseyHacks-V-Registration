@@ -25,6 +25,7 @@
     "gulp": "^3.9.1"
   },
   "dependencies": {
+    "algebra.js": "^0.2.6",
     "babel-core": "^6.1.21",
     "babel-loader": "^6.1.0",
     "babel-plugin-transform-runtime": "^6.1.18",
