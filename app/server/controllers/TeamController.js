@@ -202,6 +202,9 @@ TeamController.leaveTeam = function(id, callback) {
                 })
                 .select('+memberIDs')
                 .exec(function(err, newTeam) {
+
+                    logger.logAction(id, -1, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
+
                     if (newTeam && newTeam.memberIDs.length == 0) { // Team is dead, kill it for good
                         Team.findOneAndRemove({
                             _id : newTeam._id
@@ -214,7 +217,6 @@ TeamController.leaveTeam = function(id, callback) {
                         newTeam.name = 'null';
                     }
 
-                    logger.logAction(id, -1, 'Left the team: ' + newTeam.name + ' (' + user.teamCode + ')');
                     return callback(null, {message:'Success'})
                 });
         })

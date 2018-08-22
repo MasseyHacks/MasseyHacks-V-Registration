@@ -134,7 +134,7 @@
                         swal({
                           title: 'Are you sure?',
                           type: 'warning',
-                          html: `You are directly modifying ${this.userObj.fullName}`+
+                          html: `You are directly modifying ${this.userObj.fullName}!<br>`+
                                 '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>'+
                                 '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation'+
                                 `<br><br>Field: ${keys[field]}`+
@@ -172,8 +172,6 @@
                     }
                   }
                 })
-
-
             },
             flattenWithHistory: function (data,prefix="",level=0){
                 var tempObj = {};
