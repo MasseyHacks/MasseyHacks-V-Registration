@@ -22,6 +22,10 @@ const SettingsController = {};
 
 // Get stats
 
+function escapeRegExp(str) {
+    return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+}
+
 SettingsController.getPendingSchools = function(callback) {
     Settings.findOne(
         {},
@@ -150,22 +154,51 @@ SettingsController.modifyLimit = function(user, limit, callback) {
 
 SettingsController.getLog = function(query, callback){
 
-    var filter = {};
-    var page = 0;
-    var size = 10000000000;
+    var filter = query.filter ? query.filter : {};
+    var page   = parseInt(query.page);
+    var size   = parseInt(query.size);
+    var or     = [];
+    var and    = [];
 
     console.log('query', query)
 
-    if (query) {
-        //filter = query.filter ? query.filter : {};
-        page = parseInt(query.page);
-        size = parseInt(query.size);
+    if (query.text) {
+        var regex = new RegExp(escapeRegExp(query.text), 'i'); // filters regex chars, sets to case insensitive
+
+        or.push({ 'message': regex });
+        or.push({ 'detailedMessage': regex });
+        or.push({ 'from.name': regex });
+        or.push({ 'to.name': regex });
+        or.push({ 'from.email': regex });
+        or.push({ 'to.email': regex });
+        or.push({ 'from._id': regex });
+        or.push({ 'to._id': regex });
+    }
+
+    if (or && or.length) {
+        if ('$or' in filter) {
+            filter['$or'].concat(or)
+        } else {
+            filter['$or'] = or
+        }
+    }
+
+    if (and && and.length) {
+        if ('$and' in filter) {
+            filter['$and'].concat(and)
+        } else {
+            filter['$and'] = and
+        }
     }
 
     LogEvent.count(filter, function(err, count) {
         if (err) {
-            console.log(err)
+            console.log(err);
             return callback({error:err.message})
+        }
+
+        if (size === -1) {
+            size = count
         }
 
         LogEvent
@@ -185,11 +218,10 @@ SettingsController.getLog = function(query, callback){
                     });
                 }
 
-                console.log(log, filter)
-
                 return callback(null, {
                     log : log,
-                    totalPages: Math.ceil(count / size)
+                    totalPages: Math.ceil(count / size),
+                    count: count
                 });
             });
     });

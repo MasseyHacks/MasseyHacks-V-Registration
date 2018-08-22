@@ -160,7 +160,8 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
                 return callback(null, {
                     users: users,
-                    totalPages: Math.ceil(count / size)
+                    totalPages: Math.ceil(count / size),
+                    count: count
                 })
             });
         });

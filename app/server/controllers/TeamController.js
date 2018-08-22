@@ -46,6 +46,10 @@ TeamController.createTeam = function(id, teamName, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
+    if (teamName.length > 50) {
+        return callback({error : 'Name is too long! (Max 50)'})
+    }
+
     User.getByID(id, function(err, user) {
         if (err || !user) {
             return callback({error : 'Unable to get user'});

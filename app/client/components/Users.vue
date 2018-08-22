@@ -76,6 +76,10 @@
                         <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-light" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
                         <button class="generic-button-light" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
+
+                        <br>
+                        {{page}} of {{totalPages}} | {{count}} results
+
                         <hr>
                         <table id="users-table">
                             <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
@@ -120,6 +124,8 @@
             return {
                 page: 1,
                 totalPages: 1,
+                count: 0,
+
                 displayOrganizers: false,
                 advancedQueryContent: '{}',
                 filters: {
@@ -164,6 +170,7 @@
                 } else {
                     this.users = data.users
                     this.totalPages = data.totalPages
+                    this.count = data.count
 
                     if (!this.users.length == 0) {
                         this.queryError = 'No users found'
@@ -284,6 +291,7 @@
                     } else {
                         this.users = data.users
                         this.totalPages = data.totalPages
+                        this.count = data.count
                         this.loading = false
 
                         if (this.users.length == 0) {
@@ -427,7 +435,7 @@
 
             switchPage: function(page) {
                 this.page = page
-                this.updateSearch()
+                this.updateSearch(true)
             },
 
             toggleNormalOnly: function() {

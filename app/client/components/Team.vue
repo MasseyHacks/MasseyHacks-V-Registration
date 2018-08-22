@@ -17,7 +17,7 @@
                     <div v-else-if="createTeamState">
                         Create Team
 
-                        <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text">
+                        <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text" maxlength="50">
 
                         <br>
                         <div class="button-row">

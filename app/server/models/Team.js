@@ -9,7 +9,8 @@ const User      = require('./User');
 var schema = new mongoose.Schema({
     name : {
         type: String,
-        required: true
+        required: true,
+        maxlength: 50
     },
     code : {
         type: String,

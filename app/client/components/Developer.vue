@@ -17,10 +17,21 @@
                         {{loadingError}}
                     </div>
                     <div v-else>
+
+                        <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
+
+                        <hr>
+
                         <div v-if="log.length != 0 && !queryError">
 <!--                             <button class="generic-button" v-for="p in totalPages" :key="p" v-on:click="switchPage(p)">page {{p}}</button> -->
                             <button class="generic-button" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
                             <button class="generic-button" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
+
+                            <br>
+                            {{page}} of {{totalPages}} | {{count}} results
+
+                            <hr>
+
                             <div id="log">
                                 <div v-for="event in log" style="margin:0.5em;">
                                     <button v-on:click="showDiv(event.timestamp)" class="collapsible" style="word-wrap: break-word">
@@ -91,6 +102,7 @@
             return {
                 page: 1,
                 totalPages: 1,
+                count: 0,
 
                 filters: {},
 
@@ -100,9 +112,11 @@
 
                 log: {},
 
-                selected:"",
+                selected:'',
                 Admins:{},
                 dropdown: {},
+
+                searchQuery:''
             }
         },
         beforeMount() {
@@ -121,7 +135,7 @@
         methods: {
             switchPage: function (page) {
                 this.page = page
-                this.updateSearch()
+                this.updateSearch(true)
             },
             showDiv(id){
                 var children = document.getElementById(id).parentElement.parentElement.children;
@@ -147,8 +161,16 @@
             moment (date) {
                 return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
             },
-            updateSearch: function() {
-                ApiService.getLog({ page: this.page, size: 30 }, (err, data) => {
+
+            updateSearch: function(resetPage) {
+                if (!resetPage) {
+                    this.page = 1
+                }
+
+                // Update content of advanced query box
+                this.advancedQueryContent = JSON.stringify(this.filters)
+
+                ApiService.getLog({ page: this.page, size: 30, text: this.searchQuery }, (err, data) => {
                     this.loading = false
 
                     if (err || !data) {
@@ -156,6 +178,7 @@
                     } else {
                         this.log = data.log
                         this.totalPages = data.totalPages
+                        this.count = data.count
                     }
                 })
             }
