@@ -10,6 +10,7 @@
                 <div class="ui-card dash-card">
                     <h3>YOUR STATUS:</h3>
                     <h4>{{user.status.name.toUpperCase()}}</h4>
+                    <router-link v-if="user.status.name == 'admitted'" to="/confirmation">Confirm your spot!</router-link>
                     <hr>
                     <p><span class="emphasis">Welcome {{user.fullName}},</span><br>
                         This is the MasseyHacks V Dashboard
