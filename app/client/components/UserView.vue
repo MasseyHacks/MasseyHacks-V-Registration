@@ -82,7 +82,7 @@
                 }
                 return flattened
             },
-            editUser: async function(){
+            editUser: function(){
                 var flatWithHistory = this.flattenWithHistory(this.userObj)
                 var keys = flatWithHistory.documentKeys;
                 //remove values that cannot/should not be edited
@@ -96,70 +96,83 @@
                 keys.splice(keys.indexOf('lowerCaseName'),1);
                 console.log(keys);
 
-                const {value: field} = await swal({
-                  title: 'Select a field',
-                  input: 'select',
-                  inputOptions: keys,
-                  inputPlaceholder: 'Select a field',
+                swal({
+                  title: 'Warning',
+                  type: 'warning',
+                  text: 'Updating a user should be done through the appropriate function. This editor will not check for any errors or update any dependent fields. Continue?',
                   showCancelButton: true,
-                  inputValidator: (value) => {
-                    return new Promise((resolve) => {
-                      resolve();
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes!'
+                }).then(async (result) =>{
+                  if(result.value){
+                    const {value: field} = await swal({
+                      title: 'Select a field',
+                      input: 'select',
+                      inputOptions: keys,
+                      inputPlaceholder: 'Select a field',
+                      showCancelButton: true,
+                      inputValidator: (value) => {
+                        return new Promise((resolve) => {
+                          resolve();
+                        })
+                      }
                     })
+
+                    if (field) {
+                      const {value: newValue} = await swal({
+                        title: 'Enter a value for '+keys[field],
+                        input: 'text',
+                        inputValue: flatWithHistory[keys[field]],
+                        showCancelButton: true,
+                        inputValidator: (value) => {
+                          return !value && 'You need to write something!'
+                        }
+                      })
+
+                      if (newValue) {
+                        swal({
+                          title: 'Are you sure?',
+                          type: 'warning',
+                          html: `You are directly modifying ${this.userObj.fullName}`+
+                                '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>'+
+                                '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation'+
+                                `<br><br>Field: ${keys[field]}`+
+                                `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}`+
+                                `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Yes!'
+                        }).then((result) => {
+                            if (result.value) {
+                                AuthService.skillTest(() => {
+                                    swal.showLoading()
+
+                                    var postData = {};
+                                    postData[keys[field]] = newValue;
+                                    //TODO: Actual api endpoint
+                                    AuthService.sendRequest('POST', '/api/modifyUser', {
+                                        userID: this.userObj._id,
+                                        data: postData
+                                    }, (err,data) => {
+                                        if (err) {
+                                            swal('Error', err.error, 'error')
+                                        } else {
+                                            swal('Success', 'Field has been changed', 'success').then((result) => {
+                                                this.$router.go(this.$router.currentRoute);
+                                            });
+
+                                        }
+                                    })
+                                })
+                            }
+                        })
+                      }
+                    }
                   }
                 })
 
-                if (field) {
-                  const {value: newValue} = await swal({
-                    title: 'Enter a value for '+keys[field],
-                    input: 'text',
-                    inputValue: flatWithHistory[keys[field]],
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                      return !value && 'You need to write something!'
-                    }
-                  })
-
-                  if (newValue) {
-                    swal({
-                      title: 'Are you sure?',
-                      type: 'warning',
-                      html: `You are directly modifying ${this.userObj.fullName}`+
-                            '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>'+
-                            '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation'+
-                            `<br><br>Field: ${keys[field]}`+
-                            `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}`+
-                            `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
-                      showCancelButton: true,
-                      confirmButtonColor: '#3085d6',
-                      cancelButtonColor: '#d33',
-                      confirmButtonText: 'Yes!'
-                    }).then((result) => {
-                        if (result.value) {
-                            AuthService.skillTest(() => {
-                                swal.showLoading()
-
-                                var postData = {};
-                                postData[keys[field]] = newValue;
-                                //TODO: Actual api endpoint
-                                AuthService.sendRequest('POST', '/api/modifyUser', {
-                                    userID: this.userObj._id,
-                                    data: postData
-                                }, (err,data) => {
-                                    if (err) {
-                                        swal('Error', err.error, 'error')
-                                    } else {
-                                        swal('Success', 'Field has been changed', 'success').then((result) => {
-                                            this.$router.go(this.$router.currentRoute);
-                                        });
-
-                                    }
-                                })
-                            })
-                        }
-                    })
-                  }
-                }
 
             },
             flattenWithHistory: function (data,prefix="",level=0){
