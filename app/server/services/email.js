@@ -213,7 +213,7 @@ module.exports = {
             }
             else{
                 User.getByEmail(userEmail, function (err, user) {
-                    if(err){
+                    if(err || !user){
                         return callback({error: 'The provided email does not correspond to a user.'});
                     }
 
@@ -268,6 +268,7 @@ module.exports = {
                             }
                         }
                     }
+                    return callback(null,{message: "Success"});
                 });
             }
         });

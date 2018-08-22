@@ -71,9 +71,9 @@ SettingsController.getVerificationProblem = function(callback){
     var seed = Math.ceil(Math.random()*100);
 
     if(seed % 2 == 0){
-      var eq = new algebra.Equation(expression1,Math.floor(Math.random()*20)); // Equations on both side
+      var eq = new algebra.Equation(expression1,Math.floor(Math.random()*20)); // Expression and constant
     } else{
-      var eq = new algebra.Equation(expression1,generateExpression(letter,oldCoef)[0]); // Equation and constant
+      var eq = new algebra.Equation(expression1,generateExpression(letter,oldCoef)[0]); // Expression on both sides
     }
 
     returnData['question'] = eq.toString();

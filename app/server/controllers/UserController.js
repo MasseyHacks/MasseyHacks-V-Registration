@@ -1164,24 +1164,85 @@ UserController.flushEmailQueue = function(adminUser, userID, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
-    // Do stuff here
+    User.getByID(userID,function(err,user){
+      if(err || !user){
+        return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+      }
+      mailer.flushQueueUser(user.email,callback);
+    })
+
 };
 
-UserController.confirmInvitation = function(userID, callback) {
+UserController.acceptInvitation = function(executeUser, userID, callback) {
 
     if (!userID) {
         return callback({error : 'Invalid arguments'});
     }
 
+    User.findOneAndUpdate({
+       _id : userID,
+        'permissions.verified': true,
+        'status.rejected': false,
+        'status.admitted': true,
+        'status.declined': false
+    }, {
+        $set: {
+            'status.confirmed': true
+        }
+    }, {
+        new: true
+    }, function(err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(executeUser._id, user._id, 'Accepted invitation.');
+
+        mailer.sendTemplateEmail(user.email,'confirmationemails',{
+            nickname: user.firstName,
+            dashUrl: process.env.ROOT_URL
+        });
+
+        return callback(err, user);
+
+    });
 
 };
 
-UserController.declineInvitation = function(userID, callback) {
+UserController.declineInvitation = function(executeUser, userID, callback) {
 
     if (!userID) {
         return callback({error : 'Invalid arguments'});
     }
 
+    User.findOneAndUpdate({
+       _id : userID,
+        'permissions.verified': true,
+        'status.rejected': false,
+        'status.admitted': true,
+        'status.confirmed': false
+    }, {
+        $set: {
+            'status.declined': true
+        }
+    }, {
+        new: true
+    }, function(err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(executeUser._id, user._id, 'Declined invitation.');
+
+        mailer.sendTemplateEmail(user.email,'declineemails',{
+            nickname: user.firstName
+        });
+
+        return callback(err, user);
+
+    });
 
 };
 
@@ -1191,6 +1252,28 @@ UserController.resetInvitation = function(adminUser, userID, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
+    User.findOneAndUpdate({
+       _id : userID,
+        'permissions.verified': true,
+        'status.admitted': true
+    }, {
+        $set: {
+            'status.confirmed': false,
+            'status.declined': false,
+        }
+    }, {
+        new: true
+    }, function(err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Reset invitation.');
+
+        return callback(err, user);
+
+    });
 
 };
 

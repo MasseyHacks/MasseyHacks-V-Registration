@@ -292,17 +292,31 @@ module.exports = function(router) {
 
     // General
     // Update confirmation
+
+    /*
     router.post('/updateConfirmation', permissions.isUser, function(req, res) {
         var userID = req.body.userID;
         var confirmation = req.body.confirmation;
 
         UserController.updateConfirmation(req.userExecute, userID, confirmation, logger.defaultResponse(req, res));
+    });*/
+
+    router.post('/acceptInvitation', permissions.isUser, function(req, res) {
+        var userID = req.body.userID;
+
+        UserController.acceptInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     router.post('/declineInvitation', permissions.isUser, function(req, res) {
         var userID = req.body.userID;
 
         UserController.declineInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
+    router.post('/resetInvitation', permissions.isOwner, function(req, res) {
+        var userID = req.body.userID;
+
+        UserController.resetInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
