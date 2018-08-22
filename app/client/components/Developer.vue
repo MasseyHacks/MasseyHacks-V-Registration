@@ -47,7 +47,7 @@
                                             {{event.message}}<br>
                                             <span v-if="event.detailedMessage">
                                                 <br>
-                                                <b>DETAILED EVENT</b><br>
+                                                <b>DETAILS</b><br>
                                                 {{event.detailedMessage}}<br>
                                             </span>
                                             <br>
@@ -108,7 +108,7 @@
         beforeMount() {
             this.updateSearch()
 
-            AuthService.sendRequest("GET", "api/getAdmins", null, (err, data) => {
+            AuthService.sendRequest("GET", "/api/getAdmins", null, (err, data) => {
                 console.log(data)
                 if (err) {
                     console.log("Error while getting template")

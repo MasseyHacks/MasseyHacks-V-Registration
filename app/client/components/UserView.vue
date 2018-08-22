@@ -145,11 +145,14 @@
                                 AuthService.sendRequest('POST', '/api/modifyUser', {
                                     userID: this.userObj._id,
                                     data: postData
-                                }, (err) => {
+                                }, (err,data) => {
                                     if (err) {
                                         swal('Error', err.error, 'error')
                                     } else {
-                                        swal('Success', 'Field has been changed', 'success')
+                                        swal('Success', 'Field has been changed', 'success').then((result) => {
+                                            this.$router.go(this.$router.currentRoute);
+                                        });
+
                                     }
                                 })
                             })

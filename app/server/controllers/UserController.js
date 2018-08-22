@@ -31,7 +31,9 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
     {
         $set: data
     },
-    {}, function (err, user) {
+    {
+      new: true
+    }, function (err, user) {
         if (err || !user) {
             console.log(err);
             return callback(err);
@@ -39,7 +41,7 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
 
         logger.logAction(adminUser._id, userID, 'Modified a user manually.', JSON.stringify(data));
 
-        return callback(null, 'Success');
+        return callback(null, user);
     });
 },
 
