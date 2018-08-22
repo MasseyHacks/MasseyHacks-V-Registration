@@ -160,7 +160,14 @@
                                             swal('Error', err.error, 'error')
                                         } else {
                                             swal('Success', 'Field has been changed', 'success').then((result) => {
-                                                this.$router.go(this.$router.currentRoute);
+                                              ApiService.getUser(this.userID, (err, data) => {
+                                                  if (err || !data) {
+                                                      console.log("ERROR")
+                                                  } else {
+                                                      console.log("data2")
+                                                      this.userObj = data
+                                                  }
+                                              })
                                             });
 
                                         }
