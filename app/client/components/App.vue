@@ -54,12 +54,9 @@
     import AuthService  from '../src/AuthService'
     import Session      from '../src/Session'
     import ApiService   from '../src/ApiService.js'
-    import danger       from '../components/Bootstrap-Alerts/danger.vue'
     import Vue          from 'vue'
 
     export default {
-        components: {danger},
-
         beforeRouteUpdate (to, from, next) {
             const pageLayout = ['dashboard', 'application', 'confirmation', 'team', 'checkin', 'organizer', 'owner', 'developer', 'password']
 

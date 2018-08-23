@@ -132,6 +132,13 @@ module.exports = function(router) {
     });
 
     // Admin
+    // Get Team Fields
+    router.get('/teams/field', permissions.isAdmin, function(req, res) {
+        TeamController.getByQuery(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+
+    // Admin
     // Data varies depending on permission
     // Get all users
     router.get('/teams', permissions.isAdmin, function(req, res) {

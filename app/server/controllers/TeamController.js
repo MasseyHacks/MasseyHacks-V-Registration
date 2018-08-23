@@ -1,6 +1,7 @@
 const _              = require('underscore');
 const Team           = require('../models/Team');
-const User           = require('../models/User')
+const User           = require('../models/User');
+const TeamFields     = require('../models/data/TeamFields');
 const Settings       = require('../models/Settings');
 
 const logger         = require('../services/logger');
@@ -258,6 +259,20 @@ TeamController.getTeam = function(id, callback) {
     });
 };
 
+TeamController.getFields = function (userExcute, callback) {
+    var fieldsOut = [];
+
+    var header = data[1]
+
+    for (var runner in current) {
+        if (!TeamFields[TeamFields]['permission'] || TeamFields[runner]['permission'] <= userExecute.permissions.level) {
+                fieldsOut.push({'name' : runner, 'type' : TeamFields[runner]['type'].name});
+        }
+    }
+
+    callback(null, fieldsOut)
+};
+
 TeamController.getByQuery = function (adminUser, query, callback) {
 
     if (!query || !query.page || !query.size) {
@@ -278,7 +293,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
     if (text) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
 
-        or.push({ email: regex });
+        or.push({ name: regex });
         or.push({ 'firstName': regex });
         or.push({ 'lastName': regex });
         or.push({ 'teamCode': regex });

@@ -27,6 +27,7 @@ import Error          from '../components/Error.vue'
 import PasswordChange from '../components/PasswordChange.vue'
 import Review         from '../components/Review.vue'
 import UserView       from '../components/UserView.vue'
+import TeamTable       from '../components/TeamTable.vue'
 import GoogleAuth     from '../components/2FA.vue'
 import MagicLogin     from '../components/Magic.vue'
 
@@ -218,6 +219,14 @@ const router = new VueRouter({
                     meta: {
                           permissions: 'admin'
                     }
+               },
+               {
+                   path: 'teamview',
+                   component: TeamTable,
+                   beforeEnter: isAuthorized,
+                   meta: {
+                       permissions: 'admin'
+                   }
                }
            ]
        },

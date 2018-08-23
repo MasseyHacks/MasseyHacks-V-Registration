@@ -5,22 +5,9 @@ const bcrypt    = require('bcrypt-nodejs');
 const validator = require('validator');
 const jwt       = require('jsonwebtoken');
 const User      = require('./User');
+const TeamFields= require('./data/TeamFields.js');
 
-var schema = new mongoose.Schema({
-    name : {
-        type: String,
-        required: true,
-        maxlength: 50
-    },
-    code : {
-        type: String,
-        required: true
-    },
-    memberIDs : {
-        type: [String],
-        select: false
-    }
-});
+var schema = new mongoose.Schema(TeamFields);
 
 schema.set('toJSON', {
     virtuals: true

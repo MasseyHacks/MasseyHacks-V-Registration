@@ -13,6 +13,7 @@
                 <div class="ui-card dash-card-large" style="background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);">
                     <router-link to="/organizer/statistics"><button class="generic-button-light">Statistics</button></router-link>
                     <router-link to="/organizer/users"><button class="generic-button-light">Users</button></router-link>
+                    <router-link to="/organizer/teamview"><button class="generic-button-light">Teams</button></router-link>
                     <router-link v-if="user.permissions.reviewer" to="/organizer/review"><button class="generic-button-light">Review</button></router-link>
                 </div>
             </div>
