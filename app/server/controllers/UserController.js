@@ -5,8 +5,8 @@ const Settings           = require('../models/Settings');
 const SettingsController = require('./SettingsController');
 
 const jwt                = require('jsonwebtoken');
-
 const request            = require('request');
+const async              = require('async');
 
 const validator          = require('validator');
 const moment             = require('moment');
@@ -24,6 +24,29 @@ var UserController       = {};
 function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
+
+UserController.rejectNoState = function(adminUser, callback) {
+    User.find({
+        'permission.level': 1,
+        'status.admitted': false,
+        'status.rejected': false,
+        'status.waitlisted' : false
+    }, function(err, users) {
+        console.log(users);
+
+        logger.logAction(adminUser._id, -1, 'Rejected everyone without state.');
+
+        async.each(user, function (user, callback) {
+            UserController.rejectUser(adminUser._id, user._id, (err, msg) => {
+                console.log(user.fullName, err, msg ? 'Success' : 'Fail');
+
+                return callback()
+            })
+        }, function () {
+            return callback(null, 'Success')
+        });
+    });
+};
 
 UserController.modifyUser = function(adminUser,userID,data,callback){
     User.findOneAndUpdate({

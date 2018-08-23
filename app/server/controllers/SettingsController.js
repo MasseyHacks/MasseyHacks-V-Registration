@@ -165,7 +165,7 @@ SettingsController.requestSchool = function(user, schoolName, callback) {
             new: true
         }, function(err, settings) {
             if (err || !settings) {
-                return callback({'error':'Unable to add school'})
+                return callback({'error':'Unable to add school (It\'s probably already on the list!)'})
             }
 
             logger.logAction(user._id, -1, 'Requested to add school.', schoolName);

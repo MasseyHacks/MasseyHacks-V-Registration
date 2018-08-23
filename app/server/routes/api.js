@@ -346,21 +346,8 @@ module.exports = function(router) {
 
     // Owner
     // Reject everyone without status
-    router.post('/rejectNoStates', permissions.isOwner, function (req, res) {
-        User.find({
-            'permission.level': 1,
-            'status.admitted': false,
-            'status.rejected': false,
-            'status.waitlisted' : false
-        }, function(err, users) {
-            console.log(users);
-
-            logger.logAction(req.userExecute.email, user.email, 'Rejected everyone without state.');
-
-            /**
-             * To-Do: Add async for each here
-             */
-        });
+    router.post('/rejectNoState', permissions.isOwner, function (req, res) {
+        UserController.rejectNoState(req.userExecute, logger.defaultResponse(req, res));
     });
 
     // Owner
