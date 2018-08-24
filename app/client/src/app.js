@@ -56,7 +56,11 @@ Vue.use(VueRouter)
 Vue.use(require('vue-moment'))
 Vue.use(require('vuejs-paginator'))
 
-setInterval(AuthService.refreshToken(), 300000)
+setInterval(() => {
+    AuthService.refreshToken()
+}, 30000)
+
+AuthService.refreshToken()
 
 function twoFactorPending(to, from, next) {
     if (localStorage.token && Session.getTokenData().type == '2FA') {

@@ -7,7 +7,7 @@ import swal    from 'sweetalert2'
 module.exports = {
 
     sendRequest (type, url, data, callback) {
-        var request =   {
+        var request = {
             type: type,
             url: url,
             contentType: 'application/json; charset=utf-8',
@@ -160,11 +160,12 @@ module.exports = {
     },
 
     refreshToken() {
-        console.log('Token refreshed!')
-
         // Login with token if it exists
         if (Session.loggedIn()) {
+            console.log('Token refreshed!')
             this.loginWithToken()
+        } else {
+            console.log('Session does not exist')
         }
     },
 
