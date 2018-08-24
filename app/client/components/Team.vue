@@ -14,25 +14,25 @@
                     <div v-if="loading">
                         <p>Loading...</p>
                     </div>
-                    <div v-else-if="createTeamState">
+                    <div v-else-if="page == 'create'">
                         Create Team
 
                         <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text" maxlength="50">
 
                         <br>
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="createTeamState = false">back</button>
+                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
                             <button class="generic-button-dark" v-on:click="createTeam" :disabled="!teamName">create</button>
                         </div>
                     </div>
-                    <div v-else-if="joinTeamState">
+                    <div v-else-if="page == 'join'">
                         Join Team
 
                         <input class="round-input" style="width: 100%" placeholder="Team Code" v-model="teamCode" type="text">
 
                         <br>
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="joinTeamState = false">back</button>
+                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
                             <button class="generic-button-dark" v-on:click="joinTeam" :disabled="!teamCode">join</button>
                         </div>
                     </div>
@@ -40,8 +40,8 @@
                         <p>You are currently not in a team.</p>
 
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="switchCreateTeam">create</button>
-                            <button class="generic-button-dark" v-on:click="switchJoinTeam">join</button>
+                            <button class="generic-button-dark" v-on:click="reset(); page = 'create'">create</button>
+                            <button class="generic-button-dark" v-on:click="reset(); page = 'join'">join</button>
                         </div>
                     </div>
                     <div v-else-if="team">
@@ -74,10 +74,6 @@
     import $ from 'jquery'
     import vSelect from 'vue-select'
 
-    /**
-     * To-Do: Cleanup this code and streamline reset error process
-     */
-
     export default {
         data() {
             return {
@@ -86,8 +82,7 @@
                 teamName: '',
                 team: {},
                 loading: true,
-                createTeamState: false,
-                joinTeamState: false,
+                page: ''
             }
         },
         beforeMount() {
@@ -105,15 +100,10 @@
             });
         },
         methods: {
-            switchCreateTeam() {
-                this.teamName = ''
-                this.createTeamState = true
-                this.joinTeamState = false
-            },
-            switchJoinTeam() {
+            reset() {
                 this.teamCode = ''
-                this.joinTeamState = true
-                this.createTeamState = false
+                this.teamName = ''
+                this.error = ''
             },
             createTeam() {
                 ApiService.createTeam(this.teamName, (err, team) => {
@@ -122,7 +112,7 @@
                         this.error = err.responseJSON.error
                     } else {
                         this.team = team
-                        this.createTeamState = false
+                        this.page = ''
                         this.error = ''
                     }
                 })
@@ -134,14 +124,13 @@
                         this.error = err.responseJSON.error
                     } else {
                         this.team = team
-                        this.joinTeamState = false
+                        this.page = ''
                         this.error = ''
                     }
 
                 })
             },
             leaveTeam() {
-
                 swal({
                     title: 'Please Confirm',
                     text: 'Are you sure you want to leave this team? (' + this.team.name + ')',

@@ -30,7 +30,7 @@
 
     export default {
         beforeRouteUpdate (to, from, next) {
-            const pageLayout = ['statistics', 'users', 'review']
+            const pageLayout = ['statistics', 'users', 'teamview', 'review']
             const toPath = to.path.split('/')
             const fromPath = from.path.split('/')
 
