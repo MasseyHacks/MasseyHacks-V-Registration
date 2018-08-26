@@ -2,7 +2,7 @@
     <div id="app">
 
         <!-- Common elements -->
-        <div id="main-sidebar" v-if="loggedIn" v-bind:class="{display : 'none'}">
+        <div id="main-sidebar" v-if="loggedIn">
              <!--<img src="/logo/logo.svg" width="250" height="250"> -->
              <ul>
                 <li>

@@ -163,6 +163,9 @@ h2 {
 
     padding-bottom: 50px;
     padding-top: 50px;
+
+    transition: all .5s;
+    left: 0;
 }
 
 #main-sidebar ul {
@@ -223,9 +226,8 @@ h2 {
 .app-screen {
     margin: 0 auto;
 
-    /*
     left: 50%;
-    transform: translateX(-50%);*/
+    transform: translateX(-50%);
 
 }
 
@@ -441,7 +443,6 @@ h4 {
 
     #main-sidebar {
         left: -100%;
-
     }
 
     .title-card h2 {
@@ -505,9 +506,8 @@ h4 {
     transition: all .5s; cubic-bezier(.55,0,.1,1);
     position: absolute;
 
-    /*
     left: 50%;
-    transform: translateX(-50%);*/
+    transform: translateX(-50%);
 }
 
 .slide-left-enter, .slide-right-leave-active {
