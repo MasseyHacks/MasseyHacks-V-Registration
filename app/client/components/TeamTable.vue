@@ -78,13 +78,20 @@
 
                         <hr>
                         <table id="users-table">
-                            <tr id="table-header"><td>NAME</td><td>Count</td><td>Code</td></tr>
+                            <tr id="table-header"><td>NAME</td><td>Members</td><td>Count</td><td>Code</td></tr>
                             <tr v-for="team in teams">
                                 <td>
                                     {{team.name}}
                                 </td>
-                                <td>{{team.memberNames.length}}/4</td>
-                                <td>{{team.code}}</td>
+                                <td>
+                                    {{team.memberNames}}
+                                </td>
+                                <td>
+                                    {{team.memberNames.length}}/{{settings.maxMembers}}
+                                </td>
+                                <td>
+                                    {{team.code}}
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -136,7 +143,9 @@
                 loadingError: '',
                 queryError: '',
 
-                teams: {}
+                teams: {},
+
+                settings: Session.getSettings()
             }
         },
 

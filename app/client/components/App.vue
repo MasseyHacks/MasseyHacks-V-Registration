@@ -40,12 +40,16 @@
         </div>
 
         <!-- Router injects stuff in here -->
-        <div id="app-view" v-bind:class="{'app-view-logged-in' : loggedIn}">
+        <div id="app-view"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
+
+            <!--
             <template v-if="$route.matched.length">
-                <transition :name="transitionName">
-                    <router-view class="child-view"></router-view>
-                </transition>
-            </template>
+
+            </template>-->
+
+            <transition :name="transitionName">
+                <router-view class="child-view"></router-view>
+            </transition>
         </div>
     </div>
 </template>

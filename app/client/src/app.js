@@ -58,7 +58,7 @@ Vue.use(require('vuejs-paginator'))
 
 setInterval(() => {
     AuthService.refreshToken()
-}, 30000)
+}, 300000)
 
 AuthService.refreshToken()
 

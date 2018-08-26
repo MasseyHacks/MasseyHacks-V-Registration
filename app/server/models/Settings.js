@@ -63,6 +63,10 @@ schema.set('toObject', {
     virtuals: true
 });
 
+schema.virtual('maxMembers').get(function() {
+    return process.env.TEAM_MAX_SIZE;
+});
+
 schema.virtual('permissions').get(function() {
     return userFields.permissions;
 });
