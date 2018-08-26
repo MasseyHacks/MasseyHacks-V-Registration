@@ -310,12 +310,34 @@ const router = new VueRouter({
                })
            }
        }
-
    ]
 })
 
-new Vue({
-   el: '#app',
-   router,
-   render: h => h(App)
+var vue = new Vue({
+    el: '#app',
+    router,
+    render: h => h(App),
+    data: {
+        transition: ''
+    }
+})
+
+
+router.beforeEach((to, from, next) => {
+    const pageLayout = ['dashboard', 'application', 'team', 'confirmation', 'checkin', 'organizer', 'owner', 'developer', 'password']
+
+    const toPath = to.path.split('/')
+    const fromPath = from.path.split('/')
+
+    console.log(fromPath, toPath)
+
+    const toDepth = pageLayout.indexOf(toPath[1])
+    const fromDepth = pageLayout.indexOf(fromPath[1])
+
+    // Kind of ghetto way to transfer data
+    // Couldn't find better way to detect router update :'(
+
+    vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
+
+    next()
 })

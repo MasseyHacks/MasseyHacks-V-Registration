@@ -47,7 +47,7 @@
 
             </template>-->
 
-            <transition :name="transitionName">
+            <transition :name="$parent.transition">
                 <router-view class="child-view"></router-view>
             </transition>
         </div>
@@ -61,28 +61,12 @@
     import Vue          from 'vue'
 
     export default {
-        beforeRouteUpdate (to, from, next) {
-            const pageLayout = ['dashboard', 'application', 'confirmation', 'team', 'checkin', 'organizer', 'owner', 'developer', 'password']
-
-            const toPath = to.path.split('/')
-            const fromPath = from.path.split('/')
-
-            console.log(fromPath, toPath)
-
-            const toDepth = pageLayout.indexOf(toPath[1])
-            const fromDepth = pageLayout.indexOf(fromPath[1])
-
-            this.transitionName = toDepth < fromDepth ? 'slide-up' : 'slide-down'
-
-            next()
-        },
         data() {
             return {
                 user: Session.getUser(),
                 settings: Session.getSettings(),
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
-                transitionName: 'slide-up',
                 ApiService: ApiService,
                 Alerts: [{}]
             }
