@@ -402,6 +402,26 @@ h4 {
     border-bottom: 2px solid black;
 }
 
+.filterEntry select {
+    height: 30px;
+    margin-top: 10px;
+    border: 1px gray solid;
+}
+
+.filterEntry input {
+    height: 30px;
+    border: 1px gray solid;
+}
+
+.filterEntry>.first {
+    border-bottom-left-radius: 50px;
+    border-top-left-radius: 50px;
+}
+
+.filterEntry>.last {
+    border-bottom-right-radius: 50px;
+    border-top-right-radius: 50px;
+}
 
 @media (max-width: 992px) {
     .dash-card {

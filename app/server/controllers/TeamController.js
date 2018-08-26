@@ -261,14 +261,16 @@ TeamController.getTeam = function(id, callback) {
 
 TeamController.getFields = function (userExcute, callback) {
     var fieldsOut = [];
-
-    var header = data[1]
+    var current = TeamFields
 
     for (var runner in current) {
-        if (!TeamFields[TeamFields]['permission'] || TeamFields[runner]['permission'] <= userExecute.permissions.level) {
+        if (!TeamFields[runner]['permission'] || TeamFields[runner]['permission'] <= userExecute.permissions.level) {
                 fieldsOut.push({'name' : runner, 'type' : TeamFields[runner]['type'].name});
         }
     }
+
+    fieldsOut.push({'name' : "memberNames", })
+    console.log("testing " + fieldsOut)
 
     callback(null, fieldsOut)
 };
@@ -294,11 +296,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
 
         or.push({ name: regex });
-        or.push({ 'firstName': regex });
-        or.push({ 'lastName': regex });
-        or.push({ 'teamCode': regex });
-        or.push({ 'profile.school': regex });
-        or.push({ 'profile.departing': regex });
+        or.push({ 'memberNames': regex });
     }
 
     if (or && or.length) {
@@ -346,7 +344,8 @@ TeamController.getByQuery = function (adminUser, query, callback) {
 
                 return callback(null, {
                     teams: teams,
-                    totalPages: Math.ceil(count / size)
+                    totalPages: Math.ceil(count / size),
+                    count: count
                 })
             });
         });

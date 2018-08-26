@@ -48,6 +48,13 @@ module.exports = {
         AuthService.sendRequest('GET', '/api/user/' + id, {}, callback)
     },
 
+    getTeamFields(callback) {
+        AuthService.sendRequest('GET', '/api/teams/fields', {}, callback)
+    },
+
+    getTeams(query, callback) {
+        AuthService.sendRequest('GET', '/api/teams', query, callback)
+    },
     getLog(query, callback) {
         AuthService.sendRequest('GET', '/api/systemLog', query, callback)
     }
