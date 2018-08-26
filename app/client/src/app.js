@@ -324,10 +324,14 @@ var vue = new Vue({
 
 
 router.beforeEach((to, from, next) => {
-    const pageLayout = ['dashboard', 'application', 'team', 'confirmation', 'checkin', 'organizer', 'owner', 'developer', 'password']
+
+    const mainLayout = ['dashboard', 'application', 'team', 'confirmation', 'checkin', 'organizer', 'owner', 'developer', 'password', 'logout']
+    const loginLayout = ['login', 'register',  'reset']
 
     const toPath = to.path.split('/')
     const fromPath = from.path.split('/')
+
+    let pageLayout = Session.loggedIn() ? mainLayout : loginLayout
 
     console.log(fromPath, toPath)
 
@@ -337,7 +341,11 @@ router.beforeEach((to, from, next) => {
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
-    vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
+    if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
+        vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
+    } else {
+        vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
+    }
 
     next()
 })
