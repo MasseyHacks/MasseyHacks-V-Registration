@@ -22,7 +22,7 @@
             </span>
 <!--             <p>User Object: </p>
             {{userObj}} -->
-            <router-link to="/organizer/users"><button class="generic-button-light">Back</button></router-link>
+            <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
             <button class="generic-button-light" v-on:click="editUser">Edit User</button>
         </div>
     </div>
@@ -41,7 +41,14 @@
                 error : '',
                 userID : '',
                 userObj : {},
-                userApp : {}
+                userApp : {},
+                returnPath: "/organizer/users",
+            }
+        },
+
+        beforeMount() {
+            if (this.$route.query["returnPath"]) {
+                this.returnPath = this.$route.query["returnPath"]
             }
         },
 

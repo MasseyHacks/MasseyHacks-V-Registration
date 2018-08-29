@@ -342,6 +342,10 @@ TeamController.getByQuery = function (adminUser, query, callback) {
 
                 console.log(teams, count, size)
 
+                for (var i = 0; i < teams.length; i++) {
+                    teams[i] = TeamController.filterNames(teams[i])
+                }
+
                 return callback(null, {
                     teams: teams,
                     totalPages: Math.ceil(count / size),
@@ -350,6 +354,14 @@ TeamController.getByQuery = function (adminUser, query, callback) {
             });
         });
 
+};
+
+TeamController.filterNames = function (team) {
+    // Substitutes user objects with their names
+    for (var u in team.memberNames) {
+        team.memberNames[u] = [team.memberNames[u].fullName, team.memberNames[u].id]
+    }
+    return team
 };
 
 module.exports = TeamController;

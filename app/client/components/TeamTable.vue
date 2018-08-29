@@ -83,8 +83,10 @@
                                 <td>
                                     {{team.name}}
                                 </td>
-                                <td>
-                                    {{team.memberNames}}
+                                <td style="align-items: center">
+                                    <router-link v-for="user in team.memberNames" :to="{path: '/organizer/userview?username='+user[1]+'&returnPath=/organizer/teamview', params: {username: user[1]}}">
+                                        {{user[0]}}<br>
+                                    </router-link>
                                 </td>
                                 <td>
                                     {{team.memberNames.length}}/{{settings.maxMembers}}
