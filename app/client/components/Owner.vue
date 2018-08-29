@@ -6,50 +6,66 @@
                     <h2>OWNER</h2>
                 </div>
             </div>
-            <div class="ui-grid">
-                <div class="ui-card ui-grid-item" id="dash-card">
-                    <h3>Application Dates</h3>
-                    <hr>
-                    <h6>
-                        Registration Open: {{moment(settings.timeOpen)}}
-                    </h6>
-                    <p>
-                        <input type="datetime-local" v-model="timeOpen"/>
-                    </p>
-                    <p>
-                        Registration Close: {{moment(settings.timeClose)}}
-                        <input type="datetime-local" v-model="timeClose"/>
-                    </p>
-                    <p>
-                        Confirmation Deadline: {{moment(settings.timeConfirm)}}
-                        <input type="datetime-local" v-model="timeConfirm"/>
-                    </p>
 
-                    <button class="generic-button-dark" @click="changeTimes">Update time</button>
-                </div>
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px; margin-top: 50px">
+                <h3>Application Dates</h3>
+                <hr>
+                <h6>
+                    Registration Open: {{moment(settings.timeOpen)}}
+                </h6>
+                <p>
+                    <input type="datetime-local" v-model="timeOpen"/>
+                </p>
+                <p>
+                    Registration Close: {{moment(settings.timeClose)}}
+                    <input type="datetime-local" v-model="timeClose"/>
+                </p>
+                <p>
+                    Confirmation Deadline: {{moment(settings.timeConfirm)}}
+                    <input type="datetime-local" v-model="timeConfirm"/>
+                </p>
 
-                <div class="ui-card ui-grid-item" id="dash-card">
-                    <h3>Email Templates</h3>
-                    <hr>
-                    <select style="margin-bottom: 10px;" v-model="selected">
-                        <option disabled value="">Select a template</option>
-                        <option v-for="option in templateOptions.length">{{templateOptions[option-1]}}</option>
-                    </select>
-
-                    <button class="generic-button-dark" @click="getTemplate">Get Template</button>
-                    <hr>
-                    <p>
-                        Current Participant Limit:
-                        <input type="number" v-model="maxParticipants" style="margin-bottom: 10px;">
-                        <button class="generic-button-dark" @click="changeLimit">Update Participant Limit</button>
-                    </p>
-                </div>
+                <button class="generic-button-dark" @click="changeTimes">Update time</button>
             </div>
+
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px" >
+                <h3>Participant Limit</h3>
+                <hr>
+                <p>
+                    Current Participant Limit:
+                    <input type="number" v-model="maxParticipants" style="margin-bottom: 10px;">
+                    <br>
+                    <button class="generic-button-dark" @click="changeLimit">Update Participant Limit</button>
+                </p>
+            </div>
+
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px" >
+                <h3>Review Pending Schools</h3>
+                <hr>
+
+                <!--
+                <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="pendingSchools.length == 0">Add</button>-->
+          </div>
+
+            <div class="ui-card" id="dash-card" style="margin-bottom: 50px" >
+                <h3>Email Templates</h3>
+                <hr>
+                <select style="margin-bottom: 10px;" v-model="selected">
+                    <option disabled value="">Select a template</option>
+                    <option v-for="option in templateOptions.length">{{templateOptions[option-1]}}</option>
+                </select>
+
+                <br>
+
+                <button class="generic-button-dark" @click="getTemplate">Get Template</button>
+            </div>
+
             <div class="ui-card" id="dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
                 <h3>Email Preview</h3>
                 <hr>
                 <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>
             </div>
+
             <div class="ui-card" style="height: auto" :style="{display: emailHTML?'block':'none'}">
                 <h3>Email Editor</h3>
                 <hr>
@@ -64,6 +80,7 @@
 
 <script>
     import AuthService from '../src/AuthService'
+    import ApiService from '../src/ApiService'
     import Session from '../src/Session'
     import moment  from 'moment'
     import swal    from 'sweetalert2'
@@ -87,7 +104,8 @@
                 baseHTMLBack: '',
                 maxParticipants: 0,
                 templateOptions: [],
-                selected: ''
+                selected: '',
+                pendingSchools: ApiService.getPendingSchools()
             }
         },
         beforeMount() {
@@ -130,6 +148,9 @@
 
         },
         methods: {
+            reviewSchools() {
+                console.log(123)
+            },
             convertTimes() {
                 this.settings = Session.getSettings()
                 this.timeOpen = moment(this.settings.timeOpen).format('YYYY-MM-DDTHH:mm:ss')

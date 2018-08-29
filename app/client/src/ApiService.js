@@ -55,7 +55,24 @@ module.exports = {
     getTeams(query, callback) {
         AuthService.sendRequest('GET', '/api/teams', query, callback)
     },
+
     getLog(query, callback) {
         AuthService.sendRequest('GET', '/api/systemLog', query, callback)
+    },
+
+    getPendingSchools(callback) {
+        AuthService.sendRequest('GET', '/api/pendingSchools', {}, callback)
+    },
+
+    approveSchool(school, callback) {
+        AuthService.sendRequest('POST', '/api/approveSchools', {
+            school: school
+        }, callback)
+    },
+
+    rejectSchool(school, callback) {
+        AuthService.sendRequest('POST', '/api/rejectSchools', {
+            school: school
+        }, callback)
     }
 }
