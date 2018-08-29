@@ -10,20 +10,17 @@
             <div class="ui-card" id="dash-card" style="margin-bottom: 50px; margin-top: 50px">
                 <h3>Application Dates</h3>
                 <hr>
-                <h6>
-                    Registration Open: {{moment(settings.timeOpen)}}
-                </h6>
-                <p>
-                    <input type="datetime-local" v-model="timeOpen"/>
-                </p>
-                <p>
-                    Registration Close: {{moment(settings.timeClose)}}
-                    <input type="datetime-local" v-model="timeClose"/>
-                </p>
-                <p>
-                    Confirmation Deadline: {{moment(settings.timeConfirm)}}
-                    <input type="datetime-local" v-model="timeConfirm"/>
-                </p>
+
+                <h6>Registration Open: {{moment(settings.timeOpen)}}</h6>
+                <input type="datetime-local" v-model="timeOpen"/><br><br>
+
+
+                <h6>Registration Close: {{moment(settings.timeClose)}}</h6>
+                <input type="datetime-local" v-model="timeClose"/><br><br>
+
+                    <h6>Confirmation Deadline: {{moment(settings.timeConfirm)}}</h6>
+                <input type="datetime-local" v-model="timeConfirm"/><br><br>
+
 
                 <button class="generic-button-dark" @click="changeTimes">Update time</button>
             </div>
@@ -32,7 +29,6 @@
                 <h3>Participant Limit</h3>
                 <hr>
                 <p>
-                    Current Participant Limit:
                     <input type="number" v-model="maxParticipants" style="margin-bottom: 10px;">
                     <br>
                     <button class="generic-button-dark" @click="changeLimit">Update Participant Limit</button>
@@ -177,20 +173,28 @@
                             case '0': // Accept
                                 console.log('Accepted')
 
-                                ApiService.approveSchool(this.pendingSchools[0])
+                                AuthService.skillTest(() => {
+                                    ApiService.approveSchool(this.pendingSchools[0])
+                                    this.pendingSchools.splice(0, 1)
+                                })
 
                                 break
                             case '1': // Rejeccc
                                 console.log('Rejected')
 
-                                ApiService.rejectSchool(this.pendingSchools[0])
+                                AuthService.skillTest(() => {
+                                    ApiService.rejectSchool(this.pendingSchools[0])
+                                    this.pendingSchools.splice(0, 1)
+                                })
 
                                 break
 
                             case '2': // Skip
+
+                                this.pendingSchools.splice(0, 1)
                                 break
                         }
-                        this.pendingSchools.splice(0, 1)
+
                         console.log(decision)
                     } else {
                         break

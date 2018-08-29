@@ -18,7 +18,7 @@
                     console.log(err.responseJSON.error)
                     this.$router.replace('/login')
                 } else {
-                    swal('Success', '', 'success')
+                    swal('Success', 'Magic authentication successful', 'success')
                     console.log(data)
                     Session.destroy(() => {Session.create(data.token, data.user)});
                     AuthService.updateLoginState(true)

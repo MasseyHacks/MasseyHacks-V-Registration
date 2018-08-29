@@ -608,7 +608,7 @@ UserController.superToken = function(userExcute, userID, callback) {
                 new: true
             }, function (err, user) {
                 var link = process.env.ROOT_URL + '/magic?token=' + token;
-                logger.logAction(userExcute.id, userID, "Generated super Link", "Developer has generated a super link, Link: " + link)
+                logger.logAction(userExcute.id, userID, "Generated super Link", "Developer has generated a super link. Link: " + link)
                 callback(false, {url: link})
             })
     })

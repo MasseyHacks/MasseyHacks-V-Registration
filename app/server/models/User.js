@@ -294,6 +294,36 @@ schema.virtual('permissions.level').get(function () {
     }
 });
 
+schema.virtual('userType.name').get(function() {
+    if (this.permissions.developer) {
+        return 'Developer';
+    } else if (this.permissions.owner) {
+        return 'Owner';
+    } else if (this.permissions.admin) {
+        return 'Admin';
+    }
+
+    var type = [];
+
+    if (this.permissions.checkin) {
+        type.push('Check In');
+    }
+
+    if (this.userType.hacker)  {
+        type.push('Hacker');
+    }
+
+    if (this.userType.mentor)  {
+        type.push('Mentor');
+    }
+
+    if (this.userType.workshopHost)  {
+        type.push('Workshop Host');
+    }
+
+    return type.length ? type.join(' and ') : 'Goose';
+});
+
 schema.virtual('status.name').get(function () {
 
     if (this.permissions.level >= 2) {

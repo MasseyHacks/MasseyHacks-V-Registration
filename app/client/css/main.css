@@ -155,10 +155,11 @@ h2 {
 
 #main-sidebar {
     height: 100vh;
-    background: rgb(8,27,74);
+    /*background: rgb(8,27,74);*/
+    background: rgb(13,45,79);
     position: fixed;
     min-width: 250px;
-    z-index: 900;
+    z-index: 500;
     overflow-y: auto;
 
     padding-bottom: 50px;
@@ -216,8 +217,51 @@ h2 {
     width: 250px;
 }
 
+#top-bar {
+    left: 250px;
+    width: calc(100vw - 250px);
+    height: 100px;
+    position: fixed;
+    background: rgb(50, 49, 49);
+    z-index: 600;
+}
+
+#top-bar-highlight {
+    position: absolute;
+    background-image: linear-gradient(135deg, #4bc2e4 0%, #085fae 100%);
+
+    right: -20px;
+    top: 0;
+
+    width: 400px;
+    height: 100%;
+
+    -webkit-transform: skew(-20deg);
+    -moz-transform: skew(-20deg);
+    -o-transform: skew(-20deg);
+}
+
+#top-bar-text {
+    z-index: 605;
+
+    position: absolute;
+
+    right: 0;
+    top: 0;
+
+    width: 350px;
+    height: 100%;
+
+    padding: 20px;
+
+    color: white;
+
+    text-align: right;
+}
+
 #app-view {
     position: relative;
+    top: 100px;
     left: 250px;
     max-width: calc(100vw - 250px);
     padding-bottom: 30px;

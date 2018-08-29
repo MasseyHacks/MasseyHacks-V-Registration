@@ -44,10 +44,6 @@
 
                         <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
-                        <input v-model="displayOrganizers" type="checkbox" id="displayOrganizers" v-on:change="toggleNormalOnly">
-
-                        <label for="displayOrganizers">Display organizers: {{displayOrganizers}}</label>
-
                     </div>
 
                     <br>
@@ -61,7 +57,7 @@
                         <div v-for="(comparison, logical) in filters">
                             <tr>
                                 <div v-for="filter in comparison">
-                                    <span v-if="Object.keys(filter)[0] != 'permissions.checkin'">
+                                    <span>
                                         <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
                                         <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
                                         <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
@@ -177,6 +173,8 @@
                     }
                 }
             })
+
+            this.advancedQueryContent = JSON.stringify(this.filters)
         },
 
         components: {
@@ -436,7 +434,9 @@
             switchPage: function(page) {
                 this.page = page
                 this.updateSearch(true)
-            },
+            }
+
+            /*,
 
             toggleNormalOnly: function() {
                 if (this.filters.length > 0) {
@@ -447,7 +447,7 @@
                 }
                 console.log(this.filters)
                 this.updateSearch()
-            }
+            }*/
         }
     }
 </script>

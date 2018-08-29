@@ -39,6 +39,19 @@
             </ul>
         </div>
 
+        <div id="top-bar" v-if="loggedIn">
+            <div id="top-bar-text">
+                <div style="height: 50%"></div>
+                <div class="vertical-centered">
+                    <h2 style="margin: 0; padding: 0"><b>{{user.fullName}}</b></h2>
+                    <h6 style="margin: 0; padding: 0">{{user.userType.name[0].toUpperCase() + user.userType.name.slice(1)}}</h6>
+                </div>
+            </div>
+
+            <div id="top-bar-highlight">
+            </div>
+        </div>
+
         <!-- Router injects stuff in here -->
         <div id="app-view"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
 
