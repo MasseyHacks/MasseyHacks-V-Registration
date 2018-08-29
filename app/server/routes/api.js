@@ -99,14 +99,14 @@ module.exports = function(router) {
     // Owner
     // Approve pending school
     router.post('/approveSchool', permissions.isOwner, function (req, res) {
-        var schoolName = req.body.schoolName;
+        var schoolName = req.body.school;
         SettingsController.approvePendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
     });
 
     // Owner
     // Reject pending school
     router.post('/rejectSchool', permissions.isOwner, function (req, res) {
-        var schoolName = req.body.schoolName;
+        var schoolName = req.body.school;
         SettingsController.rejectPendingSchool(req.userExecute, schoolName, logger.defaultResponse(req, res));
     });
 

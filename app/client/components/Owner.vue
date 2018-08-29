@@ -43,9 +43,11 @@
                 <h3>Review Pending Schools</h3>
                 <hr>
 
-                <!--
-                <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="pendingSchools.length == 0">Add</button>-->
-          </div>
+                {{pendingSchools.length ? pendingSchools.length : 'No'}} schools pending review
+
+                <br>
+                <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="!pendingSchools.length">Review</button>
+            </div>
 
             <div class="ui-card" id="dash-card" style="margin-bottom: 50px" >
                 <h3>Email Templates</h3>
@@ -105,11 +107,21 @@
                 maxParticipants: 0,
                 templateOptions: [],
                 selected: '',
-                pendingSchools: ApiService.getPendingSchools()
+                pendingSchools: []
             }
         },
         beforeMount() {
             this.convertTimes()
+
+
+            ApiService.getPendingSchools((err, data) => {
+                if (err) {
+                    swal('Error', err, 'error')
+                } else {
+                    this.pendingSchools = data
+                }
+            });
+
             AuthService.sendRequest('GET', '/api/email/listTemplates', null, (err, data) => {
                 if (err) {
                     console.log('Error while getting template')
@@ -148,8 +160,49 @@
 
         },
         methods: {
-            reviewSchools() {
-                console.log(123)
+            async reviewSchools() {
+                while (this.pendingSchools.length) {
+                    const {value: decision} = await swal({
+                        title: 'Review School',
+                        html: `If approved, it will be immediately added to the school database.<br><br>School Name: ${this.pendingSchools[0]}`,
+                        input: 'radio',
+                        inputOptions: ['Accept', 'Reject', 'Skip'],
+                        inputValidator: (value) => {
+                            return !value && 'Please make a decision to proceed'
+                        }
+                    })
+
+                    if (decision) {
+                        switch (decision) {
+                            case '0': // Accept
+                                console.log('Accepted')
+
+                                ApiService.approveSchool(this.pendingSchools[0])
+
+                                break
+                            case '1': // Rejeccc
+                                console.log('Rejected')
+
+                                ApiService.rejectSchool(this.pendingSchools[0])
+
+                                break
+
+                            case '2': // Skip
+                                break
+                        }
+                        this.pendingSchools.splice(0, 1)
+                        console.log(decision)
+                    } else {
+                        break
+                    }
+                }
+
+                if (!this.pendingSchools.length) {
+                    swal({
+                        title: 'Reviewed complete!',
+                        type: 'success'
+                    })
+                }
             },
             convertTimes() {
                 this.settings = Session.getSettings()

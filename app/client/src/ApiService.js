@@ -65,13 +65,13 @@ module.exports = {
     },
 
     approveSchool(school, callback) {
-        AuthService.sendRequest('POST', '/api/approveSchools', {
+        AuthService.sendRequest('POST', '/api/approveSchool', {
             school: school
         }, callback)
     },
 
     rejectSchool(school, callback) {
-        AuthService.sendRequest('POST', '/api/rejectSchools', {
+        AuthService.sendRequest('POST', '/api/rejectSchool', {
             school: school
         }, callback)
     }

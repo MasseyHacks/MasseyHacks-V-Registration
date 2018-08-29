@@ -101,7 +101,7 @@ SettingsController.getPendingSchools = function(callback) {
                 return callback({'error':'Unable to find settings'})
             }
 
-            return settings.pendingSchools
+            return callback(null, settings.pendingSchools)
         })
 };
 
@@ -120,7 +120,7 @@ SettingsController.approvePendingSchool = function(adminUser, schoolName, callba
             new: true
         }, function(err, settings) {
             if (err || !settings) {
-                return callback({'error':'Unable to find settings'})
+                return callback({'error':'Unable to perform action'})
             }
 
             logger.logAction(adminUser._id, -1, 'Accepted pending school ' + schoolName + '.');
@@ -141,7 +141,7 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
             new: true
         }, function(err, settings) {
             if (err || !settings) {
-                return callback({'error':'Unable to find settings'})
+                return callback({'error':'Unable to perform action'})
             }
 
             logger.logAction(adminUser._id, -1, 'Rejected pending school ' + schoolName + '.');
@@ -152,9 +152,16 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
 
 SettingsController.requestSchool = function(user, schoolName, callback) {
 
+    if (schoolName === null) {
+        return calllback({'error':'School is null'})
+    }
+
     Settings.findOneAndUpdate(
         {
             schools: {
+                $ne: schoolName
+            },
+            pendingSchools: {
                 $ne: schoolName
             }
         }, {
