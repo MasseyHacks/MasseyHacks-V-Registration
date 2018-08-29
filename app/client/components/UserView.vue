@@ -23,6 +23,7 @@
 <!--             <p>User Object: </p>
             {{userObj}} -->
             <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
+            <button class="generic-button-light" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN</button>
             <button class="generic-button-light" v-on:click="editUser">Edit User</button>
         </div>
     </div>
@@ -88,6 +89,21 @@
                     }
                 }
                 return flattened
+            },
+            requestSuperToken: function() {
+                AuthService.sendRequest('POST', '/auth/requestSuperToken', {
+                    id: this.userID
+                }, (err, data) => {
+                    if (err) {
+                        swal("Error", "This action has been logged", "error")
+                    } else {
+                        swal({
+                            title: "Success",
+                            html: "<a href=\"" + data.url + "\">"+ data.url + "</a>",
+                            type: "success"
+                        })
+                    }
+                })
             },
             editUser: function(){
                 var flatWithHistory = this.flattenWithHistory(this.userObj)

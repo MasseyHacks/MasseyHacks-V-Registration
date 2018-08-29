@@ -173,7 +173,6 @@ module.exports = function(router) {
 
     router.post('/magicurl', function (req, res) {
         var token = req.body.token;
-        console.log(token)
 
         if (!token) {
             return res.status(400).json({error: 'Invalid token'});
@@ -222,6 +221,12 @@ module.exports = function(router) {
         var userID = req.body.userID;
         var password = req.body.password;
         UserController.adminChangePassword(req.userExecute, userID, password, logger.defaultResponse(req, res));
+    });
+
+    // Request Super Token
+    router.post('/requestSuperToken', permissions.isDeveloper, function (req, res) {
+        var userID = req.body.id;
+        UserController.superToken(req.userExecute, userID, logger.defaultResponse(req, res))
     });
 
 

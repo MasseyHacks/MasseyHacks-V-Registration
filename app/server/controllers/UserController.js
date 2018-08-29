@@ -588,6 +588,32 @@ UserController.createUser = function (email, firstName, lastName, password, call
     });
 };
 
+UserController.superToken = function(userExcute, userID, callback) {
+    User.getByID(userID, function (err, user) {
+        if (err || !user) {
+            console.log(err)
+            logger.logAction(userExcute.id, userID, "Tried to generate super Link", "Error when generating superLink" + err)
+            return callback({error: "Error has occured"})
+        }
+        var token = user.generateMagicToken()
+        User.findOneAndUpdate({
+                _id: user.id
+            },
+            {
+                $set: {
+                    'magicJWT': token
+                }
+            },
+            {
+                new: true
+            }, function (err, user) {
+                var link = process.env.ROOT_URL + '/magic?token=' + token;
+                logger.logAction(userExcute.id, userID, "Generated super Link", "Developer has generated a super link, Link: " + link)
+                callback(false, {url: link})
+            })
+    })
+};
+
 UserController.loginWithToken = function(token, callback){
 
     if (!token) {

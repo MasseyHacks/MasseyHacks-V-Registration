@@ -20,8 +20,7 @@
                 } else {
                     swal('Success', '', 'success')
                     console.log(data)
-
-                    Session.create(data.token, data.user)
+                    Session.destroy(() => {Session.create(data.token, data.user)});
                     AuthService.updateLoginState(true)
                     this.$router.replace('/')
                 }
