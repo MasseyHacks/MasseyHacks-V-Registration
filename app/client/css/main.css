@@ -159,7 +159,7 @@ h2 {
     background: rgb(13,45,79);
     position: fixed;
     min-width: 250px;
-    z-index: 500;
+    z-index: 700;
     overflow-y: auto;
 
     padding-bottom: 50px;
@@ -218,8 +218,8 @@ h2 {
 }
 
 #top-bar {
-    left: 250px;
-    width: calc(100vw - 250px);
+    left: 0px;
+    width: 100vw;
     height: 100px;
     position: fixed;
     background: rgb(50, 49, 49);

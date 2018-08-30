@@ -350,6 +350,10 @@ schema.virtual('status.name').get(function () {
         return 'admitted';
     }
 
+    if (this.status.rejected && this.status.statusReleased) {
+        return 'rejected';
+    }
+
     if (this.status.submittedApplication) {
         return 'submitted';
     }
