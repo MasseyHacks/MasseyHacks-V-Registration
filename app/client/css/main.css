@@ -221,6 +221,26 @@ h2 {
     width: 230px;
 }
 
+/* width */
+#main-sidebar::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+#main-sidebar::-webkit-scrollbar-track {
+    background: #132839;
+}
+
+/* Handle */
+#main-sidebar::-webkit-scrollbar-thumb {
+    background: #071d2d;
+}
+
+/* Handle on hover */
+#main-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #575d62;
+}
+
 #top-bar {
     left: 0px;
     width: 100vw;
