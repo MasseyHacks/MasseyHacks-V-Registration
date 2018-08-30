@@ -1,22 +1,20 @@
 <template>
     <div class="app-screen">
-        <div class="container">
-            <div class="row">
-                <div class="title-card col-md-12">
-                    <h2>CONFIRMATION</h2>
-                </div>
+        <div class="row">
+            <div class="title-card col-md-12">
+                <h2>CONFIRMATION</h2>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="ui-card dash-card">
-                  <div v-if="user.status.name == 'admitted'">
-                    <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
-                    <button class="generic-button" v-on:click="denyInvitation">Deny</button>
-                  </div>
-                  <div v-if="user.status.name == 'confirmed' || user.status.name == 'declined'">
-                      {{user.status.name}}
-                  </div>
-            </div>
+        <div class="row">
+            <div class="ui-card dash-card">
+              <div v-if="user.status.name == 'admitted'">
+                <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
+                <button class="generic-button" v-on:click="denyInvitation">Deny</button>
+              </div>
+              <div v-if="user.status.name == 'confirmed' || user.status.name == 'declined'">
+                  {{user.status.name}}
+              </div>
         </div>
     </div>
   </div>

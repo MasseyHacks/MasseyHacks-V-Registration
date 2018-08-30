@@ -166,7 +166,7 @@ h2 {
     padding-bottom: 50px;
     padding-top: 50px;*/
 
-    transition: all .5s;
+    transition: left .5s;
     left: 0;
 }
 
@@ -292,15 +292,48 @@ h2 {
     max-width: calc(100vw - 230px);
     height: calc(100vh - 100px);
     padding-bottom: 30px;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
+}
+
+/* width */
+#app-view::-webkit-scrollbar {
+    width: 10px;
+    z-index: 500;
+}
+
+/* Track disabled */
+#app-view::-webkit-scrollbar-track:disabled {
+    background: white;
+}
+
+/* Thumb disabled */
+#app-view::-webkit-scrollbar-thumb {
+    background: white;
+}
+
+/* Track */
+#app-view::-webkit-scrollbar-track {
+    background: lightgray;
+}
+
+/* Handle */
+#app-view::-webkit-scrollbar-thumb {
+    background: darkgrey;
+}
+
+/* Handle on hover */
+#app-view::-webkit-scrollbar-thumb:hover {
+    background: #575d62;
 }
 
 .app-screen {
     margin: 0 auto;
-
+    text-align: center;
+    width: 100%;
+    /*
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%);*/
 
 }
 
@@ -511,7 +544,6 @@ h4 {
     #app-view {
         max-width: 100vw;
         left: 0px;
-        top: 0px;
     }
 
     #main-sidebar {
@@ -579,8 +611,8 @@ h4 {
     transition: all .5s; cubic-bezier(.55,0,.1,1);
     position: absolute;
 
-    left: 50%;
-    transform: translateX(-50%);
+    /*left: 50%;
+    transform: translateX(-50%);*/
 }
 
 .slide-left-enter, .slide-right-leave-active {

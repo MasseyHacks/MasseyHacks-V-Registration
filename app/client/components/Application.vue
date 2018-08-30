@@ -13,7 +13,7 @@
                     {{loadingError}}
                 </div>
                 <div v-else style="width:100%; padding: 1em;">
-                    <form v-if="!user.permissions.checkin || user.permissions.developer" @submit.prevent="submitApplication">
+                    <form v-if="!user.permissions.checkin || user.permissions.developer" @submit.prevent="submitApplication" style="text-align: left">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
                             <textarea class="form-control" v-if="question.questionType == 'fullResponse'" :id="questionName" :maxlength="question.maxlength"></textarea>
