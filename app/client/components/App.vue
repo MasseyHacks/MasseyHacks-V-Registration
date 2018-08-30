@@ -3,7 +3,7 @@
 
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn">
-             <!--<img src="/logo/logo.svg" width="250" height="250"> -->
+             <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin: 40px">
              <ul>
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
