@@ -108,7 +108,7 @@ schema.statics.confirmationOpen = function() {
 };
 
 schema.statics.getSettings = function(callback){
-    this.findOne({}, '-emailQueue -_id -__v -newSchools', callback);
+    this.findOne({}, '-emailQueue -_id -__v -pendingSchools', callback);
 };
 
 module.exports = mongoose.model('Settings', schema);
