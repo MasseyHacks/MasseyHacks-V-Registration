@@ -232,7 +232,9 @@ h2 {
 
 #top-bar-highlight {
     position: absolute;
-    background-image: linear-gradient(135deg, #4bc2e4 0%, #085fae 100%);
+    background-image: url("../img/highlight.svg"); /*linear-gradient(135deg, #4bc2e4 0%, #085fae 100%);*/
+    background-position: center;
+    background-size: cover;
 
     right: -20px;
     top: 0;
@@ -268,7 +270,10 @@ h2 {
     top: 100px;
     left: 230px;
     max-width: calc(100vw - 230px);
+    height: calc(100vh - 100px);
     padding-bottom: 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .app-screen {
