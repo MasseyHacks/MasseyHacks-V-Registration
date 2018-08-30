@@ -328,6 +328,7 @@ h2 {
 }
 
 .app-screen {
+    padding-left: 10px; /* Makes it even with the scrollbar */
     margin: 0 auto;
     text-align: center;
     width: 100%;
@@ -356,7 +357,7 @@ h2 {
 /*    padding: 1%;*/
     text-align: center;
     margin-top: 50px;
-    border-bottom: 2px solid black;
+    /*border-bottom: 2px solid black;*/
 }
 
 .title-card h2 {
