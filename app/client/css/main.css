@@ -156,7 +156,7 @@ h2 {
 #main-sidebar {
     height: 100vh;
     /*background: rgb(8,27,74);*/
-    background: rgb(11,44,79);
+    background: rgb(32, 66, 123);
     position: fixed;
     min-width: 230px;
     z-index: 700;
@@ -200,7 +200,7 @@ h2 {
 
 #main-sidebar a.router-link-active button {
     border-left: 4px solid #1b84db;
-    background-color: #071d2d;
+    background-color: #162f4f;
 }
 
 #main-sidebar a.router-link-active button:focus {
@@ -252,7 +252,7 @@ h2 {
 
 #top-bar-highlight {
     position: absolute;
-    background-image: url("../img/highlight.svg"); /*linear-gradient(135deg, #4bc2e4 0%, #085fae 100%);*/
+    background-image: linear-gradient(135deg, #4bc2e4 0%, #085fae 100%); /*url("../img/highlight.svg");*/
     background-position: center;
     background-size: cover;
 
