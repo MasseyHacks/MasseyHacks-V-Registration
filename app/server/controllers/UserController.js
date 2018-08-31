@@ -117,13 +117,11 @@ UserController.getByQuery = function (adminUser, query, callback) {
     var page    = parseInt(query.page);
     var size    = parseInt(query.size);
     var text    = query.text;
-    var sort    = query.sort;
+    var sort    = query.sort ? query.sort : {};
     var filters = query.filters ? query.filters : {};
     var and     = [];
     var or      = [];
     var appPage = query.appPage ? query.appPage : null;
-
-    console.log(appPage)
 
     if (text) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
@@ -152,7 +150,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
-    console.log(filters)
+    console.log(sort)
 
     User.count(filters, function(err, count) {
 
@@ -167,7 +165,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
         User
             .find(filters)
-            .sort()
+            .sort(sort)
             .skip((page - 1) * size)
             .limit(size)
             .exec(function(err, users) {
@@ -175,8 +173,6 @@ UserController.getByQuery = function (adminUser, query, callback) {
                     console.log(err)
                     return callback({error:err.message})
                 }
-
-                console.log(users, count, size)
 
                 if (users) {
                     for (var i = 0; i < users.length; i++) {

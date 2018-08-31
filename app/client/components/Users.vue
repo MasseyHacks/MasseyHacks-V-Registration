@@ -15,8 +15,8 @@
                     <div v-if="advancedQuery">
                         <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter" placeholder="Enter query here"></textarea>
                     </div>
-                    <div v-else>
-                        <select style="margin: 10px;" v-model="queryLogical">
+                    <div class = "filterEntry" v-else>
+                        <select class="first" v-model="queryLogical">
                             <option value="$and">and</option>
                             <option value="$or">or</option>
                             <option value="$not">not</option>
@@ -24,12 +24,12 @@
                         </select>
 
                         <!-- Field Name -->
-                        <select style="margin: 10px;" v-model="queryField" v-on:change="changeFieldName">
+                        <select class = "middle" v-model="queryField" v-on:change="changeFieldName">
                             <option v-bind:value="{}">Select a field</option>
                             <option v-for="field in fields" v-bind:value="field">{{prettify(field.name)}}</option>
                         </select>
 
-                        <select style="margin: 10px;" v-model="queryComparison" :disabled="!queryField.name">
+                        <select class = "middle" v-model="queryComparison" :disabled="!queryField.name">
                             <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
                             <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
                             <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
@@ -42,7 +42,7 @@
                             <option value="false" :disabled="queryField.type!='Boolean'">False</option>
                         </select>
 
-                        <input v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
+                        <input class="last" v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
                     </div>
 
@@ -78,7 +78,7 @@
 
                         <hr>
                         <table id="users-table">
-                            <tr id="table-header"><td>NAME</td><td>V/S/A/C/W</td><td>VOTES</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td></tr>
+                            <tr id="table-header"><td><a class = "sortable" @click="sortBy('fullName')">NAME</a></td><td>V/S/A/C/W</td><td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td><td><a class="sortable" @click="sortBy('email')">EMAIL</a></td><td>SCHOOL</td><td>GRADE</td></tr>
                             <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
                                 <td>
                                     {{user.fullName}}
@@ -144,6 +144,9 @@
                 loadingError: '',
                 queryError: '',
 
+                currentSorting:'',
+                reverseSorted:true,
+
                 users: {}
             }
         },
@@ -189,6 +192,41 @@
                     strProc = str.slice(str.indexOf('.')+1)
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
+            },
+
+            sortBy: function(field) {
+                var sort = {}
+
+                if (this.currentSorting === field) {
+                    this.reverseSorted = !this.reverseSorted
+                } else {
+                    this.currentSorting = field
+                    this.reverseSorted = false
+                }
+
+                if (field == "fullName") {
+                    sort["firstName"] = this.reverseSorted === true ? -1 : 1
+                    sort["lastName"] = this.reverseSorted === true ? -1 : 1
+                } else {
+                    sort[field] = this.reverseSorted === false ? -1 : 1
+                }
+                ApiService.getUsers({ page: this.page, size: 100, filters: this.filters, sort:sort}, (err, data) => {
+                    this.loading = false
+
+                    if (err || !data) {
+                        this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                    } else {
+                        this.users = data.users
+                        this.totalPages = data.totalPages
+                        this.count = data.count
+
+                        console.log(data.users)
+
+                        if (this.users.length == 0) {
+                            this.queryError = 'No users found'
+                        }
+                    }
+                })
             },
 
             onClick: function(text, data) {

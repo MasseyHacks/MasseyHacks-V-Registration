@@ -471,6 +471,14 @@ h4 {
     border-top-right-radius: 50px;
 }
 
+.sortable:hover {
+    border-bottom: white 2px solid;
+}
+
+.sortable {
+    cursor: pointer;
+}
+
 @media (max-width: 992px) {
     .dash-card {
         width: 95vw;
