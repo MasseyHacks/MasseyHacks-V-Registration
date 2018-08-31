@@ -26,20 +26,7 @@ module.exports = function(router) {
     // Admin
     // Get skill question
     router.get('/skill', permissions.isAdmin, function(req, res) {
-
         SettingsController.getVerificationProblem(logger.defaultResponse(req, res));
-        /*
-        request.get({
-            uri: 'https://math.ly/api/v1/algebra/linear-equations.json?difficulty=beginner',
-            json: true
-        }, function (err, response, body) {
-            if (err) {
-                logger.defaultResponse(req,res)({message: 'Something went wrong on our end :('});
-            } else {
-                logger.defaultResponse(req, res)(null, body)
-            }
-        });*/
-
     });
 
     // Owner

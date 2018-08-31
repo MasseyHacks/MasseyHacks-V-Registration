@@ -114,7 +114,10 @@ SettingsController.approvePendingSchool = function(adminUser, schoolName, callba
                 pendingSchools : schoolName
             },
             $push : {
-                schools : schoolName
+                schools : {
+                    $each: [schoolName],
+                    $sort: 1
+                }
             }
         }, {
             new: true

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="app-screen">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
             <h2 class="subtitle" style="padding-top:8px;">Change Password</h2>
