@@ -78,7 +78,7 @@
 
                         <hr>
                         <table id="users-table">
-                            <tr id="table-header"><td>NAME</td><td>Members</td><td>Count</td><td>Code</td></tr>
+                            <tr id="table-header"><td><a class = "sortable" @click="sortBy('name')">NAME</a></td><td>Members</td><td>Count</td><td>Code</td></tr>
                             <tr v-for="team in teams">
                                 <td>
                                     {{team.name}}
@@ -145,6 +145,9 @@
                 loadingError: '',
                 queryError: '',
 
+                currentSorting:'',
+                reverseSorted:true,
+
                 teams: {},
 
                 settings: Session.getSettings()
@@ -190,6 +193,35 @@
                     strProc = str.slice(str.indexOf('.')+1)
                 }
                 return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
+            },
+
+            sortBy: function(field) {
+                var sort = {}
+
+                if (this.currentSorting === field) {
+                    this.reverseSorted = !this.reverseSorted
+                } else {
+                    this.currentSorting = field
+                    this.reverseSorted = false
+                }
+
+                sort[field] = this.reverseSorted === false ? -1 : 1
+
+                ApiService.getTeam({ page: this.page, size: 100, filters: this.filters, sort:sort}, (err, data) => {
+                    this.loading = false
+
+                    if (err || !data) {
+                        this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                    } else {
+                        this.teams = data.teams
+                        this.totalPages = data.totalPages
+                        this.count = data.count
+
+                        if (this.teams.length == 0) {
+                            this.queryError = 'No users found'
+                        }
+                    }
+                })
             },
 
             onClick: function(text, data) {

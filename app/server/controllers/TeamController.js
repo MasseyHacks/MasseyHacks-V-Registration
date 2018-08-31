@@ -284,7 +284,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
     var page    = parseInt(query.page);
     var size    = parseInt(query.size);
     var text    = query.text;
-    var sort    = query.sort;
+    var sort    = query.sort ? query.sort : {};
     var filters = query.filters ? query.filters : {};
     var and     = [];
     var or      = [];
@@ -330,7 +330,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
 
         Team
             .find(filters)
-            .sort()
+            .sort(sort)
             .skip((page - 1) * size)
             .limit(size)
             .populate('memberNames')
