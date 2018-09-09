@@ -151,6 +151,9 @@ h2 {
         height: 6vh;
         font-size: 3rem;
     }
+    .main-login {
+        left: calc(50% - 45vw)!important;
+    }
 }
 
 #main-sidebar {
@@ -239,6 +242,10 @@ h2 {
 /* Handle on hover */
 #main-sidebar::-webkit-scrollbar-thumb:hover {
     background: #575d62;
+}
+
+.main-login {
+    left:calc(50% - 20vw - 115px);
 }
 
 #top-bar {
