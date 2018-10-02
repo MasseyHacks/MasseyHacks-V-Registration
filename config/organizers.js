@@ -25,12 +25,20 @@ function makeOrganizer(email, firstName, lastName,  permission) {
             if (!user) {
                 console.log('Adding: ', email, firstName, lastName, permission);
 
+                var password = "";
+                var suspension = true;
+
+                if (process.env.NODE_ENV === 'dev') {
+                    password = "123456";
+                    suspension = false;
+                }
+
                 User.create({
                     'email': email,
                     'firstName': firstName,
                     'lastName': lastName,
-                    'password': User.generateHash('123456'),
-                    'status.passwordSuspension': true,
+                    'password': User.generateHash(password),
+                    'status.passwordSuspension': suspension,
                     'status.admitted': true,
                     'status.confirmed': true,
                     'status.submittedApplication': true,
@@ -62,10 +70,12 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                             }, function (err, user) {
                                 console.log(userNew.email + ': ' + process.env.ROOT_URL + '/magic?token=' + token)
                                 //send the email
-                                mailer.sendTemplateEmail(user.email,'magiclinkemails',{
-                                    nickname: userNew.firstName,
-                                    magicURL: process.env.ROOT_URL + '/magic?token=' + token
-                                });
+                                if (process.env.NODE_ENV !== 'dev') {
+                                    mailer.sendTemplateEmail(user.email, 'magiclinkemails', {
+                                        nickname: userNew.firstName,
+                                        magicURL: process.env.ROOT_URL + '/magic?token=' + token
+                                    });
+                                }
                             })
                     }
 
