@@ -2,6 +2,7 @@ const Imap     = require('imap');
 const inspect  = require('util').inspect;
 const Users    = require('../models/User');
 const Settings = require('../models/Settings');
+const logger   = require('./logger');
 
 const imap     = new Imap({
     user: process.env.waiverEmail,
@@ -52,7 +53,7 @@ const fetch_email = function() {
 
                             if (buffer[0] === 'From: HelloSign <noreply@mail.hellosign.com>') {
                                 console.log(buffer[1]);
-                                const process = buffer[1].split(' ');
+                                var process = buffer[1].split(' ');
                                 if (process[process.length-1] === 'by') {
                                     process = [buffer[2].slice(1)];
                                 }
@@ -70,9 +71,9 @@ const fetch_email = function() {
                                     function(err, user) {
                                         if (user) {
                                             console.log(user.email + '\'s waiver has been received');
-                                            addToLog(user.email + '\'s waiver has been received', null);
+                                            logger.logAction(-1, -1, user.email + '\'s waiver has been received', user.email + '\'s waiver has been received. Please verify contents.');
                                         } else {
-                                            addToLog('broooo da sheit? dis bois (' + process[process.length-1] + ') has da non existianting email bro')
+                                            logger.logAction(-1, -1, 'Error in waiver logger. (' + process[process.length-1] + ')', 'A waiver was received but no user was found.')
                                         }
                                     });
                             }
@@ -81,7 +82,7 @@ const fetch_email = function() {
 
                 });
                 f.once('error', function (err) {
-                    console.log('imap error ' + err);
+                    logger.logAction(-1, -1, 'Imap error has occured', err)
                 });
             }
         });
