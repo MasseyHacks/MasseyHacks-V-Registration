@@ -5,10 +5,10 @@ const Settings = require('../models/Settings');
 const logger   = require('./logger');
 
 const imap     = new Imap({
-    user: process.env.waiverEmail,
-    password: process.env.waiverPassword,
-    host: process.env.waiverAddress,
-    port: process.env.waiverPort,
+    user: process.env.WAIVER_EMAIL,
+    password: process.env.WAIVER_PASSWORD,
+    host: process.env.WAIVER_ADDRESS,
+    port: process.env.WAIVER_PORT,
     tls: true
 });
 
