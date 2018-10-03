@@ -3,14 +3,16 @@ const inspect  = require('util').inspect;
 const Users    = require('../models/User');
 const Settings = require('../models/Settings');
 const logger   = require('./logger');
+const mailparse= require('mailparser');
 
 const imap     = new Imap({
     user: process.env.WAIVER_EMAIL,
     password: process.env.WAIVER_PASSWORD,
     host: process.env.WAIVER_ADDRESS,
     port: process.env.WAIVER_PORT,
-    tls: true
-});
+    tls: true,
+    debug: console.log
+})
 
 function openInbox(cb) {
     imap.openBox('INBOX', false, cb);
@@ -18,9 +20,9 @@ function openInbox(cb) {
 
 imap.once('ready', function() {
     fetch_email();
-
-    imap.on('mail', function () {
-        fetch_email()
+    imap.on('mail', function (mail) {
+        console.log("ran");
+        fetch_email();
     })
 });
 
@@ -38,46 +40,20 @@ const fetch_email = function() {
             if (!err && results.length !== 0) {
 
                 const f = imap.fetch(results, {
-                    bodies: 'HEADER.FIELDS (FROM SUBJECT)',
+                    bodies: '',
                     markSeen: true,
                     struct: true
                 });
                 f.on('message', function (msg) {
-                    msg.on('body', function (stream) {
-                        var buffer;
-                        stream.on('data', function (chunk) {
-                            buffer = chunk.toString('utf8');
-                        });
-                        stream.once('end', function () {
-                            buffer = buffer.split('\r\n');
-
-                            if (buffer[0] === 'From: HelloSign <noreply@mail.hellosign.com>') {
-                                console.log(buffer[1]);
-                                var process = buffer[1].split(' ');
-                                if (process[process.length-1] === 'by') {
-                                    process = [buffer[2].slice(1)];
-                                }
-
-                                Users.findOneAndUpdate({
-                                        'email': process[process.length-1]
-                                    },
-                                    {
-                                        $set: {
-                                            'status.waiver': true
-                                        }
-                                    }, {
-                                        new: true
-                                    },
-                                    function(err, user) {
-                                        if (user) {
-                                            console.log(user.email + '\'s waiver has been received');
-                                            logger.logAction(-1, -1, user.email + '\'s waiver has been received', user.email + '\'s waiver has been received. Please verify contents.');
-                                        } else {
-                                            logger.logAction(-1, -1, 'Error in waiver logger. (' + process[process.length-1] + ')', 'A waiver was received but no user was found.')
-                                        }
-                                    });
+                    msg.on('body', function(stream, info) {
+                        console.log(info)
+                        mailparse.simpleParser(stream, function (err, parsed) {
+                            if (err) {
+                                console.log(err)
+                            } else {
+                                console.log(parsed)
                             }
-                        });
+                        })
                     });
 
                 });
@@ -88,5 +64,34 @@ const fetch_email = function() {
         });
     });
 };
+
+// buffer = buffer.split('\r\n');
+//
+// if (buffer[0] === 'From: HelloSign <noreply@mail.hellosign.com>') {
+//     console.log(buffer[1]);
+//     var process = buffer[1].split(' ');
+//     if (process[process.length-1] === 'by') {
+//         process = [buffer[2].slice(1)];
+//     }
+//
+//     Users.findOneAndUpdate({
+//             'email': process[process.length-1]
+//         },
+//         {
+//             $set: {
+//                 'status.waiver': true
+//             }
+//         }, {
+//             new: true
+//         },
+//         function(err, user) {
+//             if (user) {
+//                 console.log(user.email + '\'s waiver has been received');
+//                 logger.logAction(-1, -1, user.email + '\'s waiver has been received', user.email + '\'s waiver has been received. Please verify contents.');
+//             } else {
+//                 logger.logAction(-1, -1, 'Error in waiver logger. (' + process[process.length-1] + ')', 'A waiver was received but no user was found.')
+//             }
+//         });
+// }
 
 imap.connect();
