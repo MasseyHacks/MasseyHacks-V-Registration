@@ -25,7 +25,17 @@ After npm install is completed, run
 cp .env.template .env
 ```
 
-to create a new settings file. Fill all the fields and run
+to create a new settings file. Fill in all the fields. 
+
+After that, run 
+
+```
+cp config/data/organizers.json.template config/data/organizers.json
+```
+
+to create a new organizers file. This will store the initial organizers who will have superuser access. Edit the default values to your information.
+
+To start goose, run
 
 ```
 npm start
