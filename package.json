@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/henrytwo/MasseyHacks-V-Registration.git"
+    "url": "git+https://github.com/MasseyHacks/MasseyHacks-V-Registration.git"
   },
   "author": "Henry Tu <henry@henrytu.me>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/henrytwo/MasseyHacks-V-Registration/issues"
+    "url": "https://github.com/MasseyHacks/MasseyHacks-V-Registration/issues"
   },
-  "homepage": "https://github.com/henrytwo/MasseyHacks-V-Registration#readme",
+  "homepage": "https://github.com/MasseyHacks/MasseyHacks-V-Registration#readme",
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -54,6 +54,7 @@
     "imap": "^0.8.19",
     "jquery": "^3.3.1",
     "jsonwebtoken": "^8.3.0",
+    "mailparser": "^2.3.4",
     "method-override": "^3.0.0",
     "moment": "^2.22.2",
     "mongoose": "^5.2.3",

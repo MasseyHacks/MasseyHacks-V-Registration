@@ -19,6 +19,10 @@ const UserFields         = require('../models/data/UserFields');
 const FilterFields       = require('../models/data/FilterFields');
 const qrcode             = require('qrcode');
 
+if (process.env.WAIVER_DEV === "true") {
+    const waiverReciever     = require('../services/waiverReceiver');
+}
+
 var UserController       = {};
 
 function escapeRegExp(str) {
