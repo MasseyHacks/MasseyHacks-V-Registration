@@ -761,8 +761,8 @@ UserController.updateProfile = function (userExecute, id, profile, callback){
                     _id: id
                 },
                 function (err, user) {
-                    if (err) {
-                        return callback(err)
+                    if (err || !user) {
+                        return callback(err ? err : { error: 'Unable to perform action.', code: 500})
                     }
 
                     if (user.status.released && (user.status.rejected  || user.status.waitlisted  || user.status.admitted)){

@@ -16,6 +16,11 @@ h2 {
     font-family: 'Futura Bold';
     font-weight: normal;
 }
+
+.row {
+    margin-left: 20px;
+    margin-right: 20px;
+}
 .spacer {
     height: calc(50vh - 100px);
 }

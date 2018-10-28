@@ -2,11 +2,11 @@
     <div>
         <div class="ui-card dash-card-large">
             <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
-            <div id="detailed-info" style="column-count: 3; column-width: 150px;">
-                <ul>
+            <div id="detailed-info" style="column-count: 2; column-width: 300px;">
+                <ul style="list-style: none">
                     <li v-for="(value, key) in flatten(userObj,false)" style="overflow-wrap: break-word; text-align: left;">
                         <span v-if="key != 'Application'">
-                            {{key}}: {{value}}
+                            <b>{{key}}:</b> {{value}}
                         </span>
                     </li>
                 </ul>
@@ -14,14 +14,31 @@
             <hr>
             <span v-if="user.permissions.owner">
                 <h4>APPLICATION</h4>
-                <ul style="overflow-wrap: break-word; text-align: left;">
+                <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
                     <li v-for="(value, key) in userApp">
-                        {{key}}: {{value}}
+                        <b>{{key}}:</b> {{value}}<br>
                     </li>
                 </ul>
             </span>
 <!--             <p>User Object: </p>
             {{userObj}} -->
+
+
+            <!-- TODO -->
+            <!-- FORCE ADMIT -->
+            <!-- FORCE REJECT -->
+            <!-- VOTE ADMIT -->
+            <!-- VOTE REJECT -->
+            <!-- VOTE RESET -->
+            <!-- VIEW TEAM -->
+            <!-- RESET ADMISSION STATE -->
+            <!-- RESET INVITATION -->
+            <!-- FLUSH EMAIL QUEUE -->
+            <!-- TOGGLE ACCOUNT ACTIVATION -->
+            <!-- TOGGLE WAIVER -->
+            <!-- TOGGLE CHECKIN -->
+            <!-- DELETE USER -->
+
             <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
             <button class="generic-button-light" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN</button>
             <button class="generic-button-light" v-on:click="editUser">Edit User</button>
@@ -176,7 +193,7 @@
 
                                     var postData = {};
                                     postData[keys[field]] = newValue;
-                                    //TODO: Actual api endpoint
+
                                     AuthService.sendRequest('POST', '/api/modifyUser', {
                                         userID: this.userObj._id,
                                         data: postData

@@ -40,6 +40,9 @@
         </div>
 
         <div id="top-bar" v-if="loggedIn">
+
+            <button v-on:click="toggleSidebar">Hello, world!</button>
+
             <div id="top-bar-text">
                 <div style="height: 50%"></div>
                 <div class="vertical-centered">
@@ -49,6 +52,7 @@
             </div>
 
             <div id="top-bar-highlight">
+
             </div>
         </div>
 
@@ -72,6 +76,7 @@
     import Session      from '../src/Session'
     import ApiService   from '../src/ApiService.js'
     import Vue          from 'vue'
+    import $            from 'jquery'
 
     export default {
         data() {
@@ -100,6 +105,11 @@
                         this.$router.push({path: '/login'})
                     }
                 }
+            }
+        },
+        methods: {
+            toggleSidebar() {
+                $('main-sidebar').css('left: 0')
             }
         }
     }
