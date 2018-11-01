@@ -42,14 +42,14 @@ module.exports = {
     skillTest(callback) {
         swal.showLoading()
 
-        this.sendRequest('GET', '/api/skill', {
+        var sudoMode = sessionStorage.getItem('sudoMode') ? sessionStorage.getItem('sudoMode') : false;
 
-        }, (err, data) => {
+        this.sendRequest('GET', '/api/skill', {}, (err, data) => {
 
-            if (err) {
+            if (err || sudoMode) {
                 swal({
-                    title: 'Disastrous Action Final Confirmation',
-                    text: 'MasseyHacks Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.',
+                    title: (sudoMode ? '[SUDO MODE]\n' : '') + 'Disastrous Action Final Confirmation',
+                    html: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.<br><br>',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -67,7 +67,7 @@ module.exports = {
                 })
 
                 swal.showValidationError(
-                    `Unable to get skill question`
+                    sudoMode ? 'SUDO MODE ENABLED' : `Unable to get skill question`
                 )
             } else {
                 swal({
@@ -101,6 +101,7 @@ module.exports = {
                 })
             }
         })
+
     },
 
     changePassword(oldPassword, newPassword, callback) {

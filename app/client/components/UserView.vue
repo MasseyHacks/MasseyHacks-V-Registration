@@ -25,14 +25,9 @@
 
 
             <!-- TODO -->
-            <!-- FORCE ADMIT -->
-            <!-- FORCE REJECT -->
-            <!-- VOTE ADMIT -->
-            <!-- VOTE REJECT -->
-            <!-- VOTE RESET -->
+
             <!-- VIEW TEAM -->
-            <!-- RESET ADMISSION STATE -->
-            <!-- RESET INVITATION -->
+
             <!-- FLUSH EMAIL QUEUE -->
             <!-- TOGGLE ACCOUNT ACTIVATION -->
             <!-- TOGGLE WAIVER -->
@@ -42,6 +37,13 @@
             <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
             <button class="generic-button-light" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN</button>
             <button class="generic-button-light" v-on:click="editUser">Edit User</button>
+            <button class="generic-button-light" v-on:click="forceAdmit">Force Admit</button>
+            <button class="generic-button-light" v-on:click="forceReject">Force Reject</button>
+            <button class="generic-button-light" v-on:click="voteAdmit">Vote Admit</button>
+            <button class="generic-button-light" v-on:click="voteReject">Vote Reject</button>
+            <button class="generic-button-light" v-on:click="resetAdmissionState">Reset Admission State</button>
+            <button class="generic-button-light" v-on:click="resetInvitation">Reset Invitation</button>
+            <button class="generic-button-light" v-on:click="resetVotes">Reset Votes</button>
         </div>
     </div>
 </template>
@@ -84,6 +86,41 @@
         },
 
         methods: {
+            resetVotes: function() {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully reset votes', 'success');
+                });
+            },
+            resetInvitation: function() {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully reset invitation status', 'success');
+                });
+            },
+            resetAdmissionState: function() {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully reset admission state', 'success');
+                });
+            },
+            forceAdmit: function() {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully force admitted user', 'success');
+                });
+            },
+            forceReject: function() {
+                ApiService.forceReject(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully force rejected user', 'success');
+                });
+            },
+            voteAdmit: function() {
+                ApiService.voteAdmit(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully voted to admit user', 'success');
+                });
+            },
+            voteReject: function() {
+                ApiService.voteReject(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully voted to reject user', 'success');
+                });
+            },
             flatten: function(obj,includeApplication = true) {
                 var flattened = {}
                 for (var keys in obj) {

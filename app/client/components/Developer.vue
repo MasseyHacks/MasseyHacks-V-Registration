@@ -84,6 +84,13 @@
                     <hr>
                     <img v-bind:src="Admins[selected]" v-if="selected">
                 </div>
+
+                <div class="ui-card dash-card">
+                    <h3>SUDO MODE</h3>
+                    <hr>
+                    Developers are busy people, okay?<br>
+                    <button class="generic-button-dark" @click="sudoMode">Enter sudo mode</button>
+                </div>
             </div>
         </div>
     </div>
@@ -133,6 +140,31 @@
             })
         },
         methods: {
+            sudoMode: function() {
+                swal({
+                    title: 'Enter SUDO MODE?',
+                    html: 'You won\'t be prompted to solve a puzzle when you perform a dangerous action. As a developer, we trust that you won\'t blaze through all the warnings.<br><br>By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.<br><br>SUDO MODE will be disabled at the end of this session.',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Confirm',
+                    footer: 'MasseyHacks | Platform Division',
+                }).then((result) => {
+                    if (result.value) {
+                        swal({
+                            title: 'SUDO MODE enabled!',
+                            type: 'success'
+                        })
+
+                        sessionStorage.setItem('sudoMode', 'true');
+                    } else {
+                        swal({
+                            title: 'Action aborted',
+                            type: 'error'
+                        })
+                    }
+                })
+            },
             switchPage: function (page) {
                 this.page = page
                 this.updateSearch(true)

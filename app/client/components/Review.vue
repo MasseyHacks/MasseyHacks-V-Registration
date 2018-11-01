@@ -169,136 +169,28 @@
             },
             applicationVote: function(vote){
                 if(vote == "admit"){
-                    swal({
-                        title: "Confirm Your Vote [ADMIT]",
-                        html: 'Vote to <span style="color:#00FF00; font-weight:bold;">ADMIT</span> '+ this.userTimes[0][2]["fullName"] +
-                            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
-                        type: "warning",
-                        showConfirmButton: true,
-                        confirmButtonText: 'Yes, vote admit',
-                        confirmButtonColor: '#d33',
-                        showCancelButton: true,
-                        focusCancel: true,
-                        showLoaderOnConfirm: true,
-                        preConfirm: (userOK) => {
-                            console.log(userOK);
-                            if(userOK){
-                                //register the vote
-                                AuthService.sendRequest('POST','/api/voteAdmit',{
-                                    userID: this.userTimes[0][2]["id"]
-                                }, (err,data) =>{
-                                    if(err){
-                                        swal("Error","Unable to notify the server","error");
-                                    }
-                                    else if(!err && data){
-                                        this.voted = true;
-                                        this.nextApplication(false,false);
-                                    }
-                                });
-
-                            }
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    })
+                    ApiService.voteAdmit(this.userTimes[0][2]["fullName"], this.userTimes[0][2]["id"], () => {
+                        this.voted = true;
+                        this.nextApplication(false,false);
+                    });
                 }
                 else if(vote == "reject"){
-                    swal({
-                        title: "Confirm Your Vote [REJECT]",
-                        html: 'Vote to <span style="color:#d33; font-weight:bold;">REJECT</span> ' + this.userTimes[0][2]["fullName"] +
-                            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
-                        type: "warning",
-                        showConfirmButton: true,
-                        confirmButtonText: 'Yes, vote reject',
-                        confirmButtonColor: '#d33',
-                        showCancelButton: true,
-                        focusCancel: true,
-                        showLoaderOnConfirm: true,
-                        preConfirm: (userOK) => {
-                            console.log(userOK);
-                            if(userOK){
-                                //register the vote
-                                AuthService.sendRequest('POST','/api/voteReject',{
-                                    userID: this.userTimes[0][2]["id"]
-                                }, (err,data) =>{
-                                    if(err){
-                                        swal("Error","Unable to notify the server","error");
-                                    }
-                                    else if(!err && data){
-                                        this.voted = true;
-                                        this.nextApplication(false,false);
-                                    }
-                                });
-
-                            }
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    })
+                    ApiService.voteReject(this.userTimes[0][2]["fullName"], this.userTimes[0][2]["id"], () => {
+                        this.voted = true;
+                        this.nextApplication(false,false);
+                    });
                 }
                 else if(vote == "admit-force" && this.user.permissions.owner){
-                    swal({
-                        title: "Whoa, wait a minute!<br>[FORCE ACTION]",
-                        html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE</span> <span style="color:#00FF00; font-weight:bold;">ADMIT</span> ' + this.userTimes[0][2]["fullName"] +
-                                '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
-                        type: "warning",
-                        showConfirmButton: true,
-                        confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> admit',
-                        confirmButtonColor: '#d33',
-                        showCancelButton: true,
-                        focusCancel: true,
-                        showLoaderOnConfirm: true,
-                        preConfirm: (userOK) => {
-                            console.log(userOK);
-                            if(userOK){
-                                //register the vote
-                                AuthService.sendRequest('POST','/api/forceAccept',{
-                                    userID: this.userTimes[0][2]["id"]
-                                }, (err,data) =>{
-                                    if(err){
-                                        swal("Error","Unable to notify the server","error");
-                                    }
-                                    else if(!err && data){
-                                        this.voted = true;
-                                        this.nextApplication(false,false);
-                                    }
-                                });
-
-                            }
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    })
+                    ApiService.forceAdmit(this.userTimes[0][2]["fullName"], this.userTimes[0][2]["id"], () => {
+                        this.voted = true;
+                        this.nextApplication(false,false);
+                    });
                 }
                 else if(vote == "reject-force" && this.user.permissions.owner){
-                    swal({
-                        title: "Whoa, wait a minute!<br>[FORCE ACTION]",
-                        html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE REJECT</span> ' + this.userTimes[0][2]["fullName"] +
-                            '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
-                        type: "warning",
-                        showConfirmButton: true,
-                        confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> reject',
-                        confirmButtonColor: '#d33',
-                        showCancelButton: true,
-                        focusCancel: true,
-                        showLoaderOnConfirm: true,
-                        preConfirm: (userOK) => {
-                            console.log(userOK);
-                            if(userOK){
-                                //register the vote
-                                AuthService.sendRequest('POST','/api/forceReject',{
-                                    userID: this.userTimes[0][2]["id"]
-                                }, (err,data) =>{
-                                    if(err){
-                                        swal("Error","Unable to notify the server","error");
-                                    }
-                                    else if(!err && data){
-                                        this.voted = true;
-                                        this.nextApplication(false,false);
-                                    }
-                                });
-
-                            }
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    })
+                    ApiService.forceReject(this.userTimes[0][2]["fullName"], this.userTimes[0][2]["id"], () => {
+                        this.voted = true;
+                        this.nextApplication(false,false);
+                    });
                 }
             },
             switchPage: function(page) {
