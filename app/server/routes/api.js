@@ -403,6 +403,10 @@ module.exports = function(router) {
         UserController.waiverOut(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
+    router.get('status', function(req, res) {
+        res.json({'status' : 'up and running!'});
+    });
+
     router.get('*', function (req, res) {
         res.json({'error' : 'lol what are you doing here?'});
     });
