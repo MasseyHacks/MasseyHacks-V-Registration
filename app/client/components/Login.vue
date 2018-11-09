@@ -1,5 +1,5 @@
 <template>
-    <div class="main main-login"> <!--style="background-image: url('/img/background.svg'); background-position: center; background-size: cover;"-->
+    <div class="main main-login">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
 

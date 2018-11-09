@@ -53,11 +53,11 @@ h2 {
 }
 #login-form-box {
     position: relative;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #EEEEEE;
     box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
     width: 40vw;
     padding: 1%;
-    color: #ffffff;
+    color: black !important;
     align-items: center;
     display: grid;
     margin: auto;
@@ -65,14 +65,14 @@ h2 {
     text-align: center;
 }
 #login-form-box h2 {
-    color: white;
+    color: black;
     font-family: "Futura Bold";
     text-align: center;
     font-size: 1em;
 }
 
 ::placeholder {
-    color: white;
+    color: black;
     font-size: 1.5rem;
 }
 
@@ -89,7 +89,7 @@ h2 {
     position: relative;
 /*    left: 50%;
     transform: translateX(-50%);*/
-    color: white;
+    color: black;
     font-size: 1.5rem;
     text-align: left;
 }
@@ -100,9 +100,9 @@ h2 {
     transform: translateX(-50%);*/
     margin-top: 5%;
     background-color: transparent;
-    color: white;
+    color: black;
     border-radius: 2em;
-    border: 2px solid white;
+    border: 2px solid black;
     width: 10vw;
     height: 4vh;
     font-size: 0.9rem;
