@@ -1,5 +1,5 @@
 <template>
-    <div id="app" style="background: url('/img/19.jpg'); background-position: center; background-size: cover; height: 100vh; width: 100vw;">
+    <div id="app">
 
         <!-- Common elements -->
 
