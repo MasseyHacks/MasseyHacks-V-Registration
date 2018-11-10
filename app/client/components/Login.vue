@@ -5,6 +5,9 @@
             <div id="login-form-box" class="vertical-centered">
 
                 <div>
+
+                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png" width="50%">
+
                   <h2 class="subtitle">Login</h2>
 
                     <p v-if="$route.query.redirect && !error">
