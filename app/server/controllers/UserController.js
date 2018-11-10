@@ -1018,7 +1018,11 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
             'status.admitted': false,
             'status.rejected': false,
             'status.waitlisted': false,
-            'statusReleased': false
+            'statusReleased': false,
+            'applicationAdmit': [],
+            'applicationReject': [],
+            'applicationVotes': [],
+            'numVotes': 0
         }
     }, {
         new: true

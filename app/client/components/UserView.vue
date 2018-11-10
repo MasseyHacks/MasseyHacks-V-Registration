@@ -87,17 +87,17 @@
 
         methods: {
             resetVotes: function() {
-                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.resetVotes(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset votes', 'success');
                 });
             },
             resetInvitation: function() {
-                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.resetInvitation(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset invitation status', 'success');
                 });
             },
             resetAdmissionState: function() {
-                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.resetAdmissionState(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset admission state', 'success');
                 });
             },
