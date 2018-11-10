@@ -1217,6 +1217,10 @@ UserController.flushEmailQueue = function(adminUser, userID, callback) {
         return callback({error : 'Invalid arguments'});
     }
 
+
+    logger.logAction(adminUser._id, userID, 'Flush email queue.');
+
+
     User.getByID(userID,function(err,user){
       if(err || !user){
         return callback(err ? err : { error: 'Unable to perform action.', code: 500})
