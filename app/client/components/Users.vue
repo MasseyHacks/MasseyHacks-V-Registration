@@ -47,9 +47,11 @@
                     </div>
 
                     <br>
-                    <button class="generic-button-light" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
-                    <button class="generic-button-light" v-on:click="clearQuery">Clear</button>
-                    <button class="generic-button-light" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ? "Simple" : "Advanced"}} Query</button>
+                    <button class="generic-button-dark" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
+                    <button class="generic-button-dark" v-on:click="clearQuery">Clear</button>
+                    <button class="generic-button-dark" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ?
+                        "Simple" : "Advanced"}} Query
+                    </button>
 
                     <br>
 
@@ -60,7 +62,8 @@
                                     <span>
                                         <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
                                         <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
-                                        <td><button class="generic-button-light" v-on:click="deleteFilter(logical, filter)">Delete</button></td>
+                                        <td><button class="generic-button-dark"
+                                                    v-on:click="deleteFilter(logical, filter)">Delete</button></td>
                                     </span>
                                 </div>
                             </tr>
@@ -69,9 +72,13 @@
 
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
-                        <button class="generic-button-light" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-light" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
-                        <button class="generic-button-light" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
+                        <button class="generic-button-dark" v-on:click="exportUsersCSV">Export</button>
+                        <button class="generic-button-dark" :disabled="page == 1" v-on:click="switchPage(page - 1)">
+                            Previous
+                        </button>
+                        <button class="generic-button-dark" :disabled="page == totalPages"
+                                v-on:click="switchPage(page + 1)">Next
+                        </button>
 
                         <br>
                         {{page}} of {{totalPages}} | {{count}} results
@@ -108,12 +115,10 @@
 </template>
 
 <script>
-    import Session from '../src/Session'
     import ApiService from '../src/ApiService'
-    import $ from 'jquery';
-    import { saveAs } from 'file-saver/FileSaver'
+    import {saveAs} from 'file-saver/FileSaver'
     import swal from 'sweetalert2'
-    import { VueContext } from 'vue-context'
+    import {VueContext} from 'vue-context'
 
     export default {
         data() {
@@ -159,23 +164,23 @@
                 } else {
                     this.fields = data
                 }
-            })
+            });
 
             ApiService.getUsers({ page: this.page, size: 100, filters: this.filters }, (err, data) => {
-                this.loading = false
+                this.loading = false;
 
                 if (err || !data) {
                     this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {
-                    this.users = data.users
-                    this.totalPages = data.totalPages
-                    this.count = data.count
+                    this.users = data.users;
+                    this.totalPages = data.totalPages;
+                    this.count = data.count;
 
                     if (this.users.length == 0) {
                         this.queryError = 'No users found'
                     }
                 }
-            })
+            });
 
             this.advancedQueryContent = JSON.stringify(this.filters)
         },
@@ -187,7 +192,7 @@
         methods : {
 
             prettify: function(str) {
-                var strProc = str
+                var strProc = str;
                 if (str.indexOf('.') != -1) {
                     strProc = str.slice(str.indexOf('.')+1)
                 }
@@ -195,32 +200,32 @@
             },
 
             sortBy: function(field) {
-                var sort = {}
+                var sort = {};
 
                 if (this.currentSorting === field) {
                     this.reverseSorted = !this.reverseSorted
                 } else {
-                    this.currentSorting = field
+                    this.currentSorting = field;
                     this.reverseSorted = false
                 }
 
                 if (field == "fullName") {
-                    sort["firstName"] = this.reverseSorted === true ? -1 : 1
+                    sort["firstName"] = this.reverseSorted === true ? -1 : 1;
                     sort["lastName"] = this.reverseSorted === true ? -1 : 1
                 } else {
                     sort[field] = this.reverseSorted === false ? -1 : 1
                 }
                 ApiService.getUsers({ page: this.page, size: 100, filters: this.filters, sort:sort}, (err, data) => {
-                    this.loading = false
+                    this.loading = false;
 
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
-                        this.totalPages = data.totalPages
-                        this.count = data.count
+                        this.users = data.users;
+                        this.totalPages = data.totalPages;
+                        this.count = data.count;
 
-                        console.log(data.users)
+                        console.log(data.users);
 
                         if (this.users.length == 0) {
                             this.queryError = 'No users found'
@@ -234,7 +239,7 @@
             },
 
             deleteFilter: function(logical, filter) {
-                this.filters[logical].splice(this.filters[logical].indexOf(filter), 1)
+                this.filters[logical].splice(this.filters[logical].indexOf(filter), 1);
                 this.updateSearch()
             },
 
@@ -243,17 +248,17 @@
                 switch (this.queryField.type) {
                     case "Boolean": // Only true/false are valid in this case
                         if (['true', 'false'].indexOf(this.queryComparison) == -1) {
-                            this.queryComparison =  'true'
+                            this.queryComparison = 'true';
                             this.queryTargetValue = ''
                         }
 
-                        break
+                        break;
                     case "Number": // Regex cannot be used with numbers
                         if (this.queryComparison == '$regex') {
                             this.queryComparison =  '$eq'
                         }
 
-                        break
+                        break;
                     default: // Strings
                         if (['true', 'false'].indexOf(this.queryComparison) != -1) {
                             this.queryComparison =  '$eq'
@@ -262,15 +267,15 @@
             },
 
             resetQuery: function() {
-                this.queryLogical = '$and'
-                this.queryComparison =  this.queryField.type == 'Boolean' ? 'true' : '$eq'
+                this.queryLogical = '$and';
+                this.queryComparison = this.queryField.type == 'Boolean' ? 'true' : '$eq';
                 this.queryTargetValue = ''
             },
 
             addQuery: function() {
 
-                var query = {}
-                var subQuery = {}
+                var query = {};
+                var subQuery = {};
 
                 // Make it case insensitive
                 if (this.queryComparison == '$regex') {
@@ -278,10 +283,10 @@
                 }
 
                 // Generate inner query <'$eq':'foo'>
-                subQuery[this.queryComparison] = this.queryTargetValue
+                subQuery[this.queryComparison] = this.queryTargetValue;
 
                 // Generate outer query <'firstName':subQuery>
-                query[this.queryField.name] = this.queryField.type == 'Boolean' ? this.queryComparison : subQuery
+                query[this.queryField.name] = this.queryField.type == 'Boolean' ? this.queryComparison : subQuery;
 
                 if (this.queryLogical in this.filters) {
                     if (!this.filters[this.queryLogical].map(x => JSON.stringify(x)).includes(JSON.stringify(query))) { // Figure out why this doesn't work
@@ -293,19 +298,19 @@
                     this.filters[this.queryLogical] = [query]
                 }
 
-                this.updateSearch()
-                this.resetQuery()
+                this.updateSearch();
+                this.resetQuery();
                 this.queryField = {}
             },
 
             clearQuery: function() {
-                this.filters = {}
+                this.filters = {};
                 this.updateSearch()
             },
 
             updateAdvancedFilter: function() {
                 try {
-                    this.filters = JSON.parse(this.advancedQueryContent)
+                    this.filters = JSON.parse(this.advancedQueryContent);
                     this.updateSearch()
                 }  catch (e) {
                     this.queryError = 'Invalid Query'
@@ -318,17 +323,17 @@
                 }
 
                 // Update content of advanced query box
-                this.advancedQueryContent = JSON.stringify(this.filters)
+                this.advancedQueryContent = JSON.stringify(this.filters);
 
                 ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
-                    this.queryError = ''
+                    this.queryError = '';
                     if (err || !data) {
                         this.queryError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
-                        this.totalPages = data.totalPages
-                        this.count = data.count
-                        this.loading = false
+                        this.users = data.users;
+                        this.totalPages = data.totalPages;
+                        this.count = data.count;
+                        this.loading = false;
 
                         if (this.users.length == 0) {
                             this.queryError = 'No results match this query'
@@ -470,7 +475,7 @@
             },
 
             switchPage: function(page) {
-                this.page = page
+                this.page = page;
                 this.updateSearch(true)
             }
 

@@ -11,11 +11,19 @@
             </div>
             <div class="container-fluid">
                 <div class="row">
-                    <div class="ui-card dash-card-large" style="background-image: linear-gradient(to right, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);">
-                        <router-link to="/organizer/statistics"><button class="generic-button-light">Statistics</button></router-link>
-                        <router-link to="/organizer/users"><button class="generic-button-light">Users</button></router-link>
-                        <router-link to="/organizer/teamview"><button class="generic-button-light">Teams</button></router-link>
-                        <router-link v-if="user.permissions.reviewer" to="/organizer/review"><button class="generic-button-light">Review</button></router-link>
+                    <div class="ui-card dash-card-large">
+                        <router-link to="/organizer/statistics">
+                            <button class="generic-button-dark">Statistics</button>
+                        </router-link>
+                        <router-link to="/organizer/users">
+                            <button class="generic-button-dark">Users</button>
+                        </router-link>
+                        <router-link to="/organizer/teamview">
+                            <button class="generic-button-dark">Teams</button>
+                        </router-link>
+                        <router-link v-if="user.permissions.reviewer" to="/organizer/review">
+                            <button class="generic-button-dark">Review</button>
+                        </router-link>
                     </div>
                 </div>
                 <transition :name="transitionName">
@@ -28,23 +36,23 @@
 
 <script>
     import AuthService from '../src/AuthService'
-    import Session     from '../src/Session'
+    import Session from '../src/Session'
 
     export default {
         beforeRouteUpdate (to, from, next) {
-            const pageLayout = ['statistics', 'users', 'teamview', 'review']
-            const toPath = to.path.split('/')
-            const fromPath = from.path.split('/')
+            const pageLayout = ['statistics', 'users', 'teamview', 'review'];
+            const toPath = to.path.split('/');
+            const fromPath = from.path.split('/');
 
-            console.log('dasd', toPath, fromPath)
-            console.log('Hello there')
+            console.log('dasd', toPath, fromPath);
+            console.log('Hello there');
 
-            const toDepth = pageLayout.indexOf(toPath[toPath.length - 1])
-            const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1])
+            const toDepth = pageLayout.indexOf(toPath[toPath.length - 1]);
+            const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1]);
 
-            console.log(toDepth, fromDepth)
+            console.log(toDepth, fromDepth);
 
-            this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+            this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
 
             next()
         },

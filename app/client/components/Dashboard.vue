@@ -7,7 +7,7 @@
                 <div class="ui-card dash-card" style="text-align: center">
                     <h3>Application Status</h3>
 
-                    <div style="display: inline-block; border-radius: 10px; height: 20px; width: 80%; max-width: 300px ; border-color: black; border-style: solid; border-width: 2px; alignment: center; overflow: hidden; z-index: 100">
+                    <div style="display: inline-block; border-radius: 10px; height: 20px; width: 80%; max-width: 300px ; border: 2px solid black;alignment: center; overflow: hidden; z-index: 100">
                         <div style="background-image: linear-gradient(135deg, #4bc2e4 0%, #085fae 100%); height: 100%; z-index: 200" v-bind:style="{width:stepsCompleted+'%'}"></div>
                     </div>
 
@@ -58,9 +58,9 @@
 </template>
 
 <script>
-    import Session     from '../src/Session'
+    import Session from '../src/Session'
     import AuthService from '../src/AuthService.js'
-    import swal        from 'sweetalert2'
+    import swal from 'sweetalert2'
 
     export default {
         data() {
@@ -89,7 +89,7 @@
                             type: 'success'
                         })
                     }
-                });;
+                });
             }
         }
     }

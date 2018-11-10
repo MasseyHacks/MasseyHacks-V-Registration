@@ -1,14 +1,16 @@
 <template>
-    <div class="main main-login" style="background: url('/img/2.jpg'); background-position: center; background-size: cover; height: 100vh; width: 100vw;">
+    <div class="main main-login"
+         style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw;">
         <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
             <div class="spacer"></div>
             <div id="login-form-box" class="vertical-centered">
 
                 <div>
 
-                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png" width="50%">
+                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png"
+                         width="50%">
 
-                  <h2 class="subtitle">Login</h2>
+                    <h2 class="subtitle">Login</h2>
 
                     <p v-if="$route.query.redirect && !error">
                         You need to login first.
@@ -17,16 +19,20 @@
                     <p v-if="error" class="error">{{error}}</p>
 
                     <div id="login-form-elements">
-                      <form @submit.prevent="login" style="margin: 0">
-                          <input v-model="email" placeholder="email" type="email" autofocus required>
-                          <input v-model="pass" placeholder="password" type="password" required><br>
+                        <form @submit.prevent="login" style="margin: 0">
+                            <input v-model="email" placeholder="email" type="email" autofocus required>
+                            <input v-model="pass" placeholder="password" type="password" required><br>
 
-                          <div id="button-row">
-                              <button type="submit" class="primary-button">Sign In</button>
-                              <router-link to="/register" v-if="settings.registrationOpen"><button>Register</button></router-link>
-                              <router-link to="/reset"><button>Reset</button></router-link>
-                          </div>
-                      </form>
+                            <div id="button-row">
+                                <button type="submit" class="primary-button">Sign In</button>
+                                <router-link to="/register" v-if="settings.registrationOpen">
+                                    <button>Register</button>
+                                </router-link>
+                                <router-link to="/reset">
+                                    <button>Reset</button>
+                                </router-link>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -37,11 +43,11 @@
 </template>
 
 <script>
-    import AuthService  from '../src/AuthService'
-    import Session      from '../src/Session'
+    import AuthService from '../src/AuthService'
+    import Session from '../src/Session'
 
     export default {
-        data () {
+        data() {
             return {
                 email: '',
                 pass: '',
@@ -55,7 +61,7 @@
             }
         },
         methods: {
-            login () {
+            login() {
                 AuthService.loginWithPassword(this.email, this.pass, (err, data) => {
                     if (err) {
                         this.error = err

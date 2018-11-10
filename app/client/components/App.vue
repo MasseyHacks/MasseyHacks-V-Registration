@@ -114,11 +114,10 @@
 </template>
 
 <script>
-    import AuthService  from '../src/AuthService'
-    import Session      from '../src/Session'
-    import ApiService   from '../src/ApiService.js'
-    import Vue          from 'vue'
-    import $            from 'jquery'
+    import AuthService from '../src/AuthService'
+    import Session from '../src/Session'
+    import ApiService from '../src/ApiService.js'
+    import $ from 'jquery'
 
     export default {
         data() {
@@ -133,16 +132,16 @@
         },
         created() {
             AuthService.updateLoginState = (state, message) => {
-                this.user = Session.getUser()
-                this.loggedIn = state
+                this.user = Session.getUser();
+                this.loggedIn = state;
 
-                console.log('Setting state to', state, message)
+                console.log('Setting state to', state, message);
 
                 if (!state) {
-                    console.log('?message=' + encodeURIComponent(message))
+                    console.log('?message=' + encodeURIComponent(message));
 
                     if (message) {
-                        this.$router.push({ path: '/login', query: {message: message}})
+                        this.$router.push({path: '/login', query: {message: message}})
                     } else {
                         this.$router.push({path: '/login'})
                     }

@@ -18,7 +18,9 @@
                 <div class="ui-card dash-card-large">
                     <h3>AT A GLANCE:</h3>
                     <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
-                    <button v-on:click="refreshStatistics" v-if="user.permissions.developer" class="generic-button-light">Refresh</button>
+                    <button v-on:click="refreshStatistics" v-if="user.permissions.developer"
+                            class="generic-button-dark">Refresh
+                    </button>
                     <br>
                     <hr>
                     <div class="duo-col">
@@ -122,8 +124,6 @@
 <script>
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
-    import $ from 'jquery';
-    import swal from 'sweetalert2'
 
     export default {
         data() {
@@ -137,7 +137,7 @@
         },
 
         created() {
-            this.getStat()
+            this.getStat();
             setInterval(this.getStat(), 5000)
         },
 
@@ -145,7 +145,7 @@
         methods: {
             getStat: function() {
                 ApiService.getStatistics((loadingError, statistics) => {
-                    this.loading = false
+                    this.loading = false;
 
                     if (loadingError || !statistics) {
                         this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
