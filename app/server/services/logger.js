@@ -60,7 +60,7 @@ module.exports = {
             }
         };
     },
-    logAction : function (actionFrom, actionTo, message, detailedMessage) {
+    logAction : function (actionFrom, actionTo, message, detailedMessage, cb) {
 
         // Start bash
 
@@ -115,6 +115,10 @@ module.exports = {
                                         }
                                     );
 
+                                }
+
+                                if (cb) {
+                                    cb();
                                 }
                             })
                         } else {

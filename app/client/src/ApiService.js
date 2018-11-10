@@ -4,6 +4,70 @@ import AuthService from './AuthService'
 import swal from 'sweetalert2'
 
 module.exports = {
+    deleteUser(userName, userID, callback) {
+        swal({
+            title: "DELETE USER?",
+            html: 'ARE YOU SURE YOU WANT TO <span style="color:#FF0000; font-weight:bold;">DELETE</span> '+ userName +
+            '??????<br>You LITERALLY <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, DELETE ACCOUNT',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+                console.log(userOK);
+                if(userOK){
+                    //register the vote
+                    AuthService.sendRequest('POST','/api/deleteUser',{
+                        userID: userID
+                    }, (err,data) =>{
+                        if(err){
+                            swal("Error","Unable to perform action","error");
+                        }
+                        else if(!err){
+                            if (callback) callback();
+                        }
+                    });
+
+                }
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
+    flushEmailQueue(userName, userID, callback) {
+        swal({
+            title: "Flush Email Queue?",
+            html: 'ARE YOU SURE YOU WANT TO <span style="color:#FF0000; font-weight:bold;">FLUSH EMAIL QUEUE</span> '+ userName +
+            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, flush queue',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+                console.log(userOK);
+                if(userOK){
+                    //register the vote
+                    AuthService.sendRequest('POST','/api/flushEmailQueue',{
+                        userID: userID
+                    }, (err,data) =>{
+                        if(err){
+                            swal("Error","Unable to perform action","error");
+                        }
+                        else if(!err && data){
+                            if (callback) callback();
+                        }
+                    });
+
+                }
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
     resetVotes(userName, userID, callback) {
         swal({
             title: "Reset votes?",

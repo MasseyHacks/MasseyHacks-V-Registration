@@ -44,6 +44,9 @@
             <button class="generic-button-light" v-on:click="resetAdmissionState">Reset Admission State</button>
             <button class="generic-button-light" v-on:click="resetInvitation">Reset Invitation</button>
             <button class="generic-button-light" v-on:click="resetVotes">Reset Votes</button>
+
+            <button class="generic-button-light" v-on:click="flushEmailQueue">Flush Email Queue</button>
+            <button class="generic-button-light" v-on:click="deleteUser">Delete User</button>
         </div>
     </div>
 </template>
@@ -86,6 +89,19 @@
         },
 
         methods: {
+            deleteUser: function() {
+                ApiService.deleteUser(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully deleted user', 'success').then(function() {
+                        window.location.href = this.returnPath;
+                    });
+
+                });
+            },
+            flushEmailQueue: function() {
+                ApiService.flushEmailQueue(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully flushed email queue', 'success');
+                });
+            },
             resetVotes: function() {
                 ApiService.resetVotes(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset votes', 'success');

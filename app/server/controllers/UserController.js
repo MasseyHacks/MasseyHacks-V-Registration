@@ -1147,20 +1147,20 @@ UserController.remove = function(adminUser, userID, callback){
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(adminUser._id, user._id, 'Deleted user.');
+            logger.logAction(adminUser._id, user._id, 'Deleted user.', null, function() {
+                User.findOneAndRemove({
+                    _id: userID
+                }, function (err) {
+                    if (err) {
+                        return callback({error : 'Unable to delete user'})
+                    }
+
+                    return callback(null, {message : 'Success'})
+                });
+            });
         } else {
             return callback({error : 'Unable to delete user'})
         }
-    });
-
-    User.findOneAndRemove({
-        _id: userID
-    }, function (err) {
-        if (err) {
-            return callback({error : 'Unable to delete user'})
-        }
-
-        return callback({message : 'Success'})
     });
 };
 
