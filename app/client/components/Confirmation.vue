@@ -8,13 +8,15 @@
 
         <div class="row">
             <div class="ui-card dash-card">
-              <div v-if="user.status.name == 'admitted'">
-                <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
-                <button class="generic-button" v-on:click="denyInvitation">Deny</button>
-              </div>
+
               <div v-if="user.status.name == 'confirmed' || user.status.name == 'declined'">
                   {{user.status.name}}
               </div>
+              <div v-else>
+                  <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
+                  <button class="generic-button" v-on:click="denyInvitation">Deny</button>
+              </div>
+
         </div>
     </div>
   </div>

@@ -341,11 +341,12 @@ router.beforeEach((to, from, next) => {
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
+    /*
     if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
         vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
-    } else {
-        vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
-    }
+    } else {*/
+    vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
+    //}
 
     next()
 })
