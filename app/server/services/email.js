@@ -245,9 +245,9 @@ module.exports = {
                         if (typeof settings.emailQueue[emailQueueName] === 'object') {
                             console.log(typeof settings.emailQueue[emailQueueName]);
                             for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
-                                console.log(emailQueueName + ' ' + settings.emailQueue[emailQueueName][i]);
-                                if (settings.emailQueue[emailQueueName][i] === userEmail) {
 
+                                if (settings.emailQueue[emailQueueName][i] === userEmail) {
+                                    console.log(emailQueueName + ' ' + settings.emailQueue[emailQueueName][i]);
                                     //mailer
                                     module.exports.sendTemplateEmail(userEmail, emailQueueName.toLowerCase(), dataPack);
 
