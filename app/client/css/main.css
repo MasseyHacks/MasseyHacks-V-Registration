@@ -22,7 +22,7 @@ h2 {
     margin-right: 20px;
 }
 .spacer {
-    height: calc(50vh - 75px);
+    height: calc(50vh); /*- 75px);*/
 }
 
 .hidden {
@@ -53,16 +53,23 @@ h2 {
 }
 #login-form-box {
     position: relative;
+
     background: #EEEEEE;
     box-shadow: 0px 10px 27px 0px rgba(0,0,0,0.34);
+    border-radius: 10px;
+
+    max-width: 550px;
     width: 40vw;
-    padding: 1%;
+    padding: 3%;
     color: black !important;
     align-items: center;
     display: grid;
     margin: auto;
     font-size: 2rem;
     text-align: center;
+}
+#login-form-box p {
+    font-size: 0.5em;
 }
 #login-form-box h2 {
     color: black;
@@ -84,7 +91,7 @@ h2 {
     height: 7vh;
     border: 0px;
     background: transparent;
-    width: 30vw;
+    width: 100%;
     border-bottom: 2px solid white;
     position: relative;
 /*    left: 50%;
@@ -120,8 +127,6 @@ h2 {
 #login-form-elements button:hover {
     background-color: rgba(255,255,255,0.2);
 }
-
-
 #login-form-elements {
     margin: auto;
 }
@@ -310,11 +315,11 @@ h2 {
 
 #app-view {
     position: relative;
-    top: 75px;
     max-width: 100vw;
-    height: calc(100vh - 75px);
+    /*top: 75px;*/
+    height: calc(100vh); /* - 75px);*/
     padding-bottom: 30px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 

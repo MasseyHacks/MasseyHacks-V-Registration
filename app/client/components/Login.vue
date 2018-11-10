@@ -1,40 +1,34 @@
 <template>
-    <div class="main main-login" style="background: url('/img/19.jpg'); background-position: center; background-size: cover; height: 100vh; width: 100vw;">
-        <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
+    <div class="main main-login" style="background: url('/img/2.jpg'); background-position: center; background-size: cover; height: 100vh; width: 100vw;">
+        <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
+            <div class="spacer"></div>
+            <div id="login-form-box" class="vertical-centered">
 
-            <p v-if="$route.query.redirect">
-                You need to login first.
-            </p>
+                <div>
+                  <h2 class="subtitle">Login</h2>
 
-            <!--<div v-if="$route.query.message" style="margin:5%;">-->
-                <p v-if="$route.query.message">{{$route.query.message}}</p>
+                    <p v-if="$route.query.redirect && !error">
+                        You need to login first.
+                    </p>
+                    <p v-if="$route.query.message && !error">{{$route.query.message}}</p>
+                    <p v-if="error" class="error">{{error}}</p>
 
-                <!--
-                <div id="login-form-elements">
-                  <div id="button-row">
-                      <router-link to="/login"><button>sign in</button></router-link>
-                  </div>
-                </div>
-            </div>-->
+                    <div id="login-form-elements">
+                      <form @submit.prevent="login" style="margin: 0">
+                          <input v-model="email" placeholder="email" type="email" autofocus required>
+                          <input v-model="pass" placeholder="password" type="password" required><br>
 
-            <div>
-              <h2 class="subtitle">Login</h2>
-              <div id="login-form-elements">
-                  <form @submit.prevent="login">
-                      <input v-model="email" placeholder="email" type="email" autofocus required>
-                      <input v-model="pass" placeholder="password" type="password" required><br>
-
-                      <div id="button-row">
-                          <button type="submit" class="primary-button">sign in</button>
-                          <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
-                          <router-link to="/reset"><button>reset</button></router-link>
-                      </div>
-
-                      <p v-if="error" class="error">{{error}}</p>
-                  </form>
+                          <div id="button-row">
+                              <button type="submit" class="primary-button">sign in</button>
+                              <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
+                              <router-link to="/reset"><button>reset</button></router-link>
+                          </div>
+                      </form>
+                    </div>
                 </div>
             </div>
+
+            <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
         </div>
     </div>
 </template>
