@@ -88,11 +88,14 @@ h2 {
 }
 #login-form-box input {
     padding: 2%;
+    margin-bottom: 5px;
     height: 7vh;
     border: 0px;
-    background: transparent;
+    background: white;
     width: 100%;
-    border-bottom: 2px solid white;
+    height: 30px;
+    border: 2px solid white;
+    border-radius: 15px;
     position: relative;
 /*    left: 50%;
     transform: translateX(-50%);*/
@@ -129,10 +132,6 @@ h2 {
 }
 #login-form-elements {
     margin: auto;
-}
-#login-form-elements input:focus{
-    outline: 0px;
-    border-bottom: 2px solid #fc6076;
 }
 #main {
     display: grid;
@@ -529,15 +528,16 @@ h4 {
     padding: 2%;
     border: 0px;
     width: 90%;
-    background: transparent;
-    border-bottom: 2px solid gray;
+    height: 20px;
+    background: white;
+    border: 2px solid gray;
     color: black;
     text-align: left;
 }
 
 .ui-grid-item input:focus {
     outline: 0px;
-    border-bottom: 2px solid black;
+    border: 2px solid black;
 }
 
 .filterEntry select {
