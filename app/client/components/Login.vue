@@ -19,9 +19,9 @@
                           <input v-model="pass" placeholder="password" type="password" required><br>
 
                           <div id="button-row">
-                              <button type="submit" class="primary-button">sign in</button>
-                              <router-link to="/register" v-if="settings.registrationOpen"><button>register</button></router-link>
-                              <router-link to="/reset"><button>reset</button></router-link>
+                              <button type="submit" class="primary-button">Sign In</button>
+                              <router-link to="/register" v-if="settings.registrationOpen"><button>Register</button></router-link>
+                              <router-link to="/reset"><button>Reset</button></router-link>
                           </div>
                       </form>
                     </div>

@@ -108,10 +108,10 @@ h2 {
     margin-top: 5%;
     background-color: transparent;
     color: black;
-    border-radius: 2em;
+    border-radius: 20px;
     border: 2px solid black;
-    width: 10vw;
-    height: 4vh;
+    width: 30%;
+    height: 40px;
     font-size: 0.9rem;
     text-align: center;
     transition: background-color 0.1s;
