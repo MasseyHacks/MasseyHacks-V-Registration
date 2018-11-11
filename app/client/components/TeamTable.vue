@@ -79,7 +79,7 @@
                         <hr>
                         <table id="users-table">
                             <tr id="table-header"><td><a class = "sortable" @click="sortBy('name')">NAME</a></td><td>Members</td><td>Count</td><td>Code</td></tr>
-                            <tr v-for="team in teams">
+                            <router-link v-for="team in teams" :to="{path: '/organizer/teammanage?code='+team.code+'&returnPath=/organizer/teamview', params: {code: team.code}}" tag="tr">
                                 <td>
                                     {{team.name}}
                                 </td>
@@ -94,7 +94,7 @@
                                 <td>
                                     {{team.code}}
                                 </td>
-                            </tr>
+                            </router-link>
                         </table>
                     </div>
                     <p v-else>

@@ -258,6 +258,56 @@ TeamController.getTeam = function(id, callback) {
             });
     });
 };
+TeamController.getByCode = function(code, callback) {
+
+    if (!code) {
+        return callback({error : 'Invalid arguments'});
+    }
+
+    Team
+        .findOne({
+            code : code
+        })
+        .populate('memberNames')
+        .exec(function (err, team) {
+            if (err || !team) { // Team doesn't exist
+                return callback({ error : 'Team doesn\'t exist' });
+            }
+
+            // Substitutes user objects with their names
+            for (var u in team.memberNames) {
+                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id}
+            }
+
+            return callback(null, team);
+        });
+};
+
+TeamController.deleteTeamByCode = function (userExcute, code, callback) {
+    if (!code) {
+        return callback({error : 'Invalid arguments'});
+    }
+    Team.findOne({
+        code: code
+    }, function (err, team) {
+        if (err || !team) {
+            return callback({ error : 'Team doesn\'t exist' });
+        }
+        User.updateMany({teamCode: code}, {teamCode: ''}, function (err) {
+            Team.findOneAndRemove({
+                code: code
+            }, function (err) {
+                if (err) {
+                    return callback({error : 'Unable to delete Team'})
+                }
+                console.log(userExcute);
+                logger.logAction(userExcute.id, -1, 'Deleted the team: ' + team.name + ' (' + code + ')');
+
+                return callback(null, {message : 'Success'})
+            });
+        });
+    });
+};
 
 TeamController.getFields = function (userExcute, callback) {
     var fieldsOut = [];

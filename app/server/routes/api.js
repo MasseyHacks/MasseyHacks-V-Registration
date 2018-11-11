@@ -268,9 +268,25 @@ module.exports = function(router) {
         });
     });
 
-    // Reviewer
+    // Admin
+    // Get team by code
+    router.get('/getTeamByCode', permissions.isAdmin, function (req, res) {
+        var code = req.query.code;
+        TeamController.getByCode(code, logger.defaultResponse(req, res));
+    });
+
+    // Admin
+    // Delete Team
+    router.post('/deleteTeam', permissions.isAdmin, function (req, res) {
+        var code = req.body.code;
+        var user = req.userExecute;
+
+        TeamController.deleteTeamByCode(user, code, logger.defaultResponse(req, res))
+    })
+
+    // Owner
     // Accept team
-    router.post('/admitTeam', permissions.isReviewer, function (req, res) {
+    router.post('/admitTeam', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
         TeamController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
     });

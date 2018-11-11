@@ -11,7 +11,6 @@ const imap     = new Imap({
     host: process.env.WAIVER_ADDRESS,
     port: process.env.WAIVER_PORT,
     tls: true,
-    debug: console.log
 })
 
 function openInbox(cb) {
@@ -21,7 +20,6 @@ function openInbox(cb) {
 imap.once('ready', function() {
     fetch_email();
     imap.on('mail', function (mail) {
-        console.log("ran");
         fetch_email();
     })
 });

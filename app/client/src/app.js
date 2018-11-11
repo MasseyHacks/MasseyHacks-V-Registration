@@ -13,23 +13,24 @@ import Register       from '../components/Register.vue'
 import Reset          from '../components/Reset.vue'
 import Verify         from '../components/Verify.vue'
 
-import Dashboard      from '../components/Dashboard.vue'
-import Organizer      from '../components/Organizer.vue'
-import Owner          from '../components/Owner.vue'
-import Developer      from '../components/Developer.vue'
-import Checkin        from '../components/Checkin.vue'
-import Statistics     from '../components/Statistics.vue'
-import Users          from '../components/Users.vue'
-import Application    from '../components/Application.vue'
-import Team           from '../components/Team.vue'
-import Confirmation   from '../components/Confirmation.vue'
-import Error          from '../components/Error.vue'
-import PasswordChange from '../components/PasswordChange.vue'
-import Review         from '../components/Review.vue'
-import UserView       from '../components/UserView.vue'
-import TeamTable       from '../components/TeamTable.vue'
-import GoogleAuth     from '../components/2FA.vue'
-import MagicLogin     from '../components/Magic.vue'
+import Dashboard         from '../components/Dashboard.vue'
+import Organizer         from '../components/Organizer.vue'
+import Owner             from '../components/Owner.vue'
+import Developer         from '../components/Developer.vue'
+import Checkin           from '../components/Checkin.vue'
+import Statistics        from '../components/Statistics.vue'
+import Users             from '../components/Users.vue'
+import Application       from '../components/Application.vue'
+import Team              from '../components/Team.vue'
+import Confirmation      from '../components/Confirmation.vue'
+import Error             from '../components/Error.vue'
+import PasswordChange    from '../components/PasswordChange.vue'
+import Review            from '../components/Review.vue'
+import UserView          from '../components/UserView.vue'
+import TeamTable         from '../components/TeamTable.vue'
+import GoogleAuth        from '../components/2FA.vue'
+import MagicLogin        from '../components/Magic.vue'
+import TeamManage        from '../components/AdminTeamView.vue'
 
 import Raven          from 'raven-js'
 import RavenVue       from 'raven-js/plugins/vue'
@@ -230,6 +231,14 @@ const router = new VueRouter({
                    beforeEnter: isAuthorized,
                    meta: {
                        permissions: 'admin'
+                   }
+               },
+               {
+                   path: 'teammanage',
+                   component: TeamManage,
+                   beforeEnter: isAuthorized,
+                   meta: {
+                       permissions: "admin"
                    }
                }
            ]

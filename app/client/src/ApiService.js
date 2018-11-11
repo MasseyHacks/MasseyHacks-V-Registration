@@ -316,6 +316,16 @@ module.exports = {
         AuthService.sendRequest('GET', '/api/getTeam', {}, callback)
     },
 
+    getTeamByCode(code, callback) {
+        AuthService.sendRequest('GET', '/api/getTeamByCode', {code: code}, callback)
+    },
+
+    deleteTeam(code, callback) {
+        AuthService.sendRequest('POST', '/api/deleteTeam', {
+            code: code
+        }, callback)
+    },
+
     getApplications(callback) {
         AuthService.sendRequest('GET', '/api/applications', {}, callback)
     },
