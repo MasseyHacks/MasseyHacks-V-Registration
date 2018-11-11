@@ -126,7 +126,7 @@ SettingsController.approvePendingSchool = function(adminUser, schoolName, callba
                 return callback({'error':'Unable to perform action'})
             }
 
-            logger.logAction(adminUser._id, -1, 'Accepted pending school ' + schoolName + '.');
+            logger.logAction(adminUser._id, -1, 'Accepted pending school ' + schoolName + '.', 'EXECUTOR IP: ' + adminUser.ip);
 
             return callback(null, {'message':'Success'})
         })
@@ -147,7 +147,7 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
                 return callback({'error':'Unable to perform action'})
             }
 
-            logger.logAction(adminUser._id, -1, 'Rejected pending school ' + schoolName + '.');
+            logger.logAction(adminUser._id, -1, 'Rejected pending school ' + schoolName + '.', 'EXECUTOR IP: ' + adminUser.ip);
 
             return callback(null, {'message':'Success'})
         })
@@ -178,7 +178,7 @@ SettingsController.requestSchool = function(user, schoolName, callback) {
                 return callback({'error':'Unable to add school (It\'s probably already on the list!)'})
             }
 
-            logger.logAction(user._id, -1, 'Requested to add school.', schoolName);
+            logger.logAction(user._id, -1, 'Requested to add school.', schoolName, 'EXECUTOR IP: ' + user.ip);
 
             return callback(null, {'message':'Success'})
         })
@@ -205,7 +205,7 @@ SettingsController.modifyTime = function(user, newTime, callback) {
                 return callback({'error':'Unable to update time'})
             }
 
-            logger.logAction(user._id, -1, 'Modified global time settings.', JSON.stringify(newTime));
+            logger.logAction(user._id, -1, 'Modified global time settings.', JSON.stringify(newTime), 'EXECUTOR IP: ' + user.ip);
 
             return callback(null, settings)
         })
@@ -226,7 +226,7 @@ SettingsController.modifyLimit = function(user, limit, callback) {
                 return callback({'error':'Unable to update limit'})
             }
 
-            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.');
+            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.', 'EXECUTOR IP: ' + user.ip);
 
             return callback(null, settings)
         })

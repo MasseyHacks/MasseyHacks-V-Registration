@@ -25,7 +25,7 @@ TeamController.teamAccept = function(adminUser, userID, callback) {
                     return callback(err, user);
                 }
 
-                logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name);
+                logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
 
                 for (id in team.memberIDs) {
                     UserController.admitUser(adminUser, id, function (err, user) {
@@ -301,7 +301,7 @@ TeamController.deleteTeamByCode = function (userExcute, code, callback) {
                     return callback({error : 'Unable to delete Team'})
                 }
                 console.log(userExcute);
-                logger.logAction(userExcute.id, -1, 'Deleted the team: ' + team.name + ' (' + code + ')');
+                logger.logAction(userExcute.id, -1, 'Deleted the team: ' + team.name + ' (' + code + ')', 'EXECUTOR IP: ' + userExcute.ip);
 
                 return callback(null, {message : 'Success'})
             });
