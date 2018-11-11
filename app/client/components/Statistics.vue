@@ -138,7 +138,7 @@
 
         created() {
             this.getStat();
-            setInterval(this.getStat(), 5000)
+            setInterval(this.getStat(), 300000)
         },
 
 

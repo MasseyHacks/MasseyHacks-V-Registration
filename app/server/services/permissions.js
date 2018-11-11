@@ -38,6 +38,7 @@ module.exports = {
 
             if (userID && user && (user._id == userID || user.permissions.level >= 3)) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -58,6 +59,7 @@ module.exports = {
 
             if (user && user.permissions.level > 0) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -78,6 +80,7 @@ module.exports = {
 
             if (user && user.permissions.level >= 2) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -98,6 +101,7 @@ module.exports = {
 
             if (user && user.permissions.level >= 3) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -118,6 +122,7 @@ module.exports = {
 
             if (user && user.permissions.level >= 4) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -138,6 +143,7 @@ module.exports = {
 
             if (user && user.permissions.level >= 5) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }
@@ -158,6 +164,7 @@ module.exports = {
 
             if (user && user.permissions.level == 6) {
                 req.userExecute = user;
+                req.userExecute['ip'] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 req.permissionLevel = user.permissions.level;
                 return next();
             }

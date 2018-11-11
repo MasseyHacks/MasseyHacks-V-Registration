@@ -38,7 +38,7 @@ UserController.rejectNoState = function(adminUser, callback) {
     }, function(err, users) {
         console.log(users);
 
-        logger.logAction(adminUser._id, -1, 'Rejected everyone without state.');
+        logger.logAction(adminUser._id, -1, 'Rejected everyone without state.', 'EXECUTOR IP: ' + adminUser.ip);
 
         async.each(user, function (user, callback) {
             UserController.rejectUser(adminUser._id, user._id, (err, msg) => {
@@ -67,7 +67,7 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
             return callback(err);
         };
 
-        logger.logAction(adminUser._id, userID, 'Modified a user manually.', JSON.stringify(data));
+        logger.logAction(adminUser._id, userID, 'Modified a user manually.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(data));
 
         return callback(null, user);
     });
@@ -194,7 +194,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
 };
 
-UserController.verify = function (token, callback) {
+UserController.verify = function (token, callback, ip) {
 
     if (!token) {
         return callback({error : 'Invalid arguments'});
@@ -233,7 +233,7 @@ UserController.verify = function (token, callback) {
                 return callback(err);
             };
 
-            logger.logAction(user._id, user._id, 'Verified their email.');
+            logger.logAction(user._id, user._id, 'Verified their email.', 'IP: ' + ip);
 
             return callback(null, 'Success');
         });
@@ -241,7 +241,7 @@ UserController.verify = function (token, callback) {
     }.bind(this));
 };
 
-UserController.magicLogin = function (token, callback) {
+UserController.magicLogin = function (token, callback, ip) {
 
     if (!token) {
         return callback({error : 'Invalid arguments'});
@@ -284,7 +284,7 @@ UserController.magicLogin = function (token, callback) {
                         }
                         ;
 
-                        logger.logAction(user._id, user._id, 'Logged in using magic link.');
+                        logger.logAction(user._id, user._id, 'Logged in using magic link.', 'IP: ' + ip);
 
                         return callback(null, {token: user.generateAuthToken(), user:User.filterSensitive(user)});
                     });
@@ -299,7 +299,7 @@ UserController.magicLogin = function (token, callback) {
     }.bind(this));
 };
 
-UserController.sendVerificationEmail = function (token, callback) {
+UserController.sendVerificationEmail = function (token, callback, ip) {
 
     if (!token) {
         return callback({error : 'Invalid arguments'});
@@ -316,7 +316,7 @@ UserController.sendVerificationEmail = function (token, callback) {
 
         var verificationURL = process.env.ROOT_URL + '/verify/' + user.generateVerificationToken();
 
-        logger.logAction(user._id, user._id, 'Requested a verification email.');
+        logger.logAction(user._id, user._id, 'Requested a verification email.', 'IP: ' + ip);
 
         console.log(verificationURL);
 
@@ -331,7 +331,7 @@ UserController.sendVerificationEmail = function (token, callback) {
 
 };
 
-UserController.selfChangePassword = function (token, existingPassword, newPassword, callback) {
+UserController.selfChangePassword = function (token, existingPassword, newPassword, callback, ip) {
 
     if (!token || !existingPassword || !newPassword) {
         return callback({error : 'Invalid arguments'});
@@ -351,7 +351,7 @@ UserController.selfChangePassword = function (token, existingPassword, newPasswo
                 if (err) {
                     return callback(err);
                 }
-                logger.logAction(userFromToken._id, userFromToken._id, 'Changed their password with existing.');
+                logger.logAction(userFromToken._id, userFromToken._id, 'Changed their password with existing.', 'IP: ' + ip);
                 return callback(null, {
                     token: userFromToken.generateAuthToken(),
                     user: User.filterSensitive(userFromToken)
@@ -376,7 +376,7 @@ UserController.adminChangePassword = function (adminUser, userID, newPassword, c
             if (err || !msg) {
                 return callback(err);
             }
-            logger.logAction(adminUser._id, user._id, 'Changed this user\'s password.');
+            logger.logAction(adminUser._id, user._id, 'Changed this user\'s password.', 'EXECUTOR IP: ' + adminUser.ip);
             return callback(null, msg);
         });
     });
@@ -420,7 +420,7 @@ UserController.changePassword = function (email, password, callback) {
     });
 };
 
-UserController.resetPassword = function (token, password, callback) {
+UserController.resetPassword = function (token, password, callback, ip) {
 
     if (!token || !password) {
         return callback({error : 'Invalid arguments'});
@@ -463,7 +463,7 @@ UserController.resetPassword = function (token, password, callback) {
                         return callback(err);
                     }
 
-                    logger.logAction(user._id, user._id, 'Changed their password with token.');
+                    logger.logAction(user._id, user._id, 'Changed their password with token.', 'IP: ' + ip);
 
                     return callback(null, {message : 'Success'});
                 });
@@ -473,7 +473,7 @@ UserController.resetPassword = function (token, password, callback) {
 };
 
 
-UserController.sendPasswordResetEmail = function (email, callback) {
+UserController.sendPasswordResetEmail = function (email, callback, ip) {
 
     if (!email) {
         return callback({error : 'Invalid arguments'});
@@ -484,7 +484,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
         if (user && !err) {
             var resetURL = process.env.ROOT_URL + '/reset/' + user.generateResetToken();
 
-            logger.logAction(user._id.email, user._id, 'Requested a password reset email.');
+            logger.logAction(user._id.email, user._id, 'Requested a password reset email.', 'IP: ' + ip);
 
             console.log(resetURL);
             mailer.sendTemplateEmail(email,'passwordresetemails', {
@@ -498,7 +498,7 @@ UserController.sendPasswordResetEmail = function (email, callback) {
 
 };
 
-UserController.createUser = function (email, firstName, lastName, password, callback) {
+UserController.createUser = function (email, firstName, lastName, password, callback, ip) {
 
     if (!email || !firstName || !lastName || !password) {
         return callback({error : 'Invalid arguments'});
@@ -577,7 +577,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
                             user = User.filterSensitive(user);
                             delete user.password;
 
-                            logger.logAction(user._id, user._id, 'Created an account.');
+                            logger.logAction(user._id, user._id, 'Created an account.', 'IP: ' + ip);
 
                             return callback(null, token, user);
                         }
@@ -592,7 +592,7 @@ UserController.superToken = function(userExcute, userID, callback) {
     User.getByID(userID, function (err, user) {
         if (err || !user) {
             console.log(err)
-            logger.logAction(userExcute.id, userID, "Tried to generate super Link", "Error when generating superLink" + err)
+            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + adminUser.ip + " | Error when generating superLink" + err)
             return callback({error: "Error has occured"})
         }
         var token = user.generateMagicToken()
@@ -608,13 +608,13 @@ UserController.superToken = function(userExcute, userID, callback) {
                 new: true
             }, function (err, user) {
                 var link = process.env.ROOT_URL + '/magic?token=' + token;
-                logger.logAction(userExcute.id, userID, "Generated super Link", "Developer has generated a super link. Link: " + link)
+                logger.logAction(userExcute.id, userID, "Generated super Link",'EXECUTOR IP: ' + adminUser.ip + " | Developer has generated a super link. Link: " + link)
                 callback(false, {url: link})
             })
     })
 };
 
-UserController.loginWithToken = function(token, callback){
+UserController.loginWithToken = function(token, callback, ip){
 
     if (!token) {
         return callback({error : 'Invalid arguments'});
@@ -631,13 +631,13 @@ UserController.loginWithToken = function(token, callback){
 
         var token = user.generateAuthToken();
 
-        logger.logAction(user._id, user._id, 'Logged in with token.');
+        logger.logAction(user._id, user._id, 'Logged in with token.', 'IP: ' + ip);
 
         return callback(err, token, User.filterSensitive(user));
     });
 };
 
-UserController.loginWithPassword = function(email, password, callback){
+UserController.loginWithPassword = function(email, password, callback, ip){
 
     if (!email || email.length === 0) {
         return callback({
@@ -675,7 +675,7 @@ UserController.loginWithPassword = function(email, password, callback){
 
                 return callback(null, {'2FA': true}, token);
             } else {
-                logger.logAction(user._id, user._id, 'Logged in with password.');
+                logger.logAction(user._id, user._id, 'Logged in with password.', 'IP: ' + ip);
 
                 var token = user.generateAuthToken();
 
@@ -684,7 +684,7 @@ UserController.loginWithPassword = function(email, password, callback){
         });
 };
 
-UserController.loginWith2FA = function(token, code, callback) {
+UserController.loginWith2FA = function(token, code, callback, ip) {
     if (!token) {
         return callback({error : 'No token detected'});
     }
@@ -704,7 +704,7 @@ UserController.loginWith2FA = function(token, code, callback) {
 
         var token = user.generateAuthToken();
 
-        logger.logAction(user._id, user._id, 'Logged in with 2FA.');
+        logger.logAction(user._id, user._id, 'Logged in with 2FA.', 'IP: ' + ip);
 
         return callback(err, token, User.filterSensitive(user));
     });
@@ -786,6 +786,8 @@ UserController.updateProfile = function (userExecute, id, profile, callback){
                         },
                         callback);
 
+                    logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+
                     SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function(err, msg) {
                         console.log(err, msg);
                     });
@@ -837,7 +839,7 @@ UserController.voteAdmitUser = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Voted to admit.');
+        logger.logAction(adminUser._id, user._id, 'Voted to admit.', 'EXECUTOR IP: ' + adminUser.ip);
 
         UserController.checkAdmissionStatus(userID);
 
@@ -875,7 +877,7 @@ UserController.voteRejectUser = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Voted to reject.');
+        logger.logAction(adminUser._id, user._id, 'Voted to reject.', 'EXECUTOR IP: ' + adminUser.ip);
 
         UserController.checkAdmissionStatus(userID);
 
@@ -997,7 +999,7 @@ UserController.resetVotes = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Reset votes.');
+        logger.logAction(adminUser._id, user._id, 'Reset votes.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
 
@@ -1049,7 +1051,7 @@ UserController.resetAdmissionState = function(adminUser, userID, callback) {
         });
 
 
-        logger.logAction(adminUser._id, user._id, 'Reset admission status.');
+        logger.logAction(adminUser._id, user._id, 'Reset admission status.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
 
@@ -1085,7 +1087,7 @@ UserController.admitUser = function(adminUser, userID, callback) {
                 return callback(err ? err : {error: 'Unable to perform action.', code: 500})
             }
 
-            logger.logAction(adminUser._id, user._id, 'Admitted user.');
+            logger.logAction(adminUser._id, user._id, 'Admitted user.', 'EXECUTOR IP: ' + adminUser.ip);
 
             //send the email
             mailer.queueEmail(user.email, 'acceptanceemails', function (err) {
@@ -1126,7 +1128,7 @@ UserController.rejectUser = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Rejected user.');
+        logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         mailer.queueEmail(user.email,'rejectionemails',function(err){
             if (err){
@@ -1147,7 +1149,7 @@ UserController.remove = function(adminUser, userID, callback){
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(adminUser._id, user._id, 'Deleted user.', null, function() {
+            logger.logAction(adminUser._id, user._id, 'Deleted user.', 'EXECUTOR IP: ' + adminUser.ip, function() {
                 User.findOneAndRemove({
                     _id: userID
                 }, function (err) {
@@ -1218,7 +1220,7 @@ UserController.flushEmailQueue = function(adminUser, userID, callback) {
     }
 
 
-    logger.logAction(adminUser._id, userID, 'Flush email queue.');
+    logger.logAction(adminUser._id, userID, 'Flush email queue.', 'EXECUTOR IP: ' + adminUser.ip);
 
 
     User.getByID(userID,function(err,user){
@@ -1254,7 +1256,7 @@ UserController.acceptInvitation = function(executeUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(executeUser._id, user._id, 'Accepted invitation.');
+        logger.logAction(executeUser._id, user._id, 'Accepted invitation.', 'EXECUTOR IP: ' + executeUser.ip);
 
         mailer.sendTemplateEmail(user.email,'confirmationemails',{
             nickname: user.firstName,
@@ -1291,7 +1293,7 @@ UserController.declineInvitation = function(executeUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(executeUser._id, user._id, 'Declined invitation.');
+        logger.logAction(executeUser._id, user._id, 'Declined invitation.', 'EXECUTOR IP: ' + executeUser.ip);
 
         mailer.sendTemplateEmail(user.email,'declineemails',{
             nickname: user.firstName
@@ -1326,7 +1328,7 @@ UserController.resetInvitation = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Reset invitation.');
+        logger.logAction(adminUser._id, user._id, 'Reset invitation.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
 
@@ -1354,7 +1356,7 @@ UserController.activate = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Activated user.');
+        logger.logAction(adminUser._id, user._id, 'Activated user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
     });
@@ -1380,7 +1382,7 @@ UserController.deactivate = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Deactivated user.');
+        logger.logAction(adminUser._id, user._id, 'Deactivated user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
     });
@@ -1407,7 +1409,7 @@ UserController.checkIn = function(adminUser, userID, page, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Checked In user.');
+        logger.logAction(adminUser._id, user._id, 'Checked In user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, User.filterSensitive(user, 2, page));
     });
@@ -1433,7 +1435,7 @@ UserController.checkOut = function(adminUser, userID, page, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Checked Out user.');
+        logger.logAction(adminUser._id, user._id, 'Checked Out user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, User.filterSensitive(user, 2, page));
     });
@@ -1459,7 +1461,7 @@ UserController.waiverIn = function(adminUser, userID, page, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.');
+        logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.', 'EXECUTOR IP: ' + adminUser.ip);
         return callback(err, User.filterSensitive(user, 2, page));
     });
 };
@@ -1484,7 +1486,7 @@ UserController.waiverOut = function(adminUser, userID, callback) {
             return callback(err ? err : { error: 'Unable to perform action.', code: 500})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.');
+        logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, user);
     });

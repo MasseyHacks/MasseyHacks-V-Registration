@@ -15,6 +15,10 @@ JWT_SECRET = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+    function getIp(req) {
+        return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    }
+
     // Register user
     router.post('/register', function (req, res) {
         var email = req.body.email;
@@ -49,7 +53,7 @@ module.exports = function(router) {
                     token: token,
                     user: user
                 });
-        })
+        }, getIp(req))
     });
 
     // Login and issue token
@@ -71,7 +75,7 @@ module.exports = function(router) {
                 user: user
             });
 
-        })
+        }, getIp(req));
 
     });
 
@@ -87,7 +91,7 @@ module.exports = function(router) {
                 token: token,
                 user: user
             });
-        })
+        }, getIp(req))
     });
 
     router.post('/2FA', function (req, res) {
@@ -107,7 +111,7 @@ module.exports = function(router) {
                     token: token,
                     user: user
                 });
-            });
+            }, getIp(req));
         } else {
             res.status(401).json({error: 'Error, no token and/or code received!'})
         }
@@ -128,7 +132,7 @@ module.exports = function(router) {
             }
 
             return res.json(msg);
-        });
+        }, getIp(req));
     });
 
     // Send password reset email
@@ -149,7 +153,7 @@ module.exports = function(router) {
             return res.json({
                 message: 'Success'
             });
-        });
+        }, getIp(req));
     });
 
     // Verify user
@@ -168,7 +172,7 @@ module.exports = function(router) {
             return res.json({
                 message: 'Success'
             });
-        });
+        }, getIp(req));
     });
 
     router.post('/magicurl', function (req, res) {
@@ -184,7 +188,7 @@ module.exports = function(router) {
             }
 
             return res.json(msg);
-        });
+        }, getIp(req));
     });
 
     // Send verify email
@@ -203,7 +207,7 @@ module.exports = function(router) {
             return res.json({
                 message: 'Success'
             });
-        });
+        }, getIp(req));
     });
     
     // General
@@ -213,7 +217,7 @@ module.exports = function(router) {
         var newPassword = req.body.newPassword;
         var oldPassword = req.body.oldPassword;
 
-        UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res));
+        UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res), getIp(req));
     });
 
     // Change password

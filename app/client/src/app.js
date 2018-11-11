@@ -57,9 +57,10 @@ Vue.use(VueRouter)
 Vue.use(require('vue-moment'))
 Vue.use(require('vuejs-paginator'))
 
+// Refresh every 24HRs
 setInterval(() => {
     AuthService.refreshToken()
-}, 300000)
+}, 1440000)
 
 AuthService.refreshToken()
 
