@@ -87,10 +87,10 @@ module.exports = {
                             LogEvent.findOneAndUpdate({
                                 _id: event._id
                             }, {
-                                'from.name': actionFrom === -1 ? 'MasseyHacks Internal Authority' : event.fromUser.fullName,
-                                'from.email': actionFrom === -1 ? 'internal@masseyhacks.ca' : event.fromUser.email,
-                                'to.name': actionTo === -1 ? 'MasseyHacks Internal Authority' : event.toUser.fullName,
-                                'to.email': actionTo === -1 ? 'internal@masseyhacks.ca' : event.toUser.email
+                                'from.name': actionFrom === -1 ? 'MasseyHacks Internal Authority' : event.fromUser !== null ? event.fromUser.fullName : 'Unable to get name',
+                                'from.email': actionFrom === -1 ? 'internal@masseyhacks.ca' : event.fromUser !== null ? event.fromUser.email : 'Unable to get name',
+                                'to.name': actionTo === -1 ? 'MasseyHacks Internal Authority' : event.toUser !== null ? event.toUser.fullName : 'Unable to get name',
+                                'to.email': actionTo === -1 ? 'internal@masseyhacks.ca' : event.toUser !== null ? event.toUser.email : 'Unable to get email'
                             }, {
                                 new: true
                             }, function (err, newEvent) {

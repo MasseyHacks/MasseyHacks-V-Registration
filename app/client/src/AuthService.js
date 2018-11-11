@@ -16,7 +16,7 @@ module.exports = {
                 if (callback) callback(null, data)
             },
             error: data => {
-                if (data && (data.status == 401 || data.status == 403) && Session.loggedIn()) {
+                if (data && (data.status == 401 || data.status == 403) && Session.loggedIn() && !url.includes('changePassword')) {
                     this.logout(null, 'Permission error occurred. Please login again.')
                 }
 

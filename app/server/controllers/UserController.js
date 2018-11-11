@@ -592,7 +592,7 @@ UserController.superToken = function(userExcute, userID, callback) {
     User.getByID(userID, function (err, user) {
         if (err || !user) {
             console.log(err)
-            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + adminUser.ip + " | Error when generating superLink" + err)
+            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err)
             return callback({error: "Error has occured"})
         }
         var token = user.generateMagicToken()
@@ -608,7 +608,7 @@ UserController.superToken = function(userExcute, userID, callback) {
                 new: true
             }, function (err, user) {
                 var link = process.env.ROOT_URL + '/magic?token=' + token;
-                logger.logAction(userExcute.id, userID, "Generated super Link",'EXECUTOR IP: ' + adminUser.ip + " | Developer has generated a super link. Link: " + link)
+                logger.logAction(userExcute.id, userID, "Generated super Link",'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link)
                 callback(false, {url: link})
             })
     })
@@ -1149,7 +1149,7 @@ UserController.remove = function(adminUser, userID, callback){
 
     User.findOne({_id: userID}, function (err, user) {
         if (!err && user != null) {
-            logger.logAction(adminUser._id, user._id, 'Deleted user.', 'EXECUTOR IP: ' + adminUser.ip, function() {
+            logger.logAction(adminUser._id, user._id, 'Deleted user.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(user), function() {
                 User.findOneAndRemove({
                     _id: userID
                 }, function (err) {
