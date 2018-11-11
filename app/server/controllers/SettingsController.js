@@ -205,7 +205,7 @@ SettingsController.modifyTime = function(user, newTime, callback) {
                 return callback({'error':'Unable to update time'})
             }
 
-            logger.logAction(user._id, -1, 'Modified global time settings.', JSON.stringify(newTime), 'EXECUTOR IP: ' + user.ip);
+            logger.logAction(user._id, -1, 'Modified global time settings.', 'EXECUTOR IP: ' + user.ip + ' | ' + JSON.stringify(newTime));
 
             return callback(null, settings)
         })
@@ -226,7 +226,7 @@ SettingsController.modifyLimit = function(user, limit, callback) {
                 return callback({'error':'Unable to update limit'})
             }
 
-            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.', 'EXECUTOR IP: ' + user.ip);
+            logger.logAction(user._id, -1, 'EXECUTOR IP: ' + user.ip + ' | Modified participant limit to ' + limit.maxParticipants + '.');
 
             return callback(null, settings)
         })
