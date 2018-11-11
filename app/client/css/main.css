@@ -17,9 +17,7 @@ h2 {
     font-family: 'Futura Bold', sans-serif;
     font-weight: normal;
 }
-body {
-    overflow: hidden;
-}
+
 
 .row {
     margin-left: 20px;
@@ -265,67 +263,67 @@ body {
     background: #575d62;
 }
 
-#top-bar {
+/* NAVBAR */
+#hamburger {
+    background-color: white;
+}
+#hamburger::before {
+    background-color: white;
+}
+#hamburger::after {
+    background-color: white;
+}
+
+.nav-active #mlh-trust-badge {
+    top: -1px;
+}
+
+/* Navbar buttons */
+#nav-main a {
+    color: white;
+    text-decoration: none;
+
+    outline: 0px;
+
+    margin-top: 1px;
+    margin-left: -6px;
+    margin-right: -6px;
+}
+#nav-main a:hover {
+    color:darkgrey;
+    text-decoration: none;
+}
+#nav-main a:active {
+    color:lightslategray;
+    text-decoration: none;
+}
+
+/* Core navbar */
+#nav-main {
     left: 0px;
     width: 100vw;
-    height: 75px;
+    height: 70px;
     position: relative;
+
+    z-index: 600;
+    font-family: Avenir Next Bold;
+
+    border-color: transparent;
+    background-color: #051930 !important;
+
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
 
     display: table;
     margin: 0 auto;
-
-    /*background: rgb(48, 48, 48);*/
-    background-image: linear-gradient(100deg, #101010 0%, #343434 100%);
-    color: white;
-
-    z-index: 600;
+    transition: .3s;
 }
-
-#top-bar li {
+#nav-main li {
     display: inline;
 }
-
-#top-bar a {
+#nav-main a {
     color: white !important;
     margin-left: 5px;
     margin-right: 5px;
-}
-
-#top-bar-highlight {
-    position: absolute;
-    /*url("../img/highlight.svg");*/
-    background: linear-gradient(100deg, #4895BB 0%, #0b2c4f 100%) center;
-    background-size: cover;
-
-    right: -20px;
-    top: 0;
-
-    width: 400px;
-    height: 100%;
-
-    -webkit-transform: skew(-20deg);
-    -moz-transform: skew(-20deg);
-    -o-transform: skew(-20deg);
-}
-
-#top-bar-text {
-    z-index: 605;
-
-    position: absolute;
-
-    right: 0;
-    top: 0;
-
-    width: 350px;
-    height: 100%;
-
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 40px;
-
-    color: white;
-
-    text-align: right;
 }
 
 #app-view {

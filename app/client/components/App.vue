@@ -1,11 +1,11 @@
 <template>
     <div id="app">
 
-        <div id="top-bar" v-if="loggedIn">
+        <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
             <div class="vertical-centered">
 
-                <ul>
+                <ul class="container">
                     <li>
                         <img src="/logo/logo-white.svg" width="auto" height="50px" style="margin-left: 40px">
                     </li>
