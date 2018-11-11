@@ -126,7 +126,7 @@ SettingsController.approvePendingSchool = function(adminUser, schoolName, callba
                 return callback({'error':'Unable to perform action'})
             }
 
-            logger.logAction(adminUser._id, -1, 'Accepted pending school ' + schoolName + '.', 'EXECUTOR IP: ' + adminUser.ip);
+            logger.logAction(adminUser._id, -1, 'Accepted pending school.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + schoolName);
 
             return callback(null, {'message':'Success'})
         })
@@ -147,7 +147,7 @@ SettingsController.rejectPendingSchool = function(adminUser, schoolName, callbac
                 return callback({'error':'Unable to perform action'})
             }
 
-            logger.logAction(adminUser._id, -1, 'Rejected pending school ' + schoolName + '.', 'EXECUTOR IP: ' + adminUser.ip);
+            logger.logAction(adminUser._id, -1, 'Rejected pending school.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + schoolName);
 
             return callback(null, {'message':'Success'})
         })
@@ -178,7 +178,7 @@ SettingsController.requestSchool = function(user, schoolName, callback) {
                 return callback({'error':'Unable to add school (It\'s probably already on the list!)'})
             }
 
-            logger.logAction(user._id, -1, 'Requested to add school.', schoolName, 'EXECUTOR IP: ' + user.ip);
+            logger.logAction(user._id, -1, 'Requested to add school.', 'EXECUTOR IP: ' + user.ip + ' | ' + schoolName);
 
             return callback(null, {'message':'Success'})
         })
