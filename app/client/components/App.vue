@@ -7,7 +7,7 @@
 
                 <ul class="container">
                     <li>
-                        <img src="/logo/logo-white.svg" width="auto" height="50px" style="margin-left: 40px">
+                        <img src="/logo/logo-white.svg" width="auto" height="50px">
                     </li>
                     <li>
                         <router-link to="/dashboard" tag="a">Dashboard</router-link>

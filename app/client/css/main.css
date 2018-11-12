@@ -317,6 +317,9 @@ h2 {
     margin: 0 auto;
     transition: .3s;
 }
+#nav-main ul {
+    text-align: center;
+}
 #nav-main li {
     display: inline;
 }
