@@ -1492,4 +1492,51 @@ UserController.waiverOut = function(adminUser, userID, callback) {
     });
 };
 
+UserController.releaseStatus = function(adminUser, userID, callback){
+    if(!adminUser || !userID){
+        return callback({error : 'Invalid arguments'});
+    }
+
+    User.findOneAndUpdate({
+        _id : userID
+    }, {
+        $set: {
+            'status.statusReleased': true
+        }
+    }, {
+        new: true
+    }, function(err, user){
+        if (err || !user) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Released user status', 'EXECUTOR IP: ' + adminUser.ip);
+
+        return callback(err, user);
+    })
+};
+
+UserController.hideStatus = function(adminUser, userID, callback){
+    if(!adminUser || !userID){
+        return callback({error : 'Invalid arguments'});
+    }
+
+    User.findOneAndUpdate({
+        _id : userID
+    }, {
+        $set: {
+            'status.statusReleased': false
+        }
+    }, {
+        new: true
+    }, function(err, user){
+        if (err || !user) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Hid user status', 'EXECUTOR IP: ' + adminUser.ip);
+
+        return callback(err, user);
+    })
+};
 module.exports = UserController;
