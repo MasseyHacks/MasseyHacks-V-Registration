@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="ui-card dash-card-large" id="users-table">
+            <div class="ui-card dash-card-large">
                 <!--<h3>USERS:</h3>-->
                 <div v-if="loading">
                     Loading...
@@ -13,9 +13,10 @@
                     <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                     <div v-if="advancedQuery">
-                        <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter" placeholder="Enter query here"></textarea>
+                        <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter"
+                                  placeholder="Enter query here"></textarea>
                     </div>
-                    <div class = "filterEntry" v-else>
+                    <div class="filterEntry" v-else>
                         <select class="first" v-model="queryLogical">
                             <option value="$and">and</option>
                             <option value="$or">or</option>
@@ -24,12 +25,12 @@
                         </select>
 
                         <!-- Field Name -->
-                        <select class = "middle" v-model="queryField" v-on:change="changeFieldName">
+                        <select class="middle" v-model="queryField" v-on:change="changeFieldName">
                             <option v-bind:value="{}">Select a field</option>
                             <option v-for="field in fields" v-bind:value="field">{{prettify(field.name)}}</option>
                         </select>
 
-                        <select class = "middle" v-model="queryComparison" :disabled="!queryField.name">
+                        <select class="middle" v-model="queryComparison" :disabled="!queryField.name">
                             <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
                             <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
                             <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
@@ -42,7 +43,8 @@
                             <option value="false" :disabled="queryField.type!='Boolean'">False</option>
                         </select>
 
-                        <input class="last" v-model="queryTargetValue" type="text" :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
+                        <input class="last" v-model="queryTargetValue" type="text"
+                               :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
                     </div>
 
@@ -84,9 +86,18 @@
                         {{page}} of {{totalPages}} | {{count}} results
 
                         <hr>
-                        <table id="users-table">
-                            <tr id="table-header"><td><a class = "sortable" @click="sortBy('fullName')">NAME</a></td><td>V/S/A/C/W</td><td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td><td><a class="sortable" @click="sortBy('email')">EMAIL</a></td><td>SCHOOL</td><td>GRADE</td></tr>
-                            <router-link v-for="user in users" :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}" tag="tr">
+                        <table class="users-table">
+                            <tr id="table-header">
+                                <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
+                                <td>V/S/A/C/W</td>
+                                <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
+                                <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
+                                <td>SCHOOL</td>
+                                <td>GRADE</td>
+                            </tr>
+                            <router-link v-for="user in users"
+                                         :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
+                                         tag="tr">
                                 <td>
                                     {{user.fullName}}
                                 </td>
@@ -101,7 +112,7 @@
                     <p v-else>
                         {{queryError}}
                     </p>
-   
+
                 </div>
             </div>
         </div>
@@ -130,7 +141,7 @@
                 displayOrganizers: false,
                 advancedQueryContent: '{}',
                 filters: {
-                    '$and':[
+                    '$and': [
                         {
                             'permissions.checkin': 'false'
                         }
@@ -149,8 +160,8 @@
                 loadingError: '',
                 queryError: '',
 
-                currentSorting:'',
-                reverseSorted:true,
+                currentSorting: '',
+                reverseSorted: true,
 
                 users: {}
             }
@@ -166,7 +177,7 @@
                 }
             });
 
-            ApiService.getUsers({ page: this.page, size: 100, filters: this.filters }, (err, data) => {
+            ApiService.getUsers({page: this.page, size: 100, filters: this.filters}, (err, data) => {
                 this.loading = false;
 
                 if (err || !data) {
@@ -189,17 +200,19 @@
             VueContext
         },
 
-        methods : {
+        methods: {
 
-            prettify: function(str) {
+            prettify: function (str) {
                 var strProc = str;
                 if (str.indexOf('.') != -1) {
-                    strProc = str.slice(str.indexOf('.')+1)
+                    strProc = str.slice(str.indexOf('.') + 1)
                 }
-                return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function(strProc){ return strProc.toUpperCase(); })
+                return strProc.replace(/([A-Z])/g, ' $1').replace(/^./, function (strProc) {
+                    return strProc.toUpperCase();
+                })
             },
 
-            sortBy: function(field) {
+            sortBy: function (field) {
                 var sort = {};
 
                 if (this.currentSorting === field) {
@@ -215,7 +228,7 @@
                 } else {
                     sort[field] = this.reverseSorted === false ? -1 : 1
                 }
-                ApiService.getUsers({ page: this.page, size: 100, filters: this.filters, sort:sort}, (err, data) => {
+                ApiService.getUsers({page: this.page, size: 100, filters: this.filters, sort: sort}, (err, data) => {
                     this.loading = false;
 
                     if (err || !data) {
@@ -234,17 +247,17 @@
                 })
             },
 
-            onClick: function(text, data) {
+            onClick: function (text, data) {
                 swal('Hello')
             },
 
-            deleteFilter: function(logical, filter) {
+            deleteFilter: function (logical, filter) {
                 this.filters[logical].splice(this.filters[logical].indexOf(filter), 1);
                 this.updateSearch()
             },
 
             // Changes comparison operator to valid state
-            changeFieldName: function() {
+            changeFieldName: function () {
                 switch (this.queryField.type) {
                     case "Boolean": // Only true/false are valid in this case
                         if (['true', 'false'].indexOf(this.queryComparison) == -1) {
@@ -255,24 +268,24 @@
                         break;
                     case "Number": // Regex cannot be used with numbers
                         if (this.queryComparison == '$regex') {
-                            this.queryComparison =  '$eq'
+                            this.queryComparison = '$eq'
                         }
 
                         break;
                     default: // Strings
                         if (['true', 'false'].indexOf(this.queryComparison) != -1) {
-                            this.queryComparison =  '$eq'
+                            this.queryComparison = '$eq'
                         }
                 }
             },
 
-            resetQuery: function() {
+            resetQuery: function () {
                 this.queryLogical = '$and';
                 this.queryComparison = this.queryField.type == 'Boolean' ? 'true' : '$eq';
                 this.queryTargetValue = ''
             },
 
-            addQuery: function() {
+            addQuery: function () {
 
                 var query = {};
                 var subQuery = {};
@@ -303,21 +316,21 @@
                 this.queryField = {}
             },
 
-            clearQuery: function() {
+            clearQuery: function () {
                 this.filters = {};
                 this.updateSearch()
             },
 
-            updateAdvancedFilter: function() {
+            updateAdvancedFilter: function () {
                 try {
                     this.filters = JSON.parse(this.advancedQueryContent);
                     this.updateSearch()
-                }  catch (e) {
+                } catch (e) {
                     this.queryError = 'Invalid Query'
                 }
             },
 
-            updateSearch: function(resetPage) {
+            updateSearch: function (resetPage) {
                 if (!resetPage) {
                     this.page = 1
                 }
@@ -325,7 +338,12 @@
                 // Update content of advanced query box
                 this.advancedQueryContent = JSON.stringify(this.filters);
 
-                ApiService.getUsers({ page: this.page, size: 100, text: this.searchQuery, filters : this.filters }, (err, data) => {
+                ApiService.getUsers({
+                    page: this.page,
+                    size: 100,
+                    text: this.searchQuery,
+                    filters: this.filters
+                }, (err, data) => {
                     this.queryError = '';
                     if (err || !data) {
                         this.queryError = err ? err.responseJSON.error : 'Unable to process request'
@@ -343,37 +361,37 @@
             },
 
             exportUsersCSV: function () {
-                ApiService.getUsers({ page: 1, size: 100000, text: this.searchQuery }, (err, data) => {
+                ApiService.getUsers({page: 1, size: 100000, text: this.searchQuery}, (err, data) => {
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
                         var csvArray = [];
-                        for(var i = 0; i < data.users.length; i++){
+                        for (var i = 0; i < data.users.length; i++) {
                             csvArray[i] = this.flattenObject(data.users[i]);
                         }
                         this.genCSV(csvArray);
                     }
                 })
             },
-            flattenObject: function (data,prefix="",level=0){
+            flattenObject: function (data, prefix = "", level = 0) {
                 var tempObj = {};
-                if(level < 6){
+                if (level < 6) {
                     Object.keys(data).forEach((key) => {
-                        if(data[key] === Object(data[key])){
+                        if (data[key] === Object(data[key])) {
                             //iterate again!
-                            tempObj = Object.assign(tempObj,this.flattenObject(data[key],prefix+key+"/",level+=1));
+                            tempObj = Object.assign(tempObj, this.flattenObject(data[key], prefix + key + "/", level += 1));
                         }
-                        else{
+                        else {
                             //log the value
-                            tempObj[prefix+key] = data[key];
+                            tempObj[prefix + key] = data[key];
                         }
                     });
-                    if(prefix === "") {
+                    if (prefix === "") {
                         tempObj["documentKeys"] = Object.keys(tempObj);
                     }
                     return tempObj;
                 }
-                else{
+                else {
                     console.log("recursion limit reached!");
                     return {};
                 }
@@ -383,29 +401,29 @@
                 var headers = [];
 
                 //get all the headers
-                for(var i=0;i<objArray.length;i++){
-                    headers = this.mergeArray(headers,objArray[i]["documentKeys"]);
+                for (var i = 0; i < objArray.length; i++) {
+                    headers = this.mergeArray(headers, objArray[i]["documentKeys"]);
                 }
 
                 output[0] = headers.toString();
 
                 //generate the output
-                for(var i=0;i<objArray.length;i++){
-                    output[i+1] = "";
-                    for(var j=0;j<headers.length;j++){
-                        if(objArray[i][headers[j]] !== undefined){
-                            output[i+1] += objArray[i][headers[j]]+",";
+                for (var i = 0; i < objArray.length; i++) {
+                    output[i + 1] = "";
+                    for (var j = 0; j < headers.length; j++) {
+                        if (objArray[i][headers[j]] !== undefined) {
+                            output[i + 1] += objArray[i][headers[j]] + ",";
                         }
-                        else{
-                            output[i+1] += ",";
+                        else {
+                            output[i + 1] += ",";
                         }
                     }
-                    output[i+1] = output[i+1].slice(0,-1);
+                    output[i + 1] = output[i + 1].slice(0, -1);
                 }
 
                 var outputStr = "";
-                for(var i=0;i<output.length;i++){
-                    outputStr += output[i]+"\n";
+                for (var i = 0; i < output.length; i++) {
+                    outputStr += output[i] + "\n";
                 }
 
                 var filename = "Users-export-" + new Date() + ".csv";
@@ -413,10 +431,10 @@
                     type: "text/csv;charset=utf-8"
                 });
 
-                saveAs(blob,filename);
+                saveAs(blob, filename);
 
             },
-            mergeArray: function (){
+            mergeArray: function () {
                 /** Courtesy of George Ruth on Stack Overflow **/
                 var args = arguments;
                 var hash = {};
@@ -474,7 +492,7 @@
                 return finalReponse
             },
 
-            switchPage: function(page) {
+            switchPage: function (page) {
                 this.page = page;
                 this.updateSearch(true)
             }
