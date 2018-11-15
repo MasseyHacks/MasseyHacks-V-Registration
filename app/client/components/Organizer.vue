@@ -1,6 +1,6 @@
 <template>
     <div class="app-screen">
-        <div style="">
+        <div style="display: inline-block;">
             <div class="container">
                 <div class="row">
                     <div class="title-card col-md-12">

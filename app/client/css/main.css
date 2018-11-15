@@ -460,13 +460,13 @@ h2 {
     text-align: center;
 }
 
-.users-table {
+.data-table-generic {
     margin-bottom: 30px;
     overflow-x: auto;
     color: black;
 }
 
-.users-table table {
+.data-table-generic table {
     margin-left: auto;
     margin-right: auto;
     width: 80%;
@@ -474,31 +474,31 @@ h2 {
     text-align: center;
 }
 
-.users-table td.email-col {
+.data-table-generic td.email-col {
     max-width: 200px;
     overflow-wrap: break-word;
 }
 
-.users-table tr {
+.data-table-generic tr {
     vertical-align: center;
     border-bottom: 1px solid black;
 
 }
 
-.users-table td {
+.data-table-generic td {
     padding: 15px;
 }
 
-.users-table tr:hover {
+.data-table-generic tr:hover {
     border-color: #f78ca0;
 }
 
-.users-table i {
+.data-table-generic i {
     letter-spacing: 0.7em;
     text-align: center;
 }
 
-.users-table a {
+.data-table-generic a {
     color: black;
 }
 

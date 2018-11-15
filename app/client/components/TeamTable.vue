@@ -86,7 +86,7 @@
                         {{page}} of {{totalPages}} | {{count}} results
 
                         <hr>
-                        <table class="users-table">
+                        <table class="data-table-generic">
                             <tr id="table-header">
                                 <td><a class="sortable" @click="sortBy('name')">NAME</a></td>
                                 <td>Members</td>
