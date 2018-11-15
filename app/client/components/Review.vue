@@ -6,17 +6,23 @@
                     <h2>Reviewing Application</h2>
                     <div v-html="this.reviewBody"></div>
                     <button v-on:click="stopReview" class="generic-button-light">Exit</button>
-                    <button v-on:click="applicationVote('admit')" class="generic-button-light">Vote Admit</button>
-                    <button v-on:click="applicationVote('reject')" class="generic-button-light">Vote Reject</button>
-                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')" class="generic-button-light">Admit [FORCE]</button>
-                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')" class="generic-button-light">Reject [FORCE]</button>
-                    <button v-on:click="nextApplication(false)" class="generic-button-light">Pass</button>
+                    <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
+                    <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
+                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
+                            class="generic-button-dark">Admit [FORCE]
+                    </button>
+                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')"
+                            class="generic-button-dark">Reject [FORCE]
+                    </button>
+                    <button v-on:click="nextApplication(false)" class="generic-button-dark">Pass</button>
                 </div>
 
                 <div v-else>
                     <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
                     <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
-                    <button v-if="applicationsLeft > 0" v-on:click="startReview" class="generic-button-light">Start reviewing!</button>
+                    <button v-if="applicationsLeft > 0" v-on:click="startReview" class="generic-button-dark">Start
+                        reviewing!
+                    </button>
                     <h2 v-else>There are no applications to review</h2>
                 </div>
             </div>
@@ -27,8 +33,6 @@
 <script>
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
-    import AuthService from '../src/AuthService'
-    import $ from 'jquery';
     import swal from 'sweetalert2'
 
     export default {
