@@ -34,28 +34,31 @@
             <!-- TOGGLE CHECKIN -->
             <!-- DELETE USER -->
 
-            <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
-            <button class="generic-button-light" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN</button>
-            <button class="generic-button-light" v-on:click="editUser">Edit User</button>
-            <button class="generic-button-light" v-on:click="forceAdmit">Force Admit</button>
-            <button class="generic-button-light" v-on:click="forceReject">Force Reject</button>
-            <button class="generic-button-light" v-on:click="voteAdmit">Vote Admit</button>
-            <button class="generic-button-light" v-on:click="voteReject">Vote Reject</button>
-            <button class="generic-button-light" v-on:click="resetAdmissionState">Reset Admission State</button>
-            <button class="generic-button-light" v-on:click="resetInvitation">Reset Invitation</button>
-            <button class="generic-button-light" v-on:click="resetVotes">Reset Votes</button>
+            <router-link :to="{path: returnPath}">
+                <button class="generic-button-dark">Back</button>
+            </router-link>
+            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN
+            </button>
+            <button class="generic-button-dark" v-on:click="editUser">Edit User</button>
+            <button class="generic-button-dark" v-on:click="forceAdmit">Force Admit</button>
+            <button class="generic-button-dark" v-on:click="forceReject">Force Reject</button>
+            <button class="generic-button-dark" v-on:click="voteAdmit">Vote Admit</button>
+            <button class="generic-button-dark" v-on:click="voteReject">Vote Reject</button>
+            <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admission State</button>
+            <button class="generic-button-dark" v-on:click="resetInvitation">Reset Invitation</button>
+            <button class="generic-button-dark" v-on:click="resetVotes">Reset Votes</button>
 
-            <button class="generic-button-light" v-on:click="flushEmailQueue">Flush Email Queue</button>
-            <button class="generic-button-light" v-on:click="deleteUser">Delete User</button>
+            <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
+            <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
         </div>
     </div>
 </template>
 
 <script type="text/javascript">
-    import Session     from '../src/Session'
+    import Session from '../src/Session'
     import AuthService from '../src/AuthService.js'
-    import swal        from 'sweetalert2'
-    import ApiService  from '../src/ApiService.js'
+    import swal from 'sweetalert2'
+    import ApiService from '../src/ApiService.js'
 
     export default {
         data() {
@@ -76,13 +79,13 @@
         },
 
         mounted() {
-            this.userID = this.$route.query["username"]
-            console.log(this.userID)
+            this.userID = this.$route.query["username"];
+            console.log(this.userID);
             ApiService.getUser(this.userID, (err, data) => {
                 if (err || !data) {
                     console.log("ERROR")
                 } else {
-                    console.log("data2")
+                    console.log("data2");
                     this.userObj = data
                 }
             })
@@ -138,7 +141,7 @@
                 });
             },
             flatten: function(obj,includeApplication = true) {
-                var flattened = {}
+                var flattened = {};
                 for (var keys in obj) {
                     if (typeof obj[keys] != "object") {
                         if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
@@ -150,7 +153,7 @@
                                 flattened[this.prettify(depthKey)] = obj[keys][depthKey]
                             }
                         } else{
-                            var profileObj = this.flatten(obj[keys])
+                            var profileObj = this.flatten(obj[keys]);
                             if(includeApplication){
                                 flattened["Application"] = profileObj
                             }
@@ -178,7 +181,7 @@
                 })
             },
             editUser: function(){
-                var flatWithHistory = this.flattenWithHistory(this.userObj)
+                var flatWithHistory = this.flattenWithHistory(this.userObj);
                 var keys = flatWithHistory.documentKeys;
                 //remove values that cannot/should not be edited
                 keys.splice(keys.indexOf('__v'),1);
@@ -212,7 +215,7 @@
                           resolve();
                         })
                       }
-                    })
+                    });
 
                     if (field) {
                       const {value: newValue} = await swal({
@@ -223,7 +226,7 @@
                         inputValidator: (value) => {
                           return !value && 'You need to write something!'
                         }
-                      })
+                      });
 
                       if (newValue) {
                         swal({
@@ -242,7 +245,7 @@
                         }).then((result) => {
                             if (result.value) {
                                 AuthService.skillTest(() => {
-                                    swal.showLoading()
+                                    swal.showLoading();
 
                                     var postData = {};
                                     postData[keys[field]] = newValue;
@@ -259,7 +262,7 @@
                                                   if (err || !data) {
                                                       console.log("ERROR")
                                                   } else {
-                                                      console.log("data2")
+                                                      console.log("data2");
                                                       this.userObj = data
                                                   }
                                               })
