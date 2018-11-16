@@ -20,8 +20,8 @@
 
                     <div id="login-form-elements">
                         <form @submit.prevent="login" style="margin: 0">
-                            <input v-model="email" placeholder="email" type="email" autofocus required>
-                            <input v-model="pass" placeholder="password" type="password" required><br>
+                            <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
+                            <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
 
                             <div id="button-row">
                                 <button type="submit" class="primary-button">Sign In</button>
