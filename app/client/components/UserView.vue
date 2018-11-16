@@ -140,24 +140,27 @@
                     swal('Success!', 'Successfully voted to reject user', 'success');
                 });
             },
-            flatten: function(obj,includeApplication = true) {
+            flatten: function (obj, includeApplication = true, depth = 0) {
                 var flattened = {};
                 for (var keys in obj) {
-                    if (typeof obj[keys] != "object") {
-                        if (!(keys == "QRCode" || keys == "authSecret" || keys == "_id")) {
+                    if (typeof obj[keys] !== "object") {
+                        if (!(keys === "QRCode" || keys === "authSecret" || keys === "_id")) {
                             flattened[this.prettify(keys)] = obj[keys]
                         }
                     } else {
-                        if (keys != "profile") {
+                        if (keys !== "profile") {
                             for (var depthKey in obj[keys]) {
                                 flattened[this.prettify(depthKey)] = obj[keys][depthKey]
                             }
                         } else{
-                            var profileObj = this.flatten(obj[keys]);
-                            if(includeApplication){
-                                flattened["Application"] = profileObj
+                            if (depth < 6) {
+                                var profileObj = this.flatten(obj[keys], includeApplication, depth + 1);
+
+                                if (includeApplication) {
+                                    flattened["Application"] = profileObj
+                                }
+                                this.userApp = profileObj
                             }
-                            this.userApp = profileObj
                         }
                     }
                 }
