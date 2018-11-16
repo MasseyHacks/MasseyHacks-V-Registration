@@ -1,48 +1,90 @@
 <template>
     <div id="app">
 
+        <!-- Common elements -->
+        <div id="main-sidebar" v-if="loggedIn">
+            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin: 40px">
+            <ul>
+                <li>
+                    <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
+                </li>
+                <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                    <router-link to="/application" tag="a"><button class="menu-button">Application</button></router-link>
+                </li>
+                <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                    <router-link to="/team" tag="a"><button class="menu-button">Team</button></router-link>
+                </li>
+                <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
+                    <router-link to="/confirmation" tag="a"><button class="menu-button">Confirmation</button></router-link>
+                </li>
+                <li v-if="user.permissions.checkin">
+                    <router-link to="/checkin" tag="a"><button class="menu-button">Check In</button></router-link>
+                </li>
+                <li v-if="user.permissions.admin">
+                    <router-link to="/organizer" tag="a"><button class="menu-button">Organizer</button></router-link>
+                </li>
+                <li v-if="user.permissions.owner">
+                    <router-link to="/owner" tag="a"><button class="menu-button">Owner</button></router-link>
+                </li>
+                <li v-if="user.permissions.developer">
+                    <router-link to="/developer" tag="a"><button class="menu-button">Developer</button></router-link>
+                </li>
+                <li>
+                    <router-link to="/password" tag="a"><button class="menu-button">Change Password</button></router-link>
+                </li>
+                <li>
+                    <router-link v-if="loggedIn" to="/logout" tag="a"><button class="menu-button">Logout</button></router-link>
+                </li>
+
+            </ul>
+        </div>
+
+        <!--
         <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
             <div class="vertical-centered">
 
                 <ul class="container">
-                    <li>
-                        <img src="/logo/logo-white.svg" width="auto" height="50px">
-                    </li>
-                    <li>
-                        <router-link to="/dashboard" tag="a">Dashboard</router-link>
-                    </li>
-                    <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/application" tag="a">Application</router-link>
-                    </li>
-                    <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/team" tag="a">Team</router-link>
-                    </li>
-                    <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/confirmation" tag="a">Confirmation</router-link>
-                    </li>
-                    <li v-if="user.permissions.checkin">
-                        <router-link to="/checkin" tag="a">Check In</router-link>
-                    </li>
-                    <li v-if="user.permissions.admin">
-                        <router-link to="/organizer" tag="a">Organizer</router-link>
-                    </li>
-                    <li v-if="user.permissions.owner">
-                        <router-link to="/owner" tag="a">Owner</router-link>
-                    </li>
-                    <li v-if="user.permissions.developer">
-                        <router-link to="/developer" tag="a">Developer</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/password" tag="a">Change Password</router-link>
-                    </li>
-                    <li>
-                        <router-link v-if="loggedIn" to="/logout" tag="a">Logout</router-link>
-                    </li>
-
+                    <div class="">
+                        <li>
+                            <img src="/logo/logo-white.svg" width="auto" height="50px">
+                        </li>
+                    </div>
+                    <div class="float-right float-top">
+                        <li>
+                            <router-link to="/dashboard" tag="a">Dashboard</router-link>
+                        </li>
+                        <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                            <router-link to="/application" tag="a">Application</router-link>
+                        </li>
+                        <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                            <router-link to="/team" tag="a">Team</router-link>
+                        </li>
+                        <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
+                            <router-link to="/confirmation" tag="a">Confirmation</router-link>
+                        </li>
+                        <li v-if="user.permissions.checkin">
+                            <router-link to="/checkin" tag="a">Check In</router-link>
+                        </li>
+                        <li v-if="user.permissions.admin">
+                            <router-link to="/organizer" tag="a">Organizer</router-link>
+                        </li>
+                        <li v-if="user.permissions.owner">
+                            <router-link to="/owner" tag="a">Owner</router-link>
+                        </li>
+                        <li v-if="user.permissions.developer">
+                            <router-link to="/developer" tag="a">Developer</router-link>
+                        </li>
+                        <li>
+                            <router-link to="/password" tag="a">Change Password</router-link>
+                        </li>
+                        <li>
+                            <router-link v-if="loggedIn" to="/logout" tag="a">Logout</router-link>
+                        </li>
+                    </div>
                 </ul>
             </div>
-        </div>
+        </div>-->
 
         <!-- Router injects stuff in here -->
         <div id="app-view"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
