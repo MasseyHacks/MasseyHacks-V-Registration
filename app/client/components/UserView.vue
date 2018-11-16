@@ -5,7 +5,7 @@
             <div id="detailed-info" style="column-count: 2; column-width: 300px;">
                 <ul style="list-style: none">
                     <li v-for="(value, key) in flatten(userObj,false)" style="overflow-wrap: break-word; text-align: left;">
-                        <span v-if="key != 'Application'">
+                        <span v-if="key !== 'Application'">
                             <b>{{key}}:</b> {{value}}
                         </span>
                     </li>
@@ -142,27 +142,31 @@
             },
             flatten: function (obj, includeApplication = true, depth = 0) {
                 var flattened = {};
-                for (var keys in obj) {
-                    if (typeof obj[keys] !== "object") {
-                        if (!(keys === "QRCode" || keys === "authSecret" || keys === "_id")) {
-                            flattened[this.prettify(keys)] = obj[keys]
-                        }
-                    } else {
-                        if (keys !== "profile") {
-                            for (var depthKey in obj[keys]) {
-                                flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                if (depth < 6) {
+                    for (var keys in obj) {
+                        if (typeof obj[keys] !== "object") {
+                            if (!(keys === "QRCode" || keys === "authSecret" || keys === "_id")) {
+                                flattened[this.prettify(keys)] = obj[keys]
                             }
-                        } else{
-                            if (depth < 6) {
-                                var profileObj = this.flatten(obj[keys], includeApplication, depth + 1);
-
-                                if (includeApplication) {
-                                    flattened["Application"] = profileObj
+                        } else {
+                            if (keys !== "profile") {
+                                for (var depthKey in obj[keys]) {
+                                    flattened[this.prettify(depthKey)] = obj[keys][depthKey]
                                 }
-                                this.userApp = profileObj
+                            } else {
+                                if (depth < 6) {
+                                    var profileObj = this.flatten(obj[keys], includeApplication, depth + 1);
+                                    console.log("RECURSION: " + depth);
+                                    if (includeApplication) {
+                                        flattened["Application"] = profileObj
+                                    }
+                                    this.userApp = profileObj
+                                }
                             }
                         }
                     }
+                } else {
+                    console.log("RECUR LIM REACHED")
                 }
                 return flattened
             },
