@@ -57,14 +57,8 @@
         </div>
 
         <!-- Router injects stuff in here -->
-        <!-- Router injects stuff in here -->
-        <div id="app-view" v-bind:style="{ height: height, width: loggedIn ? 'calc(100% - 230px) !important' : '100vw' }"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
-
-            <!--
-            <template v-if="$route.matched.length">
-
-            </template>-->
-
+        <!-- v-bind:style="{ height: height, width: loggedIn ? 'calc(100% - 230px) !important' : '100vw' }" -->
+        <div id="app-view" v-bind:class="{'app-view-logged-in' : loggedIn}">
             <transition :name="$parent.transition">
                 <router-view class="child-view"></router-view>
             </transition>

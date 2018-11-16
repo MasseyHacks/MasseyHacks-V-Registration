@@ -353,6 +353,10 @@ h2 {
     overflow-x: hidden;
 }
 
+.app-view-logged-in {
+    width: calc(100% - 230px) !important
+}
+
 /* width */
 #app-view::-webkit-scrollbar {
     width: 10px;
@@ -613,8 +617,8 @@ h4 {
         left: -100%;
     }
 
-    #app-view {
-        width: 100vw !important;
+    .app-view-logged-in {
+        width: 100% !important;
     }
 
     .title-card h2 {
