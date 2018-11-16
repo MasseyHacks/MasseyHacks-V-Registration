@@ -57,7 +57,8 @@
         </div>
 
         <!-- Router injects stuff in here -->
-        <div id="app-view" v-bind:style="{ top: top, left: left, height: height, width: width }"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
+        <!-- Router injects stuff in here -->
+        <div id="app-view" v-bind:style="{ height: height, width: loggedIn ? 'calc(100% - 230px) !important' : '100vw' }"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
 
             <!--
             <template v-if="$route.matched.length">
@@ -86,8 +87,6 @@
                 AuthService: AuthService,
                 ApiService: ApiService,
                 Alerts: [{}],
-                top: '0px !important',
-                left: '230px !important',
                 height: '100% !important',
                 width: 'calc(100% - 230px) !important'
             }
@@ -109,6 +108,7 @@
                     }
                 }
             }
+
         },
         methods: {
             toggleSidebar() {
