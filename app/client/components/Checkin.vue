@@ -19,11 +19,19 @@
                     <div v-else>
                         <input class='round-input' style='width: 100%' placeholder='Search for hacker here' v-on:input='updateSearch' v-model='searchQuery' type='text'>
                         <hr>
-                        <button class='generic-button-light' @click='refresh()'>Refresh Table</button>
+                        <button class='generic-button-dark' @click='refresh()'>Refresh Table</button>
                         <hr>
                         <div v-if='users.length != 0 && !queryError'>
-                            <table id='checkin-table'>
-                                <tr id='table-header'><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
+                            <table id='data-table-generic'>
+                                <tr id='table-header'>
+                                    <td>NAME</td>
+                                    <td>WAIVER</td>
+                                    <td>CHECKIN</td>
+                                    <td>EMAIL</td>
+                                    <td>SCHOOL</td>
+                                    <td>GRADE</td>
+                                    <td></td>
+                                </tr>
                                 <tr v-for='i in users.length'>
                                     <td>
                                         {{users[i-1].name}}
@@ -33,7 +41,17 @@
                                     <td class='email-col'>{{users[i-1].email}}</td>
                                     <td>N/A</td>
                                     <td>N/A</td>
-                                    <td><button class='generic-button-light' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>WAIVER-IN</button><button class='generic-button-light' @click='checkin(users[i-1], i-1)' v-else-if='!users[i-1].checked'>CHECK-IN</button><button class='generic-button-light' @click='checkout(users[i-1], i-1)' v-else>CHECK-OUT</button></td>
+                                    <td>
+                                        <button class='generic-button-dark' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>
+                                            WAIVER-IN
+                                        </button>
+                                        <button class='generic-button-dark' @click='checkin(users[i-1], i-1)' v-else-if='!users[i-1].checked'>
+                                            CHECK-IN
+                                        </button>
+                                        <button class='generic-button-dark' @click='checkout(users[i-1], i-1)' v-else>
+                                            CHECK-OUT
+                                        </button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
