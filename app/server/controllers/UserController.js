@@ -484,7 +484,7 @@ UserController.sendPasswordResetEmail = function (email, callback, ip) {
         if (user && !err) {
             var resetURL = process.env.ROOT_URL + '/reset/' + user.generateResetToken();
 
-            logger.logAction(user._id.email, user._id, 'Requested a password reset email.', 'IP: ' + ip);
+            logger.logAction(user._id, user._id, 'Requested a password reset email.', 'IP: ' + ip);
 
             console.log(resetURL);
             mailer.sendTemplateEmail(email,'passwordresetemails', {
