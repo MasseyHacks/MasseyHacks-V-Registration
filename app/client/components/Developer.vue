@@ -6,7 +6,7 @@
                     <h2>DEVELOPER</h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-bottom: 30px">
                 <div class="ui-card dash-card">
                     <h3>SERVER LOG</h3>
                     <hr>

@@ -236,7 +236,11 @@ schema.statics.validateProfile = function(id, profile, callback) {
         for (var i = 0; i < keys.length; i++) {
             if('type' in runner[keys[i]]) {
                 if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== ''){
-                    return callback({message: 'Field ' + key + ' is required'})
+                    return callback({error: 'Field "' + keys[i] + '" is required'})
+                }
+
+                if (runner[keys[i]].maxlength && userpath[keys[i]].length > runner[keys[i]].maxlength){
+                    return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
                 }
             } else {
                 if(userpath[keys[i]]) {

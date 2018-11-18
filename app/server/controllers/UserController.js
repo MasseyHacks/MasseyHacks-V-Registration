@@ -717,7 +717,7 @@ UserController.updateProfile = function (userExecute, id, profile, callback){
     console.log('Updating ' + profile);
     User.validateProfile(id, profile, function(err, profileValidated){
         if (err){
-            return callback({message: 'Invalid profile!'});
+            return callback(err);
         }
 
         // Check if its within the registration window.
