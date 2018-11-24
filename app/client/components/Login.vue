@@ -19,7 +19,7 @@
                     <p v-if="error" class="error">{{error}}</p>
 
                     <div id="login-form-elements">
-                        <form @submit.prevent="login" style="margin: 0">
+                        <form @submit.prevent="login">
                             <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
                             <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
 

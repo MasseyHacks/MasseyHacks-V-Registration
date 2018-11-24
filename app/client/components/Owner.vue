@@ -173,34 +173,33 @@
                             case '0': // Accept
                                 console.log('Accepted')
 
-                                AuthService.skillTest(() => {
-                                    ApiService.approveSchool(this.pendingSchools[0])
-                                    this.pendingSchools.splice(0, 1)
+                                ApiService.approveSchool(this.pendingSchools[0])
+                                this.pendingSchools.splice(0, 1)
 
-                                    if (!this.pendingSchools.length) {
-                                        swal({
-                                            title: 'Reviewed complete!',
-                                            type: 'success'
-                                        })
-                                    }
-                                })
+                                if (!this.pendingSchools.length) {
+                                    swal({
+                                        title: 'Reviewed complete!',
+                                        type: 'success'
+                                    })
+                                }
+
 
                                 break
 
                             case '1': // Rejeccc
                                 console.log('Rejected')
 
-                                AuthService.skillTest(() => {
-                                    ApiService.rejectSchool(this.pendingSchools[0])
-                                    this.pendingSchools.splice(0, 1)
 
-                                    if (!this.pendingSchools.length) {
-                                        swal({
-                                            title: 'Reviewed complete!',
-                                            type: 'success'
-                                        })
-                                    }
-                                })
+                                ApiService.rejectSchool(this.pendingSchools[0])
+                                this.pendingSchools.splice(0, 1)
+
+                                if (!this.pendingSchools.length) {
+                                    swal({
+                                        title: 'Reviewed complete!',
+                                        type: 'success'
+                                    })
+                                }
+
 
                                 break
 

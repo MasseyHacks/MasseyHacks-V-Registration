@@ -193,7 +193,10 @@
 
                    }
                    else if(this.applications.hacker[question].questionType == 'schoolSearch'){
-                       if(this.school){
+
+                       if(this.school && this.school.length > this.applications.hacker[question].maxlength){
+                           doNotSubmit = true;
+                       } else if(this.school){
                            this.applicationValue[question] = this.school;
                        }
                        else{
@@ -209,6 +212,7 @@
                    }
                    else{
                        var inputElement = document.getElementById(question);
+
                        if($.trim( $(inputElement).val() ) == ''){
                            if(this.applications.hacker[question].mandatory){
                                doNotSubmit = true;
@@ -236,9 +240,9 @@
                     data.userID = Session.getUserID();
                     data.profile = {};
                     data.profile.hacker = this.applicationValue;
-                    AuthService.sendRequest('POST','/api/updateProfile',data,(err) =>{
+                    AuthService.sendRequest('POST','/api/updateProfile', data, (err) =>{
                         if(err){
-                            swal("Error",err,"error");
+                            swal("Error", err.responseJSON['error'],"error");
                         }
                         else{
                             swal("Success","Your application has been submitted!","success");

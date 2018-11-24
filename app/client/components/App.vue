@@ -2,8 +2,8 @@
     <div id="app">
 
         <!-- Common elements -->
-        <div id="main-sidebar" v-if="loggedIn">
-            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin: 40px">
+        <div id="main-sidebar" v-if="loggedIn" v-bind:style="sidebarStyle">
+            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin: 40px; text-align: center">
             <ul>
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button">Dashboard</button></router-link>
@@ -39,19 +39,26 @@
             </ul>
         </div>
 
-        <div id="nav-main" style="display:none;" v-if="loggedIn">
+        <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
             <div class="vertical-centered">
 
-                <ul class="container">
-                    <div class="">
+                <ul>
+
                         <li>
                             <img src="/logo/logo-white.svg" width="auto" height="50px">
                         </li>
-                    </div>
-                    <div class="">
 
-                    </div>
+                        <li style="float: right">
+
+                            <div c v-on:click="toggleSidebar" class="hamburger hamburger--slider pull-right hidden" id="nav-ham">
+                                <div class="hamburger-box">
+                                    <div class="hamburger-inner" id="hamburger"></div>
+                                </div>
+                            </div>
+
+                        </li>
+
                 </ul>
             </div>
         </div>
@@ -81,8 +88,7 @@
                 AuthService: AuthService,
                 ApiService: ApiService,
                 Alerts: [{}],
-                height: '100% !important',
-                width: 'calc(100% - 230px) !important'
+                sidebarStyle: ''
             }
         },
         created() {
@@ -106,7 +112,12 @@
         },
         methods: {
             toggleSidebar() {
-                $('main-sidebar').css('left: 0')
+                console.log('hi')
+                if (this.sidebarStyle == '') {
+                    this.sidebarStyle = 'left: 0 !important;'
+                } else {
+                    this.sidebarStyle = ''
+                }
             }
         }
     }
