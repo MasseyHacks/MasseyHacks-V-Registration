@@ -63,8 +63,8 @@ h2 {
     border-radius: 10px;
 
     max-width: 550px;
-    width: 40vw;
-    padding: 3%;
+    width: 100%;
+    padding: 40px;
     color: black !important;
     align-items: center;
     display: grid;
@@ -89,9 +89,6 @@ h2 {
     font-size: 0.7rem;
 }
 
-.dropdown-toggle input::placeholder {
-    font-size: 1rem;
-}
 
 #login-form-box input {
     padding: 1%;
@@ -103,15 +100,15 @@ h2 {
     border-bottom: 1px solid #919eaf;
     /*border-radius: 15px;*/
     position: relative;
-    font-size: 1rem;
-    color: #919eaf;
+    font-size: 0.5em;
+    color: #505050;
     text-align: left;
+    outline: none;
 }
 
+
 #login-form-elements button {
-    /*    position: relative;
-        left: 50%;
-        transform: translateX(-50%);*/
+    outline: none;
     margin-top: 5%;
     background-color: transparent;
     color: black;
@@ -123,6 +120,9 @@ h2 {
     text-align: center;
     transition: background-color 0.1s;
     transition: border 0.1s;
+}
+#login-form-elements button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 #button-row {
@@ -148,36 +148,11 @@ h2 {
     display: grid;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 700px) {
     #login-form-box {
-        width: 90vw;
+        width: 100%;
+        max-width: 90vw;
     }
-
-    #login-form-box h2 {
-        font-size: 5rem;
-    }
-
-    #login-form-box input {
-        width: 80vw;
-        height: 10vh;
-        padding: 1%;
-        font-size: 3rem;
-    }
-
-    ::placeholder {
-        font-size: 3rem;
-    }
-
-    .dropdown-toggle input::placeholder {
-        font-size: 2rem;
-    }
-
-    #login-form-elements button {
-        width: 50vw;
-        height: 6vh;
-        font-size: 3rem;
-    }
-
 }
 
 #main-sidebar {
@@ -188,6 +163,7 @@ h2 {
     width: 230px;
     z-index: 700;
     overflow-y: auto;
+    overflow-x: hidden;
 
     /*
     padding-bottom: 50px;
@@ -455,16 +431,6 @@ h2 {
 .duo-col {
     column-count: 2;
     column-width: 220px;
-}
-
-@media (max-width: 992px) {
-    * {
-        font-size: 1.1em;
-    }
-
-    .duo-col {
-        column-count: 1;
-    }
 }
 
 .custom-ul {

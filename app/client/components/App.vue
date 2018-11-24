@@ -42,9 +42,7 @@
         <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
             <div class="vertical-centered">
-
                 <ul>
-
                         <li>
                             <img src="/logo/logo-white.svg" width="auto" height="50px">
                         </li>

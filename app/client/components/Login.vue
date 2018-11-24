@@ -7,8 +7,10 @@
 
                 <div>
 
+                    <!--
                     <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png"
                          width="50%">
+                    -->
 
                     <h2 class="subtitle">Login</h2>
 
@@ -24,10 +26,14 @@
                             <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
 
                             <div id="button-row">
-                                <button type="submit" class="primary-button">Sign In</button>
+                                <button type="submit" class="primary-button">
+                                    Sign In
+                                </button>
+
                                 <router-link to="/register" v-if="settings.registrationOpen">
                                     <button>Register</button>
                                 </router-link>
+
                                 <router-link to="/reset">
                                     <button>Reset</button>
                                 </router-link>
