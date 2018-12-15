@@ -7,12 +7,12 @@
 
                 <div>
 
-                    <!--
-                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png"
-                         width="50%">
-                    -->
+                    <img src="logo/logowide.svg"
+                         width="45%">
 
+                    <!--
                     <h2 class="subtitle">Login</h2>
+                    -->
 
                     <p v-if="$route.query.redirect && !error">
                         You need to login first.
@@ -43,7 +43,10 @@
                 </div>
             </div>
 
+            <!--
             <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
+            -->
+
         </div>
     </div>
 </template>

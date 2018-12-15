@@ -12,10 +12,10 @@
                 <div v-else-if="loadingError">
                     {{loadingError}}
                 </div>
-                <div v-else style="width:100%; padding: 1em;">
+                <div v-else class="main-application">
                     <form v-if="!user.permissions.checkin || user.permissions.developer" @submit.prevent="submitApplication" style="text-align: left">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
-                            <label :for="questionName">{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></label>
+                            <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory" style="color: red">*</span></b></label>
                             <textarea class="form-control" v-if="question.questionType == 'fullResponse'" :id="questionName" :maxlength="question.maxlength"></textarea>
                             <input class="form-control" type="text" v-if="question.questionType == 'shortAnswer'" :id="questionName" :maxlength="question.maxlength">
                             <div v-if="question.questionType == 'boolean'">
@@ -29,19 +29,19 @@
                                 </div>
                             </div>
                             <div v-if="question.questionType == 'multiradio'">
-                                <div v-for="option in question.enum.values.split(' ')" class="form-check form-check-inline" :id="questionName">
+                                <div v-for="option in question.enum.values.split('|')" class="form-check form-check-inline" :id="questionName">
                                     <input class="form-check-input" type="radio" :name="questionName" :id="questionName + option">
                                     <label class="form-check-label" :for="questionName + option">{{option.replace('^',' ')}}</label>
                                 </div>
                             </div>
                             <div v-if="question.questionType == 'multicheck'">
-                                <div v-for="option in question.enum.values.split(' ')" class="form-check form-check-inline" :id="questionName">
+                                <div v-for="option in question.enum.values.split('|')" class="form-check form-check-inline" :id="questionName">
                                     <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName + option ">
                                     <label class="form-check-label" :for="questionName + option ">{{option.replace('^',' ')}}</label>
                                 </div>
                             </div>
                             <select v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
-                                <option v-for="option in question.enum.values.split(' ')">{{option}}
+                                <option v-for="option in question.enum.values.split('|')">{{option}}
                                 </option>
                             </select>
                             <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName" :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school" taggable></v-select>

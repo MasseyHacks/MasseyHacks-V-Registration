@@ -57,19 +57,18 @@
 
                     <br>
 
-                    <table>
-                        <div v-for="(comparison, logical) in filters">
-                            <tr>
-                                <div v-for="filter in comparison">
-                                    <span>
-                                        <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
-                                        <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
-                                        <td><button class="generic-button-dark"
-                                                    v-on:click="deleteFilter(logical, filter)">Delete</button></td>
-                                    </span>
-                                </div>
-                            </tr>
-                        </div>
+                    <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                        <tr v-for="filter in comparison">
+
+                            <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
+
+                            <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
+
+                            <td>
+                                <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
+                            </td>
+
+                        </tr>
                     </table>
 
                     <div v-if="users.length != 0 && !queryError">
@@ -83,6 +82,7 @@
                         </button>
 
                         <br>
+                        <br>
                         {{page}} of {{totalPages}} | {{count}} results
 
                         <hr>
@@ -95,7 +95,7 @@
                                 <td>SCHOOL</td>
                                 <td>GRADE</td>
                             </tr>
-                            <router-link v-for="user in users"
+                            <router-link type="tr" v-for="user in users"
                                          :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
                                          tag="tr">
                                 <td>

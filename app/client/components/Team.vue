@@ -9,8 +9,6 @@
 
             <div class="row">
                 <div class="ui-card dash-card">
-
-
                     <div v-if="loading">
                         <p>Loading...</p>
                     </div>
@@ -45,11 +43,15 @@
                         </div>
                     </div>
                     <div v-else-if="team">
-                        Team Name: {{team.name}} <br>
-                        Team Code: {{team.code}} <br>
+                        <h4>Team Name</h4>
+                        {{team.name}}<br>
+                        <h4>Team Code</h4>
+                        {{team.code}} <br>
                         <br>
 
-                        Members:<br>
+                        <hr>
+
+                        <h4>Members</h4>
                         <span v-for="id in team.memberNames">
                             {{id}}<br>
                         </span>

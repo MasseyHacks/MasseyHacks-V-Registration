@@ -97,26 +97,14 @@ var status = {
 };
 
 var hackerApplication = {
-    whyUWannaCome: {
-        type: String,
-        maxlength: 1500,
-        questionType: 'fullResponse',
-        question: 'Why do you want to come to MasseyHacks V?',
-        mandatory: true
-    },
 
-    name: {
+    gender: {
         type: String,
-        maxlength: 10,
-        questionType: 'shortAnswer',
-        question: 'First Name',
-        mandatory: true
-    },
-
-    skillQuestion: {
-        type: Boolean,
-        questionType: 'boolean',
-        question: 'Are bananas yellow?',
+        questionType: 'dropdown',
+        question: 'What gender do you identify as?',
+        enum: {
+            values: 'Male|Female|Other|I prefer not to answer'
+        },
         mandatory: true
     },
 
@@ -125,7 +113,7 @@ var hackerApplication = {
         questionType: 'dropdown',
         question: 'What grade are you in?',
         enum: {
-            values: '<=8 9 10 11 12'
+            values: '<=8|9|10|11|12'
         },
         mandatory: true
     },
@@ -143,7 +131,7 @@ var hackerApplication = {
         questionType: 'multiradio',
         question: 'What is 1 + 1?',
         enum: {
-            values: '1 2 4 5'
+            values: '1|2|4|5'
         },
         mandatory: true
     },
@@ -152,10 +140,27 @@ var hackerApplication = {
         questionType: 'multicheck',
         question: 'What is 2 + 1?',
         enum: {
-            values: '5 1 4 3'
+            values: '5|1|4|3'
         },
         mandatory: true
-    }
+    },
+
+    whyUWannaCome: {
+        type: String,
+        maxlength: 1500,
+        questionType: 'fullResponse',
+        question: 'Why do you want to come to MasseyHacks V?',
+        mandatory: true
+    },
+
+
+    skillQuestion: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'Are bananas yellow?',
+        mandatory: true
+    },
+
 
     /*
     multies:

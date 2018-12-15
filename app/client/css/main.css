@@ -410,9 +410,20 @@ h2 {
     font-family: 'Futura Bold' !important;
 }
 
+.main-application {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .dash-card {
+    border: solid;
+    border-color: rgb(220, 220, 220) !important;
+    border-width: 1px !important;
+
     width: 50vw;
     margin-top: 30px;
+
+    padding: 20px;
 }
 
 .dash-card-large {
@@ -445,6 +456,7 @@ h2 {
 }
 
 .data-table-generic {
+    width: 100% !important;
     margin-bottom: 30px;
     overflow-x: auto;
     color: black;
@@ -517,6 +529,8 @@ i.fa-female {
 h4 {
     font-family: 'Futura Bold', sans-serif !important;
     font-size: 0.8em;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .ui-grid {
