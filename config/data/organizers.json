@@ -1,0 +1,38 @@
+{
+  "henry": {
+    "email": "henry@masseyhacks.ca",
+    "firstName": "Henry",
+    "lastName": "Tu",
+    "permission": "developer"
+  },
+  "david": {
+    "email": "david@masseyhacks.ca",
+    "firstName": "David",
+    "lastName": "Hui",
+    "permission": "developer"
+  },
+  "ryan": {
+    "email": "ryan@masseyhacks.ca",
+    "firstName": "Yuan Song",
+    "lastName": "Zhang",
+    "permission": "developer"
+  },
+  "james": {
+    "email": "james@masseyhacks.ca",
+    "firstName": "James",
+    "lastName": "Xu",
+    "permission": "developer"
+  },
+  "noor": {
+    "email": "noor@masseyhacks.ca",
+    "firstName": "Noor",
+    "lastName": "Nasri",
+    "permission": "owner"
+  },
+  "karl": {
+    "email": "karl@rastera.xyz",
+    "firstName": "Karl",
+    "lastName": "Zhu",
+    "permission": "admin"
+  }
+}
