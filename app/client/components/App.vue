@@ -3,7 +3,7 @@
 
         <!-- Common elements -->
         <div id="main-sidebar" v-if="loggedIn" v-bind:style="sidebarStyle">
-            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin-top: 40px; margin-left: auto; margin-right: auto; text-align: center">
+            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin-top: 40px; margin-bottom: 40px; margin-left: auto; margin-right: auto; text-align: center">
             <ul>
                 <li>
                     <router-link to="/dashboard" tag="a"><button class="menu-button" v-on:click="retractSidebar">Dashboard</button></router-link>
@@ -35,7 +35,6 @@
                 <li>
                     <router-link v-if="loggedIn" to="/logout" tag="a"><button class="menu-button" v-on:click="retractSidebar">Logout</button></router-link>
                 </li>
-
             </ul>
         </div>
 

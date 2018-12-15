@@ -103,7 +103,7 @@ var hackerApplication = {
         questionType: 'dropdown',
         question: 'What gender do you identify as?',
         enum: {
-            values: 'Male|Female|Other|I prefer not to answer'
+            values: ' |Male|Female|Other|I prefer not to answer'
         },
         mandatory: false
     },
@@ -113,7 +113,7 @@ var hackerApplication = {
         questionType: 'dropdown',
         question: 'What grade are you in?',
         enum: {
-            values: '<=8|9|10|11|12'
+            values: ' |<=8|9|10|11|12'
         },
         mandatory: true
     },

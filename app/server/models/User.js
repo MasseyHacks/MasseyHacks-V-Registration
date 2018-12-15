@@ -249,6 +249,10 @@ schema.statics.validateProfile = function(id, profile, callback) {
                     }
                 }
 
+                if (runner[keys[i]].required && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'dropdown' && userpath[keys[i]] == ' ') {
+                    return callback({error: 'Field "' + keys[i] + '" is required'})
+                }
+
                 if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
                     for (var r in userpath[keys[i]]) {
                         if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
