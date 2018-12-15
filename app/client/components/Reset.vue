@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!token">
+    <div class="app-screen" v-if="!token">
 
 <!--         <form @submit.prevent="requestReset">
             <label><input v-model="email" type="email" placeholder="hacker@hackermail.io" autofocus required></label>
@@ -8,15 +8,19 @@
         </form> -->
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">Request Password Reset</h2>
+            <h2 class="subtitle" style="padding-top:8px;"><i class="fas fa-lock"></i> Change Password</h2>
+
+            <p><b>Warning: </b> All other active session tokens will be revoked</p>
+
+            <p v-if="error" class="error">{{error}}</p>
+
             <div id="login-form-elements">
-                <form @submit.prevent="requestReset">
+                <form @submit.prevent="changePassword">
                     <input v-model="email" placeholder="email" type="email" autofocus required>
-                    <div id="button-row">
-                        <button type="submit" class="primary-button">request</button>
-                        <router-link to="/login"><button>back</button></router-link>
+                    <div class="button-row">
+                        <button type="submit" class="generic-button-dark">Reset</button>
+                        <router-link to="/login"><button class="generic-button-dark">Back</button></router-link>
                     </div>
-                    <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
