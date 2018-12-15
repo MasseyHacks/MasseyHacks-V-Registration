@@ -58,9 +58,14 @@
                     <br>
 
                     <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                        <tr class="table-header">
+                            <td>TYPE</td>
+                            <td>CONDITION</td>
+
+                        </tr>
                         <tr v-for="filter in comparison">
 
-                            <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
+                            <td style="letter-spacing: normal !important;">{{logical.slice(1).toUpperCase()}}</td>
 
                             <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
 
@@ -87,7 +92,7 @@
 
                         <hr>
                         <table class="data-table-generic">
-                            <tr id="table-header">
+                            <tr class="table-header">
                                 <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
                                 <td>V/S/A/C/W</td>
                                 <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>

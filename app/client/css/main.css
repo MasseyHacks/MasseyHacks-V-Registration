@@ -121,6 +121,7 @@ h2 {
     transition: background-color 0.1s;
     transition: border 0.1s;
 }
+
 #login-form-elements button:hover {
     background-color: rgba(0, 0, 0, 0.3);
 }
@@ -140,6 +141,7 @@ h2 {
 #login-form-elements {
     margin: auto;
 }
+
 #login-form-elements form {
     margin: 0;
 }
@@ -291,7 +293,7 @@ h2 {
     position: absolute;
 
     z-index: 600;
-    font-family: Avenir Next Bold;
+    font-family: Avenir Next Bold, sans-serif;
 
     border-color: transparent;
     background-color: #051930 !important;
@@ -477,12 +479,24 @@ h2 {
 
 .data-table-generic tr {
     vertical-align: center;
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
 
 }
 
 .data-table-generic td {
     padding: 15px;
+}
+
+.data-table-generic tr:nth-child(even) {
+    background-color: rgba(9, 25, 46, 0.1);
+}
+
+.data-table-generic tr:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.data-table-generic tr:first-child:hover {
+    background-color: rgb(255, 255, 255);
 }
 
 .data-table-generic tr:hover {
@@ -499,29 +513,29 @@ h2 {
 }
 
 i.fa-ban {
-    color: #f6d365;
+    color: #f43421;
 }
 
 i.fa-check {
-    color: #96e6a1;
+    color: #55e63d;
 }
 
 i.fa-male {
-    color: #c2e9fb;
+    color: #2a5ffb;
 }
 
 i.fa-female {
-    color: #f093fb;
+    color: #e83ffb;
 }
 
-#table-header {
+.table-header {
     font-family: 'Futura Bold', sans-serif;
     font-size: 1.2em;
     border-color: transparent !important;
     color: black;
 }
 
-#table-header td {
+.table-header td {
     font-family: 'Futura Bold';
     color: black;
 }

@@ -57,22 +57,26 @@
 
                     <br>
 
-                    <table>
-                        <div v-for="(comparison, logical) in filters">
-                            <tr>
-                                <div v-for="filter in comparison">
-                                    <span v-if="Object.keys(filter)[0] != 'permissions.checkin'">
-                                        <td>{{prettify(logical.slice(1).toUpperCase())}}</td>
-                                        <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
-                                        <td><button class="generic-button-dark"
-                                                    v-on:click="deleteFilter(logical, filter)">Delete</button></td>
-                                    </span>
-                                </div>
-                            </tr>
-                        </div>
+                    <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                        <tr class="table-header">
+                            <td>TYPE</td>
+                            <td>CONDITION</td>
+
+                        </tr>
+                        <tr v-for="filter in comparison">
+
+                            <td style="letter-spacing: normal !important;">{{logical.slice(1).toUpperCase()}}</td>
+
+                            <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
+
+                            <td>
+                                <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
+                            </td>
+
+                        </tr>
                     </table>
 
-                    <div v-if="teams.length != 0 && !queryError">
+                    <div v-if="teams.length !== 0 && !queryError">
                         <hr>
                         <button class="generic-button-dark" v-on:click="exportUsersCSV">Export</button>
                         <button class="generic-button-dark" :disabled="page == 1" v-on:click="switchPage(page - 1)">
@@ -87,7 +91,7 @@
 
                         <hr>
                         <table class="data-table-generic">
-                            <tr id="table-header">
+                            <tr class="table-header">
                                 <td><a class="sortable" @click="sortBy('name')">NAME</a></td>
                                 <td>Members</td>
                                 <td>Count</td>
