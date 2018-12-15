@@ -1,7 +1,7 @@
 # MasseyHacks Registration System (CODENAME: GOOSE)
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/MasseyHacks/MasseyHacks-V-Registration.svg)](https://greenkeeper.io/)
-[Travis-CI badge](https://travis-ci.org/MasseyHacks/MasseyHacks-V-Registration.svg?branch=master)
+[![Travis-CI badge](https://travis-ci.org/MasseyHacks/MasseyHacks-V-Registration.svg?branch=master)](https://travis-ci.com)
 
 Registration system for MasseyHacks V. Goose is currently being developed and is extremely unstable at the current state. Please use with caution.
 
