@@ -105,7 +105,7 @@ var hackerApplication = {
         enum: {
             values: 'Male|Female|Other|I prefer not to answer'
         },
-        mandatory: true
+        mandatory: false
     },
 
     grade: {
@@ -118,6 +118,34 @@ var hackerApplication = {
         mandatory: true
     },
 
+    dietaryRestrictions: {
+        type: [String],
+        questionType: 'multicheck',
+        question: 'Please indicate any dietary restrictions. If your restrictions are not included here, please let us know in the free comment section at the bottom.',
+        enum: {
+            values: '5|1|4|3'
+        },
+        mandatory: false
+    },
+
+    shirt: {
+        type: String,
+        questionType: 'multiradio',
+        question: 'What is your shirt size?',
+        enum: {
+            values: 'XS|S|M|L|XL'
+        },
+        mandatory: true
+    },
+
+    hackathonExperience: {
+        type: String,
+        maxlength: 500,
+        questionType: 'fullResponse',
+        question: 'Which hackathons have you attended? (If any)',
+        mandatory: false
+    },
+
     school: {
         type: String,
         questionType: 'schoolSearch',
@@ -126,54 +154,97 @@ var hackerApplication = {
         mandatory: true
     },
 
-    testradio: {
+    departure: {
         type: String,
-        questionType: 'multiradio',
-        question: 'What is 1 + 1?',
-        enum: {
-            values: '1|2|4|5'
-        },
-        mandatory: true
-    },
-    testcheck: {
-        type: [String],
-        questionType: 'multicheck',
-        question: 'What is 2 + 1?',
-        enum: {
-            values: '5|1|4|3'
-        },
+        maxlength: 100,
+        questionType: 'shortAnswer',
+        question: 'What city are you travelling from?',
         mandatory: true
     },
 
-    whyUWannaCome: {
+    bus: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'Will you be travelling on our Toronto/Waterloo bus? (If funding permits)',
+        mandatory: false
+    },
+
+    reimbursement: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'Do you need travel reimbursement? (If funding permits)',
+        mandatory: false
+    },
+
+    github: {
+        type: String,
+        maxlength: 100,
+        questionType: 'shortAnswer',
+        question: 'GitHub',
+        mandatory: false
+    },
+
+    devpost: {
+        type: String,
+        maxlength: 100,
+        questionType: 'shortAnswer',
+        question: 'Devpost',
+        mandatory: false
+    },
+
+    website: {
+        type: String,
+        maxlength: 100,
+        questionType: 'shortAnswer',
+        question: 'Personal Website',
+        mandatory: false
+    },
+
+    resume: {
+        type: String,
+        maxlength: 100,
+        questionType: 'shortAnswer',
+        question: 'Link to resume',
+        mandatory: false
+    },
+
+    q1: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'Why do you want to come to MasseyHacks V?',
+        question: 'Tell us about a recent project you worked on, computer science-related or not. It’ll help get us an idea of your skills and what you’re all about.',
         mandatory: true
     },
 
+    q2: {
+        type: String,
+        maxlength: 1500,
+        questionType: 'fullResponse',
+        question: 'What entices you about hacking? What do you gain out of it or like about it?',
+        mandatory: true
+    },
 
-    skillQuestion: {
+    q3: {
+        type: String,
+        maxlength: 1500,
+        questionType: 'fullResponse',
+        question: 'Why do you want to attend MasseyHacks?',
+        mandatory: true
+    },
+
+    tc: {
         type: Boolean,
         questionType: 'boolean',
-        question: 'Are bananas yellow?',
+        question: 'I agree to MLH Contest Terms and Conditions.',
         mandatory: true
     },
 
-
-    /*
-    multies:
-
-    enum: {
-        options: {
-            lol: {
-                id: id
-                text: text to be shown in label
-            }
-        }
+    cc: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'I agree to MLH Code of Conduct.',
+        mandatory: true
     }
-     */
 };
 
 var mentorApplication = {

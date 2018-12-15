@@ -31,14 +31,18 @@
                             <div v-if="question.questionType == 'multiradio'">
                                 <div v-for="option in question.enum.values.split('|')" class="form-check form-check-inline" :id="questionName">
                                     <input class="form-check-input" type="radio" :name="questionName" :id="questionName + option">
-                                    <label class="form-check-label" :for="questionName + option">{{option.replace('^',' ')}}</label>
+                                    <label class="form-check-label" :for="questionName + option">{{option}}</label>
                                 </div>
                             </div>
                             <div v-if="question.questionType == 'multicheck'">
                                 <div v-for="option in question.enum.values.split('|')" class="form-check form-check-inline" :id="questionName">
                                     <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName + option ">
-                                    <label class="form-check-label" :for="questionName + option ">{{option.replace('^',' ')}}</label>
+                                    <label class="form-check-label" :for="questionName + option ">{{option}}</label>
                                 </div>
+                            </div>
+                            <div v-if="question.questionType == 'contract'">
+                                <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName">
+                                <label class="form-check-label">Yes</label>
                             </div>
                             <select v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
                                 <option v-for="option in question.enum.values.split('|')">{{option}}

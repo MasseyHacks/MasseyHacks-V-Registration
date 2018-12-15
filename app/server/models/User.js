@@ -239,16 +239,15 @@ schema.statics.validateProfile = function(id, profile, callback) {
                     return callback({error: 'Field "' + keys[i] + '" is required'})
                 }
 
-                if (runner[keys[i]].maxlength && userpath[keys[i]].length > runner[keys[i]].maxlength){
+                if (runner[keys[i]].maxlength && userpath[keys[i]] != null && userpath[keys[i]].length > runner[keys[i]].maxlength){
                     return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
                 }
 
                 if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
-                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1) {
+                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] != '' && !runner[keys[i]].required)) {
                         return callback({error: 'Field "' + keys[i] + '" is invalid'})
                     }
                 }
-
 
                 if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
                     for (var r in userpath[keys[i]]) {
