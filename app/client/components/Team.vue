@@ -19,7 +19,7 @@
 
                         <br>
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
+                            <button class="generic-button-dark" v-on:click="reset() page = ''">back</button>
                             <button class="generic-button-dark" v-on:click="createTeam" :disabled="!teamName">create</button>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
 
                         <br>
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
+                            <button class="generic-button-dark" v-on:click="reset() page = ''">back</button>
                             <button class="generic-button-dark" v-on:click="joinTeam" :disabled="!teamCode">join</button>
                         </div>
                     </div>
@@ -38,8 +38,8 @@
                         <p>You are currently not in a team.</p>
 
                         <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = 'create'">create</button>
-                            <button class="generic-button-dark" v-on:click="reset(); page = 'join'">join</button>
+                            <button class="generic-button-dark" v-on:click="reset() page = 'create'">create</button>
+                            <button class="generic-button-dark" v-on:click="reset() page = 'join'">join</button>
                         </div>
                     </div>
                     <div v-else-if="team">
@@ -69,12 +69,8 @@
 </template>
 
 <script>
-    import Session from '../src/Session'
     import swal from 'sweetalert2'
-    import AuthService from '../src/AuthService'
     import ApiService from '../src/ApiService'
-    import $ from 'jquery'
-    import vSelect from 'vue-select'
 
     export default {
         data() {
@@ -90,7 +86,7 @@
         beforeMount() {
             console.log(this.settings);
             ApiService.getTeam((err, team) => {
-                this.loading = false
+                this.loading = false;
 
                 if (err) {
                     this.error = err ? err : 'Something went wrong :\'('
@@ -103,8 +99,8 @@
         },
         methods: {
             reset() {
-                this.teamCode = ''
-                this.teamName = ''
+                this.teamCode = '';
+                this.teamName = '';
                 this.error = ''
             },
             createTeam() {
@@ -113,8 +109,8 @@
                     if (err) {
                         this.error = err.responseJSON.error
                     } else {
-                        this.team = team
-                        this.page = ''
+                        this.team = team;
+                        this.page = '';
                         this.error = ''
                     }
                 })
@@ -125,8 +121,8 @@
                     if (err) {
                         this.error = err.responseJSON.error
                     } else {
-                        this.team = team
-                        this.page = ''
+                        this.team = team;
+                        this.page = '';
                         this.error = ''
                     }
 
@@ -143,15 +139,15 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         ApiService.leaveTeam((err, team) => {
                             if (err) {
                                 this.error = err.responseJSON.error
                             }
 
-                            this.team = null
-                            this.teamName = ''
-                            this.teamCode = ''
+                            this.team = null;
+                            this.teamName = '';
+                            this.teamCode = '';
                             this.error = ''
                         })
                     }

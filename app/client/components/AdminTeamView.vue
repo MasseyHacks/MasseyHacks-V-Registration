@@ -24,10 +24,9 @@
 </template>
 
 <script type="text/javascript">
-    import Session     from '../src/Session'
-    import AuthService from '../src/AuthService.js'
-    import swal        from 'sweetalert2'
-    import ApiService  from '../src/ApiService.js'
+    import Session from '../src/Session'
+    import swal from 'sweetalert2'
+    import ApiService from '../src/ApiService.js'
 
     export default {
         data() {
@@ -50,7 +49,7 @@
                 if (err || !data) {
                     console.log("ERROR")
                 } else {
-                    console.log("data2")
+                    console.log("data2");
                     this.teamObj = data;
                 }
             })
@@ -75,7 +74,7 @@
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
 
                         ApiService.deleteTeam(this.teamCode, (err, data) => {
                             if (err) {

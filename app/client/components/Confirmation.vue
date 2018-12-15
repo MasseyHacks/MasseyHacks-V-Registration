@@ -57,7 +57,7 @@
                         title:"Success",
                         text: "You have confirmed your spot!",
                         type: "success"
-                      })
+                      });
                       this.user = Session.getUser()
                     }
 
@@ -88,7 +88,7 @@
                         title:"Success",
                         text: "You have declined your invitation.",
                         type: "success"
-                      })
+                      });
                       this.user = Session.getUser()
                     }
 

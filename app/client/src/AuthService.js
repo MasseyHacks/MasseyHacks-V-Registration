@@ -1,8 +1,8 @@
 /* globals localStorage */
 
-import $       from 'jquery'
+import $ from 'jquery'
 import Session from './Session'
-import swal    from 'sweetalert2'
+import swal from 'sweetalert2'
 
 module.exports = {
 
@@ -26,7 +26,7 @@ module.exports = {
 
                 if (callback) callback(data)
             }
-        }
+        };
 
         if (data) {
             request['data'] = type == 'POST' ? JSON.stringify(data) : data
@@ -40,7 +40,7 @@ module.exports = {
     },
     
     skillTest(callback) {
-        swal.showLoading()
+        swal.showLoading();
 
         var sudoMode = sessionStorage.getItem('sudoMode') ? sessionStorage.getItem('sudoMode') : false;
 
@@ -64,7 +64,7 @@ module.exports = {
                             type: 'error'
                         })
                     }
-                })
+                });
 
                 swal.showValidationError(
                     sudoMode ? 'SUDO MODE ENABLED' : `Unable to get skill question`
@@ -112,8 +112,8 @@ module.exports = {
             if (err) {
                 if (callback) callback(err.responseJSON.error)
             } else {
-                Session.create(data['token'], data['user'])
-                this.updateLoginState(true)
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true);
 
                 if (callback) callback(null, data)
             }
@@ -130,8 +130,8 @@ module.exports = {
             if (err) {
                 if (callback) callback(err.responseJSON.error)
             } else {
-                Session.create(data['token'], data['user'])
-                this.updateLoginState(true)
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true);
 
                 if (callback) callback(null, data)
             }
@@ -146,13 +146,13 @@ module.exports = {
             if (err) {
                 if (callback) callback(err.responseJSON.error)
             } else {
-                console.log(data)
+                console.log(data);
                 if (data['user']['2FA']) {
-                    Session.create2FA(data['token'], data['user'])
+                    Session.create2FA(data['token'], data['user']);
                     return callback(null, data['user'])
                 } else {
-                    Session.create(data['token'], data['user'])
-                    this.updateLoginState(true)
+                    Session.create(data['token'], data['user']);
+                    this.updateLoginState(true);
 
                     if (callback) callback(null, data)
                 }
@@ -163,7 +163,7 @@ module.exports = {
     refreshToken() {
         // Login with token if it exists
         if (Session.loggedIn()) {
-            console.log('Token refreshed!')
+            console.log('Token refreshed!');
             this.loginWithToken()
         } else {
             console.log('Session does not exist')
@@ -177,7 +177,7 @@ module.exports = {
             if (err) {
                 this.logout()
             } else {
-                Session.create(data['token'], data['user'])
+                Session.create(data['token'], data['user']);
                 this.updateLoginState(true)
             }
         })
@@ -190,8 +190,8 @@ module.exports = {
             if (err) {
                 if (callback) callback(err.responseJSON.error)
             } else {
-                Session.create(data['token'], data['user'])
-                this.updateLoginState(true)
+                Session.create(data['token'], data['user']);
+                this.updateLoginState(true);
 
                 if (callback) callback(null, data)
             }
@@ -218,7 +218,7 @@ module.exports = {
             if (err) {
                 if (callback) callback(err.responseJSON.error)
             } else {
-                this.logout(null, 'The session has expired')
+                this.logout(null, 'The session has expired');
                 if (callback) callback(null, data)
             }
         })
@@ -249,9 +249,9 @@ module.exports = {
     },
 
     logout (callback, message) {
-        Session.destroy(callback)
+        Session.destroy(callback);
         this.updateLoginState(false, message)
     },
 
     updateLoginState(state) {}
-}
+};

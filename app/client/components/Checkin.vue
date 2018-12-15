@@ -67,12 +67,10 @@
 </template>
 
 <script>
-    import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import AuthService from '../src/AuthService'
-    import $ from 'jquery';
     import swal from 'sweetalert2'
-    import { VueContext } from 'vue-context'
+    import {VueContext} from 'vue-context'
     import Vue from 'vue'
 
     export default {
@@ -100,13 +98,13 @@
 
         beforeMount() {
             ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin'}, (err, data) => {
-                this.loading = false
+                this.loading = false;
 
                 if (err || !data) {
                     this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {
-                    this.users = data.users
-                    this.totalPages = data.totalPages
+                    this.users = data.users;
+                    this.totalPages = data.totalPages;
 
                     if (this.users.length == 0) {
                         this.queryError = 'No users found'
@@ -122,7 +120,7 @@
         methods : {
 
             prettify: function(str) {
-                var strProc = str
+                var strProc = str;
                 if (str.indexOf('.') != -1) {
                     strProc = str.slice(str.indexOf('.')+1)
                 }
@@ -134,7 +132,7 @@
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
+                        this.users = data.users;
                         this.totalPages = data.totalPages
                     }
                 })
@@ -150,13 +148,13 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/checkIn', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
-                                console.log(err)
+                                console.log(err);
                                 swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked in.', 'success')
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked in.', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -174,13 +172,13 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/checkOut', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
-                                console.log(err)
+                                console.log(err);
                                 swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked out.', 'success')
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked out.', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -198,12 +196,12 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: 'checkin'}, (err, data) => {
                             if (err || !data) {
                                 swal('Error', err.error, 'error')
                             } else {
-                                swal('Success', 'Waiver accepted', 'success')
+                                swal('Success', 'Waiver accepted', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -219,16 +217,16 @@
                 }
 
                 // Update content of advanced query box
-                this.advancedQueryContent = JSON.stringify(this.filters)
+                this.advancedQueryContent = JSON.stringify(this.filters);
 
                 ApiService.getUsers({ page: 1, size: 0, text: this.searchQuery, filters : this.filters, appPage: 'checkin'}, (err, data) => {
-                    this.queryError = ''
+                    this.queryError = '';
                     if (err || !data) {
                         this.queryError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
-                        this.totalPages = data.totalPages
-                        this.loading = false
+                        this.users = data.users;
+                        this.totalPages = data.totalPages;
+                        this.loading = false;
 
                         if (this.users.length == 0) {
                             this.queryError = 'No results match this query'

@@ -65,9 +65,8 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
         if (err || !user) {
             console.log(err);
             return callback(err);
-        };
-
-        logger.logAction(adminUser._id, userID, 'Modified a user manually.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(data));
+        }
+            logger.logAction(adminUser._id, userID, 'Modified a user manually.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(data));
 
         return callback(null, user);
     });
@@ -80,8 +79,8 @@ UserController.getUserFields = function(userExecute, callback) {
 
     while (queue.length !=0) {
         var data = queue.pop();
-        var current = data[0]
-        var header = data[1]
+        var current = data[0];
+        var header = data[1];
 
         for (var runner in current) {
             if (current[runner]['type']) {
@@ -103,7 +102,7 @@ UserController.getAdmins = function(callback) {
             return callback({error: err})
         }
 
-        var filtered = {}
+        var filtered = {};
         for (var i = 0; i < data.length; i++) {
             filtered[data[i].fullName] = data[i].QRCode
         }
@@ -154,12 +153,12 @@ UserController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
-    console.log(sort)
+    console.log(sort);
 
     User.count(filters, function(err, count) {
 
         if (err) {
-            console.log(err)
+            console.log(err);
             return callback({error:err.message})
         }
 
@@ -174,7 +173,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
             .limit(size)
             .exec(function(err, users) {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     return callback({error:err.message})
                 }
 
@@ -231,9 +230,8 @@ UserController.verify = function (token, callback, ip) {
                 console.log(err);
 
                 return callback(err);
-            };
-
-            logger.logAction(user._id, user._id, 'Verified their email.', 'IP: ' + ip);
+            }
+                logger.logAction(user._id, user._id, 'Verified their email.', 'IP: ' + ip);
 
             return callback(null, 'Success');
         });
@@ -264,7 +262,7 @@ UserController.magicLogin = function (token, callback, ip) {
         }
 
         User.findOne({_id: payload.id}, '+magicJWT', function(err, user) {
-            console.log(user)
+            console.log(user);
             if (token === user.magicJWT) {
                 User.findOneAndUpdate({
                         _id: payload.id
@@ -282,8 +280,6 @@ UserController.magicLogin = function (token, callback, ip) {
 
                             return callback(err);
                         }
-                        ;
-
                         logger.logAction(user._id, user._id, 'Logged in using magic link.', 'IP: ' + ip);
 
                         return callback(null, {token: user.generateAuthToken(), user:User.filterSensitive(user)});
@@ -591,11 +587,11 @@ UserController.createUser = function (email, firstName, lastName, password, call
 UserController.superToken = function(userExcute, userID, callback) {
     User.getByID(userID, function (err, user) {
         if (err || !user) {
-            console.log(err)
-            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err)
+            console.log(err);
+            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err);
             return callback({error: "Error has occured"})
         }
-        var token = user.generateMagicToken()
+        var token = user.generateMagicToken();
         User.findOneAndUpdate({
                 _id: user.id
             },
@@ -608,7 +604,7 @@ UserController.superToken = function(userExcute, userID, callback) {
                 new: true
             }, function (err, user) {
                 var link = process.env.ROOT_URL + '/magic?token=' + token;
-                logger.logAction(userExcute.id, userID, "Generated super Link",'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link)
+                logger.logAction(userExcute.id, userID, "Generated super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link);
                 callback(false, {url: link})
             })
     })
@@ -667,9 +663,9 @@ UserController.loginWithPassword = function(email, password, callback, ip){
                 return callback({ error: 'Account is not active. Please contact an administrator for assistance.', code: 403})
             }
 
-            console.log(process.env.TUFA_ENABLED)
+        console.log(process.env.TUFA_ENABLED);
             if (user.permissions.admin && process.env.TUFA_ENABLED === 'true') {
-                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.')
+                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.');
 
                 var token = user.generate2FAToken();
 

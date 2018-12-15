@@ -4,24 +4,24 @@
 
 <script>
     import Session from '../src/Session'
-    import swal    from 'sweetalert2'
-    import AuthService  from '../src/AuthService'
+    import swal from 'sweetalert2'
+    import AuthService from '../src/AuthService'
 
     export default {
         name: 'Magic',
         created () {
-            swal.showLoading()
-            console.log(this.$route.query.token)
+            swal.showLoading();
+            console.log(this.$route.query.token);
             AuthService.sendRequest('POST', '/auth/magicurl', {token: this.$route.query.token}, (err, data) => {
                 if (err || !data) {
-                    swal('Error', 'An error has occurred', 'error')
-                    console.log(err.responseJSON.error)
+                    swal('Error', 'An error has occurred', 'error');
+                    console.log(err.responseJSON.error);
                     this.$router.replace('/login')
                 } else {
-                    swal('Success', 'Magic authentication successful', 'success')
-                    console.log(data)
+                    swal('Success', 'Magic authentication successful', 'success');
+                    console.log(data);
                     Session.destroy(() => {Session.create(data.token, data.user)});
-                    AuthService.updateLoginState(true)
+                    AuthService.updateLoginState(true);
                     this.$router.replace('/')
                 }
             })

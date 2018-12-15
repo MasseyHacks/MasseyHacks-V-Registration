@@ -311,7 +311,7 @@ TeamController.deleteTeamByCode = function (userExcute, code, callback) {
 
 TeamController.getFields = function (userExcute, callback) {
     var fieldsOut = [];
-    var current = TeamFields
+    var current = TeamFields;
 
     for (var runner in current) {
         if (!TeamFields[runner]['permission'] || TeamFields[runner]['permission'] <= userExecute.permissions.level) {
@@ -319,8 +319,8 @@ TeamController.getFields = function (userExcute, callback) {
         }
     }
 
-    fieldsOut.push({'name' : "memberNames", })
-    console.log("testing " + fieldsOut)
+    fieldsOut.push({'name': "memberNames",});
+    console.log("testing " + fieldsOut);
 
     callback(null, fieldsOut)
 };
@@ -340,7 +340,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
     var or      = [];
     var appPage = query.appPage ? query.appPage : null;
 
-    console.log(appPage)
+    console.log(appPage);
 
     if (text) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
@@ -365,12 +365,12 @@ TeamController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
-    console.log(filters)
+    console.log(filters);
 
     Team.count(filters, function(err, count) {
 
         if (err) {
-            console.log(err)
+            console.log(err);
             return callback({error:err.message})
         }
 
@@ -386,11 +386,11 @@ TeamController.getByQuery = function (adminUser, query, callback) {
             .populate('memberNames')
             .exec(function(err, teams) {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     return callback({error:err.message})
                 }
 
-                console.log(teams, count, size)
+                console.log(teams, count, size);
 
                 for (var i = 0; i < teams.length; i++) {
                     teams[i] = TeamController.filterNames(teams[i])

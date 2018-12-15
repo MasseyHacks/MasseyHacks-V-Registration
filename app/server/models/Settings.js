@@ -101,7 +101,7 @@ schema.statics.requestSchool = function(schoolName, callback) {
 
         return callback(null, {message: 'Success'})
     })
-}
+};
 
 schema.statics.confirmationOpen = function() {
     return this.timeConfirm >= Date.now();

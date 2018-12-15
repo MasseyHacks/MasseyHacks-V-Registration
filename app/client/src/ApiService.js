@@ -377,4 +377,4 @@ module.exports = {
             school: school
         }, callback)
     }
-}
+};
