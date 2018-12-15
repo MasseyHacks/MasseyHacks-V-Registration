@@ -49,13 +49,13 @@
 
             <hr>
 
-            <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admission State</button>
+            <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admit</button>
             <button class="generic-button-dark" v-on:click="resetInvitation">Reset Invitation</button>
             <button class="generic-button-dark" v-on:click="resetVotes">Reset Votes</button>
 
             <hr>
 
-            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">PEI TOKEN
+            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">Login
             </button>
             <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
             <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
