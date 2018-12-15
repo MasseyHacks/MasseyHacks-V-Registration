@@ -1,5 +1,7 @@
 # MasseyHacks Registration System (CODENAME: GOOSE)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/MasseyHacks/MasseyHacks-V-Registration.svg)](https://greenkeeper.io/)
+
 Registration system for MasseyHacks V. Goose is currently being developed and is extremely unstable at the current state. Please use with caution.
 
 **Setup**
