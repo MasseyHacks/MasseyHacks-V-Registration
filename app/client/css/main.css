@@ -169,6 +169,8 @@ h2 {
     padding-bottom: 50px;
     padding-top: 50px;*/
 
+    text-align: center;
+
     transition: left .5s;
     left: 0;
 }
@@ -226,7 +228,7 @@ h2 {
 
 /* width */
 #main-sidebar::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
 }
 
 /* Track */
@@ -606,7 +608,7 @@ h4 {
 
     #main-sidebar {
         left: -100%;
-        width: 300px;
+
     }
 
     .app-view-logged-in {
