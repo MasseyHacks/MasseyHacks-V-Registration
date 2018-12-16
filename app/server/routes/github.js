@@ -13,7 +13,7 @@ module.exports = function (router) {
 
     //auto pull
 
-    router.get('/pull', function (req, res) {
+    router.post('/pull', function (req, res) {
         req.on('data', function (chunk) {
             let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(chunk.toString()).digest('hex');
 
