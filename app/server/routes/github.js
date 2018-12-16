@@ -13,13 +13,9 @@ console.log(GITHUB_SECRET);
 module.exports = function (router) {
     router.use(express.json());
 
-    // test
-
     router.post('/pull', function (req, res) {
 
-
         let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(JSON.stringify(req.body)).digest('hex');
-
 
         console.log(req.headers['x-hub-signature'], sig)
         if (req.headers['x-hub-signature'] == sig) {
