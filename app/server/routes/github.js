@@ -17,7 +17,7 @@ module.exports = function (router) {
         console.log("made it this far lol");
         let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(req.toString()).digest('hex');
 
-        if (req.headers['x-hub-signature'] === sig) {
+        if (req.headers['x-hub-signature'] == sig) {
             exec('cd ../../../' + ' && git pull');
             res.send("me has pulled");
             console.log("I PULLED!");
