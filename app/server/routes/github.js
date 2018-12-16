@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const express = require('express');
 const request = require('request');
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const crypto = require('crypto');
 const logger = require('../services/logger');
 require('dotenv').load();
@@ -16,23 +16,30 @@ module.exports = function (router) {
     //auto pull
 
     router.post('/pull', function (req, res) {
-        exec('echo "macs are bad" > pineapple.txt');
-        exec('git pull > apple.txt');
-        logger.logAction(-1, -1, "Pulled from GitHub", "Pull Success", function () {
-            console.log("pull success");
-        });
-        res.send("me has pulled");
-        // console.log("made it this far lol");
-        // let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(req.toString()).digest('hex');
-        // console.log(req.headers['x-hub-signature'], sig)
-        // if (req.headers['x-hub-signature'] == sig) {
-        //     exec('cd ../../../' + ' && git pull');
-        //     res.send("me has pulled");
-        //     console.log("I PULLED!");
-        // } else {
-        //     res.send("lmao u can't do that");
-        //     console.log("ew hmac failed");
-        // }
+
+
+        let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).digest('hex');
+
+
+        console.log(req.headers['x-hub-signature'], sig)
+        if (req.headers['x-hub-signature'] == sig) {
+
+            var child = spawn('./pull.sh');
+
+            child.stdout.on('data', function(data) {
+                console.log('child stdout:\n' + data);
+
+                logger.logAction(-1, -1, 'Webhook source update successful', 'STDOUT: ' + data);
+            });
+
+            res.send("me has pulled");
+            console.log("I PULLED!");
+        } else {
+            logger.logAction(-1, -1, 'Webhook source update rejected', 'IP: ' + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + ' Headers: ' + (req.rawHeaders).toString());
+
+            res.send("lmao u can't do that");
+            console.log("ew hmac failed");
+        }
 
         res.end();
     })
