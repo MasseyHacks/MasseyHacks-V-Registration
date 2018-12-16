@@ -18,7 +18,7 @@ module.exports = function (router) {
     router.post('/pull', function (req, res) {
 
 
-        let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).digest('hex');
+        let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(JSON.stringify(req.body)).digest('hex');
 
 
         console.log(req.headers['x-hub-signature'], sig)
