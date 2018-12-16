@@ -14,7 +14,7 @@
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
                     <div class="button-row">
-                        <button type="submit" class="primary-button">Save</button>
+                        <button class="generic-button-dark" type="submit">Save</button>
                     </div>
                 </form>
             </div>

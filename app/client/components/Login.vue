@@ -26,7 +26,7 @@
                             <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
 
                             <div id="button-row">
-                                <button type="submit" class="primary-button">
+                                <button class="generic-button-dark" type="submit">
                                     Sign In
                                 </button>
 

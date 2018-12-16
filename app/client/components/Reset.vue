@@ -38,7 +38,7 @@
                     <div class="button-row">
                         <button type="submit">reset</button>
                         <router-link to="/login">
-                            <button>cancel</button>
+                            <button class="generic-button-dark">cancel</button>
                         </router-link>
                     </div>
                     <p v-if="error" class="error">{{error}}</p>
