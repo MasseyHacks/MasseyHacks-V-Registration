@@ -17,8 +17,9 @@
 
                     <br>
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
-                        <button class="generic-button-dark" v-on:click="createTeam" :disabled="!teamName">create</button>
+                        <button class="generic-button-dark" v-on:click="reset(); page = ''">Back</button>
+                        <button :disabled="!teamName" class="generic-button-dark" v-on:click="createTeam">Create
+                        </button>
                     </div>
                 </div>
                 <div v-else-if="page == 'join'">
@@ -28,16 +29,16 @@
 
                     <br>
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
-                        <button class="generic-button-dark" v-on:click="joinTeam" :disabled="!teamCode">join</button>
+                        <button class="generic-button-dark" v-on:click="reset(); page = ''">Back</button>
+                        <button :disabled="!teamCode" class="generic-button-dark" v-on:click="joinTeam">Join</button>
                     </div>
                 </div>
                 <div v-else-if="!team">
                     <p>You are currently not in a team.</p>
 
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = 'create'">create</button>
-                        <button class="generic-button-dark" v-on:click="reset(); page = 'join'">join</button>
+                        <button class="generic-button-dark" v-on:click="reset(); page = 'create'">Create</button>
+                        <button class="generic-button-dark" v-on:click="reset(); page = 'join'">Join</button>
                     </div>
                 </div>
                 <div v-else-if="team">

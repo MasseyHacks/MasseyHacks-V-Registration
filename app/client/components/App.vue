@@ -14,7 +14,7 @@
                 <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
                     <router-link to="/team" tag="a"><button class="menu-button" v-on:click="retractSidebar">Team</button></router-link>
                 </li>
-                <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
+                <li v-if="user.status.admitted || user.permissions.developer">
                     <router-link to="/confirmation" tag="a"><button class="menu-button" v-on:click="retractSidebar">Confirmation</button></router-link>
                 </li>
                 <li v-if="user.permissions.checkin">

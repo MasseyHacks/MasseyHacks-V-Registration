@@ -5,15 +5,18 @@
                 <div v-if="reviewingApplications">
                     <h2>Reviewing Application</h2>
                     <div v-html="this.reviewBody"></div>
-                    <button v-on:click="stopReview" class="generic-button-light">Exit</button>
+                    <hr>
                     <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
                     <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
+                    <hr>
                     <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
                             class="generic-button-dark">Admit [FORCE]
                     </button>
                     <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')"
                             class="generic-button-dark">Reject [FORCE]
                     </button>
+                    <hr>
+                    <button class="generic-button-dark" v-on:click="stopReview">Exit</button>
                     <button v-on:click="nextApplication(false)" class="generic-button-dark">Pass</button>
                 </div>
 
@@ -165,8 +168,10 @@
                     var application = this.userTimes[0][2]["profile"]["hacker"];
 
                     this.reviewBody = '';
+                    this.reviewBody += '<div class="duo-col">';
+                    this.reviewBody += '<ul class="custom-ul">';
                     Object.keys(application).forEach((field) => {
-                        this.reviewBody+=field+' '+application[field]+'<BR>';
+                        this.reviewBody += '<ul><h3>' + this.prettify(field) + '</h3>' + application[field] + '</ul>';
                     });
                     console.log(application);
                 }
@@ -199,6 +204,11 @@
             },
             switchPage: function(page) {
                 this.page = page
+            },
+            prettify: function (str) {
+                return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                    return str.toUpperCase();
+                })
             }
         }
     }

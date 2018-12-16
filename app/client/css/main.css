@@ -1,20 +1,20 @@
 @font-face {
-    font-family: "Futura";
+    font-family: "Avenir";
     src: url(../fonts/avenir.otf);
 }
 
 @font-face {
-    font-family: "Futura Bold";
+    font-family: "Avenir Next Bold";
     src: url(../fonts/avenir-next-bold.ttf);
 }
 
 * {
-    font-family: "Futura", sans-serif;
+    font-family: "Avenir", sans-serif;
     font-weight: normal;
 }
 
 h2 {
-    font-family: 'Futura Bold', sans-serif;
+    font-family: 'Avenir Next Bold', sans-serif;
     font-weight: normal;
 }
 
@@ -79,7 +79,7 @@ h2 {
 
 #login-form-box h2 {
     color: black;
-    font-family: "Futura Bold", sans-serif;
+    font-family: "Avenir Next Bold", sans-serif;
     text-align: center;
     font-size: 1em;
 }
@@ -296,7 +296,7 @@ h2 {
     position: absolute;
 
     z-index: 600;
-    font-family: Avenir Next Bold, sans-serif;
+    font-family: "Avenir Next Bold", sans-serif;
 
     border-color: transparent;
     background-color: #051930 !important;
@@ -408,7 +408,7 @@ h2 {
 }
 
 .ui-card h3 {
-    font-family: 'Futura Bold';
+    font-family: 'Avenir Next Bold', sans-serif;
     font-size: 1.5em;
     /*    letter-spacing: 0.3em;*/
 }
@@ -424,7 +424,7 @@ h2 {
     font-size: 3.5em;
     letter-spacing: 0.3em;
     text-align: center;
-    font-family: 'Futura Bold' !important;
+    font-family: 'Avenir Next Bold', sans-serif !important;
 }
 
 .main-application {
@@ -544,19 +544,19 @@ i.fa-female {
 }
 
 .table-header {
-    font-family: 'Futura Bold', sans-serif;
+    font-family: 'Avenir Next Bold', sans-serif;
     font-size: 1.2em;
     border-color: transparent !important;
     color: black;
 }
 
 .table-header td {
-    font-family: 'Futura Bold';
+    font-family: 'Avenir Next Bold', sans-serif;
     color: black;
 }
 
 h4 {
-    font-family: 'Futura Bold', sans-serif !important;
+    font-family: 'Avenir Next Bold', sans-serif !important;
     font-size: 0.8em;
     margin-bottom: 0;
     padding-bottom: 0;
