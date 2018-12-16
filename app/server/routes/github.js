@@ -23,6 +23,7 @@ module.exports = function (router) {
             console.log("I PULLED!");
         } else {
             res.send("lmao u can't do that");
+            console.log("ew hmac failed");
         }
 
         res.end();
