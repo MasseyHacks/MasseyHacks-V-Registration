@@ -19,6 +19,7 @@ module.exports = function (router) {
 
             if (req.headers['x-hub-signature'] === sig) {
                 exec('cd ../../../' + ' && git pull');
+                console.log("I PULLED!");
             }
         });
 
