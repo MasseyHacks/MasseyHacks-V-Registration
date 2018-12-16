@@ -18,7 +18,7 @@ module.exports = function (router) {
             let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(chunk.toString()).digest('hex');
 
             if (req.headers['x-hub-signature'] === sig) {
-                exec('cd ../../../../' + ' && git pull');
+                exec('cd ../../../' + ' && git pull');
             }
         });
 
