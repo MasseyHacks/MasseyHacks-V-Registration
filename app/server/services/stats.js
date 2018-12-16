@@ -229,8 +229,7 @@ function calculateStats(callback){
                             //console.log(line);
 
                             newStats.review.push(line);
-                        };
-
+                        }
                         //console.log(newStats.review);
 
                         // Transform dietary restrictions into a series of objects

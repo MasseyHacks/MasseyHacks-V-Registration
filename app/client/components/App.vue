@@ -81,7 +81,6 @@
     import AuthService from '../src/AuthService'
     import Session from '../src/Session'
     import ApiService from '../src/ApiService.js'
-    import $ from 'jquery'
 
     export default {
         data() {
@@ -116,7 +115,7 @@
         },
         methods: {
             toggleSidebar() {
-                console.log('hi')
+                console.log('hi');
                 if (this.sidebarStyle == '') {
                     this.sidebarStyle = 'left: 0 !important;'
                 } else {

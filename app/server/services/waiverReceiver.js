@@ -11,7 +11,7 @@ const imap     = new Imap({
     host: process.env.WAIVER_ADDRESS,
     port: process.env.WAIVER_PORT,
     tls: true,
-})
+});
 
 function openInbox(cb) {
     imap.openBox('INBOX', false, cb);
@@ -44,7 +44,7 @@ const fetch_email = function() {
                 });
                 f.on('message', function (msg) {
                     msg.on('body', function(stream, info) {
-                        console.log(info)
+                        console.log(info);
                         mailparse.simpleParser(stream, function (err, parsed) {
                             if (err) {
                                 console.log(err)

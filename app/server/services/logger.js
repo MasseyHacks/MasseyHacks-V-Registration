@@ -64,7 +64,7 @@ module.exports = {
 
         // Start bash
 
-        console.log(actionFrom, actionTo, message, detailedMessage)
+        console.log(actionFrom, actionTo, message, detailedMessage);
 
         LogEvent
             .create({
@@ -81,7 +81,7 @@ module.exports = {
                     .populate(actionTo === -1 ? '' : 'toUser')
                     .exec(function (err, event) {
 
-                        console.log(event)
+                        console.log(event);
 
                         if (event) {
                             LogEvent.findOneAndUpdate({
@@ -95,7 +95,7 @@ module.exports = {
                                 new: true
                             }, function (err, newEvent) {
 
-                                console.log(newEvent)
+                                console.log(newEvent);
 
                                 if (process.env.NODE_ENV === 'production' && process.env.AUDIT_SLACK_HOOK) {
                                     console.log('Sending audit log...');

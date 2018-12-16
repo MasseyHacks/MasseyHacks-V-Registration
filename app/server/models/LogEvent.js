@@ -14,7 +14,7 @@ var loggingTemplate = {
     email : {
         type: String
     }
-}
+};
 
 var schema = new mongoose.Schema({
     timestamp : {
@@ -62,4 +62,4 @@ schema.virtual('timestampHuman').get(function() {
     return new Date(this.timestamp)
 });
 
-module.exports = mongoose.model('LogEvent', schema)
+module.exports = mongoose.model('LogEvent', schema);

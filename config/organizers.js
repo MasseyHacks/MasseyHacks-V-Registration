@@ -53,10 +53,10 @@ function makeOrganizer(email, firstName, lastName,  permission) {
 
                     if (err) throw err;
 
-                    userNew.setPermission(permission)
+                    userNew.setPermission(permission);
 
                     if (userNew.permissions.developer) {
-                        var token = userNew.generateMagicToken()
+                        var token = userNew.generateMagicToken();
                         User.findOneAndUpdate({
                                 _id: userNew.id
                             },
@@ -68,7 +68,7 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                             {
                                 new: true
                             }, function (err, user) {
-                                console.log(userNew.email + ': ' + process.env.ROOT_URL + '/magic?token=' + token)
+                                console.log(userNew.email + ': ' + process.env.ROOT_URL + '/magic?token=' + token);
                                 //send the email
                                 if (process.env.NODE_ENV !== 'dev') {
                                     mailer.sendTemplateEmail(user.email, 'magiclinkemails', {

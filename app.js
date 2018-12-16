@@ -1,7 +1,7 @@
 require('dotenv').load();
 
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 
 const bodyParser      = require('body-parser');
 const methodOverride  = require('method-override');
@@ -79,4 +79,4 @@ Raven.context(function() {
 
     }
 
-})
+});

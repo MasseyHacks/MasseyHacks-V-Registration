@@ -70,7 +70,9 @@
                             <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
 
                             <td>
-                                <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
+                                <button class="generic-button-dark" style="margin-left: auto; margin-right: auto"
+                                        v-on:click="deleteFilter(logical, filter)">Delete
+                                </button>
                             </td>
 
                         </tr>
@@ -378,8 +380,7 @@
                         if (data[key] === Object(data[key])) {
                             //iterate again!
                             tempObj = Object.assign(tempObj, this.flattenObject(data[key], prefix + key + "/", level += 1));
-                        }
-                        else {
+                        } else {
                             //log the value
                             tempObj[prefix + key] = data[key];
                         }
@@ -388,8 +389,7 @@
                         tempObj["documentKeys"] = Object.keys(tempObj);
                     }
                     return tempObj;
-                }
-                else {
+                } else {
                     console.log("recursion limit reached!");
                     return {};
                 }
@@ -411,8 +411,7 @@
                     for (var j = 0; j < headers.length; j++) {
                         if (objArray[i][headers[j]] !== undefined) {
                             output[i + 1] += objArray[i][headers[j]] + ",";
-                        }
-                        else {
+                        } else {
                             output[i + 1] += ",";
                         }
                     }

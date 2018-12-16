@@ -38,7 +38,7 @@ schema.methods.generateMagicToken = function() {
     return jwt.sign({id: this._id, type: 'magicJWT'}, JWT_SECRET, {
         expiresIn: 600
     });
-}
+};
 
 schema.methods.generateResetToken = function() {
     return jwt.sign({id: this._id, type: 'password-reset'}, JWT_SECRET, {
@@ -53,22 +53,22 @@ schema.methods.generate2FAToken = function() {
 };
 
 schema.methods.setPermission = function(level) {
-    console.log('Got level ', level)
+    console.log('Got level ', level);
 
     if (level && typeof level == 'string') {
         for (var key in fields['permissions']) {
 
             if (key == level.toLowerCase()) {
 
-                console.log('Locked to', key)
+                console.log('Locked to', key);
 
-                level = fields['permissions'][key]['permissionLevel']
+                level = fields['permissions'][key]['permissionLevel'];
                 break
             }
         }
     }
 
-    console.log('Translating to ', level)
+    console.log('Translating to ', level);
 
     if (!level) {
         level = 0
@@ -269,7 +269,7 @@ schema.statics.validateProfile = function(id, profile, callback) {
     }
 
     return callback(null, profile);
-}
+};
 
 
 schema.virtual('lowerCaseName').get(function() {
@@ -390,16 +390,16 @@ schema.virtual('status.name').get(function () {
 
 schema.virtual('profile.isSigned').get(function () {
     return this.profile.signature !== -1;
-})
+});
 
 schema.statics.filterSensitive = function(user, permission, page) {
     return filterSensitive(user, permission, page);
-}
+};
 
 var filterSensitive = function (user, permission, page) {
 
     try {
-        console.log(page)
+        console.log(page);
         if (page === 'checkin') {
             return {
                 id: user.id,
@@ -467,6 +467,6 @@ var navigate = function(dictionary, path) {
     }
 
     return runner[path[path.length - 1]];
-}
+};
 
 module.exports = mongoose.model('User', schema);

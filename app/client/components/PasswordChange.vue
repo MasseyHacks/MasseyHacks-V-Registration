@@ -24,11 +24,10 @@
 
 <script>
     import AuthService from '../src/AuthService'
-    import Session     from '../src/Session'
-    import swal        from 'sweetalert2'
+    import swal from 'sweetalert2'
 
     export default {
-        data () {
+        data() {
             return {
                 oldPassword: '',
                 password1: '',
@@ -45,13 +44,13 @@
                         if (err) {
                             this.error = err ? err : 'Something went wrong'
                         } else {
-                            this.error = null
+                            this.error = null;
 
                             swal({
                                 title: 'Success!',
                                 text: 'Password changed!',
                                 type: 'success'
-                            })
+                            });
 
                             this.$router.replace('/login')
                         }

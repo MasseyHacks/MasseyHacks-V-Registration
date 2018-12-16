@@ -19,6 +19,6 @@ schema = {
         type: [String],
         select: false
     }
-}
+};
 
-module.exports = schema
+module.exports = schema;

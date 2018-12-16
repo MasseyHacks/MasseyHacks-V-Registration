@@ -75,13 +75,13 @@ module.exports = function(router) {
     // View current stats
     router.get('/stats', permissions.isAdmin, function (req, res) {
         logger.defaultResponse(req, res)(null, stats.getStats())
-    })
+    });
 
     // Owner
     // Get schools pending approval
     router.get('/pendingSchools', permissions.isOwner, function (req, res) {
         SettingsController.getPendingSchools(logger.defaultResponse(req, res))
-    })
+    });
 
     // Owner
     // Approve pending school
@@ -232,7 +232,7 @@ module.exports = function(router) {
 
         TeamController.joinTeam(user._id, teamCode, function(err, data){
             if (err || !data) {
-                console.log(err)
+                console.log(err);
                 return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to join team' } );
             }
 
@@ -282,7 +282,7 @@ module.exports = function(router) {
         var user = req.userExecute;
 
         TeamController.deleteTeamByCode(user, code, logger.defaultResponse(req, res))
-    })
+    });
 
     // Owner
     // Accept team

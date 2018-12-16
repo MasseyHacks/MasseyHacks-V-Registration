@@ -19,7 +19,6 @@
 
 <script>
     import AuthService from '../src/AuthService'
-    import swal        from 'sweetalert2'
 
     export default {
         props: {
@@ -37,7 +36,7 @@
                 if (err) {
                     this.status = 'invalid'
                 } else {
-                    this.status = 'success'
+                    this.status = 'success';
 
                     AuthService.refreshToken() // Update dashboard status
                 }

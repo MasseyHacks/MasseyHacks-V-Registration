@@ -119,7 +119,7 @@
         beforeMount() {
             console.log(this.settings);
             ApiService.getApplications((err, applications) => {
-                this.loading = false
+                this.loading = false;
 
                 if (err || !applications) {
                     this.loadingError = err ? err : 'Something went wrong :\'('
