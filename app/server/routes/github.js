@@ -24,7 +24,7 @@ module.exports = function (router) {
             child.stdout.on('data', function(data) {
                 console.log('child stdout:\n' + data);
 
-                logger.logAction(-1, -1, 'Webhook source update successful. Commit: ' + req.body['head_commit']['message'], 'STDOUT: ' + data);
+                logger.logAction(-1, -1, 'Webhook source update successful. Commit: ' + req.body['head_commit']['message'], data);
             });
 
             res.send("me has pulled");
