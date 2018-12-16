@@ -1,71 +1,69 @@
 <template>
     <div class="app-screen">
-        <div class="container">
-            <div class="row">
-                <div class="title-card col-md-12">
-                    <h2>TEAM</h2>
+        <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
+            <h2>TEAM</h2>
+        </div>
+
+        <div class="spacer"></div>
+        <div class="container vertical-centered">
+            <div class="ui-card dash-card">
+                <div v-if="loading">
+                    <p>Loading...</p>
                 </div>
-            </div>
+                <div v-else-if="page == 'create'">
+                    Create Team
 
-            <div class="row">
-                <div class="ui-card dash-card">
-                    <div v-if="loading">
-                        <p>Loading...</p>
+                    <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text" maxlength="50">
+
+                    <br>
+                    <div class="button-row">
+                        <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
+                        <button class="generic-button-dark" v-on:click="createTeam" :disabled="!teamName">create</button>
                     </div>
-                    <div v-else-if="page == 'create'">
-                        Create Team
-
-                        <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text" maxlength="50">
-
-                        <br>
-                        <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
-                            <button class="generic-button-dark" v-on:click="createTeam" :disabled="!teamName">create</button>
-                        </div>
-                    </div>
-                    <div v-else-if="page == 'join'">
-                        Join Team
-
-                        <input class="round-input" style="width: 100%" placeholder="Team Code" v-model="teamCode" type="text">
-
-                        <br>
-                        <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
-                            <button class="generic-button-dark" v-on:click="joinTeam" :disabled="!teamCode">join</button>
-                        </div>
-                    </div>
-                    <div v-else-if="!team">
-                        <p>You are currently not in a team.</p>
-
-                        <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="reset(); page = 'create'">create</button>
-                            <button class="generic-button-dark" v-on:click="reset(); page = 'join'">join</button>
-                        </div>
-                    </div>
-                    <div v-else-if="team">
-                        <h4>Team Name</h4>
-                        {{team.name}}<br>
-                        <h4>Team Code</h4>
-                        {{team.code}} <br>
-                        <br>
-
-                        <hr>
-
-                        <h4>Members</h4>
-                        <span v-for="id in team.memberNames">
-                            {{id}}<br>
-                        </span>
-
-                        <div class="button-row">
-                            <button class="generic-button-dark" v-on:click="leaveTeam">leave</button>
-                        </div>
-                    </div>
-
-                    <p v-if="error" class="error">{{error}}</p>
                 </div>
+                <div v-else-if="page == 'join'">
+                    Join Team
+
+                    <input class="round-input" style="width: 100%" placeholder="Team Code" v-model="teamCode" type="text">
+
+                    <br>
+                    <div class="button-row">
+                        <button class="generic-button-dark" v-on:click="reset(); page = ''">back</button>
+                        <button class="generic-button-dark" v-on:click="joinTeam" :disabled="!teamCode">join</button>
+                    </div>
+                </div>
+                <div v-else-if="!team">
+                    <p>You are currently not in a team.</p>
+
+                    <div class="button-row">
+                        <button class="generic-button-dark" v-on:click="reset(); page = 'create'">create</button>
+                        <button class="generic-button-dark" v-on:click="reset(); page = 'join'">join</button>
+                    </div>
+                </div>
+                <div v-else-if="team">
+                    <h4>Team Name</h4>
+                    {{team.name}}<br>
+                    <h4>Team Code</h4>
+                    {{team.code}} <br>
+                    <br>
+
+                    <hr>
+
+                    <h4>Members</h4>
+                    <span v-for="id in team.memberNames">
+                        {{id}}<br>
+                    </span>
+
+                    <div class="button-row">
+                        <button class="generic-button-dark" v-on:click="leaveTeam">leave</button>
+                    </div>
+                </div>
+
+                <p v-if="error" class="error">{{error}}</p>
             </div>
         </div>
     </div>
+
 </template>
 
 <script>

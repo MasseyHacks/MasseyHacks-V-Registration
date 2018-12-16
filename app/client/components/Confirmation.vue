@@ -1,12 +1,12 @@
 <template>
     <div class="app-screen">
-        <div class="row">
-            <div class="title-card col-md-12">
-                <h2>CONFIRMATION</h2>
-            </div>
+
+        <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
+            <h2>CONFIRMATION</h2>
         </div>
 
-        <div class="row">
+        <div class="spacer"></div>
+        <div class="container vertical-centered">
             <div class="ui-card dash-card">
 
               <div v-if="user.status.name == 'confirmed' || user.status.name == 'declined'">
@@ -17,9 +17,9 @@
                   <button class="generic-button" v-on:click="denyInvitation">Deny</button>
               </div>
 
+            </div>
         </div>
     </div>
-  </div>
 </template>
 
 <script>

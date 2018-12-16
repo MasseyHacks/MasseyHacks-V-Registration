@@ -1,15 +1,14 @@
 <template>
     <div class="app-screen">
 
-        <div class="row" style="position: fixed; margin-left: auto; margin-right: auto">
-            <div class="title-card col-md-12">
-                <h2>DASHBOARD</h2>
-            </div>
+        <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
+            <h2>DASHBOARD</h2>
         </div>
 
         <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="row">
+
                 <div class="ui-card dash-card" style="text-align: center">
                     <h3>Application Status</h3>
 
