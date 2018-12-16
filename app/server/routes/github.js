@@ -29,7 +29,7 @@ module.exports = function (router) {
             child.stdout.on('data', function(data) {
                 console.log('child stdout:\n' + data);
 
-                logger.logAction(-1, -1, 'Webhook source update successful', 'STDOUT: ' + data);
+                logger.logAction(-1, -1, 'Webhook source update successful. Commit: ' + req.body['head_commit']['message'], 'STDOUT: ' + data);
             });
 
             res.send("me has pulled");
@@ -38,7 +38,7 @@ module.exports = function (router) {
             logger.logAction(-1, -1, 'Webhook source update rejected', 'IP: ' + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + ' Headers: ' + (req.rawHeaders).toString());
 
             res.send("lmao u can't do that");
-            console.log("ew hmac failed");
+            console.log("Pull failed.");
         }
 
         res.end();
