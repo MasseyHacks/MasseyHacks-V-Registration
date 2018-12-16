@@ -14,6 +14,7 @@ module.exports = function (router) {
     //auto pull
 
     router.post('/pull', function (req, res) {
+        console.log("made it this far lol");
         req.on('data', function (chunk) {
             let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(chunk.toString()).digest('hex');
 
