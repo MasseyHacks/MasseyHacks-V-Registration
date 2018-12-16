@@ -19,6 +19,10 @@
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
                             <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
                                                                                       style="color: red">*</span></b></label>
+
+                            <br v-if="question.note">
+                            <label :for="questionName" v-if="question.note">{{question.note}}</label>
+
                             <textarea class="form-control" v-if="question.questionType == 'fullResponse'"
                                       :id="questionName" :maxlength="question.maxlength"></textarea>
                             <input class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"

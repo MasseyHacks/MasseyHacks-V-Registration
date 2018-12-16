@@ -89,7 +89,8 @@
                         </button>
 
                         <br>
-                        {{page}} of {{totalPages}} | {{count}} results
+                        <br>
+                        {{page}} of {{totalPages}} | {{count}} result<span v-if="count > 1">s</span>
 
                         <hr>
                         <table class="data-table-generic">
@@ -121,6 +122,7 @@
                         </table>
                     </div>
                     <p v-else>
+                        <br>
                         {{queryError}}
                     </p>
 
@@ -196,7 +198,7 @@
                     this.count = data.count;
 
                     if (this.teams.length == 0) {
-                        this.queryError = 'No users found'
+                        this.queryError = 'No teams found'
                     }
                 }
             })

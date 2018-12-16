@@ -121,7 +121,8 @@ var hackerApplication = {
     dietaryRestrictions: {
         type: [String],
         questionType: 'multicheck',
-        question: 'Please indicate any dietary restrictions. If your restrictions are not included here, please let us know in the free comment section at the bottom.',
+        question: 'Please indicate any dietary restrictions.',
+        note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
         enum: {
             values: '5|1|4|3'
         },

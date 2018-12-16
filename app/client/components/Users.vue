@@ -96,7 +96,7 @@
 
                         <br>
                         <br>
-                        {{page}} of {{totalPages}} | {{count}} results
+                        {{page}} of {{totalPages}} | {{count}} result<span v-if="count > 1">s</span>
 
                         <hr>
                         <table class="data-table-generic">
@@ -117,8 +117,8 @@
                                 <td><span v-html="userStatusConverter(user)"></span></td>
                                 <td>{{user.numVotes}}</td>
                                 <td class="email-col">{{user.email}}</td>
-                                <td>N/A</td>
-                                <td>N/A</td>
+                                <td>{{user.profile.hacker.school}}</td>
+                                <td>{{user.profile.hacker.grade}}</td>
                             </router-link>
                         </table>
                     </div>

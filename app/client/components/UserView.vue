@@ -12,14 +12,15 @@
                 </ul>
             </div>
             <hr>
-            <span v-if="user.permissions.owner">
-                <h4>APPLICATION</h4>
-                <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
-                    <li v-for="(value, key) in userApp">
-                        <b>{{key}}:</b> {{value}}<br>
-                    </li>
-                </ul>
-            </span>
+
+            <h4>APPLICATION</h4>
+            <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
+                <li v-for="(value, key) in userApp">
+                    <br>
+                    <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question'] : key}}</b><br>{{value ? value : "[Question left blank]"}}<br>
+                </li>
+            </ul>
+
 <!--             <p>User Object: </p>
             {{userObj}} -->
 
@@ -78,6 +79,7 @@
                 userObj : {},
                 userApp : {},
                 returnPath: "/organizer/users",
+                applications: {}
             }
         },
 
@@ -85,6 +87,10 @@
             if (this.$route.query["returnPath"]) {
                 this.returnPath = this.$route.query["returnPath"]
             }
+
+            ApiService.getApplications((err, applications) => {
+                this.applications = applications
+            });
         },
 
         mounted() {
@@ -155,12 +161,12 @@
                     for (var keys in obj) {
                         if (typeof obj[keys] !== "object") {
                             if (!(keys === "QRCode" || keys === "authSecret" || keys === "_id")) {
-                                flattened[this.prettify(keys)] = obj[keys]
+                                flattened[keys] = obj[keys]
                             }
                         } else {
                             if (keys !== "profile") {
                                 for (var depthKey in obj[keys]) {
-                                    flattened[this.prettify(depthKey)] = obj[keys][depthKey]
+                                    flattened[depthKey] = obj[keys][depthKey]
                                 }
                             } else {
                                 if (depth < 6) {
