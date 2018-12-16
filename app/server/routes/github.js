@@ -15,17 +15,15 @@ module.exports = function (router) {
 
     router.post('/pull', function (req, res) {
         console.log("made it this far lol");
-        req.on('data', function (chunk) {
-            let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(chunk.toString()).digest('hex');
+        let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(req.toString()).digest('hex');
 
-            if (req.headers['x-hub-signature'] === sig) {
-                exec('cd ../../../' + ' && git pull');
-                res.send("me has pulled");
-                console.log("I PULLED!");
-            } else {
-                res.send("lmao u can't do that");
-            }
-        });
+        if (req.headers['x-hub-signature'] === sig) {
+            exec('cd ../../../' + ' && git pull');
+            res.send("me has pulled");
+            console.log("I PULLED!");
+        } else {
+            res.send("lmao u can't do that");
+        }
 
         res.end();
     })
