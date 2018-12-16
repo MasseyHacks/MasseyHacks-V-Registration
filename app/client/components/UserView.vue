@@ -55,7 +55,7 @@
 
             <hr>
 
-            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">Login
+            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
             </button>
             <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
             <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>

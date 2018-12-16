@@ -1,17 +1,20 @@
 <template>
     <div class="app-screen">
 
+        <div class="row" style="position: fixed; margin-left: auto; margin-right: auto">
+            <div class="title-card col-md-12">
+                <h2>DASHBOARD</h2>
+            </div>
+        </div>
+
         <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="row">
                 <div class="ui-card dash-card" style="text-align: center">
                     <h3>Application Status</h3>
 
-                    <div style="display: inline-block; border-radius: 10px; height: 20px; width: 80%; max-width: 300px ; border: 2px solid black;alignment: center; overflow: hidden; z-index: 100">
-                        <div style="background-image: linear-gradient(135deg, #4bc2e4 0%, #085fae 100%); height: 100%; z-index: 200" v-bind:style="{width:stepsCompleted+'%'}"></div>
-                    </div>
 
-                    <h4>{{user.status.name.toUpperCase()}}</h4>
+                    <h5>{{user.status.name.toUpperCase()}}</h5>
 
                     <hr>
 
@@ -66,8 +69,7 @@
         data() {
             return {
                 user: Session.getUser(),
-                error: '',
-                stepsCompleted: 50
+                error: ''
             }
         },
         methods: {

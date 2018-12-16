@@ -38,7 +38,7 @@
             </ul>
         </div>
 
-        <div id="tint" v-if="this.sidebarOpen()" v-on:click="toggleSidebar" style="z-index: 650; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.60);"></div>
+        <div id="tint" v-bind:style="this.sidebarOpen() ? 'background-color: rgba(0, 0, 0, 0.60);' : 'background-color: rgba(0, 0, 0, 0); pointer-events: none;'" v-on:click="retractSidebar"></div>
 
         <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
