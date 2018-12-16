@@ -13,7 +13,7 @@ console.log(GITHUB_SECRET);
 module.exports = function (router) {
     router.use(express.json());
 
-    //auto pull
+    // test
 
     router.post('/pull', function (req, res) {
 
