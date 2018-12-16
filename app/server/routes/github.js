@@ -20,10 +20,10 @@ module.exports = function (router) {
 
             if (req.headers['x-hub-signature'] === sig) {
                 exec('cd ../../../' + ' && git pull');
-                res.send({"PULLED": "yes"});
+                res.send("me has pulled");
                 console.log("I PULLED!");
             } else {
-                res.send({"PULLED": "authError"});
+                res.send("lmao u can't do that");
             }
         });
 
