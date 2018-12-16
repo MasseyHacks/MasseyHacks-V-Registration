@@ -58,20 +58,28 @@
                     <br>
 
                     <table class="data-table-generic" v-for="(comparison, logical) in filters">
-                        <tr class="table-header">
-                            <td>TYPE</td>
+                        <tr class="table-header" v-if="comparison">
+                            <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>
+                            <td></td>
                             <td>CONDITION</td>
-
+                            <td></td>
+                            <td>DELETE</td>
+                            <td></td>
                         </tr>
                         <tr v-for="filter in comparison">
 
-                            <td style="letter-spacing: normal !important;">{{logical.slice(1).toUpperCase()}}</td>
+                            <td></td>
+                            <td></td>
 
                             <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
+
+                            <td></td>
 
                             <td>
                                 <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
                             </td>
+
+                            <td></td>
 
                         </tr>
                     </table>
@@ -258,6 +266,11 @@
 
             deleteFilter: function (logical, filter) {
                 this.filters[logical].splice(this.filters[logical].indexOf(filter), 1);
+
+                if (this.filters[logical].length == 0) {
+                    delete this.filters[logical];
+                }
+
                 this.updateSearch()
             },
 
