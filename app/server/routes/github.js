@@ -7,6 +7,7 @@ const crypto = require('crypto');
 require('dotenv').load();
 
 GITHUB_SECRET = process.env.GITHUB_SECRET;
+console.log(GITHUB_SECRET);
 
 module.exports = function (router) {
     router.use(express.json());
