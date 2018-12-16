@@ -4,6 +4,7 @@ const express = require('express');
 const request = require('request');
 const exec = require('child_process').exec;
 const crypto = require('crypto');
+const logger = require('../services/logger');
 require('dotenv').load();
 
 GITHUB_SECRET = process.env.GITHUB_SECRET;
@@ -17,6 +18,9 @@ module.exports = function (router) {
     router.post('/pull', function (req, res) {
         exec('echo "macs are bad" > pineapple.txt');
         exec('git pull > apple.txt');
+        logger.logAction(-1,-1, "Pulled from GitHub", "Pull Success", function () {
+            console.log("pull success");
+        });
         res.send("me has pulled");
         // console.log("made it this far lol");
         // let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(req.toString()).digest('hex');
