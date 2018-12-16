@@ -2,7 +2,7 @@
     <div>
         <div class="ui-card dash-card-large">
             <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
-            <div id="detailed-info" style="column-count: 2; column-width: 300px;">
+            <div class="duo-col" id="detailed-info">
                 <ul style="list-style: none">
                     <li style="overflow-wrap: break-word; text-align: left;"
                         v-for="(value, key) in flatten(userObj,false)">
