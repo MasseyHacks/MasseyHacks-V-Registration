@@ -461,6 +461,10 @@ h2 {
     column-width: 220px;
 }
 
+.duo-col li {
+    break-inside: avoid-column;
+}
+
 .custom-ul {
     list-style: none;
     text-align: justify;

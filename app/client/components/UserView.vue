@@ -4,7 +4,8 @@
             <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
             <div id="detailed-info" style="column-count: 2; column-width: 300px;">
                 <ul style="list-style: none">
-                    <li v-for="(value, key) in flatten(userObj,false)" style="overflow-wrap: break-word; text-align: left;">
+                    <li style="overflow-wrap: break-word; text-align: left;"
+                        v-for="(value, key) in flatten(userObj,false)">
                         <span v-if="key !== 'Application'">
                             <b>{{key}}:</b> {{value}}
                         </span>
@@ -14,15 +15,18 @@
             <hr>
 
             <h4>APPLICATION</h4>
-            <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
-                <li v-for="(value, key) in userApp">
-                    <br>
-                    <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question'] : key}}</b><br>{{value ? value : "[Question left blank]"}}<br>
-                </li>
-            </ul>
+            <div class="duo-col">
+                <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
+                    <li v-for="(value, key) in userApp">
+                        <br>
+                        <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question']
+                            : key}}</b><br>{{value ? value : "[Question left blank]"}}<br>
+                    </li>
+                </ul>
+            </div>
 
-<!--             <p>User Object: </p>
-            {{userObj}} -->
+            <!--             <p>User Object: </p>
+                        {{userObj}} -->
 
 
             <!-- TODO -->
@@ -74,10 +78,10 @@
         data() {
             return {
                 user: Session.getUser(),
-                error : '',
-                userID : '',
-                userObj : {},
-                userApp : {},
+                error: '',
+                userID: '',
+                userObj: {},
+                userApp: {},
                 returnPath: "/organizer/users",
                 applications: {}
             }
@@ -107,50 +111,50 @@
         },
 
         methods: {
-            deleteUser: function() {
+            deleteUser: function () {
                 ApiService.deleteUser(this.userObj.fullName, this.userID, () => {
-                    swal('Success!', 'Successfully deleted user', 'success').then(function() {
+                    swal('Success!', 'Successfully deleted user', 'success').then(function () {
                         window.location.href = this.returnPath;
                     });
 
                 });
             },
-            flushEmailQueue: function() {
+            flushEmailQueue: function () {
                 ApiService.flushEmailQueue(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully flushed email queue', 'success');
                 });
             },
-            resetVotes: function() {
+            resetVotes: function () {
                 ApiService.resetVotes(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset votes', 'success');
                 });
             },
-            resetInvitation: function() {
+            resetInvitation: function () {
                 ApiService.resetInvitation(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset invitation status', 'success');
                 });
             },
-            resetAdmissionState: function() {
+            resetAdmissionState: function () {
                 ApiService.resetAdmissionState(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully reset admission state', 'success');
                 });
             },
-            forceAdmit: function() {
+            forceAdmit: function () {
                 ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully force admitted user', 'success');
                 });
             },
-            forceReject: function() {
+            forceReject: function () {
                 ApiService.forceReject(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully force rejected user', 'success');
                 });
             },
-            voteAdmit: function() {
+            voteAdmit: function () {
                 ApiService.voteAdmit(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully voted to admit user', 'success');
                 });
             },
-            voteReject: function() {
+            voteReject: function () {
                 ApiService.voteReject(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully voted to reject user', 'success');
                 });
@@ -185,7 +189,7 @@
                 }
                 return flattened
             },
-            requestSuperToken: function() {
+            requestSuperToken: function () {
                 AuthService.skillTest(() => {
                     AuthService.sendRequest('POST', '/auth/requestSuperToken', {
                         id: this.userID
@@ -195,137 +199,137 @@
                         } else {
                             swal({
                                 title: "PEI TOKEN ISSUED!",
-                                html: "<a href=\"" + data.url + "\">"+ data.url + "</a>",
+                                html: "<a href=\"" + data.url + "\">" + data.url + "</a>",
                                 type: "success"
                             })
                         }
                     })
                 })
             },
-            editUser: function(){
+            editUser: function () {
                 var flatWithHistory = this.flattenWithHistory(this.userObj);
                 var keys = flatWithHistory.documentKeys;
                 //remove values that cannot/should not be edited
-                keys.splice(keys.indexOf('__v'),1);
-                keys.splice(keys.indexOf('_id'),1);
-                keys.splice(keys.indexOf('lowerCaseName'),1);
-                keys.splice(keys.indexOf('fullName'),1);
-                keys.splice(keys.indexOf('permissions.level'),1);
-                keys.splice(keys.indexOf('status.name'),1);
-                keys.splice(keys.indexOf('profile.isSigned'),1);
-                keys.splice(keys.indexOf('lowerCaseName'),1);
+                keys.splice(keys.indexOf('__v'), 1);
+                keys.splice(keys.indexOf('_id'), 1);
+                keys.splice(keys.indexOf('lowerCaseName'), 1);
+                keys.splice(keys.indexOf('fullName'), 1);
+                keys.splice(keys.indexOf('permissions.level'), 1);
+                keys.splice(keys.indexOf('status.name'), 1);
+                keys.splice(keys.indexOf('profile.isSigned'), 1);
+                keys.splice(keys.indexOf('lowerCaseName'), 1);
                 console.log(keys);
 
                 swal({
-                  title: 'Warning',
-                  type: 'warning',
-                  text: 'Updating a user should be done through the appropriate function. This editor will not check for any errors or update any dependent fields. Continue?',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Yes!'
-                }).then(async (result) =>{
-                  if(result.value){
-                    const {value: field} = await swal({
-                      title: 'Select a field',
-                      input: 'select',
-                      inputOptions: keys,
-                      inputPlaceholder: 'Select a field',
-                      showCancelButton: true,
-                      inputValidator: (value) => {
-                        return new Promise((resolve) => {
-                          resolve();
-                        })
-                      }
-                    });
-
-                    if (field) {
-                      const {value: newValue} = await swal({
-                        title: 'Enter a value for '+keys[field],
-                        input: 'text',
-                        inputValue: flatWithHistory[keys[field]],
-                        showCancelButton: true,
-                        inputValidator: (value) => {
-                          return !value && 'You need to write something!'
-                        }
-                      });
-
-                      if (newValue) {
-                        swal({
-                          title: 'Are you sure?',
-                          type: 'warning',
-                          html: `You are directly modifying ${this.userObj.fullName}!<br>`+
-                                '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>'+
-                                '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation'+
-                                `<br><br>Field: ${keys[field]}`+
-                                `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}`+
-                                `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
-                          showCancelButton: true,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Yes!'
-                        }).then((result) => {
-                            if (result.value) {
-                                AuthService.skillTest(() => {
-                                    swal.showLoading();
-
-                                    var postData = {};
-                                    postData[keys[field]] = newValue;
-
-                                    AuthService.sendRequest('POST', '/api/modifyUser', {
-                                        userID: this.userObj._id,
-                                        data: postData
-                                    }, (err,data) => {
-                                        if (err) {
-                                            swal('Error', err.error, 'error')
-                                        } else {
-                                            swal('Success', 'Field has been changed', 'success').then((result) => {
-                                              ApiService.getUser(this.userID, (err, data) => {
-                                                  if (err || !data) {
-                                                      console.log("ERROR")
-                                                  } else {
-                                                      console.log("data2");
-                                                      this.userObj = data
-                                                  }
-                                              })
-                                            });
-
-                                        }
-                                    })
+                    title: 'Warning',
+                    type: 'warning',
+                    text: 'Updating a user should be done through the appropriate function. This editor will not check for any errors or update any dependent fields. Continue?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then(async (result) => {
+                    if (result.value) {
+                        const {value: field} = await swal({
+                            title: 'Select a field',
+                            input: 'select',
+                            inputOptions: keys,
+                            inputPlaceholder: 'Select a field',
+                            showCancelButton: true,
+                            inputValidator: (value) => {
+                                return new Promise((resolve) => {
+                                    resolve();
                                 })
                             }
-                        })
-                      }
+                        });
+
+                        if (field) {
+                            const {value: newValue} = await swal({
+                                title: 'Enter a value for ' + keys[field],
+                                input: 'text',
+                                inputValue: flatWithHistory[keys[field]],
+                                showCancelButton: true,
+                                inputValidator: (value) => {
+                                    return !value && 'You need to write something!'
+                                }
+                            });
+
+                            if (newValue) {
+                                swal({
+                                    title: 'Are you sure?',
+                                    type: 'warning',
+                                    html: `You are directly modifying ${this.userObj.fullName}!<br>` +
+                                        '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>' +
+                                        '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation' +
+                                        `<br><br>Field: ${keys[field]}` +
+                                        `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}` +
+                                        `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes!'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        AuthService.skillTest(() => {
+                                            swal.showLoading();
+
+                                            var postData = {};
+                                            postData[keys[field]] = newValue;
+
+                                            AuthService.sendRequest('POST', '/api/modifyUser', {
+                                                userID: this.userObj._id,
+                                                data: postData
+                                            }, (err, data) => {
+                                                if (err) {
+                                                    swal('Error', err.error, 'error')
+                                                } else {
+                                                    swal('Success', 'Field has been changed', 'success').then((result) => {
+                                                        ApiService.getUser(this.userID, (err, data) => {
+                                                            if (err || !data) {
+                                                                console.log("ERROR")
+                                                            } else {
+                                                                console.log("data2");
+                                                                this.userObj = data
+                                                            }
+                                                        })
+                                                    });
+
+                                                }
+                                            })
+                                        })
+                                    }
+                                })
+                            }
+                        }
                     }
-                  }
                 })
             },
-            flattenWithHistory: function (data,prefix="",level=0){
+            flattenWithHistory: function (data, prefix = "", level = 0) {
                 var tempObj = {};
-                if(level < 7){
+                if (level < 7) {
                     Object.keys(data).forEach((key) => {
-                        if(data[key] === Object(data[key])){
+                        if (data[key] === Object(data[key])) {
                             //iterate again!
-                            tempObj = Object.assign(tempObj,this.flattenWithHistory(data[key],prefix+key+".",level+=1));
-                        }
-                        else{
+                            tempObj = Object.assign(tempObj, this.flattenWithHistory(data[key], prefix + key + ".", level += 1));
+                        } else {
                             //log the value
-                            tempObj[prefix+key] = data[key];
+                            tempObj[prefix + key] = data[key];
                         }
                     });
-                    if(prefix === "") {
+                    if (prefix === "") {
                         tempObj["documentKeys"] = Object.keys(tempObj);
                     }
                     return tempObj;
-                }
-                else{
+                } else {
                     console.log("recursion limit reached!");
                     return {};
                 }
             },
 
-            prettify: function(str) {
-                return str.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })
+            prettify: function (str) {
+                return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                    return str.toUpperCase();
+                })
             }
         }
 
