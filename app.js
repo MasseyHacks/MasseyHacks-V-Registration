@@ -63,6 +63,10 @@ Raven.context(function() {
         // Start routers
         app.use(express.static('app/client/'));
 
+        let githubRouter = express.Router();
+        require('./app/server/routes/github')(githubRouter);
+        app.use('/github', githubRouter);
+
         var apiRouter = express.Router();
         require('./app/server/routes/api')(apiRouter);
         app.use('/api', apiRouter);

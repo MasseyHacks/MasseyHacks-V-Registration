@@ -2,7 +2,7 @@
     <div class="app-screen">
         <div class="container">
             <div class="title-card col-md-12">
-                <h2>APPLICATION</h2>
+                <h2>APPLICATION1</h2>
             </div>
             <div class="ui-card dash-card-large">
 
