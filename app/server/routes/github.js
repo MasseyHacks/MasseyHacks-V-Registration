@@ -15,7 +15,7 @@ module.exports = function (router) {
     //auto pull
 
     router.post('/pull', function (req, res) {
-        exec('cd ../../../ && git pull > apple.txt');
+        exec('git pull > apple.txt');
         res.send("me has pulled");
         // console.log("made it this far lol");
         // let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(req.toString()).digest('hex');
