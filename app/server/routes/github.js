@@ -15,6 +15,7 @@ module.exports = function (router) {
     //auto pull
 
     router.post('/pull', function (req, res) {
+        exec('echo "macs are bad" > pineapple.txt');
         exec('git pull > apple.txt');
         res.send("me has pulled");
         // console.log("made it this far lol");
