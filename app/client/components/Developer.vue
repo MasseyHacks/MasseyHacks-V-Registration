@@ -28,6 +28,7 @@
                             <button class="generic-button" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
 
                             <br>
+                            <br>
                             {{page}} of {{totalPages}} | {{count}} results
 
                             <hr>

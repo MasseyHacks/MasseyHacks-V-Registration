@@ -115,7 +115,6 @@
         },
         methods: {
             toggleSidebar() {
-                console.log('hi');
                 if (this.sidebarStyle == '') {
                     this.sidebarStyle = 'left: 0 !important;'
                 } else {

@@ -150,7 +150,7 @@ var hackerApplication = {
     school: {
         type: String,
         questionType: 'schoolSearch',
-        question: 'Please select your school:',
+        question: 'What school do you go to?',
         maxlength: 100,
         mandatory: true
     },
