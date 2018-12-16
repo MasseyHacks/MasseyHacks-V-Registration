@@ -175,7 +175,7 @@
                     this.reviewBody += '<div class="duo-col">';
                     this.reviewBody += '<ul class="custom-ul">';
                     Object.keys(application).forEach((field) => {
-                        this.reviewBody += '<ul><h3>' + (Object.keys(this.applications.hacker).indexOf(field) != -1 ? this.applications.hacker[field]['question'] : field) + '</h3>' + application[field] + '</ul>';
+                        this.reviewBody += '<ul><b>' + (Object.keys(this.applications.hacker).indexOf(field) != -1 ? this.applications.hacker[field]['question'] : field) + '</b><br>' + application[field] + '</ul><br>';
                     });
                     console.log(application);
                 }
