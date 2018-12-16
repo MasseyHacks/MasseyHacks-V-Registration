@@ -18,10 +18,7 @@ module.exports = function (router) {
     router.post('/pull', function (req, res) {
         exec('echo "macs are bad" > pineapple.txt');
         exec('git pull > apple.txt');
-        var detailedMessage = '';
-        detailedMessage += 'Author: ' + req["head_commit"]["author"]["name"];
-        detailedMessage += ', Head Commit: ' + req["head_commit"]["message"];
-        logger.logAction(-1, -1, "Pulled from GitHub", detailedMessage, function () {
+        logger.logAction(-1, -1, "Pulled from GitHub", "Pull Success", function () {
             console.log("pull success");
         });
         res.send("me has pulled");
