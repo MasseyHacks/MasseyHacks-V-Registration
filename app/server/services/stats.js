@@ -113,7 +113,6 @@ function calculateStats(callback){
                     newStats.total = users.length;
 
                     async.each(users, function(user, callback){
-                        console.log(user);
                         /*
                         for (var i = 0; i < user.votedBy.length; i++) {
                             if (user.votedBy[i] in votes) {
@@ -256,7 +255,6 @@ function calculateStats(callback){
                         newStats.confirmedStat.dietaryRestrictions = confirmedRestrictions;
 
                         console.log('Stats updated!');
-                        console.log(newStats);
                         newStats.lastUpdated = new Date();
                         stats = newStats;
 
