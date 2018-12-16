@@ -18,10 +18,10 @@ function calculateStats(callback){
 
         demo: {
             gender: {
-                M: 0,
-                F: 0,
-                O: 0,
-                N: 0
+                'Male': 0,
+                'Female': 0,
+                'Other': 0,
+                'I prefer not to answer': 0
             },
             massey: 0,
             nonmassey: 0,
@@ -49,10 +49,10 @@ function calculateStats(callback){
 
             demo: {
                 gender: {
-                    M: 0,
-                    F: 0,
-                    O: 0,
-                    N: 0
+                    'Male': 0,
+                    'Female': 0,
+                    'Other': 0,
+                    'I prefer not to answer': 0
                 },
                 massey: 0,
                 nonmassey: 0,
@@ -148,7 +148,7 @@ function calculateStats(callback){
                         if (user.status.submittedApplication) {
 
                             // Add to the gender
-                            newStats.demo.gender[user.profile.gender] += 1;
+                            newStats.demo.gender[user.profile.hacker.gender] += 1;
 
                             if (user.profile.hacker.grade) {
                                 newStats.demo.grade[user.profile.hacker.grade] += 1;
@@ -254,6 +254,7 @@ function calculateStats(callback){
                         newStats.confirmedStat.dietaryRestrictions = confirmedRestrictions;
 
                         console.log('Stats updated!');
+                        console.log(newStats);
                         newStats.lastUpdated = new Date();
                         stats = newStats;
 

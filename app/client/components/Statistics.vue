@@ -193,14 +193,22 @@
                     "Other": '<i class="fas fa-question-circle"></i>',
                     "No Data": '<i class="fas fa-ban"></i>'
                 };
+
+                console.log(this.statistics);
+
                 for (var key in this.statistics.demo.gender) {
                     totalCount += this.statistics.demo.gender[key];
+                    console.log("STUFF");
+                    console.log(this.statistics.demo.gender);
                 }
+
+                console.log(totalCount);
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.M / totalCount) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.F / totalCount) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.O / totalCount) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.N / totalCount) : 0) + "%";
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Male / totalCount * 100) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Female / totalCount * 100) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Other / totalCount * 100) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 
