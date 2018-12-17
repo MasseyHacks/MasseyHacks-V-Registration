@@ -31,7 +31,7 @@ function makeOrganizer(email, firstName, lastName) {
             var suspension = false;
 
             var hacker = {
-                "dietaryRestrictions": ["Bad marks.", "Karl Zhu.", "Yuan Song Zhang."],
+                "dietaryRestrictions": [],
                 "shirt": "L",
                 "hackathonExperience": "I want to Hack the North.",
                 "school": "I go to the University of Waterloo",
