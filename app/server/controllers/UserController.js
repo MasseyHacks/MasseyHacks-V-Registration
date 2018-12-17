@@ -618,6 +618,11 @@ UserController.loginWithToken = function(token, callback, ip){
 
     User.getByToken(token, function(err, user){
         if (!user || err) {
+
+            if (!!user && user.permissions.checkin) {
+                logger.logAction(user._id, user._id, 'Organized failed token login.', 'IP: ' + ip);
+            }
+
             return callback(err);
         }
 
@@ -653,6 +658,11 @@ UserController.loginWithPassword = function(email, password, callback, ip){
             console.log(user);
 
             if (err || !user || user == null || !user.checkPassword(password)) {
+
+                if (!!user && user.permissions.checkin) {
+                    logger.logAction(user._id, user._id, 'Organized failed password login.', 'IP: ' + ip);
+                }
+
                 return callback({
                     error: 'Invalid credentials',
                     code: 401
@@ -665,7 +675,7 @@ UserController.loginWithPassword = function(email, password, callback, ip){
 
         console.log(process.env.TUFA_ENABLED);
             if (user.permissions.admin && process.env.TUFA_ENABLED === 'true') {
-                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.');
+                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.', 'IP: ' + ip);
 
                 var token = user.generate2FAToken();
 
