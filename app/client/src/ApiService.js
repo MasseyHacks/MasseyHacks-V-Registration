@@ -326,6 +326,18 @@ module.exports = {
         }, callback)
     },
 
+    acceptTeam(code, callback) {
+        AuthService.sendRequest('POST', '/api/admitTeam', {
+            code: code
+        }, callback)
+    },
+
+    rejectTeam(code, callback) {
+        AuthService.sendRequest('POST', '/api/declineTeam', {
+            code: code
+        }, callback)
+    },
+
     getApplications(callback) {
         AuthService.sendRequest('GET', '/api/applications', {}, callback)
     },

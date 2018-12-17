@@ -15,8 +15,8 @@
             <hr>
 
             <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
-            <button v-on:click="">Force Admit</button>
-            <button v-on:click="">Force Reject</button>
+            <button v-on:click="acceptTeam">Force Admit</button>
+            <button v-on:click="rejectTeam">Force Reject</button>
 
             <button v-on:click="deleteTeam">Delete Team</button>
         </div>
@@ -95,6 +95,14 @@
                         })
                     }
                 })
+            },
+            acceptTeam() {
+                ApiService.acceptTeam(this.teamCode, (err, data) => {
+
+                })
+            },
+            rejectTeam() {
+
             }
 
         }
