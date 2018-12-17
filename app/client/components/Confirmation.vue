@@ -8,10 +8,7 @@
         <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="ui-card dash-card">
-                <div v-if="user.status.name === 'confirmed' || user.status.name === 'declined' || user.status.name==='organizer'">
-                    {{user.status.name.toUpperCase()}}
-                </div>
-                <div v-else>
+                <div>
                     <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
                     <button class="generic-button" v-on:click="denyInvitation">Deny</button>
                 </div>
