@@ -1,3 +1,5 @@
+require('dotenv').load();
+
 //const fs             = require('fs');
 const User           = require('../app/server/models/User');
 //const UserController = require('../app/server/controllers/UserController');
