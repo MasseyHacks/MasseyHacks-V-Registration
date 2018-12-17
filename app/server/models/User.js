@@ -211,12 +211,6 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
                 code: 404
             })
         }
-
-        /*
-        if (!permissionLevel) {
-            permissionLevel = 0
-        }*/
-
         return callback(null, user); //filterSensitive(user, permissionLevel));
     });
 };

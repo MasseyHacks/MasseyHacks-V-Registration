@@ -1,8 +1,10 @@
 <template>
     <div class="app-screen">
+
+        <!--
         <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
             <h2>TEAM</h2>
-        </div>
+        </div>-->
 
         <div class="spacer"></div>
         <div class="container vertical-centered">
