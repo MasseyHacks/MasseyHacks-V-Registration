@@ -1,6 +1,5 @@
 # MasseyHacks Registration System (CODENAME: GOOSE)
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/MasseyHacks/MasseyHacks-V-Registration.svg)](https://greenkeeper.io/)
 [![Travis-CI badge](https://travis-ci.org/MasseyHacks/MasseyHacks-V-Registration.svg?branch=master)](https://travis-ci.com)
 
 Registration system for MasseyHacks V. Goose is currently being developed and is extremely unstable at the current state. Please use with caution.
@@ -46,5 +45,18 @@ npm start
 
 Congrats, the Goose server should now be running!(Hopefully)
 
+**Docker Setup**
+
+Alternatively, we have a Docker image available for use.
+
+To use the image, simply run the following to get the image.
+
+```
+docker run --env-file .env -p 3005:3005 jamesxu123/masseyhacks:latest
+```
+
+It is crucial that you add in the .env file which can be by using .env.template as described above.
+
+Docker usage is extremely experimental and certain features may be unstable or unavailable. Modifying organizers.json is for example unsupported right now.
 ___
 Developed By: Henry Tu, James Xu, Ryan Zhang, David Hui
