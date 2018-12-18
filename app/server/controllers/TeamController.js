@@ -3,6 +3,7 @@ const Team           = require('../models/Team');
 const User           = require('../models/User');
 const TeamFields     = require('../models/data/TeamFields');
 const Settings       = require('../models/Settings');
+const UserController = require('../controllers/UserController');
 
 const logger         = require('../services/logger');
 const uuidv4         = require('uuid/v4');
@@ -14,30 +15,47 @@ function escapeRegExp(str) {
 }
 
 
-TeamController.teamAccept = function(adminUser, userID, callback) {
-    User.getbyID(userID, function (err, user) {
-        if (err || !user){
-            return callback(err, user);
-        } else {
+TeamController.teamAccept = function(adminUser, teamCode, callback) {
+    console.log(teamCode)
+    TeamController.getByCode(teamCode, function (err, team) {
+        if (err || !team) {
+            console.log(err)
+            return callback(err);
+        }
 
-            Team.getByCode(user.teamCode, '+memberIDs', function (err, team) {
-                if (err || !team) {
-                    return callback(err, user);
+        logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
+
+        for (var teamMember in team.memberNames) {
+            UserController.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                if (err || !user){
+                    console.log(err)
                 }
-
-                logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
-
-                for (id in team.memberIDs) {
-                    UserController.admitUser(adminUser, id, function (err, user) {
-                        if (err || !user){
-                            console.log(err)
-                        }
-                    })
-                }
-
-                return callback(err, user);
             })
         }
+
+        return callback(false, team);
+    })
+};
+
+TeamController.teamReject = function(adminUser, teamCode, callback) {
+    console.log(teamCode)
+    TeamController.getByCode(teamCode, function (err, team) {
+        if (err || !team) {
+            console.log(err)
+            return callback(err);
+        }
+
+        logger.logAction(adminUser._id, -1, 'Rejected team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
+
+        for (var teamMember in team.memberNames) {
+            UserController.rejectUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                if (err || !user){
+                    console.log(err)
+                }
+            })
+        }
+
+        return callback(false, team);
     })
 };
 
