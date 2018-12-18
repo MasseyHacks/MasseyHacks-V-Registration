@@ -15,10 +15,10 @@
             <hr>
 
             <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
-            <button v-on:click="acceptTeam">Force Admit</button>
-            <button v-on:click="rejectTeam">Force Reject</button>
+            <button class=generic-button-dark v-on:click="acceptTeam">Force Admit</button>
+            <button class=generic-button-dark v-on:click="rejectTeam">Force Reject</button>
 
-            <button v-on:click="deleteTeam">Delete Team</button>
+            <button class=generic-button-dark v-on:click="deleteTeam">Delete Team</button>
         </div>
     </div>
 </template>
@@ -97,12 +97,66 @@
                 })
             },
             acceptTeam() {
-                ApiService.acceptTeam(this.teamCode, (err, data) => {
+                swal({
+                    title: 'Warning',
+                    type: 'warning',
+                    text: 'Are you sure you want to admit this team',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading();
 
+                        ApiService.acceptTeam(this.teamCode, (err, data) => {
+                            if (err) {
+                                swal({
+                                    title: "Warning",
+                                    type: 'danger',
+                                    text: 'Unable to admit team'
+                                })
+                            } else {
+                                swal({
+                                    title: "Success",
+                                    type: 'success',
+                                    text: 'Team has been admitted'
+                                })
+                            }
+                        })
+                    }
                 })
             },
             rejectTeam() {
+                swal({
+                    title: 'Warning',
+                    type: 'warning',
+                    text: 'Are you sure you want to reject this team',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading();
 
+                        ApiService.rejectTeam(this.teamCode, (err, data) => {
+                            if (err) {
+                                swal({
+                                    title: "Warning",
+                                    type: 'danger',
+                                    text: 'Unable to reject team'
+                                })
+                            } else {
+                                swal({
+                                    title: "Success",
+                                    type: 'success',
+                                    text: 'Team has been rejected'
+                                })
+                            }
+                        })
+                    }
+                })
             }
 
         }
