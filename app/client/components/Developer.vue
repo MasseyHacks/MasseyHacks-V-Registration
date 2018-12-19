@@ -59,7 +59,7 @@
 
                             <br>
                             <br>
-                            {{page}} of {{totalPages}} | {{count}} results
+                            page {{page}} of {{totalPages}} | {{count}} results
 
                             <hr>
 
