@@ -1,23 +1,22 @@
 @font-face {
-    font-family: "Futura";
+    font-family: "Avenir";
     src: url(../fonts/avenir.otf);
 }
 
 @font-face {
-    font-family: "Futura Bold";
+    font-family: "Avenir Next Bold";
     src: url(../fonts/avenir-next-bold.ttf);
 }
 
 * {
-    font-family: "Futura", sans-serif;
+    font-family: "Avenir", sans-serif;
     font-weight: normal;
 }
 
 h2 {
-    font-family: 'Futura Bold', sans-serif;
+    font-family: 'Avenir Next Bold', sans-serif;
     font-weight: normal;
 }
-
 
 .row {
     margin-left: 20px;
@@ -31,6 +30,7 @@ h2 {
 .hidden {
     display: none;
 }
+
 .loading-icon {
     position: absolute !important;
     top: 0px;
@@ -38,6 +38,7 @@ h2 {
     transform: translateY(-50%);
     transform: translateX(-50%);
 }
+
 #logo {
     height: 230px;
     width: 230px;
@@ -57,13 +58,13 @@ h2 {
 #login-form-box {
     position: relative;
 
-    background: #EEEEEE;
+    background: #fafafa;
     box-shadow: 0px 10px 27px 0px rgba(0, 0, 0, 0.34);
     border-radius: 10px;
 
     max-width: 550px;
-    width: 40vw;
-    padding: 3%;
+    width: 100%;
+    padding: 40px;
     color: black !important;
     align-items: center;
     display: grid;
@@ -73,12 +74,12 @@ h2 {
 }
 
 #login-form-box p {
-    font-size: 1em;
+    font-size: 0.5em;
 }
 
 #login-form-box h2 {
     color: black;
-    font-family: "Futura Bold", sans-serif;
+    font-family: "Avenir Next Bold", sans-serif;
     text-align: center;
     font-size: 1em;
 }
@@ -88,28 +89,26 @@ h2 {
     font-size: 0.7rem;
 }
 
-.dropdown-toggle input::placeholder {
-    font-size: 1rem;
-}
 
 #login-form-box input {
     padding: 1%;
     margin-bottom: 5px;
-    background: white;
+    background: transparent;
     width: 100%;
     height: 40px;
-    border: 2px solid white;
-    border-radius: 15px;
+    border: none;
+    border-bottom: 1px solid #919eaf;
+    /*border-radius: 15px;*/
     position: relative;
-    font-size: 1rem;
-    color: black;
+    font-size: 0.5em;
+    color: #505050;
     text-align: left;
+    outline: none;
 }
 
+
 #login-form-elements button {
-    /*    position: relative;
-        left: 50%;
-        transform: translateX(-50%);*/
+    outline: none;
     margin-top: 5%;
     background-color: transparent;
     color: black;
@@ -121,6 +120,10 @@ h2 {
     text-align: center;
     transition: background-color 0.1s;
     transition: border 0.1s;
+}
+
+#login-form-elements button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 #button-row {
@@ -139,54 +142,36 @@ h2 {
     margin: auto;
 }
 
+#login-form-elements form {
+    margin: 0;
+}
+
 #main {
     display: grid;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 700px) {
     #login-form-box {
-        width: 90vw;
+        width: 100%;
+        max-width: 90vw;
     }
-
-    #login-form-box h2 {
-        font-size: 5rem;
-    }
-
-    #login-form-box input {
-        width: 80vw;
-        height: 10vh;
-        padding: 1%;
-        font-size: 3rem;
-    }
-
-    ::placeholder {
-        font-size: 3rem;
-    }
-
-    .dropdown-toggle input::placeholder {
-        font-size: 2rem;
-    }
-
-    #login-form-elements button {
-        width: 50vw;
-        height: 6vh;
-        font-size: 3rem;
-    }
-
 }
 
 #main-sidebar {
     height: 100vh;
     /*background: rgb(8,27,74);*/
-    background: rgb(11, 44, 79);
+    background: #051930;
     position: fixed;
-    min-width: 230px;
+    width: 230px;
     z-index: 700;
     overflow-y: auto;
+    overflow-x: hidden;
 
     /*
     padding-bottom: 50px;
     padding-top: 50px;*/
+
+    text-align: center;
 
     transition: left .5s;
     left: 0;
@@ -198,6 +183,7 @@ h2 {
     color: white;
     left: 0px;
     padding-left: 0px;
+    margin-bottom: 40px;
 }
 
 #main-sidebar button {
@@ -222,7 +208,7 @@ h2 {
 
 #main-sidebar a.router-link-active button {
     border-left: 4px solid #1b84db;
-    background-color: #071d2d;
+    background-color: #0C304A;
 }
 
 #main-sidebar a.router-link-active button:focus {
@@ -240,12 +226,12 @@ h2 {
 #main-sidebar li {
     /*margin-top: 30px;*/
     position: relative;
-    width: 230px;
+    width: 100%;
 }
 
 /* width */
 #main-sidebar::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
 }
 
 /* Track */
@@ -267,9 +253,11 @@ h2 {
 #hamburger {
     background-color: white;
 }
+
 #hamburger::before {
     background-color: white;
 }
+
 #hamburger::after {
     background-color: white;
 }
@@ -289,12 +277,14 @@ h2 {
     margin-left: -6px;
     margin-right: -6px;
 }
+
 #nav-main a:hover {
-    color:darkgrey;
+    color: darkgrey;
     text-decoration: none;
 }
+
 #nav-main a:active {
-    color:lightslategray;
+    color: lightslategray;
     text-decoration: none;
 }
 
@@ -303,10 +293,10 @@ h2 {
     left: 0px;
     width: 100vw;
     height: 70px;
-    position: relative;
+    position: absolute;
 
     z-index: 600;
-    font-family: Avenir Next Bold;
+    font-family: "Avenir Next Bold", sans-serif;
 
     border-color: transparent;
     background-color: #051930 !important;
@@ -314,15 +304,21 @@ h2 {
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.3);
 
     display: table;
-    margin: 0 auto;
     transition: .3s;
+
+    top: -100% !important;
 }
+
+
 #nav-main ul {
-    text-align: center;
+    padding-left: 15px;
+    padding-right: 10px;
 }
+
 #nav-main li {
     display: inline;
 }
+
 #nav-main a {
     color: white !important;
     margin-left: 5px;
@@ -330,12 +326,22 @@ h2 {
 }
 
 #app-view {
-    position: relative;
-    max-width: 100vw;
-    /*top: 75px;*/
+    transition: .3s;
+
+    position: fixed;
+
+    bottom: 0;
+    right: 0;
+
+    width: 100%;
     height: 100%; /* - 75px);*/
+
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.app-view-logged-in {
+    width: calc(100% - 230px) !important
 }
 
 /* width */
@@ -369,8 +375,20 @@ h2 {
     background: #575d62;
 }
 
+#tint {
+    z-index: 650;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.60);
+
+    transition: all 0.1s;
+}
+
 .app-screen {
-    padding-left: 10px; /* Makes it even with the scrollbar */
+    /*padding-left: 10px; /* Makes it even with the scrollbar */
     margin: 0 auto;
     text-align: center;
     width: 100%;
@@ -390,7 +408,7 @@ h2 {
 }
 
 .ui-card h3 {
-    font-family: 'Futura Bold';
+    font-family: 'Avenir Next Bold', sans-serif;
     font-size: 1.5em;
     /*    letter-spacing: 0.3em;*/
 }
@@ -406,19 +424,31 @@ h2 {
     font-size: 3.5em;
     letter-spacing: 0.3em;
     text-align: center;
-    font-family: 'Futura Bold' !important;
+    font-family: 'Avenir Next Bold', sans-serif !important;
+}
+
+.main-application {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dash-card {
+    border: solid;
+    border-color: rgb(220, 220, 220) !important;
+    border-width: 1px !important;
+
     width: 50vw;
     margin-top: 30px;
+
+    padding: 20px;
 }
 
 .dash-card-large {
     width: 70vw;
     margin-top: 30px;
-    /*background-image: linear-gradient(#667eea,#667eea);*/
-    /*background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+    /*background: #fafafa;
+    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.34);
+    border-radius: 10px;*/
     color: black;
 }
 
@@ -431,14 +461,8 @@ h2 {
     column-width: 220px;
 }
 
-@media (max-width: 992px) {
-    * {
-        font-size: 1.1em;
-    }
-
-    .duo-col {
-        column-count: 1;
-    }
+.duo-col li {
+    break-inside: avoid-column;
 }
 
 .custom-ul {
@@ -452,13 +476,14 @@ h2 {
     text-align: center;
 }
 
-#users-table {
+.data-table-generic {
+    width: 100% !important;
     margin-bottom: 30px;
     overflow-x: auto;
     color: black;
 }
 
-#users-table table {
+.data-table-generic table {
     margin-left: auto;
     margin-right: auto;
     width: 80%;
@@ -466,65 +491,79 @@ h2 {
     text-align: center;
 }
 
-#users-table td.email-col {
+.data-table-generic td.email-col {
     max-width: 200px;
     overflow-wrap: break-word;
 }
 
-#users-table tr {
+.data-table-generic tr {
     vertical-align: center;
-    border-bottom: 1px solid black;
+    /*border-bottom: 1px solid black;*/
 
 }
 
-#users-table td {
+.data-table-generic td {
     padding: 15px;
 }
 
-#users-table tr:hover {
+.data-table-generic tr:nth-child(even) {
+    background-color: rgba(9, 25, 46, 0.1);
+}
+
+.data-table-generic tr:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.data-table-generic tr:first-child:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.data-table-generic tr:hover {
     border-color: #f78ca0;
 }
 
-#users-table i {
+.data-table-generic i {
     letter-spacing: 0.7em;
     text-align: center;
 }
 
-#users-table a {
+.data-table-generic a {
     color: black;
 }
 
 i.fa-ban {
-    color: #f6d365;
+    color: #f43421;
 }
 
 i.fa-check {
-    color: #96e6a1;
+    color: #55e63d;
 }
 
 i.fa-male {
-    color: #c2e9fb;
+    color: #2a5ffb;
 }
 
 i.fa-female {
-    color: #f093fb;
+    color: #e83ffb;
 }
 
-#table-header {
-    font-family: 'Futura Bold', sans-serif;
+.table-header {
+    font-family: 'Avenir Next Bold', sans-serif;
     font-size: 1.2em;
     border-color: transparent !important;
     color: black;
 }
 
-#table-header td {
-    font-family: 'Futura Bold';
+.table-header td {
+    font-family: 'Avenir Next Bold', sans-serif;
     color: black;
 }
 
 h4 {
-    font-family: 'Futura Bold', sans-serif !important;
+    font-family: 'Avenir Next Bold', sans-serif !important;
     font-size: 0.8em;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .ui-grid {
@@ -594,13 +633,19 @@ h4 {
         width: 95vw;
     }
 
-    #app-view {
-        max-width: 100vw;
-        left: 0px;
+    #nav-main {
+        top: 0 !important;
     }
 
     #main-sidebar {
         left: -100%;
+
+    }
+
+    .app-view-logged-in {
+        top: 70px !important;
+        width: 100% !important;
+        height: calc(100% - 70px) !important;
     }
 
     .title-card h2 {
@@ -637,7 +682,7 @@ h4 {
 }
 
 .generic-button-light:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .generic-button-light:focus {
@@ -691,5 +736,3 @@ cubic-bezier(.55, 0, .1, 1);
     -webkit-transform: translate(0, -1000px);
     transform: translate(0, -1000px);
 }
-
-/* Placeholder */

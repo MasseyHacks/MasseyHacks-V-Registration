@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  mongo:
+    image: mongo:latest
+    volumes:
+      - ./db:/data/db
+    restart: always
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    container_name: mongo
+
+  goose:
+    depends_on:
+      - mongo
+    build: .
+    volumes:
+      - ./app/server/templates:/usr/src/app/app/server/templates
+    expose:
+      - 3005
+    restart: always
+    ports:
+      - 3005:3005
+    container_name: goose-compose

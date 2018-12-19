@@ -19,11 +19,19 @@
                     <div v-else>
                         <input class='round-input' style='width: 100%' placeholder='Search for hacker here' v-on:input='updateSearch' v-model='searchQuery' type='text'>
                         <hr>
-                        <button class='generic-button-light' @click='refresh()'>Refresh Table</button>
+                        <button class='generic-button-dark' @click='refresh()'>Refresh Table</button>
                         <hr>
                         <div v-if='users.length != 0 && !queryError'>
-                            <table id='checkin-table'>
-                                <tr id='table-header'><td>NAME</td><td>WAIVER</td><td>CHECKIN</td><td>EMAIL</td><td>SCHOOL</td><td>GRADE</td><td></td></tr>
+                            <table class='data-table-generic'>
+                                <tr class='table-header'>
+                                    <td>NAME</td>
+                                    <td>WAIVER</td>
+                                    <td>CHECKED IN</td>
+                                    <td>EMAIL</td>
+                                    <td>SCHOOL</td>
+                                    <td>GRADE</td>
+                                    <td></td>
+                                </tr>
                                 <tr v-for='i in users.length'>
                                     <td>
                                         {{users[i-1].name}}
@@ -33,7 +41,17 @@
                                     <td class='email-col'>{{users[i-1].email}}</td>
                                     <td>N/A</td>
                                     <td>N/A</td>
-                                    <td><button class='generic-button-light' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>WAIVER-IN</button><button class='generic-button-light' @click='checkin(users[i-1], i-1)' v-else-if='!users[i-1].checked'>CHECK-IN</button><button class='generic-button-light' @click='checkout(users[i-1], i-1)' v-else>CHECK-OUT</button></td>
+                                    <td>
+                                        <button class='generic-button-dark' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>
+                                            WAIVER-IN
+                                        </button>
+                                        <button class='generic-button-dark' @click='checkin(users[i-1], i-1)' v-else-if='!users[i-1].checked'>
+                                            CHECK-IN
+                                        </button>
+                                        <button class='generic-button-dark' @click='checkout(users[i-1], i-1)' v-else>
+                                            CHECK-OUT
+                                        </button>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -49,12 +67,10 @@
 </template>
 
 <script>
-    import Session from '../src/Session'
     import ApiService from '../src/ApiService'
     import AuthService from '../src/AuthService'
-    import $ from 'jquery';
     import swal from 'sweetalert2'
-    import { VueContext } from 'vue-context'
+    import {VueContext} from 'vue-context'
     import Vue from 'vue'
 
     export default {
@@ -82,13 +98,13 @@
 
         beforeMount() {
             ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin'}, (err, data) => {
-                this.loading = false
+                this.loading = false;
 
                 if (err || !data) {
                     this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {
-                    this.users = data.users
-                    this.totalPages = data.totalPages
+                    this.users = data.users;
+                    this.totalPages = data.totalPages;
 
                     if (this.users.length == 0) {
                         this.queryError = 'No users found'
@@ -104,7 +120,7 @@
         methods : {
 
             prettify: function(str) {
-                var strProc = str
+                var strProc = str;
                 if (str.indexOf('.') != -1) {
                     strProc = str.slice(str.indexOf('.')+1)
                 }
@@ -116,7 +132,7 @@
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
+                        this.users = data.users;
                         this.totalPages = data.totalPages
                     }
                 })
@@ -132,13 +148,13 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/checkIn', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
-                                console.log(err)
+                                console.log(err);
                                 swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked in.', 'success')
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked in.', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -156,13 +172,13 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/checkOut', {userID: user.id, appPage: 'checkin'}, (err, data) => {
                             if(err) {
-                                console.log(err)
+                                console.log(err);
                                 swal('Error', 'An error has occured, please contact an organizer immediately', 'error')
                             } else {
-                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked out.', 'success')
+                                swal('Success', 'Hacker ' + data.name + ' has been successfully checked out.', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -180,12 +196,12 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.value) {
-                        swal.showLoading()
+                        swal.showLoading();
                         AuthService.sendRequest('POST', '/api/waiverIn', {'userID': user.id, appPage: 'checkin'}, (err, data) => {
                             if (err || !data) {
                                 swal('Error', err.error, 'error')
                             } else {
-                                swal('Success', 'Waiver accepted', 'success')
+                                swal('Success', 'Waiver accepted', 'success');
                                 Vue.set(this.users, index, data)
                             }
                         })
@@ -201,16 +217,16 @@
                 }
 
                 // Update content of advanced query box
-                this.advancedQueryContent = JSON.stringify(this.filters)
+                this.advancedQueryContent = JSON.stringify(this.filters);
 
                 ApiService.getUsers({ page: 1, size: 0, text: this.searchQuery, filters : this.filters, appPage: 'checkin'}, (err, data) => {
-                    this.queryError = ''
+                    this.queryError = '';
                     if (err || !data) {
                         this.queryError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.users = data.users
-                        this.totalPages = data.totalPages
-                        this.loading = false
+                        this.users = data.users;
+                        this.totalPages = data.totalPages;
+                        this.loading = false;
 
                         if (this.users.length == 0) {
                             this.queryError = 'No results match this query'

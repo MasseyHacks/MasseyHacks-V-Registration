@@ -65,9 +65,8 @@ UserController.modifyUser = function(adminUser,userID,data,callback){
         if (err || !user) {
             console.log(err);
             return callback(err);
-        };
-
-        logger.logAction(adminUser._id, userID, 'Modified a user manually.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(data));
+        }
+            logger.logAction(adminUser._id, userID, 'Modified a user manually.', 'EXECUTOR IP: ' + adminUser.ip + ' | ' + JSON.stringify(data));
 
         return callback(null, user);
     });
@@ -80,8 +79,8 @@ UserController.getUserFields = function(userExecute, callback) {
 
     while (queue.length !=0) {
         var data = queue.pop();
-        var current = data[0]
-        var header = data[1]
+        var current = data[0];
+        var header = data[1];
 
         for (var runner in current) {
             if (current[runner]['type']) {
@@ -103,7 +102,7 @@ UserController.getAdmins = function(callback) {
             return callback({error: err})
         }
 
-        var filtered = {}
+        var filtered = {};
         for (var i = 0; i < data.length; i++) {
             filtered[data[i].fullName] = data[i].QRCode
         }
@@ -154,12 +153,12 @@ UserController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
-    console.log(sort)
+    console.log(sort);
 
     User.count(filters, function(err, count) {
 
         if (err) {
-            console.log(err)
+            console.log(err);
             return callback({error:err.message})
         }
 
@@ -174,14 +173,16 @@ UserController.getByQuery = function (adminUser, query, callback) {
             .limit(size)
             .exec(function(err, users) {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     return callback({error:err.message})
                 }
 
                 if (users) {
-                    for (var i = 0; i < users.length; i++) {
-                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level, appPage)
-                    }
+                    let i = 0;
+                    async.each(users, (user, callback) => {
+                        users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
+                        i++;
+                    });
                 }
 
                 return callback(null, {
@@ -231,9 +232,8 @@ UserController.verify = function (token, callback, ip) {
                 console.log(err);
 
                 return callback(err);
-            };
-
-            logger.logAction(user._id, user._id, 'Verified their email.', 'IP: ' + ip);
+            }
+                logger.logAction(user._id, user._id, 'Verified their email.', 'IP: ' + ip);
 
             return callback(null, 'Success');
         });
@@ -264,7 +264,7 @@ UserController.magicLogin = function (token, callback, ip) {
         }
 
         User.findOne({_id: payload.id}, '+magicJWT', function(err, user) {
-            console.log(user)
+            console.log(user);
             if (token === user.magicJWT) {
                 User.findOneAndUpdate({
                         _id: payload.id
@@ -282,8 +282,6 @@ UserController.magicLogin = function (token, callback, ip) {
 
                             return callback(err);
                         }
-                        ;
-
                         logger.logAction(user._id, user._id, 'Logged in using magic link.', 'IP: ' + ip);
 
                         return callback(null, {token: user.generateAuthToken(), user:User.filterSensitive(user)});
@@ -484,7 +482,7 @@ UserController.sendPasswordResetEmail = function (email, callback, ip) {
         if (user && !err) {
             var resetURL = process.env.ROOT_URL + '/reset/' + user.generateResetToken();
 
-            logger.logAction(user._id.email, user._id, 'Requested a password reset email.', 'IP: ' + ip);
+            logger.logAction(user._id, user._id, 'Requested a password reset email.', 'IP: ' + ip);
 
             console.log(resetURL);
             mailer.sendTemplateEmail(email,'passwordresetemails', {
@@ -591,11 +589,11 @@ UserController.createUser = function (email, firstName, lastName, password, call
 UserController.superToken = function(userExcute, userID, callback) {
     User.getByID(userID, function (err, user) {
         if (err || !user) {
-            console.log(err)
-            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err)
+            console.log(err);
+            logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err);
             return callback({error: "Error has occured"})
         }
-        var token = user.generateMagicToken()
+        var token = user.generateMagicToken();
         User.findOneAndUpdate({
                 _id: user.id
             },
@@ -608,7 +606,7 @@ UserController.superToken = function(userExcute, userID, callback) {
                 new: true
             }, function (err, user) {
                 var link = process.env.ROOT_URL + '/magic?token=' + token;
-                logger.logAction(userExcute.id, userID, "Generated super Link",'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link)
+                logger.logAction(userExcute.id, userID, "Generated super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link);
                 callback(false, {url: link})
             })
     })
@@ -622,6 +620,11 @@ UserController.loginWithToken = function(token, callback, ip){
 
     User.getByToken(token, function(err, user){
         if (!user || err) {
+
+            if (!!user && user.permissions.checkin) {
+                logger.logAction(user._id, user._id, 'Organized failed token login.', 'IP: ' + ip);
+            }
+
             return callback(err);
         }
 
@@ -657,6 +660,11 @@ UserController.loginWithPassword = function(email, password, callback, ip){
             console.log(user);
 
             if (err || !user || user == null || !user.checkPassword(password)) {
+
+                if (!!user && user.permissions.checkin) {
+                    logger.logAction(user._id, user._id, 'Organized failed password login.', 'IP: ' + ip);
+                }
+
                 return callback({
                     error: 'Invalid credentials',
                     code: 401
@@ -667,9 +675,9 @@ UserController.loginWithPassword = function(email, password, callback, ip){
                 return callback({ error: 'Account is not active. Please contact an administrator for assistance.', code: 403})
             }
 
-            console.log(process.env.TUFA_ENABLED)
+        console.log(process.env.TUFA_ENABLED);
             if (user.permissions.admin && process.env.TUFA_ENABLED === 'true') {
-                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.')
+                logger.logAction(user._id, user._id, 'Organizer is logging in. Redirecting to 2FA.', 'IP: ' + ip);
 
                 var token = user.generate2FAToken();
 
@@ -717,7 +725,7 @@ UserController.updateProfile = function (userExecute, id, profile, callback){
     console.log('Updating ' + profile);
     User.validateProfile(id, profile, function(err, profileValidated){
         if (err){
-            return callback({message: 'Invalid profile!'});
+            return callback(err);
         }
 
         // Check if its within the registration window.

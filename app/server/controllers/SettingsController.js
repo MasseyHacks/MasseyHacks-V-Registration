@@ -4,7 +4,7 @@ const algebra    = require("algebra.js");
 const User       = require('../models/User');
 const Settings   = require('../models/Settings');
 const LogEvent   = require('../models/LogEvent');
-const UserFields = require('../models/data/UserFields')
+const UserFields = require('../models/data/UserFields');
 
 const jwt        = require('jsonwebtoken');
 
@@ -103,7 +103,7 @@ SettingsController.getVerificationProblem = function(callback){
     }
 
     return callback(null,returnData);
-}
+};
 
 SettingsController.getPendingSchools = function(callback) {
     Settings.findOne(
@@ -252,7 +252,7 @@ SettingsController.getLog = function(query, callback){
     var or     = [];
     var and    = [];
 
-    console.log('query', query)
+    console.log('query', query);
 
     if (query.text) {
         var regex = new RegExp(escapeRegExp(query.text), 'i'); // filters regex chars, sets to case insensitive
@@ -301,7 +301,7 @@ SettingsController.getLog = function(query, callback){
             .exec(function (err, log) {
                 if (err || !log) {
                     if (err) {
-                        console.log(err)
+                        console.log(err);
                         return callback({error:err.message})
                     }
                     return callback(null, {

@@ -1,61 +1,79 @@
 <template>
     <div id="app">
 
+        <!-- Common elements -->
+        <div id="main-sidebar" v-if="loggedIn" v-bind:style="sidebarStyle">
+            <img src="/logo/logo-white.svg" width="150px" height="150px" style="margin-top: 40px; margin-bottom: 40px; margin-left: auto; margin-right: auto; text-align: center">
+            <ul>
+                <li>
+                    <router-link to="/dashboard" tag="a"><button class="menu-button" v-on:click="retractSidebar">Dashboard</button></router-link>
+                </li>
+                <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                    <router-link to="/application" tag="a"><button class="menu-button" v-on:click="retractSidebar">Application</button></router-link>
+                </li>
+                <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                    <router-link to="/team" tag="a"><button class="menu-button" v-on:click="retractSidebar">Team</button></router-link>
+                </li>
+                <li v-if="user.status.admitted || user.permissions.developer">
+                    <router-link to="/confirmation" tag="a"><button class="menu-button" v-on:click="retractSidebar">Confirmation</button></router-link>
+                </li>
+                <li v-if="user.permissions.checkin">
+                    <router-link to="/checkin" tag="a"><button class="menu-button" v-on:click="retractSidebar">Check In</button></router-link>
+                </li>
+                <li v-if="user.permissions.admin">
+                    <router-link to="/organizer" tag="a"><button class="menu-button" v-on:click="retractSidebar">Organizer</button></router-link>
+                </li>
+                <li v-if="user.permissions.owner">
+                    <router-link to="/owner" tag="a"><button class="menu-button" v-on:click="retractSidebar">Owner</button></router-link>
+                </li>
+                <li v-if="user.permissions.developer">
+                    <router-link to="/developer" tag="a"><button class="menu-button" v-on:click="retractSidebar">Developer</button></router-link>
+                </li>
+                <li>
+                    <router-link to="/password" tag="a"><button class="menu-button" v-on:click="retractSidebar">Change Password</button></router-link>
+                </li>
+                <li>
+                    <router-link v-if="loggedIn" to="/logout" tag="a"><button class="menu-button" v-on:click="retractSidebar">Logout</button></router-link>
+                </li>
+            </ul>
+        </div>
+
+        <div id="tint" v-bind:style="this.sidebarOpen() ? 'background-color: rgba(0, 0, 0, 0.60);' : 'background-color: rgba(0, 0, 0, 0); pointer-events: none;'" v-on:click="retractSidebar"></div>
+
         <div id="nav-main" v-if="loggedIn">
             <div style="height: 50%"></div>
             <div class="vertical-centered">
+                <ul>
+                        <li>
+                            <img src="/logo/logo-white.svg" width="auto" height="50px">
+                        </li>
 
-                <ul class="container">
-                    <li>
-                        <img src="/logo/logo-white.svg" width="auto" height="50px">
-                    </li>
-                    <li>
-                        <router-link to="/dashboard" tag="a">Dashboard</router-link>
-                    </li>
-                    <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/application" tag="a">Application</router-link>
-                    </li>
-                    <li v-if="user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/team" tag="a">Team</router-link>
-                    </li>
-                    <li v-if="user.status.admitted && (user.permissions.developer || !user.permissions.admin)">
-                        <router-link to="/confirmation" tag="a">Confirmation</router-link>
-                    </li>
-                    <li v-if="user.permissions.checkin">
-                        <router-link to="/checkin" tag="a">Check In</router-link>
-                    </li>
-                    <li v-if="user.permissions.admin">
-                        <router-link to="/organizer" tag="a">Organizer</router-link>
-                    </li>
-                    <li v-if="user.permissions.owner">
-                        <router-link to="/owner" tag="a">Owner</router-link>
-                    </li>
-                    <li v-if="user.permissions.developer">
-                        <router-link to="/developer" tag="a">Developer</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/password" tag="a">Change Password</router-link>
-                    </li>
-                    <li>
-                        <router-link v-if="loggedIn" to="/logout" tag="a">Logout</router-link>
-                    </li>
+                        <li style="float: right">
+
+                            <div v-on:click="toggleSidebar" class="hamburger hamburger--slider pull-right hidden" id="nav-ham">
+                                <div class="hamburger-box">
+                                    <div class="hamburger-inner" id="hamburger"></div>
+                                </div>
+                            </div>
+
+                        </li>
 
                 </ul>
             </div>
         </div>
 
         <!-- Router injects stuff in here -->
-        <div id="app-view"> <!--v-bind:class="{'app-view-logged-in' : loggedIn}">-->
-
-            <!--
-            <template v-if="$route.matched.length">
-
-            </template>-->
+        <!-- v-bind:style="{ height: height, width: loggedIn ? 'calc(100% - 230px) !important' : '100vw' }" -->
+        <div id="app-view" v-bind:class="{'app-view-logged-in' : loggedIn}">
 
             <transition :name="$parent.transition">
                 <router-view class="child-view"></router-view>
             </transition>
+
         </div>
+
+
+
     </div>
 </template>
 
@@ -63,7 +81,6 @@
     import AuthService from '../src/AuthService'
     import Session from '../src/Session'
     import ApiService from '../src/ApiService.js'
-    import $ from 'jquery'
 
     export default {
         data() {
@@ -73,7 +90,8 @@
                 loggedIn: Session.loggedIn(),
                 AuthService: AuthService,
                 ApiService: ApiService,
-                Alerts: [{}]
+                Alerts: [{}],
+                sidebarStyle: ''
             }
         },
         created() {
@@ -93,10 +111,23 @@
                     }
                 }
             }
+
         },
         methods: {
             toggleSidebar() {
-                $('main-sidebar').css('left: 0')
+                if (this.sidebarStyle == '') {
+                    this.sidebarStyle = 'left: 0 !important;'
+                } else {
+                    this.sidebarStyle = ''
+                }
+            },
+            sidebarOpen() {
+                return this.sidebarStyle == 'left: 0 !important;';
+            },
+            retractSidebar() {
+                if (this.sidebarOpen()) {
+                    this.toggleSidebar();
+                }
             }
         }
     }

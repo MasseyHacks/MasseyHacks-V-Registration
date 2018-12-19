@@ -80,13 +80,13 @@
     import AuthService from '../src/AuthService'
     import ApiService from '../src/ApiService'
     import Session from '../src/Session'
-    import moment  from 'moment'
-    import swal    from 'sweetalert2'
+    import moment from 'moment'
+    import swal from 'sweetalert2'
 
     import hljs from 'highlight.js'
     import 'highlight.js/styles/monokai-sublime.css'
     import 'quill/dist/quill.snow.css'
-    import Quill   from 'quill'
+    import Quill from 'quill'
 
     export default {
         data() {
@@ -107,7 +107,7 @@
             }
         },
         beforeMount() {
-            this.convertTimes()
+            this.convertTimes();
 
 
             ApiService.getPendingSchools((err, data) => {
@@ -124,14 +124,14 @@
                 } else {
                     this.templateOptions = data.validTemplates
                 }
-            })
+            });
 
             AuthService.sendRequest('GET', '/api/email/get/base', null, (err, data) => {
                 if (err) {
                     swal('Error', err, 'error')
                 } else {
                     let base = data.email.split('{{emailData}}');
-                    this.baseHTMLFront = base[0]
+                    this.baseHTMLFront = base[0];
                     this.baseHTMLBack = base[1]
                 }
             })
@@ -147,10 +147,10 @@
                     ]
                 },
                 theme: 'snow'
-            })
+            });
 
             this.editor.on('text-change', (delta, oldDelta, source) => {
-                this.emailHTML = this.editor.getText()
+                this.emailHTML = this.editor.getText();
                 this.generatePreview()
             })
 
@@ -166,47 +166,46 @@
                         inputValidator: (value) => {
                             return !value && 'Please make a decision to proceed'
                         }
-                    })
+                    });
 
                     if (decision) {
                         switch (decision) {
                             case '0': // Accept
-                                console.log('Accepted')
+                                console.log('Accepted');
 
-                                AuthService.skillTest(() => {
-                                    ApiService.approveSchool(this.pendingSchools[0])
-                                    this.pendingSchools.splice(0, 1)
+                                ApiService.approveSchool(this.pendingSchools[0]);
+                                this.pendingSchools.splice(0, 1);
 
-                                    if (!this.pendingSchools.length) {
-                                        swal({
-                                            title: 'Reviewed complete!',
-                                            type: 'success'
-                                        })
-                                    }
-                                })
+                                if (!this.pendingSchools.length) {
+                                    swal({
+                                        title: 'Reviewed complete!',
+                                        type: 'success'
+                                    })
+                                }
 
-                                break
+
+                                break;
 
                             case '1': // Rejeccc
-                                console.log('Rejected')
+                                console.log('Rejected');
 
-                                AuthService.skillTest(() => {
-                                    ApiService.rejectSchool(this.pendingSchools[0])
-                                    this.pendingSchools.splice(0, 1)
 
-                                    if (!this.pendingSchools.length) {
-                                        swal({
-                                            title: 'Reviewed complete!',
-                                            type: 'success'
-                                        })
-                                    }
-                                })
+                                ApiService.rejectSchool(this.pendingSchools[0]);
+                                this.pendingSchools.splice(0, 1);
 
-                                break
+                                if (!this.pendingSchools.length) {
+                                    swal({
+                                        title: 'Reviewed complete!',
+                                        type: 'success'
+                                    })
+                                }
+
+
+                                break;
 
                             case '2': // Skip
 
-                                this.pendingSchools.splice(0, 1)
+                                this.pendingSchools.splice(0, 1);
                                 break
                         }
 
@@ -217,10 +216,10 @@
                 }
             },
             convertTimes() {
-                this.settings = Session.getSettings()
-                this.timeOpen = moment(this.settings.timeOpen).format('YYYY-MM-DDTHH:mm:ss')
-                this.timeClose = moment(this.settings.timeClose).format('YYYY-MM-DDTHH:mm:ss')
-                this.timeConfirm = moment(this.settings.timeConfirm).format('YYYY-MM-DDTHH:mm:ss')
+                this.settings = Session.getSettings();
+                this.timeOpen = moment(this.settings.timeOpen).format('YYYY-MM-DDTHH:mm:ss');
+                this.timeClose = moment(this.settings.timeClose).format('YYYY-MM-DDTHH:mm:ss');
+                this.timeConfirm = moment(this.settings.timeConfirm).format('YYYY-MM-DDTHH:mm:ss');
                 this.maxParticipants = this.settings.maxParticipants
             },
             moment (date) {
@@ -238,15 +237,15 @@
                 }).then((result) => {
                     if (result.value) {
                         AuthService.skillTest(() => {
-                            swal.showLoading()
+                            swal.showLoading();
                             AuthService.sendRequest('POST', '/api/updateParticipantLimit', {
                                 'maxParticipants': this.maxParticipants
                             }, (err, setting) => {
                                 if (err || !setting) {
                                     swal('Error', err.error, 'error')
                                 } else {
-                                    swal('Success', 'Limit has been changed successfully', 'success')
-                                    Session.setSettings(setting)
+                                    swal('Success', 'Limit has been changed successfully', 'success');
+                                    Session.setSettings(setting);
                                     this.convertTimes()
                                 }
                             })
@@ -266,7 +265,7 @@
                 }).then((result) => {
                     if (result.value) {
                         AuthService.skillTest(() => {
-                            swal.showLoading()
+                            swal.showLoading();
                             AuthService.sendRequest('POST', '/api/updateRegistrationTime', {
                                 timeOpen: moment(this.timeOpen).unix() * 1000,
                                 timeClose: moment(this.timeClose).unix() * 1000,
@@ -275,8 +274,8 @@
                                 if (err || !setting) {
                                     swal('Error', err.error, 'error')
                                 } else {
-                                    swal('Success', 'Application times has been changed', 'success')
-                                    Session.setSettings(setting)
+                                    swal('Success', 'Application times has been changed', 'success');
+                                    Session.setSettings(setting);
                                     this.convertTimes()
                                 }
                             })
@@ -288,14 +287,14 @@
                 if (this.selected == '') {
                     swal('Error', 'You must select an email first', 'error')
                 } else {
-                    swal.showLoading()
+                    swal.showLoading();
 
                     AuthService.sendRequest('GET', '/api/email/get/' + this.selected, null, (err, data) => {
                         if (err) {
                             swal('Error', err, 'error')
                         } else {
-                            swal('Success', 'Your Preview and Editor has been updated', 'success')
-                            this.emailHTML = data.email
+                            swal('Success', 'Your Preview and Editor has been updated', 'success');
+                            this.emailHTML = data.email;
                             this.editor.setText(this.emailHTML);
                             this.editor.formatLine(0, this.editor.getLength(), { 'code-block': true });
                         }
@@ -314,7 +313,7 @@
                 }).then((result) => {
                     if (result.value) {
                         AuthService.skillTest(() => {
-                            swal.showLoading()
+                            swal.showLoading();
                             AuthService.sendRequest('POST', 'api/email/set/' + this.selected, {
                                 templateHTML: this.emailHTML,
                                 templateName: this.selected

@@ -2,22 +2,39 @@
     <div>
         <div class="row">
             <div class="ui-card dash-card-large" id="users-table">
-                <div v-if="reviewingApplications">
-                    <h2>Reviewing Application</h2>
-                    <div v-html="this.reviewBody"></div>
-                    <button v-on:click="stopReview" class="generic-button-light">Exit</button>
-                    <button v-on:click="applicationVote('admit')" class="generic-button-light">Vote Admit</button>
-                    <button v-on:click="applicationVote('reject')" class="generic-button-light">Vote Reject</button>
-                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')" class="generic-button-light">Admit [FORCE]</button>
-                    <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')" class="generic-button-light">Reject [FORCE]</button>
-                    <button v-on:click="nextApplication(false)" class="generic-button-light">Pass</button>
+                <div v-if="loading">
+                    Loading...
                 </div>
-
+                <div v-else-if="err">
+                    {{err}}
+                </div>
                 <div v-else>
-                    <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
-                    <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
-                    <button v-if="applicationsLeft > 0" v-on:click="startReview" class="generic-button-light">Start reviewing!</button>
-                    <h2 v-else>There are no applications to review</h2>
+                    <div v-if="reviewingApplications">
+                        <h2>Reviewing Application</h2>
+                        <div v-html="this.reviewBody"></div>
+                        <hr>
+                        <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
+                        <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
+                        <hr>
+                        <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
+                                class="generic-button-dark">Admit [FORCE]
+                        </button>
+                        <button v-if="this.user.permissions.owner" v-on:click="applicationVote('reject-force')"
+                                class="generic-button-dark">Reject [FORCE]
+                        </button>
+                        <hr>
+                        <button class="generic-button-dark" v-on:click="stopReview">Exit</button>
+                        <button v-on:click="nextApplication(false)" class="generic-button-dark">Pass</button>
+                    </div>
+
+                    <div v-else>
+                        <div v-if="applicationsLeft > 1"><h2>There are {{this.applicationsLeft}} applications remaining</h2></div>
+                        <div v-else-if="applicationsLeft == 1"><h2>There is {{this.applicationsLeft}} application left</h2></div>
+                        <button v-if="applicationsLeft > 0" v-on:click="startReview" class="generic-button-dark">Start
+                            reviewing!
+                        </button>
+                        <h2 v-else>There are no applications to review</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -27,8 +44,6 @@
 <script>
     import Session from '../src/Session'
     import ApiService from '../src/ApiService'
-    import AuthService from '../src/AuthService'
-    import $ from 'jquery';
     import swal from 'sweetalert2'
 
     export default {
@@ -39,6 +54,7 @@
                 searchQuery: '',
                 loading: true,
                 applicationsLeft: 0,
+                applications: {},
                 reviewingApplications: false,
                 err: '',
                 currentApplication: {},
@@ -61,16 +77,21 @@
                     applicationVotes: {$nin: [this.user.email]}
                 }]}}, (err, data) => {
 
-                if (err || !data) {
-                    this.err = err ? err.responseJSON.error : 'Unable to process request'
-                } else {
-                    this.applicationsLeft = Object.keys(data.users).length;
-                    this.users = data;
-                    console.log('data');
-                    console.log(Object.assign({}, data))
-                }
-            });
+                this.loading = false;
 
+                    if (err || !data) {
+                        this.err = err ? err.responseJSON.error : 'Unable to process request'
+                    } else {
+                        this.applicationsLeft = Object.keys(data.users).length;
+                        this.users = data;
+                        console.log('data');
+                        console.log(Object.assign({}, data))
+                    }
+                });
+
+            ApiService.getApplications((err, applications) => {
+                this.applications = applications
+            });
         },
         methods : {
             startReview: function(){
@@ -161,8 +182,10 @@
                     var application = this.userTimes[0][2]["profile"]["hacker"];
 
                     this.reviewBody = '';
+                    this.reviewBody += '<div class="duo-col">';
+                    this.reviewBody += '<ul class="custom-ul">';
                     Object.keys(application).forEach((field) => {
-                        this.reviewBody+=field+' '+application[field]+'<BR>';
+                        this.reviewBody += '<li><b>' + (Object.keys(this.applications.hacker).indexOf(field) != -1 ? this.applications.hacker[field]['question'] : field) + '</b><br>' + application[field] + '</li><br>';
                     });
                     console.log(application);
                 }
@@ -195,6 +218,11 @@
             },
             switchPage: function(page) {
                 this.page = page
+            },
+            prettify: function (str) {
+                return str.replace(/([A-Z])/g, ' $1').replace(/^./, function (str) {
+                    return str.toUpperCase();
+                })
             }
         }
     }

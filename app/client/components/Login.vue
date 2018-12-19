@@ -7,10 +7,12 @@
 
                 <div>
 
-                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png"
-                         width="50%">
+                    <img src="logo/logowide.svg"
+                         width="45%">
 
+                    <!--
                     <h2 class="subtitle">Login</h2>
+                    -->
 
                     <p v-if="$route.query.redirect && !error">
                         You need to login first.
@@ -19,15 +21,19 @@
                     <p v-if="error" class="error">{{error}}</p>
 
                     <div id="login-form-elements">
-                        <form @submit.prevent="login" style="margin: 0">
-                            <input v-model="email" placeholder="email" type="email" autofocus required>
-                            <input v-model="pass" placeholder="password" type="password" required><br>
+                        <form @submit.prevent="login">
+                            <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
+                            <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
 
                             <div id="button-row">
-                                <button type="submit" class="primary-button">Sign In</button>
+                                <button class="generic-button-dark" type="submit">
+                                    Sign In
+                                </button>
+
                                 <router-link to="/register" v-if="settings.registrationOpen">
                                     <button>Register</button>
                                 </router-link>
+
                                 <router-link to="/reset">
                                     <button>Reset</button>
                                 </router-link>
@@ -37,7 +43,10 @@
                 </div>
             </div>
 
+            <!--
             <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
+            -->
+
         </div>
     </div>
 </template>

@@ -3,6 +3,7 @@ const Team           = require('../models/Team');
 const User           = require('../models/User');
 const TeamFields     = require('../models/data/TeamFields');
 const Settings       = require('../models/Settings');
+const UserController = require('../controllers/UserController');
 
 const logger         = require('../services/logger');
 const uuidv4         = require('uuid/v4');
@@ -14,30 +15,47 @@ function escapeRegExp(str) {
 }
 
 
-TeamController.teamAccept = function(adminUser, userID, callback) {
-    User.getbyID(userID, function (err, user) {
-        if (err || !user){
-            return callback(err, user);
-        } else {
+TeamController.teamAccept = function(adminUser, teamCode, callback) {
+    console.log(teamCode)
+    TeamController.getByCode(teamCode, function (err, team) {
+        if (err || !team) {
+            console.log(err)
+            return callback(err);
+        }
 
-            Team.getByCode(user.teamCode, '+memberIDs', function (err, team) {
-                if (err || !team) {
-                    return callback(err, user);
+        logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
+
+        for (var teamMember in team.memberNames) {
+            UserController.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                if (err || !user){
+                    console.log(err)
                 }
-
-                logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
-
-                for (id in team.memberIDs) {
-                    UserController.admitUser(adminUser, id, function (err, user) {
-                        if (err || !user){
-                            console.log(err)
-                        }
-                    })
-                }
-
-                return callback(err, user);
             })
         }
+
+        return callback(false, team);
+    })
+};
+
+TeamController.teamReject = function(adminUser, teamCode, callback) {
+    console.log(teamCode)
+    TeamController.getByCode(teamCode, function (err, team) {
+        if (err || !team) {
+            console.log(err)
+            return callback(err);
+        }
+
+        logger.logAction(adminUser._id, -1, 'Rejected team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
+
+        for (var teamMember in team.memberNames) {
+            UserController.rejectUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                if (err || !user){
+                    console.log(err)
+                }
+            })
+        }
+
+        return callback(false, team);
     })
 };
 
@@ -311,7 +329,7 @@ TeamController.deleteTeamByCode = function (userExcute, code, callback) {
 
 TeamController.getFields = function (userExcute, callback) {
     var fieldsOut = [];
-    var current = TeamFields
+    var current = TeamFields;
 
     for (var runner in current) {
         if (!TeamFields[runner]['permission'] || TeamFields[runner]['permission'] <= userExecute.permissions.level) {
@@ -319,8 +337,8 @@ TeamController.getFields = function (userExcute, callback) {
         }
     }
 
-    fieldsOut.push({'name' : "memberNames", })
-    console.log("testing " + fieldsOut)
+    fieldsOut.push({'name': "memberNames",});
+    console.log("testing " + fieldsOut);
 
     callback(null, fieldsOut)
 };
@@ -340,7 +358,7 @@ TeamController.getByQuery = function (adminUser, query, callback) {
     var or      = [];
     var appPage = query.appPage ? query.appPage : null;
 
-    console.log(appPage)
+    console.log(appPage);
 
     if (text) {
         var regex = new RegExp(escapeRegExp(text), 'i'); // filters regex chars, sets to case insensitive
@@ -365,12 +383,12 @@ TeamController.getByQuery = function (adminUser, query, callback) {
         }
     }
 
-    console.log(filters)
+    console.log(filters);
 
     Team.count(filters, function(err, count) {
 
         if (err) {
-            console.log(err)
+            console.log(err);
             return callback({error:err.message})
         }
 
@@ -386,11 +404,11 @@ TeamController.getByQuery = function (adminUser, query, callback) {
             .populate('memberNames')
             .exec(function(err, teams) {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     return callback({error:err.message})
                 }
 
-                console.log(teams, count, size)
+                console.log(teams, count, size);
 
                 for (var i = 0; i < teams.length; i++) {
                     teams[i] = TeamController.filterNames(teams[i])

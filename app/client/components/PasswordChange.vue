@@ -2,17 +2,20 @@
     <div class="app-screen">
         <div class="spacer"></div>
         <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle" style="padding-top:8px;">Change Password</h2>
+            <h2 class="subtitle" style="padding-top:8px;"><i class="fas fa-lock"></i> Change Password</h2>
+
+            <p><b>Warning: </b> All other active session tokens will be revoked</p>
+
+            <p v-if="error" class="error">{{error}}</p>
+
             <div id="login-form-elements">
                 <form @submit.prevent="changePassword">
                     <input v-model="oldPassword" placeholder="Old Password" type="password" required>
                     <input v-model="password1" placeholder="Password" type="password" required>
                     <input v-model="password2" placeholder="Confirm Password" type="password" required>
                     <div class="button-row">
-                        <button type="submit">change</button>
-                        <router-link to="/"><button>back</button></router-link>
+                        <button class="generic-button-dark" type="submit">Save</button>
                     </div>
-                    <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
@@ -21,11 +24,10 @@
 
 <script>
     import AuthService from '../src/AuthService'
-    import Session     from '../src/Session'
-    import swal        from 'sweetalert2'
+    import swal from 'sweetalert2'
 
     export default {
-        data () {
+        data() {
             return {
                 oldPassword: '',
                 password1: '',
@@ -42,13 +44,13 @@
                         if (err) {
                             this.error = err ? err : 'Something went wrong'
                         } else {
-                            this.error = null
+                            this.error = null;
 
                             swal({
                                 title: 'Success!',
                                 text: 'Password changed!',
                                 type: 'success'
-                            })
+                            });
 
                             this.$router.replace('/login')
                         }

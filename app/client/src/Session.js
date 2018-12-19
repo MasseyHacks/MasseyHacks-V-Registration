@@ -1,7 +1,5 @@
-import Raven        from 'raven-js'
+import Raven from 'raven-js'
 //import AuthService  from './AuthService'
-import RavenVue     from 'raven-js/plugins/vue'
-import $ from 'jquery'
 
 module.exports = {
 
@@ -15,12 +13,12 @@ module.exports = {
 
     create(token, user) {
 
-        var date = new Date()
-        var expiration = date.setMonth(date.getMonth() + 1)
+        var date = new Date();
+        var expiration = date.setMonth(date.getMonth() + 1);
 
-        localStorage.token = token
-        localStorage.userID = user._id
-        localStorage.user = JSON.stringify(user)
+        localStorage.token = token;
+        localStorage.userID = user._id;
+        localStorage.user = JSON.stringify(user);
 
         Raven.setUserContext({
             email: user.email,
@@ -30,16 +28,16 @@ module.exports = {
     },
 
     create2FA(token, data) {
-        localStorage.token = token
+        localStorage.token = token;
         console.log(token)
     },
 
     destroy(callback) {
-        delete localStorage.token
-        delete localStorage.userID
-        delete localStorage.user
+        delete localStorage.token;
+        delete localStorage.userID;
+        delete localStorage.user;
 
-        Raven.setUserContext()
+        Raven.setUserContext();
 
         if (callback) {
             callback()
@@ -47,7 +45,7 @@ module.exports = {
     },
 
     getTokenData() {
-        const token = this.getToken()
+        const token = this.getToken();
 
         if (token) {
             return JSON.parse(atob(token.split('.')[1]))
@@ -75,4 +73,4 @@ module.exports = {
     loggedIn() {
         return !!localStorage.token && !!localStorage.user
     }
-}
+};

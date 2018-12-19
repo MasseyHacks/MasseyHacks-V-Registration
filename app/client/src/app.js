@@ -1,39 +1,39 @@
-import Vue            from 'vue'
-import VueRouter      from 'vue-router'
-import swal           from 'sweetalert2'
-import $              from 'jquery'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import swal from 'sweetalert2'
+import $ from 'jquery'
 
-import Session        from './Session'
-import AuthService    from './AuthService'
+import Session from './Session'
+import AuthService from './AuthService'
 
-import App            from '../components/App.vue'
+import App from '../components/App.vue'
 
-import Login          from '../components/Login.vue'
-import Register       from '../components/Register.vue'
-import Reset          from '../components/Reset.vue'
-import Verify         from '../components/Verify.vue'
+import Login from '../components/Login.vue'
+import Register from '../components/Register.vue'
+import Reset from '../components/Reset.vue'
+import Verify from '../components/Verify.vue'
 
-import Dashboard         from '../components/Dashboard.vue'
-import Organizer         from '../components/Organizer.vue'
-import Owner             from '../components/Owner.vue'
-import Developer         from '../components/Developer.vue'
-import Checkin           from '../components/Checkin.vue'
-import Statistics        from '../components/Statistics.vue'
-import Users             from '../components/Users.vue'
-import Application       from '../components/Application.vue'
-import Team              from '../components/Team.vue'
-import Confirmation      from '../components/Confirmation.vue'
-import Error             from '../components/Error.vue'
-import PasswordChange    from '../components/PasswordChange.vue'
-import Review            from '../components/Review.vue'
-import UserView          from '../components/UserView.vue'
-import TeamTable         from '../components/TeamTable.vue'
-import GoogleAuth        from '../components/2FA.vue'
-import MagicLogin        from '../components/Magic.vue'
-import TeamManage        from '../components/AdminTeamView.vue'
+import Dashboard from '../components/Dashboard.vue'
+import Organizer from '../components/Organizer.vue'
+import Owner from '../components/Owner.vue'
+import Developer from '../components/Developer.vue'
+import Checkin from '../components/Checkin.vue'
+import Statistics from '../components/Statistics.vue'
+import Users from '../components/Users.vue'
+import Application from '../components/Application.vue'
+import Team from '../components/Team.vue'
+import Confirmation from '../components/Confirmation.vue'
+import Error from '../components/Error.vue'
+import PasswordChange from '../components/PasswordChange.vue'
+import Review from '../components/Review.vue'
+import UserView from '../components/UserView.vue'
+import TeamTable from '../components/TeamTable.vue'
+import GoogleAuth from '../components/2FA.vue'
+import MagicLogin from '../components/Magic.vue'
+import TeamManage from '../components/AdminTeamView.vue'
 
-import Raven          from 'raven-js'
-import RavenVue       from 'raven-js/plugins/vue'
+import Raven from 'raven-js'
+import RavenVue from 'raven-js/plugins/vue'
 
 $.ajax({
     type: 'GET',
@@ -45,24 +45,24 @@ $.ajax({
     error: data => {
         Raven.captureMessage(JSON.stringify(data))
     }
-})
+});
 
 Raven
     .config(CLIENT_RAVEN_KEY) //Sub in key with webpack
     .addPlugin(RavenVue, Vue)
-    .install()
+    .install();
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
-Vue.use(require('vue-moment'))
-Vue.use(require('vuejs-paginator'))
+Vue.use(require('vue-moment'));
+Vue.use(require('vuejs-paginator'));
 
 // Refresh every 24HRs
 setInterval(() => {
     AuthService.refreshToken()
-}, 1440000)
+}, 86400000);
 
-AuthService.refreshToken()
+AuthService.refreshToken();
 
 function twoFactorPending(to, from, next) {
     if (localStorage.token && Session.getTokenData().type == '2FA') {
@@ -88,11 +88,11 @@ function requireAuth (to, from, next) {
 }
 
 function isAuthorized (to, from, next) {
-    var authorized = true
+    var authorized = true;
 
     for (var key in to.meta) {
         if (!Session.getUser() || !to['meta'][key] in Session.getUser()[key] || !Session.getUser()[key][to['meta'][key]]) {
-            authorized = false
+            authorized = false;
             break
         }
     }
@@ -321,7 +321,7 @@ const router = new VueRouter({
            }
        }
    ]
-})
+});
 
 var vue = new Vue({
     el: '#app',
@@ -330,33 +330,32 @@ var vue = new Vue({
     data: {
         transition: ''
     }
-})
+});
 
 
 router.beforeEach((to, from, next) => {
 
-    const mainLayout = ['dashboard', 'application', 'team', 'confirmation', 'checkin', 'organizer', 'owner', 'developer', 'password', 'logout']
-    const loginLayout = ['login', 'register',  'reset']
+    const mainLayout = ['dashboard', 'application', 'team', 'confirmation', 'checkin', 'organizer', 'owner', 'developer', 'password', 'logout'];
+    const loginLayout = ['login', 'register', 'reset'];
 
-    const toPath = to.path.split('/')
-    const fromPath = from.path.split('/')
+    const toPath = to.path.split('/');
+    const fromPath = from.path.split('/');
 
-    let pageLayout = Session.loggedIn() ? mainLayout : loginLayout
+    let pageLayout = Session.loggedIn() ? mainLayout : loginLayout;
 
-    console.log(fromPath, toPath)
+    console.log(fromPath, toPath);
 
-    const toDepth = pageLayout.indexOf(toPath[1])
-    const fromDepth = pageLayout.indexOf(fromPath[1])
+    const toDepth = pageLayout.indexOf(toPath[1]);
+    const fromDepth = pageLayout.indexOf(fromPath[1]);
 
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
-    /*
     if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
         vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
-    } else {*/
-    vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
-    //}
+    } else {
+        vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
+    }
 
     next()
-})
+});

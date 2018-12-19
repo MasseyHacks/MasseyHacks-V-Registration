@@ -7,7 +7,8 @@ const fs       = require('fs');
 
 // In memory stats.
 var stats = {};
-function calculateStats(callback){
+
+function calculateStats(callback) {
     console.log('Calculating stats...');
     var newStats = {
         lastUpdated: 0,
@@ -18,10 +19,10 @@ function calculateStats(callback){
 
         demo: {
             gender: {
-                M: 0,
-                F: 0,
-                O: 0,
-                N: 0
+                'Male': 0,
+                'Female': 0,
+                'Other': 0,
+                'I prefer not to answer': 0
             },
             massey: 0,
             nonmassey: 0,
@@ -49,10 +50,10 @@ function calculateStats(callback){
 
             demo: {
                 gender: {
-                    M: 0,
-                    F: 0,
-                    O: 0,
-                    N: 0
+                    'Male': 0,
+                    'Female': 0,
+                    'Other': 0,
+                    'I prefer not to answer': 0
                 },
                 massey: 0,
                 nonmassey: 0,
@@ -109,6 +110,7 @@ function calculateStats(callback){
                         throw err;
                     }
 
+
                     newStats.total = users.length;
 
                     async.each(users, function(user, callback){
@@ -148,19 +150,19 @@ function calculateStats(callback){
                         if (user.status.submittedApplication) {
 
                             // Add to the gender
-                            newStats.demo.gender[user.profile.gender] += 1;
+                            newStats.demo.gender[user.profile.hacker.gender] += 1;
 
                             if (user.profile.hacker.grade) {
                                 newStats.demo.grade[user.profile.hacker.grade] += 1;
                             }
 
                             // Count shirt sizes
-                            if (user.profile.shirt in newStats.shirtSizes) {
-                                newStats.shirtSizes[user.profile.shirt] += 1;
+                            if (user.profile.hacker.shirt in newStats.shirtSizes) {
+                                newStats.shirtSizes[user.profile.hacker.shirt] += 1;
                             }
                             // Dietary restrictions
-                            if (user.profile.diet) {
-                                user.profile.diet.forEach(function (restriction) {
+                            if (user.profile.hacker.dietaryRestrictions) {
+                                user.profile.hacker.dietaryRestrictions.forEach(function (restriction) {
                                     if (!newStats.dietaryRestrictions[restriction]) {
                                         newStats.dietaryRestrictions[restriction] = 0;
                                     }
@@ -168,8 +170,8 @@ function calculateStats(callback){
                                 });
                             }
 
-                            if (user.profile.school) {
-                                if (user.profile.school.toLowerCase().includes('massey')) {
+                            if (user.profile.hacker.school) {
+                                if (user.profile.hacker.school.toLowerCase().includes('massey')) {
                                     newStats.demo.massey += 1;
                                 }
                                 else {
@@ -191,12 +193,12 @@ function calculateStats(callback){
                             }
 
                             // Count shirt sizes
-                            if (user.profile.shirt in newStats.confirmedStat.shirtSizes){
-                                newStats.confirmedStat.shirtSizes[user.profile.shirt] += 1;
+                            if (user.profile.hacker.shirt in newStats.confirmedStat.shirtSizes) {
+                                newStats.confirmedStat.shirtSizes[user.profile.hacker.shirt] += 1;
                             }
                             // Dietary restrictions
-                            if (user.profile.diet){
-                                user.profile.diet.forEach(function(restriction){
+                            if (user.profile.hacker.dietaryRestrictions) {
+                                user.profile.hacker.dietaryRestrictions.forEach(function (restriction) {
                                     if (!newStats.confirmedStat.dietaryRestrictions[restriction]){
                                         newStats.confirmedStat.dietaryRestrictions[restriction] = 0;
                                     }
@@ -204,8 +206,8 @@ function calculateStats(callback){
                                 });
                             }
 
-                            if (user.profile.school) {
-                                if (user.profile.school.toLowerCase().includes('massey')) {
+                            if (user.profile.hacker.school) {
+                                if (user.profile.hacker.school.toLowerCase().includes('massey')) {
                                     newStats.confirmedStat.demo.massey += 1;
                                 }
                                 else {
@@ -229,8 +231,7 @@ function calculateStats(callback){
                             //console.log(line);
 
                             newStats.review.push(line);
-                        };
-
+                        }
                         //console.log(newStats.review);
 
                         // Transform dietary restrictions into a series of objects

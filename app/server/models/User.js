@@ -1,12 +1,13 @@
 require('dotenv').load();
 
-const mongoose    = require('mongoose');
-const bcrypt      = require('bcrypt-nodejs');
-const validator   = require('validator');
-const jwt         = require('jsonwebtoken');
-const fields      = require('../models/data/UserFields');
-const Raven       = require('raven');
-const speakeasy   = require('speakeasy');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt-nodejs');
+const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const fields = require('../models/data/UserFields');
+const Raven = require('raven');
+const speakeasy = require('speakeasy');
+const async = require('async');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
@@ -16,10 +17,12 @@ schema.methods.checkPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
-schema.methods.checkCode = function(code) {
-    return speakeasy.totp.verify({ secret: this.authSecret,
-                                   encoding: 'base32',
-                                   token: code});
+schema.methods.checkCode = function (code) {
+    return speakeasy.totp.verify({
+        secret: this.authSecret,
+        encoding: 'base32',
+        token: code
+    });
 };
 
 schema.methods.generateAuthToken = function () {
@@ -28,47 +31,47 @@ schema.methods.generateAuthToken = function () {
     });
 };
 
-schema.methods.generateVerificationToken = function() {
+schema.methods.generateVerificationToken = function () {
     return jwt.sign({id: this._id, type: 'verification'}, JWT_SECRET, {
         expiresIn: 3600
     });
 };
 
-schema.methods.generateMagicToken = function() {
+schema.methods.generateMagicToken = function () {
     return jwt.sign({id: this._id, type: 'magicJWT'}, JWT_SECRET, {
         expiresIn: 600
     });
-}
+};
 
-schema.methods.generateResetToken = function() {
+schema.methods.generateResetToken = function () {
     return jwt.sign({id: this._id, type: 'password-reset'}, JWT_SECRET, {
         expiresIn: 3600
     });
 };
 
-schema.methods.generate2FAToken = function() {
+schema.methods.generate2FAToken = function () {
     return jwt.sign({id: this._id, type: '2FA'}, JWT_SECRET, {
         expiresIn: 600
     });
 };
 
-schema.methods.setPermission = function(level) {
-    console.log('Got level ', level)
+schema.methods.setPermission = function (level) {
+    console.log('Got level ', level);
 
     if (level && typeof level == 'string') {
         for (var key in fields['permissions']) {
 
             if (key == level.toLowerCase()) {
 
-                console.log('Locked to', key)
+                console.log('Locked to', key);
 
-                level = fields['permissions'][key]['permissionLevel']
+                level = fields['permissions'][key]['permissionLevel'];
                 break
             }
         }
     }
 
-    console.log('Translating to ', level)
+    console.log('Translating to ', level);
 
     if (!level) {
         level = 0
@@ -80,7 +83,7 @@ schema.methods.setPermission = function(level) {
 
     this.update({
         permissions: this.permissions
-    }, function(err, user) {
+    }, function (err, user) {
         if (err || !user) {
             console.log('Failed to set permission')
         }
@@ -101,7 +104,7 @@ schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-schema.statics.getByID = function(id, callback, permissionLevel) {
+schema.statics.getByID = function (id, callback, permissionLevel) {
 
     /*
     if (permissionLevel == null) {
@@ -109,8 +112,8 @@ schema.statics.getByID = function(id, callback, permissionLevel) {
     }*/
 
     this.findOne({
-        _id:  id
-    }, function(err, user) {
+        _id: id
+    }, function (err, user) {
         if (err || !user) {
             return callback(err ? err : {
                 error: 'User not found.',
@@ -139,7 +142,7 @@ schema.statics.getByToken = function (token, callback) {
             });
         }
 
-        this.findOne({_id: payload.id}, function(err, user) {
+        this.findOne({_id: payload.id}, function (err, user) {
 
             if (err || !user) {
                 return callback(err ? err : {
@@ -176,7 +179,7 @@ schema.statics.get2FA = function (token, callback) {
             });
         }
 
-        this.findOne({_id: payload.id}, '+QRCode +authSecret', function(err, user) {
+        this.findOne({_id: payload.id}, '+QRCode +authSecret', function (err, user) {
 
             if (err || !user) {
                 return callback(err ? err : {
@@ -197,31 +200,25 @@ schema.statics.get2FA = function (token, callback) {
     }.bind(this));
 };
 
-schema.statics.getUser = async function(query) {
+schema.statics.getUser = async function (query) {
     return await this.findOne(query);
 };
 
 schema.statics.getByEmail = function (email, callback, permissionLevel) {
     this.findOne({
-        email:  email ? email.toLowerCase() : email
-    }, function(err, user) {
+        email: email ? email.toLowerCase() : email
+    }, function (err, user) {
         if (err || !user) {
             return callback(err ? err : {
                 error: 'User not found',
                 code: 404
             })
         }
-
-        /*
-        if (!permissionLevel) {
-            permissionLevel = 0
-        }*/
-
         return callback(null, user); //filterSensitive(user, permissionLevel));
     });
 };
 
-schema.statics.validateProfile = function(id, profile, callback) {
+schema.statics.validateProfile = function (id, profile, callback) {
 
     var queue = [[fields.profile, profile]];
     var runner;
@@ -234,12 +231,34 @@ schema.statics.validateProfile = function(id, profile, callback) {
         keys = Object.keys(runner);
 
         for (var i = 0; i < keys.length; i++) {
-            if('type' in runner[keys[i]]) {
-                if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== ''){
-                    return callback({message: 'Field ' + key + ' is required'})
+            if ('type' in runner[keys[i]]) {
+                if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== '') {
+                    return callback({error: 'Field "' + keys[i] + '" is required'})
+                }
+
+                if (runner[keys[i]].maxlength && userpath[keys[i]] != null && userpath[keys[i]].length > runner[keys[i]].maxlength) {
+                    return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
+                }
+
+                if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
+                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] != '' && !runner[keys[i]].required)) {
+                        return callback({error: 'Field "' + keys[i] + '" is invalid'})
+                    }
+                }
+
+                if (runner[keys[i]].required && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'dropdown' && userpath[keys[i]] == ' ') {
+                    return callback({error: 'Field "' + keys[i] + '" is required'})
+                }
+
+                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
+                    for (var r in userpath[keys[i]]) {
+                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
+                            return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
+                        }
+                    }
                 }
             } else {
-                if(userpath[keys[i]]) {
+                if (userpath[keys[i]]) {
                     queue.push([runner[keys[i]], userpath[keys[i]]])
                 }
             }
@@ -247,10 +266,10 @@ schema.statics.validateProfile = function(id, profile, callback) {
     }
 
     return callback(null, profile);
-}
+};
 
 
-schema.virtual('lowerCaseName').get(function() {
+schema.virtual('lowerCaseName').get(function () {
     if (this.firstName && this.lastName) {
         return this.firstName.toLowerCase() + ' ' + this.lastName.toLowerCase();
     }
@@ -258,7 +277,7 @@ schema.virtual('lowerCaseName').get(function() {
     return '';
 });
 
-schema.virtual('fullName').get(function() {
+schema.virtual('fullName').get(function () {
     if (this.firstName && this.lastName) {
         return this.firstName + ' ' + this.lastName;
     }
@@ -294,7 +313,7 @@ schema.virtual('permissions.level').get(function () {
     }
 });
 
-schema.virtual('userType.name').get(function() {
+schema.virtual('userType.name').get(function () {
     if (this.permissions.developer) {
         return 'Developer';
     } else if (this.permissions.owner) {
@@ -309,15 +328,15 @@ schema.virtual('userType.name').get(function() {
         type.push('Check In');
     }
 
-    if (this.userType.hacker)  {
+    if (this.userType.hacker) {
         type.push('Hacker');
     }
 
-    if (this.userType.mentor)  {
+    if (this.userType.mentor) {
         type.push('Mentor');
     }
 
-    if (this.userType.workshopHost)  {
+    if (this.userType.workshopHost) {
         type.push('Workshop Host');
     }
 
@@ -368,23 +387,24 @@ schema.virtual('status.name').get(function () {
 
 schema.virtual('profile.isSigned').get(function () {
     return this.profile.signature !== -1;
-})
+});
 
-schema.statics.filterSensitive = function(user, permission, page) {
+schema.statics.filterSensitive = function (user, permission, page) {
     return filterSensitive(user, permission, page);
-}
+};
 
 var filterSensitive = function (user, permission, page) {
 
     try {
-        console.log(page)
+        console.log(page);
         if (page === 'checkin') {
             return {
                 id: user.id,
                 name: user.fullName,
                 waiver: user.status.waiver,
                 checked: user.status.checkedIn,
-                email: user.email}
+                email: user.email
+            }
         }
 
         var u = user.toJSON();
@@ -406,37 +426,56 @@ var filterSensitive = function (user, permission, page) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
             keys = Object.keys(runner);
-
-            for (var i = 0; i < keys.length; i++) {
-                if ('type' in runner[keys[i]]) {
-                    if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
+            async.each(keys, (key, callback) => {
+                if ('type' in runner[key]) {
+                    if (runner[key].permission && runner[key].permission >= permissionLevel) {
                         try {
-                            delete userpath[keys[i]];
+                            delete userpath[key];
                         } catch (e) {
                             console.log(e)
                         }
                     }
 
-                    if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
-                        userpath[keys[i]] = runner[keys[i]].default;
+                    if (permissionLevel < 2 && runner[key].condition && !navigate(user, runner[key].condition)) {
+                        userpath[key] = runner[key].default;
                     }
 
                 } else {
-                    if (userpath[keys[i]]) {
-                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                    if (userpath[key]) {
+                        queue.push([runner[key], userpath[key]])
                     }
                 }
-            }
+            });
+            // for (var i = 0; i < keys.length; i++) {
+            //     if ('type' in runner[keys[i]]) {
+            //         if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
+            //             try {
+            //                 delete userpath[keys[i]];
+            //             } catch (e) {
+            //                 console.log(e)
+            //             }
+            //         }
+            //
+            //         if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+            //             userpath[keys[i]] = runner[keys[i]].default;
+            //         }
+            //
+            //     } else {
+            //         if (userpath[keys[i]]) {
+            //             queue.push([runner[keys[i]], userpath[keys[i]]])
+            //         }
+            //     }
+            // }
         }
 
         return u;
-    } catch(e) {
+    } catch (e) {
         Raven.captureException(e);
         return {};
     }
 };
 
-var navigate = function(dictionary, path) {
+var navigate = function (dictionary, path) {
     var runner = dictionary;
     path = path.split('.');
 
@@ -445,6 +484,6 @@ var navigate = function(dictionary, path) {
     }
 
     return runner[path[path.length - 1]];
-}
+};
 
 module.exports = mongoose.model('User', schema);

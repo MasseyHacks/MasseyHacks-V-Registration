@@ -7,14 +7,14 @@ const nodemon       = require('nodemon');
 const dotenv        = require('dotenv');
 const WebpackConfig = require('./webpack.config');
 const uglify        = require('gulp-uglify');
-const minifyCSS     = require('gulp-minify-css')
+const minifyCSS = require('gulp-minify-css');
 
 gulp.task('css', function() {
     console.log('Rebuilding CSS...');
 
     gulp.src(['app/client/css/*.css'])
         .pipe(minifyCSS())
-        .pipe(gulp.dest('app/client/dist'))
+        .pipe(gulp.dest('app/client/dist'));
 
     console.log('CSS built!')
 });

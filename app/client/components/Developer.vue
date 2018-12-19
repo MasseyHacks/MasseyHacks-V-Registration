@@ -6,7 +6,7 @@
                     <h2>DEVELOPER</h2>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" style="padding-bottom: 30px">
                 <div class="ui-card dash-card">
                     <h3>SERVER LOG</h3>
                     <hr>
@@ -27,6 +27,7 @@
                             <button class="generic-button" :disabled="page == 1" v-on:click="switchPage(page - 1)">Previous</button>
                             <button class="generic-button" :disabled="page == totalPages" v-on:click="switchPage(page + 1)">Next</button>
 
+                            <br>
                             <br>
                             {{page}} of {{totalPages}} | {{count}} results
 
@@ -109,11 +110,10 @@
 </template>
 
 <script>
-    import Session     from '../src/Session'
     import AuthService from '../src/AuthService.js'
     import ApiService from '../src/ApiService.js'
-    import swal        from 'sweetalert2'
-    import moment  from 'moment'
+    import swal from 'sweetalert2'
+    import moment from 'moment'
     import $ from 'jquery';
 
     export default {
@@ -141,14 +141,14 @@
             }
         },
         beforeMount() {
-            this.updateSearch()
+            this.updateSearch();
 
             AuthService.sendRequest("GET", "/api/getAdmins", null, (err, data) => {
-                console.log(data)
+                console.log(data);
                 if (err) {
                     console.log("Error while getting template")
                 } else {
-                    this.Admins = data
+                    this.Admins = data;
                     this.dropdown = Object.keys(data)
                 }
             });
@@ -178,7 +178,7 @@
                         swal({
                             title: 'SUDO MODE enabled!',
                             type: 'success'
-                        })
+                        });
 
                         sessionStorage.setItem('sudoMode', 'true');
                     } else {
@@ -190,7 +190,7 @@
                 })
             },
             switchPage: function (page) {
-                this.page = page
+                this.page = page;
                 this.updateSearch(true)
             },
             showDiv(id){
@@ -224,18 +224,18 @@
                 }
 
                 // Update content of advanced query box
-                this.advancedQueryContent = JSON.stringify(this.filters)
+                this.advancedQueryContent = JSON.stringify(this.filters);
 
                 ApiService.getLog({ page: this.page, size: 30, text: this.searchQuery }, (err, data) => {
-                    this.loading = false
-                    this.queryError = ''
+                    this.loading = false;
+                    this.queryError = '';
 
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
-                        this.log = data.log
-                        this.totalPages = data.totalPages
-                        this.count = data.count
+                        this.log = data.log;
+                        this.totalPages = data.totalPages;
+                        this.count = data.count;
 
                         if (this.log.length == 0) {
                             this.queryError = 'No events found'

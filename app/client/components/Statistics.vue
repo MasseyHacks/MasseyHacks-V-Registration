@@ -107,7 +107,9 @@
                         <ul class="custom-ul" style="text-align: left;">
                             <li><i class="fas fa-bus"></i>Bus: {{statistics.confirmedStat.bus}}</li>
                             <li><i class="fas fa-home"></i>Massey: {{statistics.confirmedStat.demo.massey}}</li>
-                            <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.confirmedStat.demo.nonmassey}}</li>
+                            <li><i class="fas fa-globe-americas"></i>Non-Massey:
+                                {{statistics.confirmedStat.demo.nonmassey}}
+                            </li>
                         </ul>
                         <ul class="custom-ul" style="text-align: left;">
                             <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
@@ -132,7 +134,7 @@
                 loading: true,
                 loadingError: '',
                 statistics: {},
-                atGlanceStuff : {}
+                atGlanceStuff: {}
             }
         },
 
@@ -143,7 +145,7 @@
 
 
         methods: {
-            getStat: function() {
+            getStat: function () {
                 ApiService.getStatistics((loadingError, statistics) => {
                     this.loading = false;
 
@@ -154,7 +156,7 @@
                     }
                 })
             },
-            refreshStatistics: function() {
+            refreshStatistics: function () {
                 ApiService.refreshStatistics((loadingError, statistics) => {
                     if (loadingError || !statistics) {
                         this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
@@ -166,52 +168,60 @@
         },
 
         computed: {
-            atGlance: function() {
+            atGlance: function () {
                 return {
-                    "Total" : this.statistics.total,
-                    "Verified" : this.statistics.verified,
-                    "Submitted" : this.statistics.submitted
+                    "Total": this.statistics.total,
+                    "Verified": this.statistics.verified,
+                    "Submitted": this.statistics.submitted
                 }
             },
 
-            atGlance2: function() {
+            atGlance2: function () {
                 return {
-                    "Admitted" : this.statistics.admitted,
+                    "Admitted": this.statistics.admitted,
                     "Waitlisted": this.statistics.waitlisted,
-                    "Rejected" : this.statistics.rejected
+                    "Rejected": this.statistics.rejected
                 }
             },
 
-            genderSubmitted: function() {
+            genderSubmitted: function () {
                 var totalCount = 0;
                 var returnObject = {
-                    "Total" : '<i class="fas fa-check"></i>Total: ',
-                    "Male" : '<i class="fas fa-male"></i>',
-                    "Female" : '<i class="fas fa-female"></i>',
-                    "Other" : '<i class="fas fa-question-circle"></i>',
-                    "No Data" : '<i class="fas fa-ban"></i>'
+                    "Total": '<i class="fas fa-check"></i>Total: ',
+                    "Male": '<i class="fas fa-male"></i>',
+                    "Female": '<i class="fas fa-female"></i>',
+                    "Other": '<i class="fas fa-question-circle"></i>',
+                    "No Data": '<i class="fas fa-ban"></i>'
                 };
+
+                console.log(this.statistics);
+
                 for (var key in this.statistics.demo.gender) {
                     totalCount += this.statistics.demo.gender[key];
+                    console.log("STUFF");
+                    console.log(this.statistics.demo.gender);
                 }
+
+                console.log(totalCount);
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.M / totalCount) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.F / totalCount) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.O / totalCount) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.N / totalCount) : 0) + "%";
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Male / totalCount * 100) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Female / totalCount * 100) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Other / totalCount * 100) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 
             },
 
-            genderConfirmed: function() {
+            genderConfirmed: function () {
                 var totalCount = 0;
                 var returnObject = {
-                    "Total" : '<i class="fas fa-check"></i>Total: ',
-                    "Male" : '<i class="fas fa-male"></i>',
-                    "Female" : '<i class="fas fa-female"></i>',
-                    "Other" : '<i class="fas fa-question-circle"></i>',
-                    "No Data" : '<i class="fas fa-ban"></i>'
+                    "Total": '<i class="fas fa-check"></i>Total: ',
+                    "Male": '<i class="fas fa-male"></i>',
+                    "Female": '<i class="fas fa-female"></i>',
+                    "Other": '<i class="fas fa-question-circle"></i>',
+                    "No Data": '<i class="fas fa-ban"></i>'
                 };
                 for (var key in this.statistics.confirmedStat.gender) {
                     totalCount += this.statistics.confirmedStat.gender[key];

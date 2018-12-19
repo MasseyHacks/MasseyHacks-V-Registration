@@ -1,6 +1,6 @@
 <template>
     <div class="app-screen">
-        <div style="display: inline-block">
+        <div style="display: inline-block;">
             <div class="container">
                 <div class="row">
                     <div class="title-card col-md-12">
@@ -39,7 +39,7 @@
     import Session from '../src/Session'
 
     export default {
-        beforeRouteUpdate (to, from, next) {
+        beforeRouteUpdate(to, from, next) {
             const pageLayout = ['statistics', 'users', 'teamview', 'review'];
             const toPath = to.path.split('/');
             const fromPath = from.path.split('/');

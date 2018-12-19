@@ -1,13 +1,13 @@
 require('dotenv').load();
 
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 
 const bodyParser      = require('body-parser');
 const methodOverride  = require('method-override');
 const morgan          = require('morgan');
 const cookieParser    = require('cookie-parser');
-const RateLimit          = require('express-rate-limit');
+const RateLimit       = require('express-rate-limit');
 const cluster         = require('cluster');
 const cpuCount        = require('os').cpus().length;
 
@@ -29,7 +29,11 @@ Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
 
     var app = express();
-    mongoose.connect(database);
+    console.log(database);
+    mongoose.connect(database, {server: {auto_reconnect: true}}).catch(error => {
+        console.log("DB CONNECTION ERROR");
+        console.log(error)
+    });
     stats.startService();
 
     app.enable('trust proxy'); // For reverse proxy
@@ -63,6 +67,10 @@ Raven.context(function() {
         // Start routers
         app.use(express.static('app/client/'));
 
+        let githubRouter = express.Router();
+        require('./app/server/routes/github')(githubRouter);
+        app.use('/github', githubRouter);
+
         var apiRouter = express.Router();
         require('./app/server/routes/api')(apiRouter);
         app.use('/api', apiRouter);
@@ -79,4 +87,4 @@ Raven.context(function() {
 
     }
 
-})
+});

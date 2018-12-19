@@ -1,25 +1,33 @@
 <template>
-    <div>
+    <div class="app-screen">
+
+
         <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <div id="login-form-elements">
-                <div v-if="status == 'success'">
-                    <p>Success!</p>
-                </div>
-                <div v-else-if="status == 'invalid'">
-                    <p>Invalid Token</p>
-                </div>
-                <div v-else>
-                    <p>Loading...</p>
+        <div class="container vertical-centered">
+            <div class="ui-card dash-card">
+                <div>
+                    <div v-if="status == 'success'">
+                        <h5 style="margin-bottom: 0">Successfully verified!</h5>
+
+                        <br>
+
+                        <router-link to="/application"><button class="generic-button-dark">Start Application</button></router-link>
+                    </div>
+                    <div v-else-if="status == 'invalid'">
+                        <h5 style="margin-bottom: 0">Invalid Token</h5>
+                    </div>
+                    <div v-else>
+                        <h5 style="margin-bottom: 0">Loading...</h5>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script>
     import AuthService from '../src/AuthService'
-    import swal        from 'sweetalert2'
 
     export default {
         props: {
@@ -37,7 +45,7 @@
                 if (err) {
                     this.status = 'invalid'
                 } else {
-                    this.status = 'success'
+                    this.status = 'success';
 
                     AuthService.refreshToken() // Update dashboard status
                 }

@@ -1,5 +1,5 @@
 require('dotenv').load();
-const webpack = require('webpack')
+const webpack = require('webpack');
 
 module.exports = {
     entry: [
@@ -41,4 +41,4 @@ module.exports = {
             CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY)
         })
     ]
-}
+};
