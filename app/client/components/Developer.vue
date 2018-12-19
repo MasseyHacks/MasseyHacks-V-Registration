@@ -91,6 +91,18 @@
                     Developers are busy people, okay?<br>
                     <button class="generic-button-dark" @click="sudoMode">Enter sudo mode</button>
                 </div>
+
+                <div class="ui-card dash-card">
+                    <h3>Version</h3>
+                    <hr>
+                    <p-if="currentVersion != latestVersion">
+                        There is an update available.
+                    </p>
+                    Current Version: {{currentVersion}}
+                    <br>
+                    Latest Version: {{latestVersion}}
+
+                </div>
             </div>
         </div>
     </div>
@@ -123,7 +135,9 @@
                 Admins:{},
                 dropdown: {},
 
-                searchQuery:''
+                searchQuery:'',
+                currentLocalVersion: '',
+                currentRemoteVersion: ''
             }
         },
         beforeMount() {
@@ -136,6 +150,16 @@
                 } else {
                     this.Admins = data
                     this.dropdown = Object.keys(data)
+                }
+            });
+
+            AuthService.sendRequest("GET", "/api/version", null, (err, data) => {
+                if(err) {
+                    console.log("Error while getting template");
+                    this.currentLocalVersion = "-2"
+                }
+                else{
+                    this.currentLocalVersion = data.commit;
                 }
             })
         },
