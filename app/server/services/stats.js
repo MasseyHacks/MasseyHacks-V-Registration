@@ -7,7 +7,8 @@ const fs       = require('fs');
 
 // In memory stats.
 var stats = {};
-function calculateStats(callback){
+
+function calculateStats(callback) {
     console.log('Calculating stats...');
     var newStats = {
         lastUpdated: 0,

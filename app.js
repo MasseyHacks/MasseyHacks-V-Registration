@@ -29,7 +29,9 @@ Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
 
     var app = express();
+    console.log(database);
     mongoose.connect(database, {server: {auto_reconnect: true}}).catch(error => {
+        console.log("DB CONNECTION ERROR");
         console.log(error)
     });
     stats.startService();

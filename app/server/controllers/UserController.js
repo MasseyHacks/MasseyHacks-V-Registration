@@ -178,9 +178,11 @@ UserController.getByQuery = function (adminUser, query, callback) {
                 }
 
                 if (users) {
-                    for (var i = 0; i < users.length; i++) {
-                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level, appPage)
-                    }
+                    let i = 0;
+                    async.each(users, (user, callback) => {
+                        users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
+                        i++;
+                    });
                 }
 
                 return callback(null, {

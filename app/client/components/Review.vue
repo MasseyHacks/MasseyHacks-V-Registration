@@ -77,11 +77,12 @@
                     applicationVotes: {$nin: [this.user.email]}
                 }]}}, (err, data) => {
 
-                    this.loading = false
+                this.loading = true;
 
                     if (err || !data) {
                         this.err = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
+                        this.loading = false;
                         this.applicationsLeft = Object.keys(data.users).length;
                         this.users = data;
                         console.log('data');
