@@ -189,7 +189,8 @@
                     console.log("asgsfagf",data);
                     this.currentRemoteVersion = data.sha;
                 },
-                dataType: "json"
+                dataType: "json",
+                cache: false
             });
         },
         methods: {
