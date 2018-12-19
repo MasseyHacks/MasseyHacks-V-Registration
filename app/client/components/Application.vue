@@ -13,7 +13,7 @@
                 <div v-else-if="loadingError">
                     {{loadingError}}
                 </div>
-                <div v-else class="main-application">
+                <div v-else class="main-app">
                     <form v-if="!user.permissions.checkin || user.permissions.developer"
                           @submit.prevent="submitApplication" style="text-align: left">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">

@@ -226,7 +226,7 @@ SettingsController.modifyLimit = function(user, limit, callback) {
                 return callback({'error':'Unable to update limit'})
             }
 
-            logger.logAction(user._id, -1, 'EXECUTOR IP: ' + user.ip + ' | Modified participant limit to ' + limit.maxParticipants + '.');
+            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.', 'EXECUTOR IP: ' + user.ip);
 
             return callback(null, settings)
         })
