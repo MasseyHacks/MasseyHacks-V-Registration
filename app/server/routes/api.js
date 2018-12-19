@@ -160,6 +160,12 @@ module.exports = function(router) {
         stats.refreshStats(logger.defaultResponse(req, res));
     });
 
+    // Developer
+    // Get current commit id
+    router.get('/version', permissions.isDeveloper, function (req, res) {
+        SettingsController.getCurrentVersion(logger.defaultResponse(req, res));
+    });
+
     // Owner
     // Force accept
     router.post('/forceAccept', permissions.isOwner, function (req, res) {
@@ -287,8 +293,15 @@ module.exports = function(router) {
     // Owner
     // Accept team
     router.post('/admitTeam', permissions.isOwner, function (req, res) {
-        var userID = req.body.userID;
-        TeamController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
+        var teamCode = req.body.code;
+        TeamController.teamAccept(req.userExecute, teamCode, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Reject team
+    router.post('/rejectTeam', permissions.isOwner, function (req, res) {
+        var teamCode = req.body.code;
+        TeamController.teamReject(req.userExecute, teamCode, logger.defaultResponse(req, res));
     });
 
     // General

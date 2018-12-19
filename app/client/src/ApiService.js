@@ -333,7 +333,7 @@ module.exports = {
     },
 
     rejectTeam(code, callback) {
-        AuthService.sendRequest('POST', '/api/declineTeam', {
+        AuthService.sendRequest('POST', '/api/rejectTeam', {
             code: code
         }, callback)
     },
