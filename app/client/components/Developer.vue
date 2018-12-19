@@ -24,7 +24,7 @@
                         <strong>There is an update available</strong>
                     </p>
                     <p v-else>
-                        <strong>GOOSE is update to date</strong>
+                        <strong>GOOSE is up to date</strong>
                     </p>
                     <p>
                         <span v-if="currentLocalVersion != -1">
