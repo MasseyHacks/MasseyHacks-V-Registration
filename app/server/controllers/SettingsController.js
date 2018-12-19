@@ -59,8 +59,8 @@ function generateExpression(letter,otherCoef){
 }
 
 SettingsController.getCurrentVersion = function(callback){
-    if (fs.existsSync('../../../.git/refs/heads/master')){
-        var commitHash = fs.readFileSync('../../../.git/refs/heads/master');
+    if (fs.existsSync('.git/refs/heads/master')){
+        var commitHash = fs.readFileSync('.git/refs/heads/master', 'utf-8').trim();
         return callback(null, {"commit": commitHash})
     }
     else{

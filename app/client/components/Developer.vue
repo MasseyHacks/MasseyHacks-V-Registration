@@ -8,6 +8,36 @@
             </div>
             <div class="row" style="padding-bottom: 30px">
                 <div class="ui-card dash-card">
+                    <h3>Version</h3>
+                    <hr>
+
+                    <p v-if="currentLocalVersion == -1 && currentRemoteVersion == ''">
+                        <strong>Unable to fetch version status</strong>
+                    </p>
+                    <p v-else-if="currentLocalVersion == -1">
+                        <strong>Unable to fetch local version</strong>
+                    </p>
+                    <p v-else-if="currentRemoteVersion == ''">
+                        <strong>Unable to fetch remote version</strong>
+                    </p>
+                    <p v-else-if="currentRemoteVersion != currentLocalVersion">
+                        <strong>There is an update available</strong>
+                    </p>
+                    <p v-else>
+                        <strong>GOOSE is update to date</strong>
+                    </p>
+                    <p>
+                        <span v-if="currentLocalVersion != -1">
+                            Local Version: {{currentLocalVersion}}
+                        </span><br>
+                        <span v-if="currentRemoteVersion != ''">
+                            Remote Version: {{currentRemoteVersion}}
+                        </span>
+                    </p>
+
+
+                </div>
+                <div class="ui-card dash-card">
                     <h3>SERVER LOG</h3>
                     <hr>
                     <div v-if="loading">
@@ -93,17 +123,7 @@
                     <button class="generic-button-dark" @click="sudoMode">Enter sudo mode</button>
                 </div>
 
-                <div class="ui-card dash-card">
-                    <h3>Version</h3>
-                    <hr>
-                    <p-if="currentVersion != latestVersion">
-                        There is an update available.
-                    </p>
-                    Current Version: {{currentVersion}}
-                    <br>
-                    Latest Version: {{latestVersion}}
 
-                </div>
             </div>
         </div>
     </div>
@@ -156,12 +176,21 @@
             AuthService.sendRequest("GET", "/api/version", null, (err, data) => {
                 if(err) {
                     console.log("Error while getting template");
-                    this.currentLocalVersion = "-2"
+                    this.currentLocalVersion = "-1"
                 }
                 else{
                     this.currentLocalVersion = data.commit;
                 }
-            })
+            });
+
+            $.ajax({
+                url: "https://api.github.com/repos/MasseyHacks/MasseyHacks-V-Registration/commits/master",
+                success: (data) => {
+                    console.log("asgsfagf",data);
+                    this.currentRemoteVersion = data.sha;
+                },
+                dataType: "json"
+            });
         },
         methods: {
             sudoMode: function() {
