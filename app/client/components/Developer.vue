@@ -8,7 +8,7 @@
             </div>
             <div class="row" style="padding-bottom: 30px">
                 <div class="ui-card dash-card">
-                    <h3>Version</h3>
+                    <h3>VERSION</h3>
                     <hr>
 
                     <p v-if="currentLocalVersion == -1 && currentRemoteVersion == ''">
