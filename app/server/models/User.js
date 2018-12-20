@@ -426,7 +426,7 @@ var filterSensitive = function (user, permission, page) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
             keys = Object.keys(runner);
-            async.each(keys, (key, callback) => {
+            async.eachSeries(keys, (key) => {
                 if ('type' in runner[key]) {
                     if (runner[key].permission && runner[key].permission >= permissionLevel) {
                         try {
