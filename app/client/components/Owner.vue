@@ -58,7 +58,7 @@
 
                     <button class="generic-button-dark" v-on:click="rejectNoState">Reject no state</button>
                     <button class="generic-button-dark" v-on:click="hideAll">Hide all status</button>
-                    <button class="generic-button-dark" v-on:click="reviewSchools">Flush global email queue</button>
+                    <button class="generic-button-dark" v-on:click="flushAllEmails">Flush global email queue</button>
                 </div>
 
 
@@ -387,6 +387,33 @@
                                     swal('Error', err ? err.error : 'Something went wrong...', 'error')
                                 } else {
                                     swal('Success', `Successfully hid status for ${msg} users!`, 'success');
+                                }
+                            })
+                        })
+                    }
+                })
+            },
+
+            flushAllEmails() {
+                swal({
+                    title: 'Are you sure you?',
+                    text: 'YOU ARE ABOUT TO FLUSH THE EMAIL QUEUE FOR ALL USERS REGARDLESS OF STATUS! ARE YOU SURE YOU WANT TO PROCEED?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        AuthService.skillTest(() => {
+                            swal.showLoading();
+                            AuthService.sendRequest('POST', '/api/flushAllEmails', {
+
+                            }, (err, msg) => {
+                                if (err) {
+                                    swal('Error', err ? err.error : 'Something went wrong...', 'error')
+                                } else {
+                                    swal('Success', `Successfully flushed email queue for ${msg} users!`, 'success');
                                 }
                             })
                         })

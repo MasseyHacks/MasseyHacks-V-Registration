@@ -192,7 +192,7 @@ module.exports = function(router) {
     // Flush email queue for user
     router.post('/flushEmailQueue', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
-       UserController.flushEmailQueue(req.userExecute, userID, logger.defaultResponse(req, res));
+        UserController.flushEmailQueue(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
@@ -395,6 +395,12 @@ module.exports = function(router) {
     // Hide all status
     router.post('/hideAllStatus', permissions.isOwner, function (req, res) {
         globalUsersManager.hideAllStatusRelease(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Flash all email queue
+    router.post('/flushAllEmails', permissions.isOwner, function (req, res) {
+        globalUsersManager.flushAllEmails(req.userExecute, logger.defaultResponse(req, res));
     });
 
     // Owner

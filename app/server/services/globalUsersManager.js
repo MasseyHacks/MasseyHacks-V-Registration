@@ -1,5 +1,7 @@
 const User   = require('../models/User');
 const logger = require('../services/logger');
+const async  = require('async');
+const UserController = require('../controllers/UserController');
 
 var globalUsersManager = {};
 
@@ -109,5 +111,26 @@ globalUsersManager.hideAllStatusRelease = function(adminUser, callback){
         return callback(err, result.nModified);
     });
 };
+
+
+globalUsersManager.flushAllEmails = function (adminUser, callback) {
+    User.find({}, function (err, users) {
+        console.log('Users to be flushed.', users, err);
+
+        logger.logAction(adminUser._id, -1, 'Flushed all emails from queue.', 'EXECUTOR IP: ' + adminUser.ip);
+
+        async.each(users, function (user, callback) {
+            UserController.flushEmailQueue(adminUser, user._id, (err, msg) => {
+                console.log(user.fullName, err, msg ? 'Success' : 'Fail');
+
+                return callback()
+            });
+
+        }, function () {
+            return callback(null, users.length)
+        });
+    });
+};
+
 
 module.exports = globalUsersManager;
