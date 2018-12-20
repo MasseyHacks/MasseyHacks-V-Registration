@@ -29,7 +29,11 @@ Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
 
     var app = express();
-    mongoose.connect(database);
+    console.log(database);
+    mongoose.connect(database, {server: {auto_reconnect: true}}).catch(error => {
+        console.log("DB CONNECTION ERROR");
+        console.log(error)
+    });
     stats.startService();
 
     app.enable('trust proxy'); // For reverse proxy

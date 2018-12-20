@@ -20,6 +20,11 @@
                     <div v-if="user.status.name == 'organizer'">
                         <p><b>Hello there fellow organizer, welcome to your administrative dashboard.</b><br>
                             Remember, with great power, comes great responsibility.</p>
+
+                        <hr>
+
+                        <router-link to="/organizer/statistics"><button class="generic-button-dark">Organizer Dashboard</button></router-link>
+
                     </div>
                     <div v-else-if="user.status.name == 'incomplete'">
                         u need to finish app

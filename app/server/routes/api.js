@@ -10,6 +10,7 @@ const LogEvent           = require('../models/LogEvent');
 const UserController     = require('../controllers/UserController');
 const TeamController     = require('../controllers/TeamController');
 const SettingsController = require('../controllers/SettingsController');
+const globalUsersManager  = require('../services/globalUsersManager');
 
 const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
@@ -160,6 +161,12 @@ module.exports = function(router) {
         stats.refreshStats(logger.defaultResponse(req, res));
     });
 
+    // Developer
+    // Get current commit id
+    router.get('/version', permissions.isDeveloper, function (req, res) {
+        SettingsController.getCurrentVersion(logger.defaultResponse(req, res));
+    });
+
     // Owner
     // Force accept
     router.post('/forceAccept', permissions.isOwner, function (req, res) {
@@ -185,7 +192,7 @@ module.exports = function(router) {
     // Flush email queue for user
     router.post('/flushEmailQueue', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
-       UserController.flushEmailQueue(req.userExecute, userID, logger.defaultResponse(req, res));
+        UserController.flushEmailQueue(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
     // Owner
@@ -287,8 +294,15 @@ module.exports = function(router) {
     // Owner
     // Accept team
     router.post('/admitTeam', permissions.isOwner, function (req, res) {
-        var userID = req.body.userID;
-        TeamController.teamAccept(req.userExecute, userID, logger.defaultResponse(req, res));
+        var teamCode = req.body.code;
+        TeamController.teamAccept(req.userExecute, teamCode, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Reject team
+    router.post('/rejectTeam', permissions.isOwner, function (req, res) {
+        var teamCode = req.body.code;
+        TeamController.teamReject(req.userExecute, teamCode, logger.defaultResponse(req, res));
     });
 
     // General
@@ -351,6 +365,42 @@ module.exports = function(router) {
     // Reject everyone without status
     router.post('/rejectNoState', permissions.isOwner, function (req, res) {
         UserController.rejectNoState(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status
+    router.post('/releaseAllStatus', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllStatus(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status accepted
+    router.post('/releaseAllAccepted', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllAccepted(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status waitlisted
+    router.post('/releaseAllWaitlisted', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllWaitlisted(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status rejected
+    router.post('/releaseAllRejected', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllRejected(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Hide all status
+    router.post('/hideAllStatus', permissions.isOwner, function (req, res) {
+        globalUsersManager.hideAllStatusRelease(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Flash all email queue
+    router.post('/flushAllEmails', permissions.isOwner, function (req, res) {
+        globalUsersManager.flushAllEmails(req.userExecute, logger.defaultResponse(req, res));
     });
 
     // Owner

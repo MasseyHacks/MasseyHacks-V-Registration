@@ -427,7 +427,8 @@ h2 {
     font-family: 'Avenir Next Bold', sans-serif !important;
 }
 
-.main-application {
+.main-app {
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
