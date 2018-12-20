@@ -13,9 +13,13 @@
                     <p>Loading...</p>
                 </div>
                 <div v-else-if="page == 'create'">
-                    Create Team
+                    <h4>Create Team</h4>
 
-                    <input class="round-input" style="width: 100%" placeholder="Super Hax0r Team" v-model="teamName" type="text" maxlength="50">
+                    <br>
+
+                    <input class="round-input" style="width: 100%; padding: 5px;" placeholder="Team Name" v-model="teamName" type="text" maxlength="50">
+
+                    <br>
 
                     <br>
                     <div class="button-row">
@@ -25,9 +29,13 @@
                     </div>
                 </div>
                 <div v-else-if="page == 'join'">
-                    Join Team
+                    <h4>Join Team</h4>
 
-                    <input class="round-input" style="width: 100%" placeholder="Team Code" v-model="teamCode" type="text">
+                    <br>
+
+                    <input class="round-input" style="width: 100%; padding: 5px;" placeholder="Team Code" v-model="teamCode" type="text">
+
+                    <br>
 
                     <br>
                     <div class="button-row">
@@ -36,7 +44,7 @@
                     </div>
                 </div>
                 <div v-else-if="!team">
-                    <p>You are currently not in a team.</p>
+                    <h4>You are currently not on a team.</h4>
 
                     <div class="button-row">
                         <button class="generic-button-dark" v-on:click="reset(); page = 'create'">Create</button>
@@ -57,8 +65,10 @@
                         {{id}}<br>
                     </span>
 
+                    <br>
+
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="leaveTeam">leave</button>
+                        <button class="generic-button-dark" v-on:click="leaveTeam">Leave</button>
                     </div>
                 </div>
 
@@ -66,7 +76,6 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>

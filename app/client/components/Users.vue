@@ -99,28 +99,30 @@
                         {{page}} of {{totalPages}} | {{count}} result<span v-if="count > 1">s</span>
 
                         <hr>
-                        <table class="data-table-generic">
-                            <tr class="table-header">
-                                <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
-                                <td>V/S/A/C/W</td>
-                                <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
-                                <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
-                                <td>SCHOOL</td>
-                                <td>GRADE</td>
-                            </tr>
-                            <router-link type="tr" v-for="user in users"
-                                         :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
-                                         tag="tr">
-                                <td>
-                                    {{user.fullName}}
-                                </td>
-                                <td><span v-html="userStatusConverter(user)"></span></td>
-                                <td>{{user.numVotes}}</td>
-                                <td class="email-col">{{user.email}}</td>
-                                <td>{{user.profile.hacker.school}}</td>
-                                <td>{{user.profile.hacker.grade}}</td>
-                            </router-link>
-                        </table>
+                        <div style="overflow-x: auto; max-width: 100%">
+                            <table class="data-table-generic">
+                                <tr class="table-header">
+                                    <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
+                                    <td>V/S/A/C/W</td>
+                                    <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
+                                    <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
+                                    <td>SCHOOL</td>
+                                    <td>GRADE</td>
+                                </tr>
+                                <router-link type="tr" v-for="user in users"
+                                             :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
+                                             tag="tr">
+                                    <td>
+                                        {{user.fullName}}
+                                    </td>
+                                    <td><span v-html="userStatusConverter(user)"></span></td>
+                                    <td>{{user.numVotes}}</td>
+                                    <td class="email-col">{{user.email}}</td>
+                                    <td>{{user.profile.hacker.school}}</td>
+                                    <td>{{user.profile.hacker.grade}}</td>
+                                </router-link>
+                            </table>
+                        </div>
                     </div>
                     <p v-else>
                         {{queryError}}

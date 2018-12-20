@@ -14,16 +14,16 @@
                     <h2 class="subtitle">Login</h2>
                     -->
 
-                    <p v-if="$route.query.redirect && !error">
+                    <p v-if="$route.query.redirect && !error" class="error">
                         You need to login first.
                     </p>
-                    <p v-if="$route.query.message && !error">{{$route.query.message}}</p>
+                    <p v-if="$route.query.message && !error" class="error">{{$route.query.message}}</p>
                     <p v-if="error" class="error">{{error}}</p>
 
                     <div id="login-form-elements">
                         <form @submit.prevent="login">
-                            <input v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
-                            <input v-model="pass" placeholder="supersecretpw" type="password" required><br>
+                            <input class="standard-input" v-model="email" placeholder="Email" type="email" autofocus required><br>
+                            <input class="standard-input" v-model="pass" placeholder="Password" type="password" required><br>
 
                             <div id="button-row">
                                 <button class="generic-button-dark" type="submit">
@@ -31,11 +31,11 @@
                                 </button>
 
                                 <router-link to="/register" v-if="settings.registrationOpen">
-                                    <button>Register</button>
+                                    <button class="generic-button-dark">Register</button>
                                 </router-link>
 
                                 <router-link to="/reset">
-                                    <button>Reset</button>
+                                    <button class="generic-button-dark">Reset</button>
                                 </router-link>
                             </div>
                         </form>

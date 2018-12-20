@@ -1535,6 +1535,7 @@ UserController.releaseStatus = function (adminUser, userID, callback) {
         }
 
         logger.logAction(adminUser._id, user._id, 'Released user status', 'EXECUTOR IP: ' + adminUser.ip);
+
         mailer.flushQueueUser(user.email, function(err, message){
             return callback(err, user);
         });

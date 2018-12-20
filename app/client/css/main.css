@@ -55,6 +55,16 @@ h2 {
     border: 2px solid #fc6076 !important;
 }
 
+.standard-input {
+    border: 1px solid #a9a9a9;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 2px;
+    height: 30px;
+}
+
 #login-form-box {
     position: relative;
 
@@ -69,19 +79,7 @@ h2 {
     align-items: center;
     display: grid;
     margin: auto;
-    font-size: 2rem;
     text-align: center;
-}
-
-#login-form-box p {
-    font-size: 0.5em;
-}
-
-#login-form-box h2 {
-    color: black;
-    font-family: "Avenir Next Bold", sans-serif;
-    text-align: center;
-    font-size: 1em;
 }
 
 ::placeholder {
@@ -89,57 +87,17 @@ h2 {
     font-size: 0.7rem;
 }
 
-
-#login-form-box input {
-    padding: 1%;
-    margin-bottom: 5px;
-    background: transparent;
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-bottom: 1px solid #919eaf;
-    /*border-radius: 15px;*/
-    position: relative;
-    font-size: 0.5em;
-    color: #505050;
-    text-align: left;
-    outline: none;
-}
-
-
-#login-form-elements button {
-    outline: none;
-    margin-top: 5%;
-    background-color: transparent;
-    color: black;
-    border-radius: 20px;
-    border: 2px solid black;
-    width: 30%;
-    height: 40px;
-    font-size: 0.9rem;
-    text-align: center;
-    transition: background-color 0.1s;
-    transition: border 0.1s;
-}
-
-#login-form-elements button:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
 #button-row {
     text-align: center;
-    /*    position: relative;
-        left: 50%;
-        transform: translateX(-50%);*/
     margin: auto;
-}
-
-#login-form-elements button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
 }
 
 #login-form-elements {
     margin: auto;
+}
+
+#login-form-elements input {
+    margin-bottom: 10px !important;
 }
 
 #login-form-elements form {
@@ -439,9 +397,11 @@ h2 {
     border-width: 1px !important;
 
     width: 50vw;
-    margin-top: 30px;
-
     padding: 20px;
+}
+
+.dash-card-offset {
+    margin-top: 30px;
 }
 
 .dash-card-large {
@@ -478,9 +438,7 @@ h2 {
 }
 
 .data-table-generic {
-    width: 100% !important;
     margin-bottom: 30px;
-    overflow-x: auto;
     color: black;
 }
 
@@ -626,12 +584,17 @@ h4 {
 }
 
 @media (max-width: 992px) {
+
     .dash-card {
-        width: 95vw;
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
     }
 
     .dash-card-large {
-        width: 95vw;
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
     }
 
     #nav-main {
@@ -693,7 +656,7 @@ h4 {
 .generic-button-dark {
     border-radius: 2em;
     padding: 10px;
-    min-width: 10rem;
+    min-width: 9em;
     background-color: transparent;
     color: black;
     border: 2px solid black;

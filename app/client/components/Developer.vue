@@ -6,8 +6,8 @@
                     <h2>DEVELOPER</h2>
                 </div>
             </div>
-            <div class="row" style="padding-bottom: 30px">
-                <div class="ui-card dash-card">
+            <div style="padding-bottom: 30px">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>VERSION</h3>
                     <hr>
 
@@ -37,7 +37,7 @@
 
 
                 </div>
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>SERVER LOG</h3>
                     <hr>
                     <div v-if="loading">
@@ -105,8 +105,9 @@
                         </p>
                     </div>
                 </div>
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>QR CODES</h3>
+                    <h5><b>Warning:</b> You are about to reveal confidential information</h5>
                     <hr>
                     <select style="margin-bottom: 10px;" v-model="selected">
                         <option disabled value="">Select an Admin</option>
@@ -116,7 +117,7 @@
                     <img v-bind:src="Admins[selected]" v-if="selected">
                 </div>
 
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>SUDO MODE</h3>
                     <hr>
                     Developers are busy people, okay?<br>

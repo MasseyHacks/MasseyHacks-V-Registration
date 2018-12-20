@@ -6,26 +6,26 @@
                     <h2>OWNER</h2>
                 </div>
             </div>
-            <div class="row" style="padding-bottom: 30px">
-                <div class="ui-card dash-card">
+            <div style="padding-bottom: 30px">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>Application Dates</h3>
                     <hr>
 
                     <h6>Registration Open: {{moment(settings.timeOpen)}}</h6>
-                    <input type="datetime-local" v-model="timeOpen"/><br><br>
+                    <input class="standard-input" type="datetime-local" v-model="timeOpen"/><br><br>
 
 
                     <h6>Registration Close: {{moment(settings.timeClose)}}</h6>
-                    <input type="datetime-local" v-model="timeClose"/><br><br>
+                    <input class="standard-input" type="datetime-local" v-model="timeClose"/><br><br>
 
                         <h6>Confirmation Deadline: {{moment(settings.timeConfirm)}}</h6>
-                    <input type="datetime-local" v-model="timeConfirm"/><br><br>
+                    <input class="standard-input" type="datetime-local" v-model="timeConfirm"/><br><br>
 
 
                     <button class="generic-button-dark" @click="changeTimes">Update time</button>
                 </div>
 
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>Participant Limit</h3>
                     <hr>
                     <p>
@@ -35,7 +35,7 @@
                     </p>
                 </div>
 
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>Review Pending Schools</h3>
                     <hr>
 
@@ -45,7 +45,7 @@
                     <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="!pendingSchools.length">Review</button>
                 </div>
 
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>Global User Management</h3>
                     <hr>
 
@@ -62,7 +62,7 @@
                 </div>
 
 
-                <div class="ui-card dash-card">
+                <div class="ui-card dash-card-offset dash-card">
                     <h3>Email Templates</h3>
                     <hr>
                     <select style="margin-bottom: 10px;" v-model="selected">
@@ -75,7 +75,7 @@
                     <button class="generic-button-dark" @click="getTemplate">Get Template</button>
                 </div>
 
-                <div class="ui-card" id="dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
+                <div class="ui-card" id="dash-card-offset dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
                     <h3>Email Preview</h3>
                     <hr>
                     <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>
