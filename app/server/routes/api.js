@@ -160,6 +160,12 @@ module.exports = function(router) {
         stats.refreshStats(logger.defaultResponse(req, res));
     });
 
+    // Developer
+    // Get current commit id
+    router.get('/version', permissions.isDeveloper, function (req, res) {
+        SettingsController.getCurrentVersion(logger.defaultResponse(req, res));
+    });
+
     // Owner
     // Force accept
     router.post('/forceAccept', permissions.isOwner, function (req, res) {

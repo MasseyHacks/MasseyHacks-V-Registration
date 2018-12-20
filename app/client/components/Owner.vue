@@ -287,6 +287,7 @@
                 if (this.selected == '') {
                     swal('Error', 'You must select an email first', 'error')
                 } else {
+                    swal('Fetching email...')
                     swal.showLoading();
 
                     AuthService.sendRequest('GET', '/api/email/get/' + this.selected, null, (err, data) => {

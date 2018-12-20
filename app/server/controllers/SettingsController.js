@@ -1,4 +1,5 @@
 const _          = require('underscore');
+const fs         = require('fs');
 const algebra    = require("algebra.js");
 const User       = require('../models/User');
 const Settings   = require('../models/Settings');
@@ -56,6 +57,17 @@ function generateExpression(letter,otherCoef){
   }
   return [expr,coef];
 }
+
+SettingsController.getCurrentVersion = function(callback){
+    if (fs.existsSync('.git/refs/heads/master')){
+        var commitHash = fs.readFileSync('.git/refs/heads/master', 'utf-8').trim();
+        return callback(null, {"commit": commitHash})
+    }
+    else{
+        return callback(null, {"commit": "-1"})
+    }
+
+};
 
 SettingsController.getVerificationProblem = function(callback){
     var alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -226,7 +238,7 @@ SettingsController.modifyLimit = function(user, limit, callback) {
                 return callback({'error':'Unable to update limit'})
             }
 
-            logger.logAction(user._id, -1, 'EXECUTOR IP: ' + user.ip + ' | Modified participant limit to ' + limit.maxParticipants + '.');
+            logger.logAction(user._id, -1, 'Modified participant limit to ' + limit.maxParticipants + '.', 'EXECUTOR IP: ' + user.ip);
 
             return callback(null, settings)
         })

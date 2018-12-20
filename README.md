@@ -47,16 +47,15 @@ Congrats, the Goose server should now be running!(Hopefully)
 
 **Docker Setup**
 
-Alternatively, we have a Docker image available for use.
+Docker support is **EXTREMELY** experimental and certain features may be unstable or unavailable. For example, email templates will be reset whenever you rebuild the image and you cannot modify any configuration files. We do not recommend using it at this time.
 
-To use the image, simply run the following to get the image.
+To use the image, simply run the following command:
 
 ```
 docker run --env-file .env -p 3005:3005 jamesxu123/masseyhacks:latest
 ```
 
-It is crucial that you add in the .env file which can be by using .env.template as described above.
+You must create an .env file and pass it to the container or GOOSE will not work. Instructions can be found above.
 
-Docker usage is extremely experimental and certain features may be unstable or unavailable. Modifying organizers.json is for example unsupported right now.
 ___
 Developed By: Henry Tu, James Xu, Ryan Zhang, David Hui
