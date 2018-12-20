@@ -19,6 +19,8 @@ const UserFields         = require('../models/data/UserFields');
 const FilterFields       = require('../models/data/FilterFields');
 const qrcode             = require('qrcode');
 
+const cpuCount = require('os').cpus().length;
+
 if (process.env.WAIVER_DEV === "true") {
     const waiverReciever     = require('../services/waiverReceiver');
 }
@@ -179,7 +181,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
 
                 if (users) {
                     let i = 0;
-                    async.each(users, (user, callback) => {
+                    async.eachSeries(users, (user, callback) => {
                         users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
                         i++;
                     });
