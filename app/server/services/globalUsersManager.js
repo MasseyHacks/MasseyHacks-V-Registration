@@ -17,7 +17,7 @@ globalUsersManager.releaseAllStatus = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Released all user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        return callback(err, result);
+        return callback(err, result.nModified);
     });
 };
 
@@ -36,7 +36,7 @@ globalUsersManager.releaseAllAccepted = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Released all accepted user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        return callback(err, result);
+        return callback(err, result.nModified);
     });
 };
 
@@ -55,7 +55,7 @@ globalUsersManager.releaseAllWaitlisted = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Released all waitlisted user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        return callback(err, result);
+        return callback(err, result.nModified);
     });
 };
 
@@ -74,7 +74,7 @@ globalUsersManager.releaseAllRejected = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Released all rejected user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        return callback(err, result);
+        return callback(err, result.nModified);
     });
 };
 
@@ -106,6 +106,8 @@ globalUsersManager.hideAllStatusRelease = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Hid all user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        return callback(err, result);
+        return callback(err, result.nModified);
     });
 };
+
+module.exports = globalUsersManager;

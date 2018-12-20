@@ -10,6 +10,7 @@ const LogEvent           = require('../models/LogEvent');
 const UserController     = require('../controllers/UserController');
 const TeamController     = require('../controllers/TeamController');
 const SettingsController = require('../controllers/SettingsController');
+const globalUsersManager  = require('../services/globalUsersManager');
 
 const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
@@ -364,6 +365,36 @@ module.exports = function(router) {
     // Reject everyone without status
     router.post('/rejectNoState', permissions.isOwner, function (req, res) {
         UserController.rejectNoState(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status
+    router.post('/releaseAllStatus', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllStatus(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status accepted
+    router.post('/releaseAllAccepted', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllAccepted(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status waitlisted
+    router.post('/releaseAllWaitlisted', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllWaitlisted(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status rejected
+    router.post('/releaseAllRejected', permissions.isOwner, function (req, res) {
+        globalUsersManager.releaseAllRejected(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Hide all status
+    router.post('/hideAllStatus', permissions.isOwner, function (req, res) {
+        globalUsersManager.hideAllStatusRelease(req.userExecute, logger.defaultResponse(req, res));
     });
 
     // Owner

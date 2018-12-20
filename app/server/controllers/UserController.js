@@ -33,23 +33,25 @@ function escapeRegExp(str) {
 
 UserController.rejectNoState = function (adminUser, callback) {
     User.find({
-        'permission.level': 1,
+        'status.submittedApplication': true,
+        'permissions.checkin': false,
+        'permissions.verified': true,
         'status.admitted': false,
         'status.rejected': false,
         'status.waitlisted': false
     }, function (err, users) {
-        console.log(users);
+        console.log('Users to be rejected', users, err);
 
         logger.logAction(adminUser._id, -1, 'Rejected everyone without state.', 'EXECUTOR IP: ' + adminUser.ip);
 
-        async.each(user, function (user, callback) {
-            UserController.rejectUser(adminUser._id, user._id, (err, msg) => {
+        async.each(users, function (user, callback) {
+            UserController.rejectUser(adminUser, user._id, (err, msg) => {
                 console.log(user.fullName, err, msg ? 'Success' : 'Fail');
 
                 return callback()
             })
         }, function () {
-            return callback(null, 'Success')
+            return callback(null, users.length)
         });
     });
 };
