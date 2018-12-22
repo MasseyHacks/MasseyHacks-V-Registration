@@ -246,7 +246,7 @@ schema.statics.validateProfile = function (id, profile, callback) {
                     }
                 }
 
-                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
+                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck' && ((userpath[keys[i]] && userpath[keys[i]].length > 0) || runner[keys[i]].mandatory)) {
                     for (var r in userpath[keys[i]]) {
                         if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
                             return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})

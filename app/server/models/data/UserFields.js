@@ -209,7 +209,7 @@ var hackerApplication = {
         mandatory: false
     },
 
-    q1: {
+    fullResponse1: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
@@ -217,7 +217,7 @@ var hackerApplication = {
         mandatory: true
     },
 
-    q2: {
+    fullResponse2: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
@@ -225,7 +225,7 @@ var hackerApplication = {
         mandatory: true
     },
 
-    q3: {
+    fullResponse3: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',

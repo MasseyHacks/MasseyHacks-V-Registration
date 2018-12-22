@@ -191,6 +191,7 @@
                         });
 
                         if (this.applications.hacker[question].mandatory && checked.length < 1) {
+                            this.submissionError = 'Field "' + question + '" is mandatory!';
                             doNotSubmit = true;
                         }
 
@@ -201,6 +202,7 @@
                         } catch (error) {
                             //invalid
                             if (this.applications.hacker[question].mandatory) {
+                                this.submissionError = 'Field "' + question + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
@@ -210,12 +212,14 @@
                     } else if (this.applications.hacker[question].questionType == 'schoolSearch') {
 
                         if (this.school && this.school.length > this.applications.hacker[question].maxlength) {
+                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
                             doNotSubmit = true;
                         } else if (this.school) {
                             this.applicationValue[question] = this.school;
                         } else {
                             //invalid
                             if (this.applications.hacker[question].mandatory) {
+                                this.submissionError = 'Field "' + question + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
@@ -227,11 +231,13 @@
 
                         if ($.trim($(inputElement).val()) == '') {
                             if (this.applications.hacker[question].mandatory) {
+                                this.submissionError = 'Field "' + (question.includes('fullResponse') ? this.applications.hacker[question]['question'] : question) + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
                             }
                         } else if (inputElement.value.length > this.applications.hacker[question].maxlength) {
+                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
                             doNotSubmit = true;
                         } else {
                             this.applicationValue[question] = inputElement.value;
@@ -242,7 +248,7 @@
                 });
 
                 if (doNotSubmit) {
-                    swal("Error", this.submissionError ? this.submissionError : "Please check all the required fields and try again", "error");
+                    swal("Error", (this.submissionError ? this.submissionError + ' <br><br>' : '') + "Please check all the required fields and try again.", "error");
                 } else {
                     //ajax submit code
                     var data = {};
