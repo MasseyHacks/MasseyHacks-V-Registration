@@ -42,7 +42,7 @@
                 }).then((result) => {
                     if (result.value) {
                         AuthService.sendRequest('POST', '/api/acceptInvitation', {
-                            userID: this.user._id
+
                         }, (err, data) => {
                             if (err || !data) {
                                 swal("Error", err.error, "error");
@@ -73,7 +73,7 @@
                 }).then((result) => {
                     if (result.value) {
                         AuthService.sendRequest('POST', '/api/declineInvitation', {
-                            userID: this.user._id
+
                         }, (err, data) => {
                             if (err || !data) {
                                 swal("Error", err.error, "error");

@@ -106,6 +106,7 @@
             return {
                 loading: true,
                 loadingError: '',
+                submissionError: '',
 
                 error: '',
                 applications: {},
@@ -180,6 +181,7 @@
             },
             submitApplication() {
                 var doNotSubmit = false;
+
                 Object.keys(this.applications.hacker).forEach((question) => {
                     console.log(this.applications.hacker[question].questionType);
                     if (this.applications.hacker[question].questionType == 'multicheck') {
@@ -238,20 +240,21 @@
 
                     }
                 });
+
                 if (doNotSubmit) {
-                    swal("Error", "Please check all the required fields and try again", "error");
+                    swal("Error", this.submissionError ? this.submissionError : "Please check all the required fields and try again", "error");
                 } else {
                     //ajax submit code
                     var data = {};
                     data.userID = Session.getUserID();
                     data.profile = {};
                     data.profile.hacker = this.applicationValue;
-                    AuthService.sendRequest('POST', '/api/updateProfile', data, (err) => {
+                    AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
                         if (err) {
                             swal("Error", err.responseJSON['error'], "error");
                         } else {
                             swal("Success", "Your application has been submitted!", "success");
-                            AuthService.refreshToken()
+                            Session.setUser(user);
                         }
                     });
                 }

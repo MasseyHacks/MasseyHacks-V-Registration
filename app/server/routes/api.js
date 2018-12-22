@@ -2,6 +2,7 @@ const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
 const request            = require('request');
+const formidable         = require('formidable');
 
 const User               = require('../models/User');
 const UserFields         = require('../models/data/UserFields');
@@ -275,6 +276,20 @@ module.exports = function(router) {
         });
     });
 
+    // General
+    // Upload waiver
+    router.get('/uploadWaiver', permissions.isUser, function(req, res){
+        var user = req.userExecute;
+
+        TeamController.getTeam(user._id, function(err, data){
+            if (err) {
+                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to get team' } );
+            }
+
+            return logger.defaultResponse(req, res)(null, data);
+        });
+    });
+
     // Admin
     // Get team by code
     router.get('/getTeamByCode', permissions.isAdmin, function (req, res) {
@@ -325,16 +340,12 @@ module.exports = function(router) {
         UserController.updateConfirmation(req.userExecute, userID, confirmation, logger.defaultResponse(req, res));
     });*/
 
-    router.post('/acceptInvitation', permissions.isUser, function(req, res) {
-        var userID = req.body.userID;
-
-        UserController.acceptInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+    router.post('/acceptInvitation', permissions.isVerified, function(req, res) {
+        UserController.acceptInvitation(req.userExecute, logger.defaultResponse(req, res));
     });
 
-    router.post('/declineInvitation', permissions.isUser, function(req, res) {
-        var userID = req.body.userID;
-
-        UserController.declineInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+    router.post('/declineInvitation', permissions.isVerified, function(req, res) {
+        UserController.declineInvitation(req.userExecute, logger.defaultResponse(req, res));
     });
 
     router.post('/resetInvitation', permissions.isOwner, function(req, res) {

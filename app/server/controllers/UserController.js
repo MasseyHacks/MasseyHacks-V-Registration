@@ -1256,14 +1256,10 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
 
 };
 
-UserController.acceptInvitation = function (executeUser, userID, callback) {
-
-    if (!userID) {
-        return callback({error: 'Invalid arguments'});
-    }
+UserController.acceptInvitation = function (executeUser, callback) {
 
     User.findOneAndUpdate({
-        _id: userID,
+        _id: executeUser._id,
         'permissions.verified': true,
         'status.rejected': false,
         'status.admitted': true,
@@ -1293,14 +1289,10 @@ UserController.acceptInvitation = function (executeUser, userID, callback) {
 
 };
 
-UserController.declineInvitation = function (executeUser, userID, callback) {
-
-    if (!userID) {
-        return callback({error: 'Invalid arguments'});
-    }
+UserController.declineInvitation = function (executeUser, callback) {
 
     User.findOneAndUpdate({
-        _id: userID,
+        _id: executeUser._id,
         'permissions.verified': true,
         'status.rejected': false,
         'status.admitted': true,

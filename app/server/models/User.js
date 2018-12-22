@@ -232,22 +232,18 @@ schema.statics.validateProfile = function (id, profile, callback) {
 
         for (var i = 0; i < keys.length; i++) {
             if ('type' in runner[keys[i]]) {
-                if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== '') {
+                if (runner[keys[i]].mandatory && !userpath[keys[i]]) {
                     return callback({error: 'Field "' + keys[i] + '" is required'})
                 }
 
-                if (runner[keys[i]].maxlength && userpath[keys[i]] != null && userpath[keys[i]].length > runner[keys[i]].maxlength) {
+                if (runner[keys[i]].maxlength && userpath[keys[i]] && userpath[keys[i]].length > runner[keys[i]].maxlength) {
                     return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
                 }
 
                 if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
-                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] != '' && !runner[keys[i]].required)) {
-                        return callback({error: 'Field "' + keys[i] + '" is invalid'})
+                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory)) {
+                        return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]] + '" is invalid'})
                     }
-                }
-
-                if (runner[keys[i]].required && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'dropdown' && userpath[keys[i]] == ' ') {
-                    return callback({error: 'Field "' + keys[i] + '" is required'})
                 }
 
                 if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
