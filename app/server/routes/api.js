@@ -2,8 +2,11 @@ const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
 const request            = require('request');
+const mongodb            = require('mongodb');
+const fs                 = require('fs');
 const formidable         = require('formidable');
 
+const GridStore             = require('../models/GridStore');
 const User               = require('../models/User');
 const UserFields         = require('../models/data/UserFields');
 const Settings           = require('../models/Settings');
@@ -278,16 +281,27 @@ module.exports = function(router) {
 
     // General
     // Upload waiver
-    router.get('/uploadWaiver', permissions.isUser, function(req, res){
+    router.post('/uploadWaiver', /*permissions.isUser,*/ function(req, res){
         var user = req.userExecute;
 
-        TeamController.getTeam(user._id, function(err, data){
-            if (err) {
-                return logger.defaultResponse(req, res)( err ? err : { error : 'Unable to get team' } );
-            }
+        var form = new formidable.IncomingForm();
 
-            return logger.defaultResponse(req, res)(null, data);
+        form.parse(req, function (err, fields, files) {
+            //var oldpath = files.filetoupload.path;
+
+            GridStore.write('pei', files.data.path);
+
+            GridStore.read('pei', res)
         });
+    });
+
+    // General
+    // Upload waiver
+    router.get('/getWaiver', /*permissions.isUser,*/ function(req, res){
+        var user = req.userExecute;
+
+        GridStore.read('pei', res)
+
     });
 
     // Admin
@@ -466,7 +480,7 @@ module.exports = function(router) {
     });
 
     // Checkin
-    // Waiver in
+    // GridStore in
     router.post('/waiverIn', permissions.isAdmin, function (req, res) {
         var userID = req.body.userID;
         var appPage = req.body.appPage ? req.body.appPage : null;
@@ -474,7 +488,7 @@ module.exports = function(router) {
     });
 
     // Checkin
-    // Waiver out
+    // GridStore out
     router.post('/waiverOut', permissions.isCheckin, function (req, res) {
         var userID = req.body.userID;
         UserController.waiverOut(req.userExecute, userID, logger.defaultResponse(req, res));

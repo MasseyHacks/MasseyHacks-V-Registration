@@ -1,7 +1,8 @@
 require('dotenv').load();
 
-const express = require('express');
-const cors = require('cors');
+const express         = require('express');
+const cors            = require('cors');
+const fs              = require('fs');
 
 const bodyParser      = require('body-parser');
 const methodOverride  = require('method-override');
@@ -14,6 +15,8 @@ const cpuCount        = require('os').cpus().length;
 const mongoose        = require('mongoose');
 const port            = process.env.PORT || 3005;
 const database        = process.env.DATABASE || 'mongodb://localhost:27017';
+
+const Waiver          = require('./app/server/models/GridStore');
 
 // Start configuration
 const organizers      = require('./config/organizers');
@@ -30,10 +33,14 @@ Raven.context(function() {
 
     var app = express();
     console.log(database);
-    mongoose.connect(database, {server: {auto_reconnect: true}}).catch(error => {
-        console.log("DB CONNECTION ERROR");
-        console.log(error)
-    });
+    mongoose.connect(database, {server: {auto_reconnect: true}})
+        .then(() => {
+            Waiver.init(mongoose.connection.db)
+        })
+        .catch(error => {
+            console.log("DB CONNECTION ERROR");
+            console.log(error)
+        });
     stats.startService();
 
     app.enable('trust proxy'); // For reverse proxy
@@ -63,6 +70,8 @@ Raven.context(function() {
     } else {
 
         console.log(`Worker ${process.pid} started`);
+
+        //app.use(express.bodyParser({limit: '15mb'}));
 
         // Start routers
         app.use(express.static('app/client/'));
