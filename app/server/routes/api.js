@@ -287,11 +287,16 @@ module.exports = function(router) {
         var form = new formidable.IncomingForm();
 
         form.parse(req, function (err, fields, files) {
-            //var oldpath = files.filetoupload.path;
+            //var oldpath = files.filetoupload.path
+            try {
+                console.log(err, fields, files)
 
-            GridStore.write('pei', files.data.path);
+                GridStore.write('pei', files.data.path);
 
-            GridStore.read('pei', res)
+                GridStore.read('pei', res)
+            } catch (e) {
+                console.log(e)
+            }
         });
     });
 
