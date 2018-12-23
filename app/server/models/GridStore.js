@@ -12,16 +12,25 @@ module.exports = {
         gfs = gridfs(mongooseConnection, require('mongodb'));
     },
 
-    write : function(owner, filename, path) {
-        var writestream = gfs.createWriteStream({
-            filename: filename,
-            metadata: owner
-        });
+    write : function(owner, filename, path, callback) {
 
-        fs.createReadStream(path).pipe(writestream);
+        gfs.files.findOne({ filename: filename }, (err, file) => {
+            if (file) {
+                return callback({ error: 'File exists!'})
+            }
 
-        writestream.on('close', (file) => {
-            console.log('Stored File: ' + file.filename);
+            var writestream = gfs.createWriteStream({
+                filename: filename,
+                metadata: owner
+            });
+
+            fs.createReadStream(path).pipe(writestream);
+
+            writestream.on('close', (file) => {
+                console.log('Stored File: ' + file.filename);
+                return callback(null)
+            });
+
         });
     },
 
@@ -56,21 +65,25 @@ module.exports = {
                 res.status(403).send('Invalid Token');
             }
 
-            if (payload.type != 'resource' || !payload.exp || Date.now() >= payload.exp * 1000) {
+            else if (payload.type != 'resource' || !payload.exp || Date.now() >= payload.exp * 1000) {
                 res.status(403).send('Invalid Token');
             }
 
-            gfs.files.findOne({ filename: payload.filename }, (err, file) => {
-                console.log(err, file)
+            else {
 
-                if (err || !file) {
-                    res.status(404).send('File Not Found');
-                    return
-                }
+                gfs.files.findOne({filename: payload.filename}, (err, file) => {
+                    console.log(err, file)
 
-                var readstream = gfs.createReadStream({ filename: payload.filename });
-                readstream.pipe(res);
-            });
+                    if (err || !file) {
+                        res.status(404).send('File Not Found');
+                        return
+                    }
+
+                    var readstream = gfs.createReadStream({filename: payload.filename});
+                    readstream.pipe(res);
+                });
+
+            }
 
         });
 

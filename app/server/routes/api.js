@@ -281,8 +281,8 @@ module.exports = function(router) {
 
     // General
     // Upload waiver
-    router.post('/uploadWaiver', permissions.isVerified, function(req, res){
-        var userID = '12312'//req.body.id;
+    router.post('/uploadWaiver', /*permissions.isVerified,*/ function(req, res){
+        var userID = 'asdsad'//req.body.id;
 
         var form = new formidable.IncomingForm();
 
@@ -290,12 +290,23 @@ module.exports = function(router) {
 
         form.parse(req, function (err, fields, files) {
             try {
-                console.log(err, fields, 'shit', files)
+                //console.log(err, fields, 'shit', files)
 
-                GridStore.write(userID, userID + '-waiver-' + files.data.name, files.data.path);
+                GridStore.write(userID, userID + '-waiver-' + files.data.name, files.data.path, function(err) {
 
-                fs.unlink(files.data.path)
+                    if (err) {
+                        return logger.defaultResponse(req, res)(err);
+                    }
+
+                    fs.unlink(files.data.path, function() {
+                        console.log('Deleted temp')
+
+                        return logger.defaultResponse(req, res)(null, 'ok');
+                    })
+                });
+
             } catch (e) {
+                return logger.defaultResponse(req, res)({ error : 'Something went wrong' });
                 console.log(e)
             }
         });
