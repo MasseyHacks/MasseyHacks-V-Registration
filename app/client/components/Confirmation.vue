@@ -5,6 +5,11 @@
             <h2>CONFIRMATION</h2>
         </div>
 
+        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+        <button v-on:click="submitFile()">Submit</button>
+
+        <img :src="waiver" width="500px">
+
         <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="ui-card dash-card">
@@ -26,10 +31,39 @@
     export default {
         data() {
             return {
-                user: Session.getUser()
+                user: Session.getUser(),
+                waiver: '',
+                file: ''
             }
         },
+        mounted() {
+            AuthService.sendRequest('GET', '/api/getResourceAuthorization?filename=asdsad-waiver-wtf.jpg', {}, (err, msg) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    this.waiver = msg
+                }
+            });
+        },
         methods: {
+            handleFileUpload() {
+                this.file = this.$refs.file.files[0];
+            },
+            submitFile() {
+                let formData = new FormData();
+
+                console.log(this.file)
+
+                formData.append('file', this.file);
+                formData.append('id', Session.getUserID());
+
+                console.log('DIS IS FORM', formData.get('file'))
+
+                AuthService.sendRequest('POST', '/api/uploadWaiver', formData, (err, msg) => {
+                   console.log(err, msg)
+                }, 'multipart/form-data; charset=utf-8');
+
+            },
             acceptInvitation() {
                 swal({
                     title: "Hey!",

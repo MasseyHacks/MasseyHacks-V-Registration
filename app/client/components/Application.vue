@@ -333,7 +333,7 @@
                         if (err) {
                             swal("Error", err.responseJSON['error'], "error");
                         } else {
-                            swal("Success", "Your application has been submitted!", "success");
+                            swal("Success", "Your application has been saved!", "success");
                             Session.setUser(user);
 
                         }

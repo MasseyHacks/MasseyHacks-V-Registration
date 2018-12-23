@@ -6,11 +6,11 @@ import swal from 'sweetalert2'
 
 module.exports = {
 
-    sendRequest (type, url, data, callback) {
+    sendRequest (type, url, data, callback, contentType) {
         var request = {
             type: type,
             url: url,
-            contentType: 'application/json; charset=utf-8',
+            contentType: contentType || 'application/json; charset=utf-8',
             dataType: 'json',
             success: data => {
                 if (callback) callback(null, data)

@@ -281,19 +281,20 @@ module.exports = function(router) {
 
     // General
     // Upload waiver
-    router.post('/uploadWaiver', /*permissions.isUser,*/ function(req, res){
-        var user = req.userExecute;
+    router.post('/uploadWaiver', permissions.isVerified, function(req, res){
+        var userID = '12312'//req.body.id;
 
         var form = new formidable.IncomingForm();
 
+        console.log(req)
+
         form.parse(req, function (err, fields, files) {
-            //var oldpath = files.filetoupload.path
             try {
-                console.log(err, fields, files)
+                console.log(err, fields, 'shit', files)
 
-                GridStore.write('pei', files.data.path);
+                GridStore.write(userID, userID + '-waiver-' + files.data.name, files.data.path);
 
-                GridStore.read('pei', res)
+                fs.unlink(files.data.path)
             } catch (e) {
                 console.log(e)
             }
@@ -301,12 +302,20 @@ module.exports = function(router) {
     });
 
     // General
-    // Upload waiver
-    router.get('/getWaiver', /*permissions.isUser,*/ function(req, res){
+    // Get authorization
+    router.get('/getResourceAuthorization', permissions.isVerified, function(req, res){
         var user = req.userExecute;
+        var filename = req.query.filename;
 
-        GridStore.read('pei', res)
+        GridStore.authorize(user, filename, function (err, msg) {
+            logger.defaultResponse(req, res)(err, msg);
+        })
+    });
 
+    // General
+    // Upload waiver
+    router.get('/getResource', function(req, res){
+        GridStore.read(req.query.token, res)
     });
 
     // Admin
