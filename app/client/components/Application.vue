@@ -67,6 +67,7 @@
                                       :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school"
                                       taggable></v-select>
                         </div>
+                        <button v-if="user.profile.signature === -1" type="button" class="generic-button-dark" v-on:click="saveApplication(false)">Save</button>
                         <button type="submit" class="generic-button-dark">Submit</button>
                     </form>
                     <div v-else style="text-align:center; font-size:1.5em;"><span>You are not a hacker!</span></div>
@@ -114,6 +115,7 @@
                 applicationHTML: '',
                 schoolPlaceholder: 'Select a school',
                 applicationValue: {},
+                saveTimer: null,
                 school: null,
                 user: Session.getUser()
             }
@@ -141,6 +143,10 @@
                     } else {
                         this.applications = applications;
                         this.populateApplication();
+                        if (this.user.profile.signature === -1) {
+                            this.saveTimer = setInterval(this.autoSave, 60000)
+                            console.log(this.user.profile.signature)
+                        }
                     }
                 });
             })
@@ -240,6 +246,9 @@
                             this.submissionError = 'Field "' + question + '" exceeds character limit!';
                             doNotSubmit = true;
                         } else {
+                            if (this.saveTimer) {
+                                clearInterval(this.saveTimer)
+                            }
                             this.applicationValue[question] = inputElement.value;
                         }
 
@@ -255,6 +264,8 @@
                     data.userID = Session.getUserID();
                     data.profile = {};
                     data.profile.hacker = this.applicationValue;
+                    data.profile.signature = 1;
+                    console.log(data)
                     AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
                         if (err) {
                             swal("Error", err.responseJSON['error'], "error");
@@ -264,6 +275,70 @@
                         }
                     });
                 }
+            },
+            autoSave () {
+              this.saveApplication(true)
+            },
+            saveApplication(auto) {
+                console.log("save")
+                Object.keys(this.applications.hacker).forEach((question) => {
+                    console.log(this.applications.hacker[question].questionType);
+                    if (this.applications.hacker[question].questionType == 'multicheck') {
+                        var checked = [];
+                        $("input[name='" + question + "']:checked").each(function () {
+                            checked.push($(this).attr('id').replace(question, ''));
+                        });
+                        this.applicationValue[question] = checked;
+                    } else if (this.applications.hacker[question].questionType == 'multiradio' || this.applications.hacker[question].questionType == 'boolean') {
+                        try {
+                            this.applicationValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
+                        } catch (error) {
+                            this.applicationValue[question] = null;
+                        }
+
+                    } else if (this.applications.hacker[question].questionType == 'schoolSearch') {
+                        if (this.school) {
+                            this.applicationValue[question] = this.school;
+                        } else {
+                            //invalid
+                            this.applicationValue[question] = null;
+                        }
+
+                    } else {
+                        var inputElement = document.getElementById(question);
+
+                        if ($.trim($(inputElement).val()) == '') {
+                            this.applicationValue[question] = null;
+
+                        } else if (inputElement.value.length > this.applications.hacker[question].maxlength) {
+                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
+                            doNotSubmit = true
+                            this.applicationValue[question] = inputElement.value.slice(0, this.applications.hacker[question].maxlength);
+                        } else {
+                            this.applicationValue[question] = inputElement.value;
+                        }
+
+
+                    }
+                });
+
+                //ajax submit code
+                var data = {};
+                data.userID = Session.getUserID();
+                data.profile = {};
+                data.profile.hacker = this.applicationValue;
+                data.profile.signature = -1;
+                AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
+                    if (!auto) {
+                        if (err) {
+                            swal("Error", err.responseJSON['error'], "error");
+                        } else {
+                            swal("Success", "Your application has been submitted!", "success");
+                            Session.setUser(user);
+
+                        }
+                    }
+                });
             }
         },
     }

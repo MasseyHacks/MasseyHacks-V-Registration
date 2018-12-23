@@ -224,7 +224,9 @@ schema.statics.validateProfile = function (id, profile, callback) {
     var runner;
     var userpath;
     var keys;
-
+    if (profile.signature === -1) {
+        return callback(null, profile);
+    }
     while (queue.length !== 0) {
         runner = queue[0][0];
         userpath = queue.shift()[1];
