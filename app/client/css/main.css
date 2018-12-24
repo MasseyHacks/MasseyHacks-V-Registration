@@ -55,16 +55,6 @@ h2 {
     border: 2px solid #fc6076 !important;
 }
 
-.standard-input {
-    border: 1px solid #a9a9a9;
-    width: 100%;
-    max-width: 500px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    padding: 2px;
-    height: 30px;
-}
-
 #login-form-box {
     position: relative;
 
@@ -74,12 +64,36 @@ h2 {
 
     max-width: 550px;
     width: 100%;
-    padding: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     color: black !important;
     align-items: center;
     display: grid;
     margin: auto;
+
+}
+
+.login-header {
     text-align: center;
+    margin-bottom: 10px;
+}
+
+.error-banner {
+
+    color: black;
+    background-color: #f0f0f0;
+    width: 100%;
+
+    margin-top: 5px;
+    margin-bottom: 10px;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+}
+
+.error-banner p {
+    margin: 0;
 }
 
 ::placeholder {
@@ -94,6 +108,8 @@ h2 {
 
 #login-form-elements {
     margin: auto;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 #login-form-elements input {

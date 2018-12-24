@@ -104,6 +104,49 @@ module.exports = {
 
     },
 
+    adminChangePassword(fullName, userID, callback) {
+        swal({
+            title: 'Change user password',
+            html: 'Enter a new password for ' + fullName,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Change',
+            input: 'password',
+            footer: 'MasseyHacks | Platform Division',
+            preConfirm: (pw) => {
+
+                if (pw.length < 6) {
+                    swal.showValidationError(
+                        `Must be at least 6 characters long!`
+                    )
+                } else {
+                    return pw
+                }
+            }
+        }).then((result) => {
+
+            if (result.value) {
+
+                this.skillTest(() => {
+
+                    this.sendRequest('POST', '/auth/adminChangePassword', {
+                        userID: userID,
+                        password: result.value
+                    }, (err, data) => {
+                        if (err) {
+                            if (callback) callback(err.responseJSON.error)
+                        } else {
+                            if (callback) callback(null, data)
+                        }
+                    })
+
+                })
+
+            }
+        });
+    },
+
     changePassword(oldPassword, newPassword, callback) {
         this.sendRequest('POST', '/auth/changePassword', {
             oldPassword: oldPassword,

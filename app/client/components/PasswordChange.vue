@@ -14,9 +14,9 @@
             <div id="login-form-elements">
                 <form @submit.prevent="changePassword">
 
-                    <input v-model="oldPassword" class="standard-input" placeholder="Old Password" type="password" required><br>
-                    <input v-model="password1" class="standard-input" placeholder="Password" type="password" required><br>
-                    <input v-model="password2" class="standard-input" placeholder="Confirm Password" type="password" required><br>
+                    <input v-model="oldPassword" class="form-control" placeholder="Old Password" type="password" required><br>
+                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required><br>
+                    <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
                     <div class="button-row">
                         <button class="generic-button-dark" type="submit">Save</button>
                     </div>

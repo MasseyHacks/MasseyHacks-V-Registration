@@ -62,6 +62,8 @@
 
             <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
             </button>
+            <button class="generic-button-dark" v-on:click="changePassword">Change Password</button>
+            <button class="generic-button-dark" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
             <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
             <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
         </div>
@@ -111,8 +113,31 @@
         },
 
         methods: {
+            changePassword: function() {
+
+                AuthService.adminChangePassword(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully changed password', 'success');
+                });
+
+            },
+            toggleSuspend: function() {
+
+                if (this.userObj.status.active) {
+                    ApiService.deactivate(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully deactivated user', 'success');
+                    });
+                } else {
+                    ApiService.activate(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully activated user', 'success');
+                    });
+                }
+
+            },
             deleteUser: function () {
-                ApiService.deleteUser(this.userObj.fullName, this.userID, () => {
+                ApiService.deleteUser(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully deleted user', 'success').then(function () {
                         window.location.href = this.returnPath;
                     });
@@ -120,42 +145,50 @@
                 });
             },
             flushEmailQueue: function () {
-                ApiService.flushEmailQueue(this.userObj.fullName, this.userID, () => {
+                ApiService.flushEmailQueue(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully flushed email queue', 'success');
                 });
             },
             resetVotes: function () {
-                ApiService.resetVotes(this.userObj.fullName, this.userID, () => {
+                ApiService.resetVotes(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset votes', 'success');
                 });
             },
             resetInvitation: function () {
-                ApiService.resetInvitation(this.userObj.fullName, this.userID, () => {
+                ApiService.resetInvitation(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset invitation status', 'success');
                 });
             },
             resetAdmissionState: function () {
-                ApiService.resetAdmissionState(this.userObj.fullName, this.userID, () => {
+                ApiService.resetAdmissionState(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset admission state', 'success');
                 });
             },
             forceAdmit: function () {
-                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully force admitted user', 'success');
                 });
             },
             forceReject: function () {
-                ApiService.forceReject(this.userObj.fullName, this.userID, () => {
+                ApiService.forceReject(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully force rejected user', 'success');
                 });
             },
             voteAdmit: function () {
-                ApiService.voteAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.voteAdmit(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully voted to admit user', 'success');
                 });
             },
             voteReject: function () {
-                ApiService.voteReject(this.userObj.fullName, this.userID, () => {
+                ApiService.voteReject(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully voted to reject user', 'success');
                 });
             },

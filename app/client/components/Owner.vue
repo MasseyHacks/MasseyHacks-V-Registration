@@ -12,14 +12,14 @@
                     <hr>
 
                     <h6>Registration Open: {{moment(settings.timeOpen)}}</h6>
-                    <input class="standard-input" type="datetime-local" v-model="timeOpen"/><br><br>
+                    <input class="form-control" type="datetime-local" v-model="timeOpen"/><br><br>
 
 
                     <h6>Registration Close: {{moment(settings.timeClose)}}</h6>
-                    <input class="standard-input" type="datetime-local" v-model="timeClose"/><br><br>
+                    <input class="form-control" type="datetime-local" v-model="timeClose"/><br><br>
 
                         <h6>Confirmation Deadline: {{moment(settings.timeConfirm)}}</h6>
-                    <input class="standard-input" type="datetime-local" v-model="timeConfirm"/><br><br>
+                    <input class="form-control" type="datetime-local" v-model="timeConfirm"/><br><br>
 
 
                     <button class="generic-button-dark" @click="changeTimes">Update time</button>

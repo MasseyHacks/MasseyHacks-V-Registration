@@ -4,6 +4,77 @@ import AuthService from './AuthService'
 import swal from 'sweetalert2'
 
 module.exports = {
+
+    deactivate(userName, userID, callback) {
+        swal({
+            title: "Deactivate account?",
+            html: '<span style="color:#FF0000; font-weight:bold;">DEACTIVATE</span> '+ userName +
+            '\'s ACCOUNT?',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, deactivate',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+
+                AuthService.skillTest(() => {
+                    console.log(userOK);
+                    if (userOK) {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/deactivate', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback();
+                            }
+                        });
+
+                    }
+                });
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
+    activate(userName, userID, callback) {
+        swal({
+            title: "Activate account?",
+            html: '<span style="color:#00FF00; font-weight:bold;">ACTIVATE</span> '+ userName +
+            '\'s ACCOUNT?',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, activate',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+                console.log(userOK);
+                if(userOK){
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/activate', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
+                    });
+
+                }
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
     deleteUser(userName, userID, callback) {
         swal({
             title: "DELETE USER?",
@@ -19,16 +90,19 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/deleteUser',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err){
-                            if (callback) callback();
-                        }
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/deleteUser', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -51,16 +125,19 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/flushEmailQueue',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/flushEmailQueue', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -83,16 +160,19 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/voteReset',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/voteReset', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -115,16 +195,19 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/resetInvitation',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/resetInvitation', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -147,16 +230,19 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/resetAdmissionState',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/resetAdmissionState', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -187,7 +273,7 @@ module.exports = {
                             swal("Error","Unable to perform action","error");
                         }
                         else if(!err && data){
-                            if (callback) callback();
+                            if (callback) callback(data);
                         }
                     });
 
@@ -220,7 +306,7 @@ module.exports = {
                             swal("Error","Unable to perform action","error");
                         }
                         else if(!err && data){
-                            if (callback) callback();
+                            if (callback) callback(data);
                         }
                     });
 
@@ -246,15 +332,17 @@ module.exports = {
                 console.log(userOK);
                 if(userOK){
                     //register the vote
-                    AuthService.sendRequest('POST','/api/forceAccept',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
+                    AuthService.skillTest(() => {
+                        AuthService.sendRequest('POST', '/api/forceAccept', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
                     });
 
                 }
@@ -278,18 +366,20 @@ module.exports = {
             preConfirm: (userOK) => {
                 console.log(userOK);
                 if(userOK){
-                    //register the vote
-                    AuthService.sendRequest('POST','/api/forceReject',{
-                        userID: userID
-                    }, (err,data) =>{
-                        if(err){
-                            swal("Error","Unable to perform action","error");
-                        }
-                        else if(!err && data){
-                            if (callback) callback();
-                        }
-                    });
 
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/forceReject', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
+                    });
                 }
             },
             allowOutsideClick: () => !swal.isLoading()

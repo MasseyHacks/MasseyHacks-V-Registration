@@ -7,23 +7,32 @@
 
                 <div>
 
-                    <img src="logo/logowide.svg"
-                         width="45%">
+                    <div class="login-header">
 
-                    <!--
-                    <h2 class="subtitle">Login</h2>
-                    -->
+                        <img src="logo/logowide.svg"
+                             width="45%">
 
-                    <p v-if="$route.query.redirect && !error" class="error">
-                        You need to login first.
-                    </p>
-                    <p v-if="$route.query.message && !error" class="error">{{$route.query.message}}</p>
-                    <p v-if="error" class="error">{{error}}</p>
+                        <div v-if="$route.query.redirect && !error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> You need to login first.</p>
+                        </div>
+
+                        <div v-if="$route.query.message && !error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{$route.query.message}}</p>
+                        </div>
+
+                        <div v-if="error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
+                        </div>
+
+                    </div>
 
                     <div id="login-form-elements">
                         <form @submit.prevent="login">
-                            <input class="standard-input" v-model="email" placeholder="Email" type="email" autofocus required><br>
-                            <input class="standard-input" v-model="pass" placeholder="Password" type="password" required><br>
+                            <label>Email</label>
+                            <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
+
+                            <label>Password</label>
+                            <input class="form-control" v-model="pass" placeholder="5up3r53cr3t" type="password" required><br>
 
                             <div id="button-row">
                                 <button class="generic-button-dark" type="submit">
