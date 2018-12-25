@@ -17,6 +17,11 @@
                     <form v-if="!user.permissions.checkin || user.permissions.developer"
                           @submit.prevent="submitApplication" style="text-align: left">
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
+
+                            <h4 v-if="question.precaption" style="margin-top: 50px">
+                               {{question.precaption}}
+                            </h4>
+
                             <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
                                                                                       style="color: red">*</span></b></label>
 

@@ -220,6 +220,8 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
 
 schema.statics.validateProfile = function (id, profile, callback) {
 
+    console.log('Validating profile!')
+
     var queue = [[fields.profile, profile]];
     var runner;
     var userpath;
@@ -262,6 +264,8 @@ schema.statics.validateProfile = function (id, profile, callback) {
             }
         }
     }
+
+    console.log('Profile accepted!')
 
     return callback(null, profile);
 };

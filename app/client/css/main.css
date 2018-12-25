@@ -412,7 +412,7 @@ h2 {
     border-color: rgb(220, 220, 220) !important;
     border-width: 1px !important;
 
-    width: 50vw;
+    width: 90%;
     padding: 20px;
 }
 
@@ -421,7 +421,8 @@ h2 {
 }
 
 .dash-card-large {
-    width: 70vw;
+    /*width: 70vw;*/
+    width: 100%;
     margin-top: 30px;
     /*background: #fafafa;
     box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.34);

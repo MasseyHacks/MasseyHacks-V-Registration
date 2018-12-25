@@ -268,7 +268,7 @@ module.exports = {
                             }
                         }
                     }
-                    return callback(null,{message: "Success"});
+                    return callback(null,{message: 'Success'});
                 });
             }
         });

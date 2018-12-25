@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div v-else>
-                <div class="ui-card dash-card-large">
+                <div class="ui-card dash-card-large" style="width: 100% !important">
                     <h3>AT A GLANCE:</h3>
                     <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                     <button v-on:click="refreshStatistics" v-if="user.permissions.developer"

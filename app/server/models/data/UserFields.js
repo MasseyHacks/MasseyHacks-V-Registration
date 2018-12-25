@@ -105,7 +105,8 @@ var hackerApplication = {
         enum: {
             values: ' |Male|Female|Other|I prefer not to answer'
         },
-        mandatory: false
+        mandatory: false,
+        precaption: 'BASIC INFORMATION'
     },
 
     grade: {
@@ -116,17 +117,6 @@ var hackerApplication = {
             values: ' |<=8|9|10|11|12'
         },
         mandatory: true
-    },
-
-    dietaryRestrictions: {
-        type: [String],
-        questionType: 'multicheck',
-        question: 'Please indicate any dietary restrictions.',
-        note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
-        enum: {
-            values: '5|1|4|3'
-        },
-        mandatory: false
     },
 
     shirt: {
@@ -155,12 +145,25 @@ var hackerApplication = {
         mandatory: true
     },
 
+
+    dietaryRestrictions: {
+        type: [String],
+        questionType: 'multicheck',
+        question: 'Please indicate any dietary restrictions.',
+        note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
+        enum: {
+            values: 'Vegetarian|Vegan|Halal|Kosher|Nut Allergy|Gluten Free'
+        },
+        mandatory: false
+    },
+
     departure: {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
         question: 'What city are you travelling from?',
-        mandatory: true
+        mandatory: true,
+        precaption: 'TRAVEL'
     },
 
     bus: {
@@ -182,7 +185,8 @@ var hackerApplication = {
         maxlength: 100,
         questionType: 'shortAnswer',
         question: 'GitHub',
-        mandatory: false
+        mandatory: false,
+        precaption: 'EXPERIENCE'
     },
 
     devpost: {
@@ -237,7 +241,8 @@ var hackerApplication = {
         type: Boolean,
         questionType: 'boolean',
         question: 'I agree to MLH Contest Terms and Conditions.',
-        mandatory: true
+        mandatory: true,
+        precaption: 'FINAL QUESTIONS'
     },
 
     cc: {
@@ -245,6 +250,25 @@ var hackerApplication = {
         questionType: 'boolean',
         question: 'I agree to MLH Code of Conduct.',
         mandatory: true
+    },
+
+    ts: {
+        type: String,
+        questionType: 'multiradio',
+        question: 'Tabs or spaces?',
+        enum: {
+            values: 'Tabs|Spaces'
+        },
+        mandatory: false
+    },
+
+    comment: {
+        type: String,
+        maxlength: 1500,
+        questionType: 'fullResponse',
+        question: 'Anything else you want to let us know?',
+        mandatory: false,
+        precaption: 'FREE COMMENT'
     }
 };
 

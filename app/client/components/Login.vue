@@ -10,7 +10,7 @@
                     <div class="login-header">
 
                         <img src="logo/logowide.svg"
-                             width="45%">
+                             style="width: 45%; min-width: 250px">
 
                         <div v-if="$route.query.redirect && !error" class="error-banner">
                             <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> You need to login first.</p>
