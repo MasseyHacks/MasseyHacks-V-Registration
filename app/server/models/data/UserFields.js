@@ -237,22 +237,34 @@ var hackerApplication = {
         mandatory: true
     },
 
-    tc: {
-        type: Boolean,
-        questionType: 'boolean',
-        question: 'I agree to MLH Contest Terms and Conditions.',
+    discovery: {
+        type: String,
+        questionType: 'dropdown',
+        question: 'How did you find us?',
+        enum: {
+            values: ' |MLH|Social Media|Word of mouth|Other'
+        },
         mandatory: true,
         precaption: 'FINAL QUESTIONS'
     },
 
-    cc: {
-        type: Boolean,
-        questionType: 'boolean',
-        question: 'I agree to MLH Code of Conduct.',
-        mandatory: true
+    termsAndConditions: {
+        type: String,
+        questionType: 'contract',
+        question: 'I agree to MLH Contest Terms and Conditions.',
+        mandatory: true,
+        warning: 'You must agree to MLH Contest Terms and Conditions.'
     },
 
-    ts: {
+    codeOfConduct: {
+        type: String,
+        questionType: 'contract',
+        question: 'I agree to MLH Code of Conduct.',
+        mandatory: true,
+        warning: 'You must agree to MLH Code of Conduct.'
+    },
+
+    tabsOrSpaces: {
         type: String,
         questionType: 'multiradio',
         question: 'Tabs or spaces?',

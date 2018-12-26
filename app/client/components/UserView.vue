@@ -281,10 +281,10 @@
                                 title: 'Enter a value for ' + keys[field],
                                 input: 'text',
                                 inputValue: flatWithHistory[keys[field]],
-                                showCancelButton: true,
+                                showCancelButton: true/*,
                                 inputValidator: (value) => {
                                     return !value && 'You need to write something!'
-                                }
+                                }*/
                             });
 
                             if (newValue) {

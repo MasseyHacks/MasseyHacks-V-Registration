@@ -22,7 +22,7 @@
                                {{question.precaption}}
                             </h4>
 
-                            <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
+                            <label :for="questionName" v-if="question.questionType != 'contract'"><b>{{question.question}} <span v-if="question.mandatory"
                                                                                       style="color: red">*</span></b></label>
 
                             <br v-if="question.note">
@@ -60,9 +60,10 @@
                                     <label class="form-check-label" :for="questionName + option ">{{option}}</label>
                                 </div>
                             </div>
-                            <div v-if="question.questionType == 'contract'">
+                            <div v-if="question.questionType == 'contract'" style="margin-left: 20px" >
                                 <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName">
-                                <label class="form-check-label">Yes</label>
+                                <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
+                                                                                                                                     style="color: red">*</span></b></label>
                             </div>
                             <select v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
                                 <option v-for="option in question.enum.values.split('|')">{{option}}
@@ -180,10 +181,15 @@
                                 }
                             }
                             console.log("field", field + userApp[field]);
-                            document.getElementById(field + userApp[field]).checked = "true";
+
+                            if (userApp[field]) {
+                                document.getElementById(field + userApp[field]).checked = "true";
+                            }
                         } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
                             this.schoolPlaceholder = userApp[field];
                             this.school = userApp[field];
+                        } else if (this.applications.hacker[field].questionType == 'contract') {
+                            document.getElementById(field).checked = userApp[field] == "true";
                         } else {
                             document.getElementById(field).value = userApp[field];
                         }
@@ -202,18 +208,32 @@
                         });
 
                         if (this.applications.hacker[question].mandatory && checked.length < 1) {
-                            this.submissionError = 'Field "' + question + '" is mandatory!';
+                            this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
                             doNotSubmit = true;
                         }
 
                         this.applicationValue[question] = checked;
+                    } else if (this.applications.hacker[question].questionType == 'contract') {
+
+                        var agreed = 'false'
+
+                        $("input[name='" + question + "']:checked").each(function () {
+                            agreed = 'true'
+                        });
+
+                        if (this.applications.hacker[question].mandatory && agreed != 'true') {
+                            this.submissionError = this.applications.hacker[question].warning;
+                            doNotSubmit = true;
+                        }
+
+                        this.applicationValue[question] = agreed;
                     } else if (this.applications.hacker[question].questionType == 'multiradio' || this.applications.hacker[question].questionType == 'boolean') {
                         try {
                             this.applicationValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
                         } catch (error) {
                             //invalid
                             if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + question + '" is mandatory!';
+                                this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
@@ -230,7 +250,7 @@
                         } else {
                             //invalid
                             if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + question + '" is mandatory!';
+                                this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
@@ -242,7 +262,7 @@
 
                         if ($.trim($(inputElement).val()) == '') {
                             if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + (question.includes('fullResponse') ? this.applications.hacker[question]['question'] : question) + '" is mandatory!';
+                                this.submissionError = 'Field "' + ((question.includes('fullResponse') || this.applications.hacker[question].question.length < 50) ? this.applications.hacker[question]['question'] : question) + '" is mandatory!';
                                 doNotSubmit = true;
                             } else {
                                 this.applicationValue[question] = null;
@@ -294,6 +314,15 @@
                             checked.push($(this).attr('id').replace(question, ''));
                         });
                         this.applicationValue[question] = checked;
+                    } else if (this.applications.hacker[question].questionType == 'contract') {
+
+                        var agreed = 'false'
+
+                        $("input[name='" + question + "']:checked").each(function () {
+                            agreed = 'true'
+                        });
+
+                        this.applicationValue[question] = agreed;
                     } else if (this.applications.hacker[question].questionType == 'multiradio' || this.applications.hacker[question].questionType == 'boolean') {
                         try {
                             this.applicationValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');

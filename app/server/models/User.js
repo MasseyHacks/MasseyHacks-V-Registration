@@ -257,6 +257,12 @@ schema.statics.validateProfile = function (id, profile, callback) {
                         }
                     }
                 }
+
+                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
+                    if (userpath[keys[i]] != 'true') {
+                        return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
+                    }
+                }
             } else {
                 if (userpath[keys[i]]) {
                     queue.push([runner[keys[i]], userpath[keys[i]]])
