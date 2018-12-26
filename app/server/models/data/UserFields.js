@@ -170,14 +170,14 @@ var hackerApplication = {
         type: Boolean,
         questionType: 'boolean',
         question: 'Will you be travelling on our Toronto/Waterloo bus? (If funding permits)',
-        mandatory: false
+        mandatory: true
     },
 
     reimbursement: {
         type: Boolean,
         questionType: 'boolean',
         question: 'Do you need travel reimbursement? (If funding permits)',
-        mandatory: false
+        mandatory: true
     },
 
     github: {
