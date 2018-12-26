@@ -35,6 +35,44 @@ import TeamManage from '../components/AdminTeamView.vue'
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
 
+console.log(`                               ,-""   \`.
+                             ,'  _   e )\`-._
+                            /  ,' \`-._<.===-'
+                           /  /
+                          /  ;
+              _          /   ;
+ (\`._    _.-"" ""--..__,'    |
+ <_  \`-""                     \\
+  <\`-                          :
+   (__   <__.                  ;
+     \`-.   '-.__.      _.'    /
+        \\      \`-.__,-'    _,'
+         \`._    ,    /__,-'
+            ""._\\__,'< <____
+                 | |  \`----.\`.
+                 | |        \\ \`.
+                 ; |___      \\-\`\`
+                 \\   --<
+                  \`.\`.<
+             hjw    \`-'
+
+   _____  ____   _____  ______ ______
+  / ____|/ __ \\ / __ \\ / ____|  ____|
+  | |  __| |  | | |  | | (___ | |__   
+  | | |_ | |  | | |  | |\\___ \\|  __|  
+  | |__| | |__| | |__| |____) | |____ 
+  \\_____|\\____/ \\____/|_____/|______|
+
+"The comprehensive event registration system designed by hackers for hackers"
+
+github.com/MasseyHacks
+
+Developed by:
+Henry Tu (github.com/henrytwo)
+Ryan Zhang (github.com/ryanz34)
+David Hui (github.com/BlazingAsher)
+James Xu (github.com/JamesXu123)`)
+
 $.ajax({
     type: 'GET',
     url: '/api/settings',

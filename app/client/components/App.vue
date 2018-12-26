@@ -35,6 +35,13 @@
                 <li>
                     <router-link v-if="loggedIn" to="/logout" tag="a"><button class="menu-button" v-on:click="retractSidebar">Logout</button></router-link>
                 </li>
+                <li>
+                    <p style="color: darkgrey; font-size: 0.7em">
+                        <br>
+                        Logged in as {{user.fullName}}<br>
+                        ({{user.userType.name.toUpperCase()}})
+                    </p>
+                </li>
             </ul>
         </div>
 

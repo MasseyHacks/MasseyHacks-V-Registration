@@ -15,8 +15,6 @@
                 <div v-else-if="page == 'create'">
                     <h4>Create Team</h4>
 
-                    <br>
-
                     <input class="round-input" style="width: 100%; padding: 5px;" placeholder="Team Name" v-model="teamName" type="text" maxlength="50">
 
                     <br>
@@ -31,7 +29,7 @@
                 <div v-else-if="page == 'join'">
                     <h4>Join Team</h4>
 
-                    <br>
+                    <p>Already have a team code? Enter it below to join!</p>
 
                     <input class="round-input" style="width: 100%; padding: 5px;" placeholder="Team Code" v-model="teamCode" type="text">
 
@@ -46,6 +44,8 @@
                 <div v-else-if="!team">
                     <h4>You are currently not on a team.</h4>
 
+                    <p>Registering as a team helps speed up the review process.</p>
+
                     <div class="button-row">
                         <button class="generic-button-dark" v-on:click="reset(); page = 'create'">Create</button>
                         <button class="generic-button-dark" v-on:click="reset(); page = 'join'">Join</button>
@@ -57,6 +57,8 @@
                     <h4>Team Code</h4>
                     {{team.code}} <br>
                     <br>
+
+                    <p>Teammates can join by entering the Team Code above</p>
 
                     <hr>
 
