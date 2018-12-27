@@ -10,7 +10,7 @@
                     <div class="login-header">
 
                         <img src="logo/logowide.svg"
-                             style="width: 45%; min-width: 250px">
+                             style="width: 45%; min-width: 200px">
 
                         <div v-if="$route.query.redirect && !error" class="error-banner">
                             <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> You need to login first.</p>
@@ -32,7 +32,7 @@
                             <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
 
                             <label>Password</label>
-                            <input class="form-control" v-model="pass" placeholder="5up3r53cr3t" type="password" required><br>
+                            <input class="form-control" v-model="pass" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
 
                             <div id="button-row">
                                 <button class="generic-button-dark" type="submit">

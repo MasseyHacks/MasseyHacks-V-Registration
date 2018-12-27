@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div style="padding-bottom: 30px">
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>VERSION</h3>
                     <hr>
 
@@ -37,7 +37,7 @@
 
 
                 </div>
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>SERVER LOG</h3>
                     <hr>
                     <div v-if="loading">
@@ -105,7 +105,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>QR CODES</h3>
                     <h5><b>Warning:</b> You are about to reveal confidential information</h5>
                     <hr>
@@ -117,7 +117,7 @@
                     <img v-bind:src="Admins[selected]" v-if="selected">
                 </div>
 
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>SUDO MODE</h3>
                     <hr>
                     Developers are busy people, okay?<br>

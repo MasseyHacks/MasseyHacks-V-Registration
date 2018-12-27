@@ -8,7 +8,7 @@
 
         <div class="spacer"></div>
         <div class="container vertical-centered">
-            <div class="ui-card dash-card">
+            <div class="ui-card dash-card dash-card-medium">
                 <div v-if="loading">
                     <p>Loading...</p>
                 </div>

@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div style="padding-bottom: 30px">
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Application Dates</h3>
                     <hr>
 
@@ -25,7 +25,7 @@
                     <button class="generic-button-dark" @click="changeTimes">Update time</button>
                 </div>
 
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Participant Limit</h3>
                     <hr>
                     <p>
@@ -35,7 +35,7 @@
                     </p>
                 </div>
 
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Review Pending Schools</h3>
                     <hr>
 
@@ -45,7 +45,7 @@
                     <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="!pendingSchools.length">Review</button>
                 </div>
 
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Global User Management</h3>
                     <hr>
 
@@ -62,7 +62,7 @@
                 </div>
 
 
-                <div class="ui-card dash-card-offset dash-card">
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Email Templates</h3>
                     <hr>
                     <select style="margin-bottom: 10px;" v-model="selected">
@@ -75,7 +75,7 @@
                     <button class="generic-button-dark" @click="getTemplate">Get Template</button>
                 </div>
 
-                <div class="ui-card" id="dash-card-offset dash-card" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
+                <div class="ui-card" id="dash-card-offset dash-card dash-card-large" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
                     <h3>Email Preview</h3>
                     <hr>
                     <div v-html="previewHTML" style="height: 50vh; overflow: auto;"></div>

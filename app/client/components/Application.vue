@@ -73,6 +73,9 @@
                                       :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school"
                                       taggable></v-select>
                         </div>
+
+                        <br>
+                        <p>Remember: You <b>CANNOT</b> modify your application after you submit!</p>
                         <button v-if="user.profile.signature === -1" type="button" class="generic-button-dark" v-on:click="saveApplication(false)">Save</button>
                         <button type="submit" class="generic-button-dark">Submit</button>
                     </form>

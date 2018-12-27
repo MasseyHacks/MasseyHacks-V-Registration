@@ -10,7 +10,7 @@
         <div class="container vertical-centered">
             <div class="row">
 
-                <div class="ui-card dash-card" style="text-align: center">
+                <div class="ui-card dash-card dash-card-medium" style="text-align: center">
                     <h3>Application Status</h3>
 
 

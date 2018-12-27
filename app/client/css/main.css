@@ -315,6 +315,7 @@ h2 {
 }
 
 .app-view-logged-in {
+    overflow-y: scroll !important;
     width: calc(100% - 230px) !important
 }
 
@@ -362,7 +363,6 @@ h2 {
 }
 
 .app-screen {
-    /*padding-left: 10px; /* Makes it even with the scrollbar */
     margin: 0 auto;
     text-align: center;
     width: 100%;
@@ -370,6 +370,14 @@ h2 {
     left: 50%;
     transform: translateX(-50%);*/
 
+}
+
+.organizer-card {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    width: 90%;
+    text-align: center;
 }
 
 .ui-card {
@@ -412,12 +420,18 @@ h2 {
     border-color: rgb(220, 220, 220) !important;
     border-width: 1px !important;
 
-    width: 90%;
+    min-width: 250px;
+
+    width: 60%;
     padding: 20px;
 }
 
 .dash-card-offset {
     margin-top: 30px;
+}
+
+.dash-card-medium {
+    width: 80%;
 }
 
 .dash-card-large {
@@ -427,12 +441,12 @@ h2 {
     /*background: #fafafa;
     box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.34);
     border-radius: 10px;*/
-    color: black;
 }
 
+/*
 .dash-card-large hr {
     border-color: black;
-}
+}*/
 
 .duo-col {
     column-count: 2;
@@ -603,15 +617,9 @@ h4 {
 @media (max-width: 992px) {
 
     .dash-card {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
-    }
-
-    .dash-card-large {
-        margin-left: 0;
-        margin-right: 0;
-        width: 100%;
+        width: 95%;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 
     #nav-main {
