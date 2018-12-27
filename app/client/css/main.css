@@ -469,6 +469,7 @@ h2 {
 }
 
 .data-table-generic {
+    width: 100% !important;
     margin-bottom: 30px;
     color: black;
 }
