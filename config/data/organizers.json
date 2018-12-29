@@ -29,10 +29,58 @@
     "lastName": "Nasri",
     "permission": "owner"
   },
-  "karl": {
-    "email": "karl@rastera.xyz",
-    "firstName": "Karl",
-    "lastName": "Zhu",
+  "syed": {
+    "email": "syed@masseyhacks.ca",
+    "firstName": "Syed",
+    "lastName": "Safwaan",
+    "permission": "reviewer"
+  },
+  "qin": {
+    "email": "qin@masseyhacks.ca",
+    "firstName": "Qin",
+    "lastName": "Liu",
+    "permission": "reviewer"
+  },
+  "anish": {
+    "email": "anish@masseyhacks.ca",
+    "firstName": "Anish",
+    "lastName": "Aggarwal",
+    "permission": "reviewer"
+  },
+  "andrew": {
+    "email": "andrew@masseyhacks.ca",
+    "firstName": "Andrew",
+    "lastName": "Gao",
+    "permission": "admin"
+  },
+  "tailai": {
+    "email": "tailai@masseyhacks.ca",
+    "firstName": "Tailai",
+    "lastName": "Wong",
+    "permission": "admin"
+  },
+  "aaryan": {
+    "email": "aaryan@masseyhacks.ca",
+    "firstName": "Aaryan",
+    "lastName": "Patel",
+    "permission": "admin"
+  },
+  "anumita": {
+    "email": "anumita@masseyhacks.ca",
+    "firstName": "Anumita",
+    "lastName": "Jain",
+    "permission": "admin"
+  },
+  "joshua": {
+    "email": "joshua@masseyhacks.ca",
+    "firstName": "Joshua",
+    "lastName": "Mattews",
+    "permission": "admin"
+  },
+  "katelyn": {
+    "email": "katelyn@masseyhacks.ca",
+    "firstName": "Katelyn",
+    "lastName": "Sato",
     "permission": "admin"
   }
 }
