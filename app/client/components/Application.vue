@@ -16,6 +16,9 @@
                 <div v-else class="main-app">
                     <form v-if="!user.permissions.checkin || user.permissions.developer"
                           @submit.prevent="submitApplication" style="text-align: left">
+
+                        <h5 v-if="editWarning"><b>{{editWarning}}</b></h5>
+
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
 
                             <h4 v-if="question.precaption" style="margin-top: 50px">
@@ -28,18 +31,18 @@
                             <br v-if="question.note">
                             <label :for="questionName" v-if="question.note">{{question.note}}</label>
 
-                            <textarea class="form-control" v-if="question.questionType == 'fullResponse'"
+                            <textarea :disabled="editDisabled" class="form-control" v-if="question.questionType == 'fullResponse'"
                                       :id="questionName" :maxlength="question.maxlength"></textarea>
-                            <input class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
+                            <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                                    :id="questionName" :maxlength="question.maxlength">
                             <div v-if="question.questionType == 'boolean'">
                                 <div class="form-check form-check-inline" :id="questionName">
-                                    <input class="form-check-input" type="radio" :name="questionName"
+                                    <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
                                            :id="questionName + '1' ">
                                     <label class="form-check-label" :for="questionName + '1' ">Yes</label>
                                 </div>
                                 <div class="form-check form-check-inline" :id="questionName">
-                                    <input class="form-check-input" type="radio" :name="questionName"
+                                    <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
                                            :id="questionName + '0' ">
                                     <label class="form-check-label" :for="questionName + '0' ">No</label>
                                 </div>
@@ -47,7 +50,7 @@
                             <div v-if="question.questionType == 'multiradio'">
                                 <div v-for="option in question.enum.values.split('|')"
                                      class="form-check form-check-inline" :id="questionName">
-                                    <input class="form-check-input" type="radio" :name="questionName"
+                                    <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
                                            :id="questionName + option">
                                     <label class="form-check-label" :for="questionName + option">{{option}}</label>
                                 </div>
@@ -55,29 +58,30 @@
                             <div v-if="question.questionType == 'multicheck'">
                                 <div v-for="option in question.enum.values.split('|')"
                                      class="form-check form-check-inline" :id="questionName">
-                                    <input class="form-check-input" type="checkbox" :name="questionName"
+                                    <input :disabled="editDisabled" class="form-check-input" type="checkbox" :name="questionName"
                                            :id="questionName + option ">
                                     <label class="form-check-label" :for="questionName + option ">{{option}}</label>
                                 </div>
                             </div>
                             <div v-if="question.questionType == 'contract'" style="margin-left: 20px" >
-                                <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName">
+                                <input class="form-check-input" :disabled="editDisabled" type="checkbox" :name="questionName" :id="questionName">
                                 <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
                                                                                                                                      style="color: red">*</span></b></label>
                             </div>
-                            <select v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
+                            <select  :disabled="editDisabled" v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
                                 <option v-for="option in question.enum.values.split('|')">{{option}}
                                 </option>
                             </select>
-                            <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName"
+                            <v-select :disabled="editDisabled" v-if="question.questionType == 'schoolSearch'" :id="questionName"
                                       :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school"
                                       taggable></v-select>
                         </div>
 
                         <br>
-                        <p>Remember: You <b>CANNOT</b> modify your application after you submit!</p>
+                        <p v-if="user.profile.signature !== -1">Time of submission: {{moment(user.lastUpdated)}}</p>
+                        <p v-if="!editDisabled">Remember: You <b>CANNOT</b> modify your application after you submit!</p>
                         <button v-if="user.profile.signature === -1" type="button" class="generic-button-dark" v-on:click="saveApplication(false)">Save</button>
-                        <button type="submit" class="generic-button-dark">Submit</button>
+                        <button v-if="!editDisabled" type="submit" class="generic-button-dark">Submit</button>
                     </form>
                     <div v-else style="text-align:center; font-size:1.5em;"><span>You are not a hacker!</span></div>
                 </div>
@@ -109,6 +113,7 @@
     import AuthService from '../src/AuthService'
     import ApiService from '../src/ApiService'
     import $ from 'jquery'
+    import moment from 'moment'
     import vSelect from 'vue-select'
 
     export default {
@@ -126,13 +131,19 @@
                 applicationValue: {},
                 saveTimer: null,
                 school: null,
-                user: Session.getUser()
+                user: Session.getUser(),
+
+                editDisabled: false,
+                editWarning: ''
             }
         },
         components: {
             vSelect
         },
         beforeMount() {
+
+            this.checkEditState();
+
             console.log(this.settings);
             ApiService.getApplications((err, applications) => {
                 this.loading = false;
@@ -161,13 +172,29 @@
             })
         },
         methods: {
+            moment (date) {
+                return moment(date).format('MMMM Do YYYY, h:mm:ss')
+            },
+            checkEditState() {
+                this.editDisabled = this.user.profile.isSigned || !this.settings.registrationOpen;
+
+                if (this.user.profile.isSigned) {
+                    this.editWarning = 'You cannot edit your application as you have already submitted.';
+                } else if (!this.settings.registrationOpen) {
+                    this.editWarning = 'You cannot edit your application as the submission window has passed.';
+                }
+            },
             populateApplication() {
                 if (this.user.status.submittedApplication && this.user.profile.hacker != null) {
+
                     console.log('adding values');
                     //populate the fields with what they submitted
                     var userApp = this.user.profile.hacker;
 
                     Object.keys(userApp).forEach((field) => {
+
+                        console.log(userApp[field])
+
                         if (this.applications.hacker[field].questionType == 'multicheck') {
                             userApp[field].forEach((checkedBox) => {
                                 //check 'em all!
@@ -185,21 +212,24 @@
                             }
                             console.log("field", field + userApp[field]);
 
-                            if (userApp[field]) {
-                                document.getElementById(field + userApp[field]).checked = "true";
+                            if (document.getElementById(field + userApp[field])) {
+                                document.getElementById(field + userApp[field]).checked = true;
                             }
                         } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
                             this.schoolPlaceholder = userApp[field];
                             this.school = userApp[field];
                         } else if (this.applications.hacker[field].questionType == 'contract') {
                             document.getElementById(field).checked = userApp[field] == "true";
-                        } else {
+                        } else if (document.getElementById(field)) {
                             document.getElementById(field).value = userApp[field];
+                        } else {
+                            console.log(field, 'is broken!')
                         }
                     })
                 }
             },
             submitApplication() {
+
                 var doNotSubmit = false;
 
                 Object.keys(this.applications.hacker).forEach((question) => {
@@ -287,19 +317,35 @@
                 if (doNotSubmit) {
                     swal("Error", (this.submissionError ? this.submissionError + ' <br><br>' : '') + "Please check all the required fields and try again.", "error");
                 } else {
-                    //ajax submit code
-                    var data = {};
-                    data.userID = Session.getUserID();
-                    data.profile = {};
-                    data.profile.hacker = this.applicationValue;
-                    data.profile.signature = 1;
-                    console.log(data)
-                    AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
-                        if (err) {
-                            swal("Error", err.responseJSON['error'], "error");
-                        } else {
-                            swal("Success", "Your application has been submitted!", "success");
-                            Session.setUser(user);
+
+                    swal({
+                        title: 'Submit Application',
+                        html: 'Are you sure you want to submit your application?<br><br>You <b>CANNOT</b> modify your application after you submit!',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Submit',
+                        type: 'warning',
+                    }).then((result) => {
+                        if (result.value) {
+
+                            //ajax submit code
+                            var data = {};
+                            data.userID = Session.getUserID();
+                            data.profile = {};
+                            data.profile.hacker = this.applicationValue;
+                            data.profile.signature = 1;
+                            console.log(data)
+                            AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
+                                if (err) {
+                                    swal("Error", err.responseJSON['error'], "error");
+                                } else {
+                                    Session.setUser(user);
+                                    this.user = user;
+                                    this.checkEditState();
+                                    swal("Success", "Your application has been submitted!", "success");
+                                }
+                            });
                         }
                     });
                 }
@@ -372,11 +418,13 @@
                         } else {
                             swal("Success", "Your application has been saved!", "success");
                             Session.setUser(user);
+                            this.user = user;
+                            this.checkEditState();
 
                         }
                     }
                 });
             }
-        },
+        }
     }
 </script>

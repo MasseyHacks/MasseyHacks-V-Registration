@@ -745,99 +745,111 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
     // Validate the user profile, and mark the user as profile completed
     // when successful.
     console.log('Updating ' + profile);
-    User.validateProfile(id, profile, function (err, profileValidated) {
-        if (err) {
-            return callback(err);
+
+    User.getByID(id, function(err, validationUser) {
+        // Already submitted
+        if (validationUser.profile.signature !== -1) {
+            return callback({
+                error: 'Sorry, you have already submitted.'
+            });
         }
 
-        // Check if its within the registration window.
-        Settings.getSettings(function (err, times) {
-            if (profileValidated.signature === -1) {
-                return User.findOneAndUpdate({
-                        _id: id
-                    },
-                    {
-                        $set: {
-                            'lastUpdated': Date.now(),
-                            'profile': profileValidated
-                        }
-                    },
-                    {
-                        new: true
-                    },
-                    callback);
-            }
-
+        User.validateProfile(id, profile, function (err, profileValidated) {
             if (err) {
                 return callback(err);
             }
 
-            var now = Date.now();
+            // Check if its within the registration window.
+            Settings.getSettings(function (err, times) {
 
-            if (!userExecute.admin && now < times.timeOpen) {
-                return callback({
-                    message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
-                });
-            }
+                if (err) {
+                    return callback(err);
+                }
 
-            if (!userExecute.admin && now > times.timeClose) {
-                return callback({
-                    message: 'Sorry, registration is closed.'
-                });
-            }
+                var now = Date.now();
 
-            User.findOne(
-                {
-                    _id: id
-                },
-                function (err, user) {
-                    if (err || !user) {
-                        return callback(err ? err : {error: 'Unable to perform action.', code: 500})
-                    }
+                if (!userExecute.admin && now < times.timeOpen) {
+                    return callback({
+                        error: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
+                    });
+                }
 
-                    if (user.status.released && (user.status.rejected || user.status.waitlisted || user.status.admitted)) {
-                        return callback({
-                            message: 'Sorry, registration is closed.'
-                        });
-                    }
+                if (!userExecute.admin && now > times.timeClose) {
+                    return callback({
+                        error: 'Sorry, registration is closed.'
+                    });
+                }
 
-                    User.findOneAndUpdate({
-                            _id: id,
+                // Saving
+                if (profileValidated.signature === -1) {
+                    return User.findOneAndUpdate({
+                            _id: id
                         },
                         {
                             $set: {
                                 'lastUpdated': Date.now(),
-                                'profile': profileValidated,
-                                'status.submittedApplication': true
+                                'profile': profileValidated
                             }
                         },
                         {
                             new: true
                         },
                         callback);
+                }
 
-                    logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+                User.findOne(
+                    {
+                        _id: id
+                    },
+                    function (err, user) {
+                        if (err || !user) {
+                            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                        }
 
-                    SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function (err, msg) {
-                        console.log(err, msg);
-                    });
+                        if (user.status.released && (user.status.rejected || user.status.waitlisted || user.status.admitted)) {
+                            return callback({
+                                message: 'Sorry, registration is closed.'
+                            });
+                        }
 
-                    if (!user.status.submittedApplication) {
-                        User.findById(id, function (err, user) {
-                            if (err) {
-                                console.log('Could not send email:');
-                                console.log(err);
-                            }
-                            mailer.sendTemplateEmail(user.email, 'applicationemails', {
-                                nickname: user['firstName'],
-                                dashUrl: process.env.ROOT_URL
-                            })
+                        User.findOneAndUpdate({
+                                _id: id,
+                            },
+                            {
+                                $set: {
+                                    'lastUpdated': Date.now(),
+                                    'profile': profileValidated,
+                                    'status.submittedApplication': true
+                                }
+                            },
+                            {
+                                new: true
+                            },
+                            callback);
+
+                        logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+
+                        SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function (err, msg) {
+                            console.log(err, msg);
                         });
-                    }
 
-                });
+                        if (!user.status.submittedApplication) {
+                            User.findById(id, function (err, user) {
+                                if (err) {
+                                    console.log('Could not send email:');
+                                    console.log(err);
+                                }
+                                mailer.sendTemplateEmail(user.email, 'applicationemails', {
+                                    nickname: user['firstName'],
+                                    dashUrl: process.env.ROOT_URL
+                                })
+                            });
+                        }
+
+                    });
+            });
         });
-    });
+    })
 };
 
 UserController.voteAdmitUser = function (adminUser, userID, callback) {

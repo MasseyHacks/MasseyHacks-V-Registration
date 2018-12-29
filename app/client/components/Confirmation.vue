@@ -5,17 +5,23 @@
             <h2>CONFIRMATION</h2>
         </div>
 
-        <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-        <button v-on:click="submitFile()">Submit</button>
-
-        <img :src="waiver" width="500px">
-
         <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="ui-card dash-card">
-                <div>
+                <div v-if="user.status.confirmed">
+                    <p>You are already confirmed</p>
+
+                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                    <button v-on:click="submitFile()">Submit</button>
+
+                    <img :src="waiver" width="500px">
+                </div>
+                <div v-else-if="user.status.declined">
+                    <p>You declined your invitation :(</p>
+                </div>
+                <div v-else>
                     <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
-                    <button class="generic-button" v-on:click="denyInvitation">Deny</button>
+                    <button class="generic-button" v-on:click="denyInvitation">Decline</button>
                 </div>
             </div>
         </div>
@@ -37,13 +43,16 @@
             }
         },
         mounted() {
+
+            /*
             AuthService.sendRequest('GET', '/api/getResourceAuthorization?filename=asdsad-waiver-wtf.jpg', {}, (err, msg) => {
                 if (err) {
                     console.log(err)
                 } else {
                     this.waiver = msg
                 }
-            });
+            });*/
+
         },
         methods: {
             handleFileUpload() {
@@ -81,13 +90,15 @@
                             if (err || !data) {
                                 swal("Error", err.error, "error");
                             } else {
+                                this.user = data
+                                Session.setUser(data)
+                                console.log(this.user.status.name);
+
                                 swal({
                                     title: "Success",
                                     text: "You have confirmed your spot!",
                                     type: "success"
                                 });
-                                this.user = Session.getUser()
-                                console.log(this.user.status.name);
                             }
 
                         })

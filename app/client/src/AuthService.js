@@ -6,10 +6,11 @@ import swal from 'sweetalert2'
 
 module.exports = {
 
-    sendRequest (type, url, data, callback, contentType) {
+    sendRequest (type, url, data, callback, contentType, async) {
         var request = {
             type: type,
             url: url,
+            async: async,
             contentType: contentType || 'application/json; charset=utf-8',
             dataType: 'json',
             success: data => {
@@ -223,7 +224,7 @@ module.exports = {
                 Session.create(data['token'], data['user']);
                 this.updateLoginState(true)
             }
-        })
+        }, null, false)
     },
 
     loginWithCode (code, callback) {
