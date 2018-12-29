@@ -692,7 +692,8 @@ h4 {
 }
 
 .generic-button-dark:disabled {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 /* State transitions */
