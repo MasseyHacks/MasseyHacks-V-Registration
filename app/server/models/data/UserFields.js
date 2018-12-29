@@ -293,18 +293,33 @@ var workshopHost = {
 
 };
 
+var confirmation = {
+    bus: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'Will you be travelling on our Toronto/Waterloo bus?',
+        mandatory: true,
+        precaption: 'TRANSPORTATION'
+    },
+
+    additionalNotes: {
+        type: String,
+        questionType: 'fullResponse',
+        question: 'Is there anything else you\'d like us to know?',
+        mandatory: false,
+        precaption: 'ADDITIONAL NOTES'
+    }
+};
+
 var profile = {
     hacker: hackerApplication,
     mentor: mentorApplication,
     workshop: workshopHost,
+    confirmation: confirmation,
     signature: {
         type: Number,
         default: -1
     }
-};
-
-var confirmation = {
-
 };
 
 var userType = {
@@ -462,8 +477,7 @@ var schema = {
     userType: userType,
 
     // Only parts user can update
-    profile: profile,
-    confirmation: confirmation
+    profile: profile
 };
 
 module.exports = schema;

@@ -221,59 +221,66 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
 schema.statics.validateProfile = function (id, profile, callback) {
 
     console.log('Validating profile!')
+    try {
+        var queue = [[fields.profile, profile]];
+        var runner;
+        var userpath;
+        var keys;
+        if (profile.signature === -1) {
+            return callback(null, profile);
+        }
+        while (queue.length !== 0) {
+            runner = queue[0][0];
+            userpath = queue.shift()[1];
+            keys = Object.keys(runner);
 
-    var queue = [[fields.profile, profile]];
-    var runner;
-    var userpath;
-    var keys;
-    if (profile.signature === -1) {
-        return callback(null, profile);
-    }
-    while (queue.length !== 0) {
-        runner = queue[0][0];
-        userpath = queue.shift()[1];
-        keys = Object.keys(runner);
-
-        for (var i = 0; i < keys.length; i++) {
-            if ('type' in runner[keys[i]]) {
-                if (runner[keys[i]].mandatory && !userpath[keys[i]]) {
-                    return callback({error: 'Field "' + keys[i] + '" is required'})
-                }
-
-                if (runner[keys[i]].maxlength && userpath[keys[i]] && userpath[keys[i]].length > runner[keys[i]].maxlength) {
-                    return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
-                }
-
-                if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
-                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory)) {
-                        return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]] + '" is invalid'})
+            for (var i = 0; i < keys.length; i++) {
+                if ('type' in runner[keys[i]]) {
+                    if (runner[keys[i]].mandatory && !userpath[keys[i]]) {
+                        return callback({error: 'Field "' + keys[i] + '" is required'})
                     }
-                }
 
-                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck' && ((userpath[keys[i]] && userpath[keys[i]].length > 0) || runner[keys[i]].mandatory)) {
-                    for (var r in userpath[keys[i]]) {
-                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
-                            return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
+                    if (runner[keys[i]].maxlength && userpath[keys[i]] && userpath[keys[i]].length > runner[keys[i]].maxlength) {
+                        return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
+                    }
+
+                    if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
+                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory)) {
+                            return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]] + '" is invalid'})
                         }
                     }
-                }
 
-                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
-                    if (userpath[keys[i]] != 'true') {
-                        return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
+                    if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck' && ((userpath[keys[i]] && userpath[keys[i]].length > 0) || runner[keys[i]].mandatory)) {
+                        for (var r in userpath[keys[i]]) {
+                            if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
+                                return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
+                            }
+                        }
                     }
-                }
-            } else {
-                if (userpath[keys[i]]) {
-                    queue.push([runner[keys[i]], userpath[keys[i]]])
+
+                    if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
+                        if (userpath[keys[i]] != 'true') {
+                            return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
+                        }
+                    }
+                } else {
+                    if (userpath[keys[i]]) {
+                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                    }
                 }
             }
         }
+
+        console.log('Profile accepted!')
+
+        return callback(null, profile);
+    } catch (e) {
+
+        console.log('Dammit! Something broke...', e)
+
+        return callback({ error: 'You broke something...' })
+
     }
-
-    console.log('Profile accepted!')
-
-    return callback(null, profile);
 };
 
 

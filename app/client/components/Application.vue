@@ -121,7 +121,6 @@
             return {
                 loading: true,
                 loadingError: '',
-                submissionError: '',
 
                 error: '',
                 applications: {},
@@ -228,25 +227,27 @@
                     })
                 }
             },
-            submitApplication() {
-
+            parseForm(template, validate) {
+                
                 var doNotSubmit = false;
+                var submissionErrors = [];
+                var formValue = {};
 
-                Object.keys(this.applications.hacker).forEach((question) => {
-                    console.log(this.applications.hacker[question].questionType);
-                    if (this.applications.hacker[question].questionType == 'multicheck') {
+                Object.keys(template).forEach((question) => {
+                    console.log(template[question].questionType);
+                    if (template[question].questionType == 'multicheck') {
                         var checked = [];
                         $("input[name='" + question + "']:checked").each(function () {
                             checked.push($(this).attr('id').replace(question, ''));
                         });
 
-                        if (this.applications.hacker[question].mandatory && checked.length < 1) {
-                            this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
+                        if (validate && template[question].mandatory && checked.length < 1) {
+                            submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
                             doNotSubmit = true;
                         }
 
-                        this.applicationValue[question] = checked;
-                    } else if (this.applications.hacker[question].questionType == 'contract') {
+                        formValue[question] = checked;
+                    } else if (template[question].questionType == 'contract') {
 
                         var agreed = 'false'
 
@@ -254,39 +255,39 @@
                             agreed = 'true'
                         });
 
-                        if (this.applications.hacker[question].mandatory && agreed != 'true') {
-                            this.submissionError = this.applications.hacker[question].warning;
+                        if (validate && template[question].mandatory && agreed != 'true') {
+                            submissionErrors.push(template[question].warning);
                             doNotSubmit = true;
                         }
 
-                        this.applicationValue[question] = agreed;
-                    } else if (this.applications.hacker[question].questionType == 'multiradio' || this.applications.hacker[question].questionType == 'boolean') {
+                        formValue[question] = agreed;
+                    } else if (template[question].questionType == 'multiradio' || template[question].questionType == 'boolean') {
                         try {
-                            this.applicationValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
+                            formValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
                         } catch (error) {
                             //invalid
-                            if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
                                 doNotSubmit = true;
                             } else {
-                                this.applicationValue[question] = null;
+                                formValue[question] = null;
                             }
                         }
 
-                    } else if (this.applications.hacker[question].questionType == 'schoolSearch') {
+                    } else if (template[question].questionType == 'schoolSearch') {
 
-                        if (this.school && this.school.length > this.applications.hacker[question].maxlength) {
-                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
+                        if (validate && this.school && this.school.length > template[question].maxlength) {
+                            submissionErrors.push('Field "' + question + '" exceeds character limit!');
                             doNotSubmit = true;
                         } else if (this.school) {
-                            this.applicationValue[question] = this.school;
+                            formValue[question] = this.school;
                         } else {
                             //invalid
-                            if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + (this.applications.hacker[question].question.length < 50 ? this.applications.hacker[question].question : question) + '" is mandatory!';
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
                                 doNotSubmit = true;
                             } else {
-                                this.applicationValue[question] = null;
+                                formValue[question] = null;
                             }
                         }
 
@@ -294,28 +295,39 @@
                         var inputElement = document.getElementById(question);
 
                         if ($.trim($(inputElement).val()) == '') {
-                            if (this.applications.hacker[question].mandatory) {
-                                this.submissionError = 'Field "' + ((question.includes('fullResponse') || this.applications.hacker[question].question.length < 50) ? this.applications.hacker[question]['question'] : question) + '" is mandatory!';
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + ((question.includes('fullResponse') || template[question].question.length < 50) ? template[question]['question'] : question) + '" is mandatory!');
                                 doNotSubmit = true;
                             } else {
-                                this.applicationValue[question] = null;
+                                formValue[question] = null;
                             }
-                        } else if (inputElement.value.length > this.applications.hacker[question].maxlength) {
-                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
+                        } else if (validate && inputElement.value.length > template[question].maxlength) {
+                            submissionErrors.push('Field "' + question + '" exceeds character limit!');
                             doNotSubmit = true;
                         } else {
                             if (this.saveTimer) {
                                 clearInterval(this.saveTimer)
                             }
-                            this.applicationValue[question] = inputElement.value;
+                            formValue[question] = inputElement.value;
                         }
 
 
                     }
                 });
+                
+                return {doNotSubmit: doNotSubmit, submissionErrors: submissionErrors, profile: formValue}
+                
+            },
+            submitApplication() {
 
-                if (doNotSubmit) {
-                    swal("Error", (this.submissionError ? this.submissionError + ' <br><br>' : '') + "Please check all the required fields and try again.", "error");
+                var parsedForm = this.parseForm(this.applications.hacker, true)
+
+                if (parsedForm.doNotSubmit) {
+                    swal({
+                        title: 'Error',
+                        html: '<p style="text-align: left"><b>' + (parsedForm.submissionErrors.length ? parsedForm.submissionErrors.join('<br>') + ' <br>' : '') + "</b></p> Please check all the required fields and try again.",
+                        type: 'error'
+                    })
                 } else {
 
                     swal({
@@ -325,7 +337,7 @@
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Submit',
-                        type: 'warning',
+                        type: 'warning'
                     }).then((result) => {
                         if (result.value) {
 
@@ -333,7 +345,7 @@
                             var data = {};
                             data.userID = Session.getUserID();
                             data.profile = {};
-                            data.profile.hacker = this.applicationValue;
+                            data.profile.hacker = parsedForm.profile;
                             data.profile.signature = 1;
                             console.log(data)
                             AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
@@ -354,62 +366,13 @@
               this.saveApplication(true)
             },
             saveApplication(auto) {
-                console.log("save")
-                Object.keys(this.applications.hacker).forEach((question) => {
-                    console.log(this.applications.hacker[question].questionType);
-                    if (this.applications.hacker[question].questionType == 'multicheck') {
-                        var checked = [];
-                        $("input[name='" + question + "']:checked").each(function () {
-                            checked.push($(this).attr('id').replace(question, ''));
-                        });
-                        this.applicationValue[question] = checked;
-                    } else if (this.applications.hacker[question].questionType == 'contract') {
-
-                        var agreed = 'false'
-
-                        $("input[name='" + question + "']:checked").each(function () {
-                            agreed = 'true'
-                        });
-
-                        this.applicationValue[question] = agreed;
-                    } else if (this.applications.hacker[question].questionType == 'multiradio' || this.applications.hacker[question].questionType == 'boolean') {
-                        try {
-                            this.applicationValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
-                        } catch (error) {
-                            this.applicationValue[question] = null;
-                        }
-
-                    } else if (this.applications.hacker[question].questionType == 'schoolSearch') {
-                        if (this.school) {
-                            this.applicationValue[question] = this.school;
-                        } else {
-                            //invalid
-                            this.applicationValue[question] = null;
-                        }
-
-                    } else {
-                        var inputElement = document.getElementById(question);
-
-                        if ($.trim($(inputElement).val()) == '') {
-                            this.applicationValue[question] = null;
-
-                        } else if (inputElement.value.length > this.applications.hacker[question].maxlength) {
-                            this.submissionError = 'Field "' + question + '" exceeds character limit!';
-                            doNotSubmit = true
-                            this.applicationValue[question] = inputElement.value.slice(0, this.applications.hacker[question].maxlength);
-                        } else {
-                            this.applicationValue[question] = inputElement.value;
-                        }
-
-
-                    }
-                });
+                var parsedForm = this.parseForm(this.applications.hacker, false)
 
                 //ajax submit code
                 var data = {};
                 data.userID = Session.getUserID();
                 data.profile = {};
-                data.profile.hacker = this.applicationValue;
+                data.profile.hacker = parsedForm.profile;
                 data.profile.signature = -1;
                 AuthService.sendRequest('POST', '/api/updateProfile', data, (err, user) => {
                     if (!auto) {
