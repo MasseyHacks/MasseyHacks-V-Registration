@@ -434,6 +434,8 @@ var filterSensitive = function (user, permission, page) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
             keys = Object.keys(runner);
+
+            /*
             async.eachSeries(keys, (key) => {
                 if ('type' in runner[key]) {
                     if (runner[key].permission && runner[key].permission >= permissionLevel) {
@@ -453,27 +455,27 @@ var filterSensitive = function (user, permission, page) {
                         queue.push([runner[key], userpath[key]])
                     }
                 }
-            });
-            // for (var i = 0; i < keys.length; i++) {
-            //     if ('type' in runner[keys[i]]) {
-            //         if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
-            //             try {
-            //                 delete userpath[keys[i]];
-            //             } catch (e) {
-            //                 console.log(e)
-            //             }
-            //         }
-            //
-            //         if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
-            //             userpath[keys[i]] = runner[keys[i]].default;
-            //         }
-            //
-            //     } else {
-            //         if (userpath[keys[i]]) {
-            //             queue.push([runner[keys[i]], userpath[keys[i]]])
-            //         }
-            //     }
-            // }
+            });*/
+
+            for (var i = 0; i < keys.length; i++) {
+                if ('type' in runner[keys[i]]) {
+                   if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
+                        try {
+                            delete userpath[keys[i]];
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    }
+                    if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+                        userpath[keys[i]] = runner[keys[i]].default;
+                    }
+
+                } else {
+                  if (userpath[keys[i]]) {
+                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                   }
+               }
+            }
         }
 
         return u;

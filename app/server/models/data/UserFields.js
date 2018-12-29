@@ -87,7 +87,8 @@ var status = {
         type: Number
     },
     confirmBy: {
-        type: Number
+        type: Number,
+        condition: 'status.statusReleased'
     },
     statusReleased: {
         type: Boolean,

@@ -1,24 +1,21 @@
 <template>
     <div class="app-screen" v-if="!token">
 
-        <!--         <form @submit.prevent="requestReset">
-                    <label><input v-model="email" type="email" placeholder="hacker@hackermail.io" autofocus required></label>
-                    <button type="submit">Submit</button>
-                    <p v-if="error" class="error">{{error}}</p>
-                </form> -->
         <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle" style="padding-top:8px;"><i class="fas fa-lock"></i> Change Password</h2>
 
-            <p><b>Warning: </b> All other active session tokens will be revoked</p>
+        <div class="ui-card dash-card vertical-centered">
+            <h3><i class="fas fa-lock"></i> Request Password Reset</h3>
+
+            <hr>
 
             <p v-if="error" class="error">{{error}}</p>
 
             <div id="login-form-elements">
-                <form @submit.prevent="changePassword">
-                    <input v-model="email" placeholder="email" type="email" autofocus required>
+                <form @submit.prevent="requestReset">
+
+                    <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
                     <div class="button-row">
-                        <button type="submit" class="generic-button-dark">Reset</button>
+                        <button class="generic-button-dark" type="submit">Request</button>
                         <router-link to="/login">
                             <button class="generic-button-dark">Back</button>
                         </router-link>
@@ -27,24 +24,30 @@
             </div>
         </div>
     </div>
-    <div v-else>
+    <div v-else="" class="app-screen">
+
         <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">Reset Password</h2>
+
+        <div class="ui-card dash-card vertical-centered">
+            <h3><i class="fas fa-lock"></i> Change Password</h3>
+
+            <hr>
+
+            <p><b>Warning: </b> All other active session tokens will be revoked</p>
+
+            <p v-if="error" class="error">{{error}}</p>
+
             <div id="login-form-elements">
                 <form @submit.prevent="resetPassword">
-                    <input v-model="password1" placeholder="Password" type="password" required>
-                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
+                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required><br>
+                    <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
                     <div class="button-row">
-                        <button type="submit">reset</button>
-                        <router-link to="/login">
-                            <button class="generic-button-dark">cancel</button>
-                        </router-link>
+                        <button class="generic-button-dark" type="submit">Save</button>
                     </div>
-                    <p v-if="error" class="error">{{error}}</p>
                 </form>
             </div>
         </div>
+
     </div>
 </template>
 

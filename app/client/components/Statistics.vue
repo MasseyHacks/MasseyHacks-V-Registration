@@ -86,7 +86,7 @@
                 <div class="duo-col">
                     <div class="card-col">
                         <ul class="custom-ul" style="text-align: left;">
-                            <li v-for="(key,value) in genderSubmitted">
+                            <li v-for="(key,value) in genderConfirmed">
                                 <span v-html="key"></span>
                             </li>
                         </ul>

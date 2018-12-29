@@ -127,7 +127,6 @@ function calculateStats(callback) {
                         newStats.rejected += user.status.rejected ? 1 : 0;
 
                         newStats.waitlisted += user.status.waitlisted ? 1 : 0;
-                        //newStats.bus += user.confirmation.bus ? 1 : 0;
 
                         // Count submitted
                         newStats.submitted += user.status.submittedApplication ? 1 : 0;
@@ -148,6 +147,8 @@ function calculateStats(callback) {
 
 
                         if (user.status.submittedApplication) {
+
+                            newStats.bus += user.profile.hacker.bus ? 1 : 0;
 
                             // Add to the gender
                             newStats.demo.gender[user.profile.hacker.gender] += 1;
@@ -183,7 +184,7 @@ function calculateStats(callback) {
                         if (user.status.confirmed) {
 
                             newStats.confirmedStat.total += 1;
-                            //newStats.confirmedStat.bus += user.confirmation.bus ? 1 : 0;
+                            newStats.confirmedStat.bus += user.confirmation.bus ? 1 : 0;
 
                             // Add to the gender
                             newStats.confirmedStat.demo.gender[user.profile.gender] += 1;
