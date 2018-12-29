@@ -380,7 +380,9 @@ module.exports = function(router) {
     });*/
 
     router.post('/acceptInvitation', permissions.isVerified, function(req, res) {
-        UserController.acceptInvitation(req.userExecute, logger.defaultResponse(req, res));
+        var confirmation = req.body.confirmation;
+
+        UserController.acceptInvitation(req.userExecute, confirmation, logger.defaultResponse(req, res));
     });
 
     router.post('/declineInvitation', permissions.isVerified, function(req, res) {

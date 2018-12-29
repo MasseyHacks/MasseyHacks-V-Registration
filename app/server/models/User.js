@@ -226,9 +226,7 @@ schema.statics.validateProfile = function (id, profile, callback) {
         var runner;
         var userpath;
         var keys;
-        if (profile.signature === -1) {
-            return callback(null, profile);
-        }
+
         while (queue.length !== 0) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
@@ -236,7 +234,7 @@ schema.statics.validateProfile = function (id, profile, callback) {
 
             for (var i = 0; i < keys.length; i++) {
                 if ('type' in runner[keys[i]]) {
-                    if (runner[keys[i]].mandatory && !userpath[keys[i]]) {
+                    if (profile.signature !== -1 && runner[keys[i]].mandatory && !userpath[keys[i]]) {
                         return callback({error: 'Field "' + keys[i] + '" is required'})
                     }
 
@@ -245,20 +243,20 @@ schema.statics.validateProfile = function (id, profile, callback) {
                     }
 
                     if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
-                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory)) {
+                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory) && !(profile.signature === -1 && !userpath[keys[i]])) {
                             return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]] + '" is invalid'})
                         }
                     }
 
                     if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck' && ((userpath[keys[i]] && userpath[keys[i]].length > 0) || runner[keys[i]].mandatory)) {
                         for (var r in userpath[keys[i]]) {
-                            if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
+                            if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1 && !(profile.signature === -1 && !userpath[keys[i]][r])) {
                                 return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
                             }
                         }
                     }
 
-                    if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
+                    if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
                         if (userpath[keys[i]] != 'true') {
                             return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
                         }

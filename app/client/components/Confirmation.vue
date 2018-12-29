@@ -203,6 +203,97 @@
                     })
                 }
             },
+            parseForm(template, validate) {
+
+                var doNotSubmit = false;
+                var submissionErrors = [];
+                var formValue = {};
+
+                Object.keys(template).forEach((question) => {
+                    console.log(template[question].questionType);
+                    if (template[question].questionType == 'multicheck') {
+                        var checked = [];
+                        $("input[name='" + question + "']:checked").each(function () {
+                            checked.push($(this).attr('id').replace(question, ''));
+                        });
+
+                        if (validate && template[question].mandatory && checked.length < 1) {
+                            submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
+                            doNotSubmit = true;
+                        }
+
+                        formValue[question] = checked;
+                    } else if (template[question].questionType == 'contract') {
+
+                        var agreed = 'false'
+
+                        $("input[name='" + question + "']:checked").each(function () {
+                            agreed = 'true'
+                        });
+
+                        if (validate && template[question].mandatory && agreed != 'true') {
+                            submissionErrors.push(template[question].warning);
+                            doNotSubmit = true;
+                        }
+
+                        formValue[question] = agreed;
+                    } else if (template[question].questionType == 'multiradio' || template[question].questionType == 'boolean') {
+                        try {
+                            formValue[question] = $("input[name='" + question + "']:checked").attr('id').replace(question, '');
+                        } catch (error) {
+                            //invalid
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
+                        }
+
+                    } else if (template[question].questionType == 'schoolSearch') {
+
+                        if (validate && this.school && this.school.length > template[question].maxlength) {
+                            submissionErrors.push('Field "' + question + '" exceeds character limit!');
+                            doNotSubmit = true;
+                        } else if (this.school) {
+                            formValue[question] = this.school;
+                        } else {
+                            //invalid
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + (template[question].question.length < 50 ? template[question].question : question) + '" is mandatory!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
+                        }
+
+                    } else {
+                        var inputElement = document.getElementById(question);
+
+                        if ($.trim($(inputElement).val()) == '') {
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Field "' + ((question.includes('fullResponse') || template[question].question.length < 50) ? template[question]['question'] : question) + '" is mandatory!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
+                        } else if (validate && inputElement.value.length > template[question].maxlength) {
+                            submissionErrors.push('Field "' + question + '" exceeds character limit!');
+                            doNotSubmit = true;
+                        } else {
+                            if (this.saveTimer) {
+                                clearInterval(this.saveTimer)
+                            }
+                            formValue[question] = inputElement.value;
+                        }
+
+
+                    }
+                });
+
+                return {doNotSubmit: doNotSubmit, submissionErrors: submissionErrors, profile: formValue}
+
+            },
             handleFileUpload() {
                 this.file = this.$refs.file.files[0];
             },
@@ -222,37 +313,48 @@
 
             },
             acceptInvitation() {
-                swal({
-                    title: "Hey!",
-                    text: "Are you sure you want to accept your invitation?",
-                    type: "question",
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes!'
-                }).then((result) => {
-                    if (result.value) {
-                        AuthService.sendRequest('POST', '/api/acceptInvitation', {
 
-                        }, (err, data) => {
-                            if (err || !data) {
-                                swal("Error", err.error, "error");
-                            } else {
-                                this.user = data
-                                Session.setUser(data)
-                                console.log(this.user.status.name);
+                var parsedForm = this.parseForm(this.applications.confirmation, true)
 
-                                swal({
-                                    title: "Success",
-                                    text: "You have confirmed your spot!",
-                                    type: "success"
-                                });
-                            }
+                if (parsedForm.doNotSubmit) {
+                    swal({
+                        title: 'Error',
+                        html: '<p style="text-align: left"><b>' + (parsedForm.submissionErrors.length ? parsedForm.submissionErrors.join('<br>') + ' <br>' : '') + "</b></p> Please check all the required fields and try again.",
+                        type: 'error'
+                    })
+                } else {
+                    swal({
+                        title: "Hey!",
+                        text: "Are you sure you want to accept your invitation?",
+                        type: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes!'
+                    }).then((result) => {
+                        if (result.value) {
+                            AuthService.sendRequest('POST', '/api/acceptInvitation', {
+                                confirmation: parsedForm.profile
+                            }, (err, data) => {
+                                if (err || !data) {
+                                    swal("Error", err.error, "error");
+                                } else {
+                                    this.user = data
+                                    Session.setUser(data)
+                                    console.log(this.user.status.name);
 
-                        })
-                    }
+                                    swal({
+                                        title: "Success",
+                                        text: "You have confirmed your spot!",
+                                        type: "success"
+                                    });
+                                }
 
-                })
+                            })
+                        }
+
+                    })
+                }
             },
             denyInvitation() {
                 swal({

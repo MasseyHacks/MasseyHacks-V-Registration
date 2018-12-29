@@ -1268,7 +1268,7 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
 
 };
 
-UserController.acceptInvitation = function (executeUser, callback) {
+UserController.acceptInvitation = function (executeUser, confirmation, callback) {
 
     User.findOneAndUpdate({
         _id: executeUser._id,
