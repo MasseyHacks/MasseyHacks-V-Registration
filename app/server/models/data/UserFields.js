@@ -337,13 +337,13 @@ var permissions = {
         default: false,
         permissionLevel: 2
     },
-    reviewer: {
+    admin: {
         type: Boolean,
         required: true,
         default: false,
         permissionLevel: 3
     },
-    admin: {
+    reviewer: {
         type: Boolean,
         required: true,
         default: false,
