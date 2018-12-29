@@ -15,7 +15,7 @@
                     <input class="form-control" type="datetime-local" v-model="timeOpen"/><br><br>
 
 
-                    <h6>Registration Close:  v-if="!editDisabled"</h6>
+                    <h6>Registration Close: {{moment(settings.timeClose)}}</h6>
                     <input class="form-control" type="datetime-local" v-model="timeClose"/><br><br>
 
                         <h6>Confirmation Deadline: {{moment(settings.timeConfirm)}}</h6>

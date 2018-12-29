@@ -42,11 +42,13 @@
                                 <router-link to="/register" v-if="settings.registrationOpen">
                                     <button class="generic-button-dark">Register</button>
                                 </router-link>
-
-                                <router-link to="/reset">
-                                    <button class="generic-button-dark">Reset</button>
-                                </router-link>
                             </div>
+
+                            <br>
+
+                            <router-link to="/reset">
+                                <p id="forget-button">Forget your password?</p>
+                            </router-link>
                         </form>
                     </div>
                 </div>

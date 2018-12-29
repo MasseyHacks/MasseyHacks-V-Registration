@@ -14,7 +14,7 @@
             </div>
             <hr>
 
-            <router-link :to="{path: returnPath}"><button class="generic-button-light">Back</button></router-link>
+            <router-link :to="{path: returnPath}"><button class="generic-button-dark">Back</button></router-link>
             <button class=generic-button-dark v-on:click="acceptTeam">Force Admit</button>
             <button class=generic-button-dark v-on:click="rejectTeam">Force Reject</button>
 

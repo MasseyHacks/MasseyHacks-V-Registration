@@ -30,7 +30,7 @@ module.exports = {
                                 swal("Error", "Unable to perform action", "error");
                             }
                             else if (!err && data) {
-                                if (callback) callback();
+                                if (callback) callback(data);
                             }
                         });
 
