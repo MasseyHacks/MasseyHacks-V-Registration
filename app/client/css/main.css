@@ -629,9 +629,10 @@ h4 {
 
 @media (max-width: 992px) {
 
+    /*
     .spacer {
         min-height: calc(50vh - 70px) !important;
-    }
+    }*/
 
     .content-spacer {
         height: 0 !important;
@@ -671,6 +672,10 @@ h4 {
         top: 70px !important;
         width: 100% !important;
         height: calc(100% - 70px) !important;
+    }
+
+    .app-view-logged-in .spacer {
+        min-height: calc(50vh - 70px);
     }
 
     .title-card h2 {
