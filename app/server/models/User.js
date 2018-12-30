@@ -218,7 +218,7 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
     });
 };
 
-schema.statics.validateProfile = function (id, profile, callback) {
+schema.statics.validateProfile = function (profile, callback) {
 
     console.log('Validating profile!')
     try {

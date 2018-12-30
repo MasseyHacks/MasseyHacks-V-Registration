@@ -1,39 +1,89 @@
 <template>
     <div class="main main-login"
-         style="background: rgb(250,250,250);background-size: cover; height: 100vh; width: 100vw;">
+         style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
         <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
             <div class="spacer"></div>
             <div id="login-form-box" class="vertical-centered">
-
                 <div>
 
-                    <img src="https://d1pzqbmq24mwaz.cloudfront.net/static/public/images/home/waterloo-logo.png"
-                         width="50%">
+                    <div class="login-header">
 
-                    <h2 class="subtitle">Register</h2>
+                        <img src="logo/logowide.svg"
+                             style="width: 45%; min-width: 200px">
 
-                    <p v-if="$route.query.message && !error">{{$route.query.message}}</p>
-                    <p v-if="error" class="error">{{error}}</p>
+                        <div v-if="$route.query.redirect && !error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> You need to login first.</p>
+                        </div>
+
+                        <div v-if="$route.query.message && !error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{$route.query.message}}</p>
+                        </div>
+
+                        <div v-if="error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
+                        </div>
+
+                    </div>
 
                     <div id="login-form-elements">
-                        <form @submit.prevent="register">
-                            <input v-model="firstName" placeholder="First Name" autofocus required>
-                            <input v-model="lastName" placeholder="Last Name" required>
-                            <input v-model="email" placeholder="Email" type="email" required>
-                            <input v-model="password1" placeholder="Password" type="password" required>
-                            <input v-model="password2" placeholder="Confirm Password" type="password" required>
+                        <form @submit.prevent="login">
+
+                            <!--
+                            <div id="login-form-elements">
+                                <form @submit.prevent="register">
+                                    <input v-model="firstName" placeholder="First Name" autofocus required>
+                                    <input v-model="lastName" placeholder="Last Name" required>
+                                    <input v-model="email" placeholder="Email" type="email" required>
+                                    <input v-model="password1" placeholder="Password" type="password" required>
+                                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
+                                    <div id="button-row">
+                                        <button type="submit" class="primary-button">register</button>
+                                        <router-link to="/login">
+                                            <button>back</button>
+                                        </router-link>
+                                    </div>
+
+                                    <p v-if="error" class="error">{{error}}</p>
+                                </form>
+                            </div>-->
+
+                            <label>First Name</label>
+                            <input class="form-control" v-model="firstName" placeholder="hacker@hackermail.io" autofocus required>
+
+                            <label>Last Name</label>
+                            <input class="form-control" v-model="lastName" placeholder="hacker@hackermail.io" required>
+
+
+                            <label>Email</label>
+                            <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
+
+                            <label>Password</label>
+                            <input class="form-control" v-model="password1" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+
+                            <label>Confirm Password</label>
+                            <input class="form-control" v-model="password2" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+
+
                             <div id="button-row">
-                                <button type="submit" class="primary-button">register</button>
-                                <router-link to="/login">
-                                    <button>back</button>
+                                <button class="generic-button-dark" type="submit">
+                                    Sign In
+                                </button>
+
+                                <router-link to="/register" v-if="settings.registrationOpen">
+                                    <button class="generic-button-dark">Register</button>
                                 </router-link>
                             </div>
 
-                            <p v-if="error" class="error">{{error}}</p>
+                            <br>
+
+                            <router-link to="/reset">
+                                <p id="forget-button">Forget your password?</p>
+                            </router-link>
                         </form>
                     </div>
                 </div>
             </div>
+
 
             <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
         </div>

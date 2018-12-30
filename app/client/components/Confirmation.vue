@@ -8,6 +8,7 @@
         <div class="spacer"></div>
         <div class="container vertical-centered">
 
+            <!--
             <div v-if="user.status.confirmed" class="ui-card dash-card">
                 <p>You are already confirmed</p>
 
@@ -15,8 +16,9 @@
                 <button v-on:click="submitFile()">Submit</button>
 
                 <img :src="waiver" width="500px">
-            </div>
-            <div v-else-if="user.status.declined" class="ui-card dash-card">
+            </div>-->
+
+            <div v-if="user.status.declined" class="ui-card dash-card">
                 <p>You declined your invitation :(</p>
             </div>
             <div v-else="" class="ui-card dash-card-large">
@@ -160,11 +162,11 @@
                 }
             },
             populateApplication() {
-                if (this.user.status.submittedApplication && this.user.profile.hacker != null) {
+                if (this.user.status.confirmed && this.user.profile.confirmation != null) {
 
                     console.log('adding values');
                     //populate the fields with what they submitted
-                    var userApp = this.user.profile.hacker;
+                    var userApp = this.user.profile.confirmation;
 
                     Object.keys(userApp).forEach((field) => {
 

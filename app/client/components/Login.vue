@@ -54,9 +54,7 @@
                 </div>
             </div>
 
-            <!--
             <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
-            -->
 
         </div>
     </div>

@@ -754,7 +754,7 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
             });
         }
 
-        User.validateProfile(id, profile, function (err, profileValidated) {
+        User.validateProfile(profile, function (err, profileValidated) {
             if (err) {
                 return callback(err);
             }
@@ -1269,36 +1269,55 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
 };
 
 UserController.acceptInvitation = function (executeUser, confirmation, callback) {
-
-    User.findOneAndUpdate({
-        _id: executeUser._id,
-        'permissions.verified': true,
-        'status.rejected': false,
-        'status.admitted': true,
-        'status.declined': false
-    }, {
-        $set: {
-            'status.confirmed': true
-        }
-    }, {
-        new: true
-    }, function (err, user) {
-
-        if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+    User.validateProfile(confirmation, function (err, profileValidated) {
+        if (err) {
+            return callback(err);
         }
 
-        logger.logAction(executeUser._id, user._id, 'Accepted invitation.', 'EXECUTOR IP: ' + executeUser.ip);
+        console.log(err, profileValidated)
 
-        mailer.sendTemplateEmail(user.email, 'confirmationemails', {
-            nickname: user.firstName,
-            dashUrl: process.env.ROOT_URL
+        // Only send email if user hasn't confirmed yet
+        User.findOne({
+                _id: executeUser._id,
+                'permissions.verified': true,
+                'status.rejected': false,
+                'status.admitted': true,
+                'status.declined': false,
+                'status.confirmed': false
+            }, function(err, user) {
+
+                if (user && !err) {
+                    mailer.sendTemplateEmail(user.email, 'confirmationemails', {
+                        nickname: user.firstName,
+                        dashUrl: process.env.ROOT_URL
+                    });
+                }
         });
 
-        return callback(err, user);
+        User.findOneAndUpdate({
+            _id: executeUser._id,
+            'permissions.verified': true,
+            'status.rejected': false,
+            'status.admitted': true,
+            'status.declined': false
+        }, {
+            $set: {
+                'status.confirmed': true,
+                'profile.confirmation': profileValidated
+            }
+        }, {
+            new: true
+        }, function (err, user) {
 
+            if (err || !user) {
+                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            }
+
+            logger.logAction(executeUser._id, user._id, 'Accepted invitation.', 'EXECUTOR IP: ' + executeUser.ip);
+
+            return callback(err, user);
+        });
     });
-
 };
 
 UserController.declineInvitation = function (executeUser, callback) {
