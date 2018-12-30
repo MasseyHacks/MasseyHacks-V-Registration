@@ -638,7 +638,7 @@ UserController.loginWithToken = function (token, callback, ip) {
         if (!user || err) {
 
             if (!!user && user.permissions.checkin) {
-                logger.logAction(user._id, user._id, 'Organized failed token login.', 'IP: ' + ip);
+                logger.logAction(user._id, user._id, 'Organizer failed token login.', 'IP: ' + ip);
             }
 
             return callback(err);
@@ -681,7 +681,7 @@ UserController.loginWithPassword = function (email, password, callback, ip) {
         if (err || !user || user == null || !user.checkPassword(password)) {
 
             if (!!user && user.permissions.checkin) {
-                logger.logAction(user._id, user._id, 'Organized failed password login.', 'IP: ' + ip);
+                logger.logAction(user._id, user._id, 'Organizer failed password login.', 'IP: ' + ip);
             }
 
             return callback({

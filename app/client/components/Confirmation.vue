@@ -346,7 +346,6 @@
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
-                        dangerMode: true,
                         confirmButtonText: 'Yes!'
                     }).then((result) => {
                         if (result.value) {
@@ -381,7 +380,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    dangerMode: true,
+                    focusCancel: true,
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {

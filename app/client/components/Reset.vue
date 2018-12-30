@@ -1,26 +1,33 @@
 <template>
     <div class="app-screen" v-if="!token">
+        <div class="main main-login" style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
+            <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
+                <div class="spacer"></div>
+                <div id="login-form-box" class="vertical-centered">
+                    <h3><i class="fas fa-lock"></i> Request Password Reset</h3>
 
-        <div class="spacer"></div>
-
-        <div class="ui-card dash-card vertical-centered">
-            <h3><i class="fas fa-lock"></i> Request Password Reset</h3>
-
-            <hr>
-
-            <p v-if="error" class="error">{{error}}</p>
-
-            <div id="login-form-elements">
-                <form @submit.prevent="requestReset">
-
-                    <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
-                    <div class="button-row">
-                        <button class="generic-button-dark" type="submit">Request</button>
-                        <router-link to="/login">
-                            <button class="generic-button-dark">Back</button>
-                        </router-link>
+                    <div v-if="error" class="error-banner">
+                        <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
                     </div>
-                </form>
+
+                    <br>
+
+                    <div id="login-form-elements">
+                        <form @submit.prevent="requestReset">
+
+                            <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
+
+                            <br>
+
+                            <div class="button-row">
+                                <button class="generic-button-dark" type="submit">Request</button>
+                                <router-link to="/login">
+                                    <button class="generic-button-dark">Back</button>
+                                </router-link>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

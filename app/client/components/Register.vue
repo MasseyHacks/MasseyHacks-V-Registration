@@ -11,14 +11,6 @@
                         <img src="logo/logowide.svg"
                              style="width: 45%; min-width: 200px">
 
-                        <div v-if="$route.query.redirect && !error" class="error-banner">
-                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> You need to login first.</p>
-                        </div>
-
-                        <div v-if="$route.query.message && !error" class="error-banner">
-                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{$route.query.message}}</p>
-                        </div>
-
                         <div v-if="error" class="error-banner">
                             <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
                         </div>
@@ -26,33 +18,13 @@
                     </div>
 
                     <div id="login-form-elements">
-                        <form @submit.prevent="login">
-
-                            <!--
-                            <div id="login-form-elements">
-                                <form @submit.prevent="register">
-                                    <input v-model="firstName" placeholder="First Name" autofocus required>
-                                    <input v-model="lastName" placeholder="Last Name" required>
-                                    <input v-model="email" placeholder="Email" type="email" required>
-                                    <input v-model="password1" placeholder="Password" type="password" required>
-                                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                                    <div id="button-row">
-                                        <button type="submit" class="primary-button">register</button>
-                                        <router-link to="/login">
-                                            <button>back</button>
-                                        </router-link>
-                                    </div>
-
-                                    <p v-if="error" class="error">{{error}}</p>
-                                </form>
-                            </div>-->
+                        <form @submit.prevent="register">
 
                             <label>First Name</label>
-                            <input class="form-control" v-model="firstName" placeholder="hacker@hackermail.io" autofocus required>
+                            <input class="form-control" v-model="firstName" placeholder="Hax0r" autofocus required>
 
                             <label>Last Name</label>
-                            <input class="form-control" v-model="lastName" placeholder="hacker@hackermail.io" required>
-
+                            <input class="form-control" v-model="lastName" placeholder="M4ast3r" required>
 
                             <label>Email</label>
                             <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
@@ -66,26 +38,20 @@
 
                             <div id="button-row">
                                 <button class="generic-button-dark" type="submit">
-                                    Sign In
+                                    Register
                                 </button>
 
-                                <router-link to="/register" v-if="settings.registrationOpen">
-                                    <button class="generic-button-dark">Register</button>
+                                <router-link to="/login">
+                                    <button class="generic-button-dark">Back</button>
                                 </router-link>
                             </div>
 
                             <br>
 
-                            <router-link to="/reset">
-                                <p id="forget-button">Forget your password?</p>
-                            </router-link>
                         </form>
                     </div>
                 </div>
             </div>
-
-
-            <img src="/img/goose.png" width="200px" height="auto" style="left: 30px; bottom: 30px; position: absolute;">
         </div>
     </div>
 </template>
