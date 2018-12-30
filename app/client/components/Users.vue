@@ -183,6 +183,14 @@
                 }
             });
 
+            if (sessionStorage.searchQuery) {
+                this.searchQuery = JSON.parse(sessionStorage.searchQuery);
+            }
+
+            if (sessionStorage.filters) {
+                this.filters = JSON.parse(sessionStorage.filters);
+            }
+
             ApiService.getUsers({page: this.page, size: 100, filters: this.filters}, (err, data) => {
                 this.loading = false;
 
@@ -348,6 +356,9 @@
 
                 // Update content of advanced query box
                 this.advancedQueryContent = JSON.stringify(this.filters);
+
+                sessionStorage.searchQuery = JSON.stringify(this.searchQuery);
+                sessionStorage.filters = JSON.stringify(this.filters)
 
                 ApiService.getUsers({
                     page: this.page,
