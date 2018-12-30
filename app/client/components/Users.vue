@@ -94,7 +94,7 @@
                             <table class="data-table-generic">
                                 <tr class="table-header">
                                     <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
-                                    <td>V/S/A/C/W</td>
+                                    <td>V/S/A/C/W/R</td>
                                     <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
                                     <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
                                     <td>SCHOOL</td>
@@ -466,7 +466,8 @@
                     'S': '',
                     'A': '',
                     'C': '',
-                    'W': ''
+                    'W': '',
+                    'R': ''
                 };
 
                 if (user.permissions.verified) {
@@ -494,6 +495,13 @@
                 } else {
                     repsonseArray['W'] = '<i class="fas fa-ban"></i>'
                 }
+
+                if (user.status.statusReleased) {
+                    repsonseArray['R'] = '<i class="fas fa-check"></i>'
+                } else {
+                    repsonseArray['R'] = '<i class="fas fa-ban"></i>'
+                }
+
 
                 var finalReponse = '';
 
