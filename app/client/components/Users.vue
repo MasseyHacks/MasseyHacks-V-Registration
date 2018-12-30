@@ -94,7 +94,7 @@
                             <table class="data-table-generic">
                                 <tr class="table-header">
                                     <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
-                                    <td>V/S/A/C/W/R</td>
+                                    <td>V/S/A/R/C/W</td>
                                     <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
                                     <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
                                     <td>SCHOOL</td>
@@ -465,9 +465,9 @@
                     'V': '',
                     'S': '',
                     'A': '',
+                    'R': '',
                     'C': '',
-                    'W': '',
-                    'R': ''
+                    'W': ''
                 };
 
                 if (user.permissions.verified) {
