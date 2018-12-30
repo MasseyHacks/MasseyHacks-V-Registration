@@ -440,6 +440,11 @@ var schema = {
         default: 0
     },
 
+    confirmedTimestamp: {
+        type: Number,
+        default: 0
+    },
+
     passwordLastUpdated: {
         type: Number,
         default: 0

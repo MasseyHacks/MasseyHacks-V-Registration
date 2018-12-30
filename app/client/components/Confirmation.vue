@@ -1,12 +1,14 @@
 <template>
     <div class="app-screen">
 
-        <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
+        <div class="title-card col-md-12" style="position: absolute">
             <h2>CONFIRMATION</h2>
         </div>
 
-        <div class="spacer"></div>
-        <div class="container vertical-centered">
+        <div class="spacer content-spacer">
+
+        </div>
+        <div class="container vertical-centered content-vertical-centered">
 
             <!--
             <div v-if="user.status.confirmed" class="ui-card dash-card">
@@ -19,9 +21,23 @@
             </div>-->
 
             <div v-if="user.status.declined" class="ui-card dash-card">
-                <p>You declined your invitation :(</p>
+                <p style="margin: 0">You declined your invitation :(</p>
             </div>
             <div v-else="" class="ui-card dash-card-large">
+
+                <div style="text-align: left !important;">
+                    <h4 v-if="user.status.confirmed">
+
+                        <b>You confirmed on {{moment(user.confirmedTimestamp)}}</b>
+
+                    </h4>
+                    <h4 v-else="">
+                        <b>You are not confirmed!</b>
+                    </h4>
+                </div>
+
+                <br>
+
 
                 <!-- Copied froom application -->
                 <div class="form-group" v-for="(question,questionName) in applications.confirmation" style="text-align: left">
@@ -35,18 +51,18 @@
                     <br v-if="question.note">
                     <label :for="questionName" v-if="question.note">{{question.note}}</label>
 
-                    <textarea :disabled="editDisabled" class="form-control" v-if="question.questionType == 'fullResponse'"
+                    <textarea class="form-control" v-if="question.questionType == 'fullResponse'"
                               :id="questionName" :maxlength="question.maxlength"></textarea>
-                    <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
+                    <input class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                            :id="questionName" :maxlength="question.maxlength">
                     <div v-if="question.questionType == 'boolean'">
                         <div class="form-check form-check-inline" :id="questionName">
-                            <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
+                            <input class="form-check-input" type="radio" :name="questionName"
                                    :id="questionName + '1' ">
                             <label class="form-check-label" :for="questionName + '1' ">Yes</label>
                         </div>
                         <div class="form-check form-check-inline" :id="questionName">
-                            <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
+                            <input class="form-check-input" type="radio" :name="questionName"
                                    :id="questionName + '0' ">
                             <label class="form-check-label" :for="questionName + '0' ">No</label>
                         </div>
@@ -54,7 +70,7 @@
                     <div v-if="question.questionType == 'multiradio'">
                         <div v-for="option in question.enum.values.split('|')"
                              class="form-check form-check-inline" :id="questionName">
-                            <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
+                            <input class="form-check-input" type="radio" :name="questionName"
                                    :id="questionName + option">
                             <label class="form-check-label" :for="questionName + option">{{option}}</label>
                         </div>
@@ -62,28 +78,38 @@
                     <div v-if="question.questionType == 'multicheck'">
                         <div v-for="option in question.enum.values.split('|')"
                              class="form-check form-check-inline" :id="questionName">
-                            <input :disabled="editDisabled" class="form-check-input" type="checkbox" :name="questionName"
+                            <input class="form-check-input" type="checkbox" :name="questionName"
                                    :id="questionName + option ">
                             <label class="form-check-label" :for="questionName + option ">{{option}}</label>
                         </div>
                     </div>
                     <div v-if="question.questionType == 'contract'" style="margin-left: 20px" >
-                        <input class="form-check-input" :disabled="editDisabled" type="checkbox" :name="questionName" :id="questionName">
+                        <input class="form-check-input" type="checkbox" :name="questionName" :id="questionName">
                         <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
                                                                                   style="color: red">*</span></b></label>
                     </div>
-                    <select  :disabled="editDisabled" v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
+                    <select  v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
                         <option v-for="option in question.enum.values.split('|')">{{option}}
                         </option>
                     </select>
-                    <v-select :disabled="editDisabled" v-if="question.questionType == 'schoolSearch'" :id="questionName"
+                    <v-select v-if="question.questionType == 'schoolSearch'" :id="questionName"
                               :options="settings.schools" :placeholder="schoolPlaceholder" v-model="school"
                               taggable></v-select>
+
+                    <br>
+
                 </div>
 
                 <br>
 
-                <button class="generic-button" v-on:click="acceptInvitation">Confirm</button>
+                <button class="generic-button" v-on:click="acceptInvitation">
+                    <span v-if="user.status.confirmed">
+                        Update Confirmation
+                    </span>
+                    <span v-else>
+                        Confirm
+                    </span>
+                </button>
                 <button class="generic-button" v-on:click="denyInvitation">Decline</button>
             </div>
         </div>
@@ -113,9 +139,6 @@
             vSelect
         },
         beforeMount() {
-
-            this.checkEditState();
-
             console.log(this.settings);
             ApiService.getApplications((err, applications) => {
                 this.loading = false;
@@ -151,15 +174,6 @@
         methods: {
             moment (date) {
                 return moment(date).format('MMMM Do YYYY, h:mm:ss')
-            },
-            checkEditState() {
-                this.editDisabled = this.user.profile.isSigned || !this.settings.registrationOpen;
-
-                if (this.user.profile.isSigned) {
-                    this.editWarning = 'You cannot edit your application as you have already submitted.';
-                } else if (!this.settings.registrationOpen) {
-                    this.editWarning = 'You cannot edit your application as the submission window has passed.';
-                }
             },
             populateApplication() {
                 if (this.user.status.confirmed && this.user.profile.confirmation != null) {
@@ -326,12 +340,13 @@
                     })
                 } else {
                     swal({
-                        title: "Hey!",
+                        title: "Accept Invitation?",
                         text: "Are you sure you want to accept your invitation?",
                         type: "question",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
+                        dangerMode: true,
                         confirmButtonText: 'Yes!'
                     }).then((result) => {
                         if (result.value) {
@@ -360,12 +375,13 @@
             },
             denyInvitation() {
                 swal({
-                    title: "Hey!",
-                    text: "Are you sure you want to decline your invitation?",
+                    title: "Decline invitation?",
+                    html: "Are you sure you want to decline your invitation? You <b>CANNOT</b> undo this action!",
                     type: "question",
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    dangerMode: true,
                     confirmButtonText: 'Yes!'
                 }).then((result) => {
                     if (result.value) {
@@ -380,7 +396,8 @@
                                     text: "You have declined your invitation.",
                                     type: "success"
                                 });
-                                this.user = Session.getUser()
+                                this.user = data
+                                Session.setUser(data)
                             }
 
                         })

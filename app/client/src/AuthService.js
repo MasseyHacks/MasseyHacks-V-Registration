@@ -55,6 +55,7 @@ module.exports = {
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Confirm',
+                    dangerMode: true,
                     footer: 'MasseyHacks | Platform Division',
                 }).then((result) => {
                     if (result.value) {

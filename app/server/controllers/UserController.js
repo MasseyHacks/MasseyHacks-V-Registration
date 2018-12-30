@@ -1303,7 +1303,8 @@ UserController.acceptInvitation = function (executeUser, confirmation, callback)
         }, {
             $set: {
                 'status.confirmed': true,
-                'profile.confirmation': profileValidated
+                'profile.confirmation': profileValidated,
+                'confirmedTimestamp':  Date.now()
             }
         }, {
             new: true
@@ -1327,10 +1328,11 @@ UserController.declineInvitation = function (executeUser, callback) {
         'permissions.verified': true,
         'status.rejected': false,
         'status.admitted': true,
-        'status.confirmed': false
+        'status.declined': false
     }, {
         $set: {
-            'status.declined': true
+            'status.declined': true,
+            'confirmationTimestamp': null
         }
     }, {
         new: true
@@ -1366,6 +1368,7 @@ UserController.resetInvitation = function (adminUser, userID, callback) {
         $set: {
             'status.confirmed': false,
             'status.declined': false,
+            'confirmedTimestamp': null
         }
     }, {
         new: true

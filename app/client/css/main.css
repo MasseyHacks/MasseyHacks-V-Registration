@@ -24,7 +24,7 @@ h2 {
 }
 
 .spacer {
-    height: 50vh; /*- 75px);*/
+    min-height: 50vh; /*- 75px);*/
 }
 
 .hidden {
@@ -410,7 +410,7 @@ h2 {
 .title-card {
     /*    padding: 1%;*/
     text-align: center;
-    margin-top: 50px;
+    margin-top: 15vh !important;
     /*border-bottom: 2px solid black;*/
 }
 
@@ -628,6 +628,25 @@ h4 {
 }
 
 @media (max-width: 992px) {
+
+    .spacer {
+        min-height: calc(50vh - 70px) !important;
+    }
+
+    .content-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+    }
+
+    .content-vertical-centered {
+        transform: translateY(0%);
+    }
+
+    .title-card {
+        margin-top: 50px !important;
+        position: relative !important;
+    }
 
     #button-row button {
         width: 100%;
