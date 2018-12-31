@@ -56,6 +56,9 @@
             const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1]);
 
             console.log(toDepth, fromDepth);
+            if (toDepth === -1) {
+                return next('/organizer/statistics')
+            }
 
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
 
