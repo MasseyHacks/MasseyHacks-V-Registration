@@ -56,24 +56,25 @@
                     </button>
 
                     <br>
+                    <div style="overflow-x: auto; max-width: 100%">
+                        <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                            <tr class="table-header" v-if="comparison">
+                                <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>
+                                <td>CONDITION</td>
+                                <td>DELETE</td>
+                            </tr>
+                            <tr v-for="filter in comparison">
 
-                    <table class="data-table-generic" v-for="(comparison, logical) in filters">
-                        <tr class="table-header" v-if="comparison">
-                            <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>
-                            <td>CONDITION</td>
-                            <td>DELETE</td>
-                        </tr>
-                        <tr v-for="filter in comparison">
-
-                            <td></td>
-                            <td>
-                                {{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}
-                            </td>
-                            <td>
-                                <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
-                            </td>
-                        </tr>
-                    </table>
+                                <td></td>
+                                <td>
+                                    {{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}
+                                </td>
+                                <td>
+                                    <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
                     <div v-if="users.length != 0 && !queryError">
                         <hr>

@@ -30,7 +30,7 @@
                     <div class="card-col">
                         <ul class="custom-ul" style="text-align: left;">
                             <li v-for="(value, key) in atGlance2">
-                                <span v-if="key.toLowerCase() == 'rejected'">
+                                <span v-if="['rejected', 'declined'].indexOf(key.toLowerCase()) != -1">
                                     <i class="fas fa-ban"></i>{{key}} : {{value}}
                                 </span>
                                 <span v-else-if="key.toLowerCase() == 'waitlisted'">
@@ -47,8 +47,9 @@
             <div class="ui-card dash-card-large">
                 <h3>{{statistics.checkedIn}} CHECKED IN</h3>
             </div>
+
             <div class="ui-card dash-card-large">
-                <h3>DEMOGRAPHICS (SUBMITTED)</h3>
+                <h3>DEMOGRAPHICS (SUBMITTED/SAVED)</h3>
                 <hr>
                 <div class="duo-col">
                     <div class="card-col">
@@ -73,11 +74,28 @@
                         <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.demo.nonmassey}}</li>
                     </ul>
                     <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
-                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
-                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XS: {{statistics.shirtSizes.XS}}</li>
+                        <li><i class="fas fa-tshirt"></i>S: {{statistics.shirtSizes.S}}</li>
+                        <li><i class="fas fa-tshirt"></i>M: {{statistics.shirtSizes.M}}</li>
+                        <li><i class="fas fa-tshirt"></i>L: {{statistics.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XL: {{statistics.shirtSizes.XL}}</li>
                     </ul>
                 </div>
+
+                <table class='data-table-generic'>
+                    <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
+                        <td>DIETARY RESTRICTION</td>
+                        <td>COUNT</td>
+                    </tr>
+                    <tr v-for='restriction in statistics.dietaryRestrictions'>
+                        <td>
+                            {{restriction['name']}}
+                        </td>
+                        <td>
+                            {{restriction['count']}}
+                        </td>
+                    </tr>
+                </table>
 
             </div>
             <div class="ui-card dash-card-large">
@@ -108,12 +126,52 @@
                         </li>
                     </ul>
                     <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-tshirt"></i>XS: {{statistics.confirmedStat.shirtSizes.XS}}</li>
                         <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
                         <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
                         <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XL: {{statistics.confirmedStat.shirtSizes.XL}}</li>
                     </ul>
                 </div>
+
+                <table class='data-table-generic'>
+                    <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
+                        <td>DIETARY RESTRICTION</td>
+                        <td>COUNT</td>
+                    </tr>
+                    <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
+                        <td>
+                            {{restriction['name']}}
+                        </td>
+                        <td>
+                            {{restriction['count']}}
+                        </td>
+                    </tr>
+                </table>
+
             </div>
+
+            <div class="ui-card dash-card-large">
+                <h3>REVIEW STATISTICS</h3>
+                <h5>AKA: HAS LOGISTICS BEEN SLACKING OFF?</h5>
+                <hr>
+                <table class='data-table-generic'>
+                    <tr class='table-header'>
+                        <td>NAME</td>
+                        <td># VOTES</td>
+                    </tr>
+                    <tr v-for='human in statistics.votes'>
+                        <td>
+                            <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
+                            <span v-else>{{human[0]}}</span>
+                        </td>
+                        <td>
+                            {{human[1]}} / {{statistics.submitted}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 </template>
@@ -129,7 +187,8 @@
                 loading: true,
                 loadingError: '',
                 statistics: {},
-                atGlanceStuff: {}
+                atGlanceStuff: {},
+                maxVotes: -1
             }
         },
 
@@ -148,6 +207,12 @@
                         this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
+
+                        for (var human in statistics.votes) {
+                            if (statistics.votes[human][1] > this.maxVotes) {
+                                this.maxVotes = statistics.votes[human][1]
+                            }
+                        }
                     }
                 })
             },
@@ -167,7 +232,9 @@
                 return {
                     "Total": this.statistics.total,
                     "Verified": this.statistics.verified,
-                    "Submitted": this.statistics.submitted
+                    "Submitted": this.statistics.submitted,
+                    "Waiver": this.statistics.waiver,
+                    "Status Released": this.statistics.released
                 }
             },
 
@@ -175,7 +242,8 @@
                 return {
                     "Admitted": this.statistics.admitted,
                     "Waitlisted": this.statistics.waitlisted,
-                    "Rejected": this.statistics.rejected
+                    "Rejected": this.statistics.rejected,
+                    "Declined": this.statistics.declined
                 }
             },
 
@@ -191,11 +259,8 @@
 
                 console.log(this.statistics);
 
-                for (var key in this.statistics.demo.gender) {
-                    totalCount += this.statistics.demo.gender[key];
-                    console.log("STUFF");
-                    console.log(this.statistics.demo.gender);
-                }
+                totalCount += this.statistics.total;
+
 
                 console.log(totalCount);
 
@@ -218,14 +283,14 @@
                     "Other": '<i class="fas fa-question-circle"></i>',
                     "No Data": '<i class="fas fa-ban"></i>'
                 };
-                for (var key in this.statistics.confirmedStat.gender) {
-                    totalCount += this.statistics.confirmedStat.gender[key];
-                }
+
+                totalCount += this.statistics.confirmedStat.total;
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.M / totalCount) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.F / totalCount) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.O / totalCount) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.N / totalCount) : 0) + "%";
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Male / totalCount * 100) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Female / totalCount * 100) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Other / totalCount * 100) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 
