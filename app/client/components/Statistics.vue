@@ -209,8 +209,8 @@
                         this.statistics = statistics
 
                         for (var human in statistics.votes) {
-                            if (human[1] > this.maxVotes) {
-                                this.maxVotes = human[1]
+                            if (statistics.votes[human][1] > this.maxVotes) {
+                                this.maxVotes = statistics.votes[human][1]
                             }
                         }
                     }
