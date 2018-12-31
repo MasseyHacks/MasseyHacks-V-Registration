@@ -162,7 +162,8 @@
                     </tr>
                     <tr v-for='human in statistics.votes'>
                         <td>
-                            {{human[0]}}
+                            <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
+                            <span v-else>{{human[0]}}</span>
                         </td>
                         <td>
                             {{human[1]}} / {{statistics.submitted}}
@@ -186,7 +187,8 @@
                 loading: true,
                 loadingError: '',
                 statistics: {},
-                atGlanceStuff: {}
+                atGlanceStuff: {},
+                maxVotes: -1
             }
         },
 
@@ -205,6 +207,12 @@
                         this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
+
+                        for (var human in statistics.votes) {
+                            if (human[1] > this.maxVotes) {
+                                tthis.maxVotes = human[1]
+                            }
+                        }
                     }
                 })
             },
