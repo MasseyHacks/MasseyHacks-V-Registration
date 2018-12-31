@@ -627,12 +627,7 @@ h4 {
     cursor: pointer;
 }
 
-@media (max-width: 992px) {
-
-    /*
-    .spacer {
-        min-height: calc(50vh - 70px) !important;
-    }*/
+@media (max-width: 992px), (max-height: 730px) {
 
     .content-spacer {
         height: 0 !important;
@@ -648,6 +643,11 @@ h4 {
         margin-top: 50px !important;
         position: relative !important;
     }
+
+
+}
+
+@media (max-width: 992px) {
 
     #button-row button {
         width: 100%;
