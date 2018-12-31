@@ -117,7 +117,7 @@ function calculateStats(callback) {
 
                         for (var i = 0; i < user.applicationVotes.length; i++) {
                             if (user.applicationVotes[i] in newStats.votes) {
-                                newStats.votes[user.applicationVotes[i]] += 1;
+                                newStats.votes[user.applicationVotes[i]][1] += 1;
                             }
                         }
 
