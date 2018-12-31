@@ -264,11 +264,18 @@
 
                 console.log(totalCount);
 
+
+                var numMale = this.statistics.demo.gender.Male;
+                var numFemale = this.statistics.demo.gender.Female;
+                var numOther = this.statistics.demo.gender.Other;
+                var numDataless = this.statistics.demo.gender["I prefer not to answer"];
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.ceil(this.statistics.demo.gender.Male / totalCount * 100) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.ceil(this.statistics.demo.gender.Female / totalCount * 100) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.ceil(this.statistics.demo.gender.Other / totalCount * 100) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.ceil(this.statistics.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? Math.ceil(numMale / totalCount * 100) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? Math.ceil(numFemale / totalCount * 100) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? Math.ceil(numOther / totalCount * 100) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? Math.ceil(numDataless / totalCount * 100) : 0)}%)`;
+
                 console.log(returnObject);
                 return returnObject;
 
@@ -286,11 +293,16 @@
 
                 totalCount += this.statistics.confirmedStat.total;
 
+                var numMale = this.statistics.confirmedStat.demo.gender.Male;
+                var numFemale = this.statistics.confirmedStat.demo.gender.Female;
+                var numOther = this.statistics.confirmedStat.demo.gender.Other;
+                var numDataless = this.statistics.confirmedStat.demo.gender["I prefer not to answer"];
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.ceil(this.statistics.confirmedStat.demo.gender.Male / totalCount * 100) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.ceil(this.statistics.confirmedStat.demo.gender.Female / totalCount * 100) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.ceil(this.statistics.confirmedStat.demo.gender.Other / totalCount * 100) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.ceil(this.statistics.confirmedStat.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? Math.ceil(numMale / totalCount * 100) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? Math.ceil(numFemale / totalCount * 100) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? Math.ceil(numOther / totalCount * 100) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? Math.ceil(numDataless / totalCount * 100) : 0)}%)`;
                 console.log(returnObject);
                 return returnObject;
 
