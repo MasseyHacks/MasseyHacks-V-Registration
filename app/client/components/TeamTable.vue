@@ -57,26 +57,28 @@
 
                     <br>
 
-                    <table class="data-table-generic" v-for="(comparison, logical) in filters">
-                        <tr class="table-header">
-                            <td>TYPE</td>
-                            <td>CONDITION</td>
+                    <div style="overflow-x: auto; max-width: 100%">
+                        <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                            <tr class="table-header">
+                                <td>TYPE</td>
+                                <td>CONDITION</td>
 
-                        </tr>
-                        <tr v-for="filter in comparison">
+                            </tr>
+                            <tr v-for="filter in comparison">
 
-                            <td style="letter-spacing: normal !important;">{{logical.slice(1).toUpperCase()}}</td>
+                                <td style="letter-spacing: normal !important;">{{logical.slice(1).toUpperCase()}}</td>
 
-                            <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
+                                <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
 
-                            <td>
-                                <button class="generic-button-dark" style="margin-left: auto; margin-right: auto"
-                                        v-on:click="deleteFilter(logical, filter)">Delete
-                                </button>
-                            </td>
+                                <td>
+                                    <button class="generic-button-dark" style="margin-left: auto; margin-right: auto"
+                                            v-on:click="deleteFilter(logical, filter)">Delete
+                                    </button>
+                                </td>
 
-                        </tr>
-                    </table>
+                            </tr>
+                        </table>
+                    </div>
 
                     <div v-if="teams.length !== 0 && !queryError">
                         <hr>
@@ -93,33 +95,36 @@
                         {{page}} of {{totalPages}} | {{count}} result<span v-if="count > 1">s</span>
 
                         <hr>
-                        <table class="data-table-generic">
-                            <tr class="table-header">
-                                <td><a class="sortable" @click="sortBy('name')">NAME</a></td>
-                                <td>Members</td>
-                                <td>Count</td>
-                                <td>Code</td>
-                            </tr>
-                            <router-link v-for="team in teams"
-                                         :to="{path: '/organizer/teammanage?code='+team.code+'&returnPath=/organizer/teamview', params: {code: team.code}}"
-                                         tag="tr">
-                                <td>
-                                    {{team.name}}
-                                </td>
-                                <td style="align-items: center">
-                                    <router-link v-for="user in team.memberNames"
-                                                 :to="{path: '/organizer/userview?username='+user[1]+'&returnPath=/organizer/teamview', params: {username: user[1]}}">
-                                        {{user[0]}}<br>
-                                    </router-link>
-                                </td>
-                                <td>
-                                    {{team.memberNames.length}}/{{settings.maxMembers}}
-                                </td>
-                                <td>
-                                    {{team.code}}
-                                </td>
-                            </router-link>
-                        </table>
+
+                        <div style="overflow-x: auto; max-width: 100%">
+                            <table class="data-table-generic">
+                                <tr class="table-header">
+                                    <td><a class="sortable" @click="sortBy('name')">NAME</a></td>
+                                    <td>Members</td>
+                                    <td>Count</td>
+                                    <td>Code</td>
+                                </tr>
+                                <router-link v-for="team in teams"
+                                             :to="{path: '/organizer/teammanage?code='+team.code+'&returnPath=/organizer/teamview', params: {code: team.code}}"
+                                             tag="tr">
+                                    <td>
+                                        {{team.name}}
+                                    </td>
+                                    <td style="align-items: center">
+                                        <router-link v-for="user in team.memberNames"
+                                                     :to="{path: '/organizer/userview?username='+user[1]+'&returnPath=/organizer/teamview', params: {username: user[1]}}">
+                                            {{user[0]}}<br>
+                                        </router-link>
+                                    </td>
+                                    <td>
+                                        {{team.memberNames.length}}/{{settings.maxMembers}}
+                                    </td>
+                                    <td>
+                                        {{team.code}}
+                                    </td>
+                                </router-link>
+                            </table>
+                        </div>
                     </div>
                     <p v-else>
                         <br>
