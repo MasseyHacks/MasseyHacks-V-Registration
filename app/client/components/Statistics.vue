@@ -30,7 +30,7 @@
                     <div class="card-col">
                         <ul class="custom-ul" style="text-align: left;">
                             <li v-for="(value, key) in atGlance2">
-                                <span v-if="key.toLowerCase() == 'rejected'">
+                                <span v-if="['rejected', 'declined'].indexOf(key.toLowerCase()) != -1">
                                     <i class="fas fa-ban"></i>{{key}} : {{value}}
                                 </span>
                                 <span v-else-if="key.toLowerCase() == 'waitlisted'">
@@ -47,8 +47,9 @@
             <div class="ui-card dash-card-large">
                 <h3>{{statistics.checkedIn}} CHECKED IN</h3>
             </div>
+
             <div class="ui-card dash-card-large">
-                <h3>DEMOGRAPHICS (SUBMITTED)</h3>
+                <h3>DEMOGRAPHICS (SUBMITTED/SAVED)</h3>
                 <hr>
                 <div class="duo-col">
                     <div class="card-col">
@@ -80,6 +81,21 @@
                         <li><i class="fas fa-tshirt"></i>XL: {{statistics.shirtSizes.XL}}</li>
                     </ul>
                 </div>
+
+                <table class='data-table-generic'>
+                    <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
+                        <td>DIETARY RESTRICTION</td>
+                        <td>COUNT</td>
+                    </tr>
+                    <tr v-for='restriction in statistics.dietaryRestrictions'>
+                        <td>
+                            {{restriction['name']}}
+                        </td>
+                        <td>
+                            {{restriction['count']}}
+                        </td>
+                    </tr>
+                </table>
 
             </div>
             <div class="ui-card dash-card-large">
@@ -117,7 +133,44 @@
                         <li><i class="fas fa-tshirt"></i>XL: {{statistics.confirmedStat.shirtSizes.XL}}</li>
                     </ul>
                 </div>
+
+                <table class='data-table-generic'>
+                    <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
+                        <td>DIETARY RESTRICTION</td>
+                        <td>COUNT</td>
+                    </tr>
+                    <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
+                        <td>
+                            {{restriction['name']}}
+                        </td>
+                        <td>
+                            {{restriction['count']}}
+                        </td>
+                    </tr>
+                </table>
+
             </div>
+
+            <div class="ui-card dash-card-large">
+                <h3>REVIEW STATISTICS</h3>
+                <h5>AKA: HAS LOGISTICS BEEN SLACKING OFF?</h5>
+                <hr>
+                <table class='data-table-generic'>
+                    <tr class='table-header'>
+                        <td>NAME</td>
+                        <td># VOTES</td>
+                    </tr>
+                    <tr v-for='human in statistics.votes'>
+                        <td>
+                            {{human[0]}}
+                        </td>
+                        <td>
+                            {{human[1]}} / {{statistics.submitted}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 </template>
@@ -171,7 +224,9 @@
                 return {
                     "Total": this.statistics.total,
                     "Verified": this.statistics.verified,
-                    "Submitted": this.statistics.submitted
+                    "Submitted": this.statistics.submitted,
+                    "Waiver": this.statistics.waiver,
+                    "Status Released": this.statistics.released
                 }
             },
 
@@ -179,7 +234,8 @@
                 return {
                     "Admitted": this.statistics.admitted,
                     "Waitlisted": this.statistics.waitlisted,
-                    "Rejected": this.statistics.rejected
+                    "Rejected": this.statistics.rejected,
+                    "Declined": this.statistics.declined
                 }
             },
 

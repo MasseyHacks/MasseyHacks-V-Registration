@@ -14,8 +14,7 @@ function calculateStats(callback) {
         lastUpdated: 0,
 
         total: 0,
-        wave: 0,
-        review: [['Reviewer', 'Accept/Reject']],
+        votes: {},
 
         demo: {
             gender: {
@@ -85,13 +84,13 @@ function calculateStats(callback) {
         waiver: 0,
         rejected: 0,
         checkedIn: 0,
+        released: 0,
         bus: 0,
 
         dietaryRestrictions: {}
 
     };
 
-    var votes = {};
 
     User
         .find({'permissions.reviewer':true, 'permissions.developer':false})
@@ -101,7 +100,7 @@ function calculateStats(callback) {
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                votes[adminUsers[i].email] = [adminUsers[i].fullName, 0];
+                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0];
             }
 
 
@@ -112,14 +111,13 @@ function calculateStats(callback) {
                         throw err;
                     }
 
-
                     newStats.total = users.length;
 
                     async.each(users, function(user, callback){
 
                         for (var i = 0; i < user.applicationVotes.length; i++) {
-                            if (user.applicationVotes[i] in votes) {
-                                votes[user.applicationVotes[i]] += 1;
+                            if (user.applicationVotes[i] in newStats.votes) {
+                                newStats.votes[user.applicationVotes[i]] += 1;
                             }
                         }
 
@@ -147,13 +145,20 @@ function calculateStats(callback) {
                         // Count checked in
                         newStats.checkedIn += user.status.checkedIn ? 1 : 0;
 
+                        // Count released
+                        newStats.released += user.status.released ? 1 : 0;
 
                         if (user.status.submittedApplication) {
 
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
 
                             // Add to the gender
-                            newStats.demo.gender[user.profile.hacker.gender] += 1;
+                            if (user.profile.hacker.gender) {
+                                newStats.demo.gender[user.profile.hacker.gender] += 1;
+                            } else {
+                                //"I prefer not to answer"
+                                newStats.demo.gender["I prefer not to answer"] += 1;
+                            }
 
                             if (user.profile.hacker.grade) {
                                 newStats.demo.grade[user.profile.hacker.grade] += 1;
@@ -189,7 +194,12 @@ function calculateStats(callback) {
                             newStats.confirmedStat.bus += user.profile.confirmation.bus ? 1 : 0;
 
                             // Add to the gender
-                            newStats.confirmedStat.demo.gender[user.profile.gender] += 1;
+                            if (user.profile.hacker.gender) {
+                                newStats.confirmedStat.demo.gender[user.profile.hacker.gender] += 1;
+                            } else {
+                                //"I prefer not to answer"
+                                newStats.confirmedStat.demo.gender["I prefer not to answer"] += 1;
+                            }
 
                             if (user.profile.hacker.grade){
                                 newStats.confirmedStat.demo.grade[user.profile.hacker.grade] += 1;
@@ -223,18 +233,6 @@ function calculateStats(callback) {
 
                         callback(); // let async know we've finished
                     }, function() {
-
-                        for (var voter in votes) {
-                            var line = votes[voter];
-
-                            for (var i = 1; i < line.length; i++) {
-                                line[i] = line[i] + '/' + newStats.submitted;
-                            }
-
-                            //console.log(line);
-
-                            newStats.review.push(line);
-                        }
                         //console.log(newStats.review);
 
                         // Transform dietary restrictions into a series of objects
