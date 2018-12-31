@@ -11,6 +11,7 @@
 * {
     font-family: "Avenir", sans-serif;
     font-weight: normal;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 h2 {
