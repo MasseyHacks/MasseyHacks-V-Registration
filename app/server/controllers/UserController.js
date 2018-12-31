@@ -931,26 +931,6 @@ UserController.voteRejectUser = function (adminUser, userID, callback) {
     });
 };
 
-function updateStatus(id, status) {
-    User.findOneAndUpdate({
-            '_id': id,
-            'permissions.verified': true,
-            'status.rejected': false,
-            'status.admitted': false,
-        },
-        {
-            $set: {
-                'status': status
-            }
-        },
-        {
-            new: true
-        },
-        function (err, user) {
-            console.log(err, user)
-        });
-}
-
 UserController.checkAdmissionStatus = function (id) {
 
     User.getByID(id, function (err, user) {
@@ -964,13 +944,19 @@ UserController.checkAdmissionStatus = function (id) {
 
             if (!user.status.admitted && !user.status.rejected && !user.status.waitlisted) {
                 if (user.applicationReject.length >= 3) {
-                    user.status.admitted = false;
-                    user.status.rejected = true;
-                    console.log('Rejected user');
+                    //user.status.admitted = false;
+                    //user.status.rejected = true;
+                    //console.log('Rejected user');
 
-                    logger.logAction(-1, user._id, 'Soft rejected user.');
+                    //logger.logAction(-1, user._id, 'Soft rejected user.');
 
-                    updateStatus(id, user.status);
+                    UserController.rejectUser({_id: -1}, user._id, function(err, user) {
+
+                        console.log(err, user)
+
+                    })
+
+                    //updateStatus(id, user.status);
 
                 } else {
                     console.log(user);
@@ -994,18 +980,29 @@ UserController.checkAdmissionStatus = function (id) {
                                 }
 
                                 if (count < settings.maxParticipants) {
+
+                                    /*
                                     user.status.admitted = true;
                                     user.status.rejected = false;
                                     user.status.admittedBy = 'MasseyHacks Admission Authority';
-                                    console.log('Admitted user');
+                                    console.log('Admitted user');*/
 
-                                    logger.logAction(-1, user._id, 'Accepted user.');
+                                    UserController.admitUser({_id: -1, email: 'MasseyHacks Admission Authority'}, user._id, function(err, user) {
+                                        console.log(err, user);
+                                    })
+
+                                    //logger.logAction(-1, user._id, 'Accepted user.');
                                 } else {
+                                    /*
                                     user.status.waitlisted = true;
                                     user.status.rejected = false;
                                     console.log('Waitlisted User');
 
-                                    logger.logAction(-1, user._id, 'Waitlisted user.');
+                                    logger.logAction(-1, user._id, 'Waitlisted user.');*/
+
+                                    UserController.waitlistUser({_id: -1}, user._id, function(err, user) {
+                                        console.log(err, user);
+                                    })
                                 }
 
                                 updateStatus(id, user.status)
@@ -1112,7 +1109,8 @@ UserController.admitUser = function (adminUser, userID, callback) {
             _id: userID,
             'permissions.verified': true,
             'status.rejected': false,
-            'status.admitted': false
+            'status.admitted': false,
+            'status.waitlisted': false
         }, {
             $set: {
                 'status.admitted': true,
@@ -1120,7 +1118,7 @@ UserController.admitUser = function (adminUser, userID, callback) {
                 'status.waitlisted': false,
                 'statusReleased': false,
                 'status.admittedBy': adminUser.email,
-                'status.confirmBy': settings.timeConfirm
+                'status.confirmBy': Date.now() > settings.timeConfirm ? Date.now() + 604800000 : settings.timeConfirm
             }
         }, {
             new: true
@@ -1155,12 +1153,53 @@ UserController.rejectUser = function (adminUser, userID, callback) {
         _id: userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.admitted': false
+        'status.admitted': false,
+        'status.waitlisted': false
     }, {
         $set: {
             'status.admitted': false,
             'status.rejected': true,
             'status.waitlisted': false,
+            'statusReleased': false
+        }
+    }, {
+        new: true
+    }, function (err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
+
+        mailer.queueEmail(user.email, 'rejectionemails', function (err) {
+            if (err) {
+                return callback(err);
+            }
+        });
+
+        return callback(err, user);
+
+    });
+};
+
+UserController.waitlistUser = function (adminUser, userID, callback) {
+
+    if (!adminUser || !userID) {
+        return callback({error: 'Invalid arguments'});
+    }
+
+    User.findOneAndUpdate({
+        _id: userID,
+        'permissions.verified': true,
+        'status.rejected': false,
+        'status.admitted': false,
+        'status.waitlisted': false
+    }, {
+        $set: {
+            'status.admitted': false,
+            'status.rejected': false,
+            'status.waitlisted': true,
             'statusReleased': false
         }
     }, {
@@ -1317,7 +1356,7 @@ UserController.acceptInvitation = function (executeUser, confirmation, callback)
                 return callback(err ? err : {error: 'Unable to perform action.', code: 500})
             }
 
-            logger.logAction(executeUser._id, user._id, 'Accepted invitation.', 'EXECUTOR IP: ' + executeUser.ip);
+            logger.logAction(executeUser._id, user._id, 'Updated confirmation.', 'EXECUTOR IP: ' + executeUser.ip + ' | ' + JSON.stringify(profileValidated));
 
             return callback(err, user);
         });

@@ -52,6 +52,7 @@
                 <button class="generic-button-dark" v-on:click="editUser">Edit User</button>
                 <button class="generic-button-dark" v-on:click="forceAdmit">Force Admit</button>
                 <button class="generic-button-dark" v-on:click="forceReject">Force Reject</button>
+                <button class="generic-button-dark" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
 
                 <hr>
 
@@ -65,6 +66,7 @@
                 </button>
                 <button class="generic-button-dark" v-on:click="changePassword">Change Password</button>
                 <button class="generic-button-dark" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+
                 <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
                 <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
             </div>
@@ -133,6 +135,21 @@
                     ApiService.activate(this.userObj.fullName, this.userID, (data) => {
                         this.userObj = data;
                         swal('Success!', 'Successfully activated user', 'success');
+                    });
+                }
+
+            },
+            toggleStatus: function() {
+
+                if (this.userObj.status.statusReleased) {
+                    ApiService.hideStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully hid status for user', 'success');
+                    });
+                } else {
+                    ApiService.releaseStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully released status for user', 'success');
                     });
                 }
 

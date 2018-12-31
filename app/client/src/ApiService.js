@@ -5,6 +5,77 @@ import swal from 'sweetalert2'
 
 module.exports = {
 
+    hideStatus(userName, userID, callback) {
+        swal({
+            title: "Hide status for user?",
+            html: '<span style="color:#FF0000; font-weight:bold;">HIDE STATUS</span> for '+ userName +
+            '? THEY WILL NOT BE ABLE TO SEE THEIR ADMISSION STATUS!',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, hide status',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+
+                AuthService.skillTest(() => {
+                    console.log(userOK);
+                    if (userOK) {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/hideStatus', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
+
+                    }
+                });
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
+    releaseStatus(userName, userID, callback) {
+        swal({
+            title: "Release status?",
+            html: '<span style="color:#00FF00; font-weight:bold;">RELEASE STATUS</span> FOR '+ userName +
+            '? THEY WILL SEE THEIR ADMISSION STATE!',
+            type: "warning",
+            showConfirmButton: true,
+            confirmButtonText: 'Yes, release',
+            confirmButtonColor: '#d33',
+            showCancelButton: true,
+            focusCancel: true,
+            showLoaderOnConfirm: true,
+            preConfirm: (userOK) => {
+                console.log(userOK);
+                if(userOK){
+
+                    AuthService.skillTest(() => {
+                        //register the vote
+                        AuthService.sendRequest('POST', '/api/releaseStatus', {
+                            userID: userID
+                        }, (err, data) => {
+                            if (err) {
+                                swal("Error", "Unable to perform action", "error");
+                            }
+                            else if (!err && data) {
+                                if (callback) callback(data);
+                            }
+                        });
+                    });
+
+                }
+            },
+            allowOutsideClick: () => !swal.isLoading()
+        })
+    },
+
     deactivate(userName, userID, callback) {
         swal({
             title: "Deactivate account?",
