@@ -193,12 +193,13 @@ UserController.getByQuery = function (adminUser, query, callback) {
                             console.log(err);
                             return callback({error: err})
                         }
+
+                        return callback(null, {
+                            users: users,
+                            totalPages: Math.ceil(count / size),
+                            count: count
+                        })
                     });
-                    return callback(null, {
-                        users: users,
-                        totalPages: Math.ceil(count / size),
-                        count: count
-                    })
                 }
             });
     });
