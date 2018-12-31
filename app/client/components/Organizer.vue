@@ -52,6 +52,10 @@
             console.log('dasd', toPath, fromPath);
             console.log('Hello there');
 
+            if (toPath[toPath.length - 1].indexOf('?') != -1) {
+                toPath[toPath.length - 1] = toPath[toPath.length - 1].split('?')[0]
+            }
+
             const toDepth = pageLayout.indexOf(toPath[toPath.length - 1]);
             const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1]);
 
