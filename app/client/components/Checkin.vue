@@ -39,8 +39,8 @@
                                     <td><span v-html='userWaiverConverter(users[i-1])'></span></td>
                                     <td><span v-html='userCheckinConverter(users[i-1])'></span></td>
                                     <td class='email-col'>{{users[i-1].email}}</td>
-                                    <td>N/A</td>
-                                    <td>N/A</td>
+                                    <td>{{users[i-1].school}}</td>
+                                    <td>{{users[i-1].grade}}</td>
                                     <td>
                                         <button class='generic-button-dark' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>
                                             WAIVER-IN
