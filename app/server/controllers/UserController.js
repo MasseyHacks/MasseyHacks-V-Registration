@@ -185,8 +185,10 @@ UserController.getByQuery = function (adminUser, query, callback) {
                 }
 
                 if (users) {
-                    async.eachOfSeries(users, (user, i) => {
+                    async.eachOfSeries(users, (user, i, cb) => {
                         users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
+
+                        return cb()
                     }, (err) => {
                         console.log("FINISHED ASYNC USER FIND");
                         if (err) {
