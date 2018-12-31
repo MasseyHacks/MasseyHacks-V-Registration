@@ -271,10 +271,10 @@
                 var numDataless = this.statistics.demo.gender["I prefer not to answer"];
 
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? Math.ceil(numMale / totalCount * 100) : 0)}%)`;
-                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? Math.ceil(numFemale / totalCount * 100) : 0)}%)`;
-                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? Math.ceil(numOther / totalCount * 100) : 0)}%)`;
-                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? Math.ceil(numDataless / totalCount * 100) : 0)}%)`;
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
 
                 console.log(returnObject);
                 return returnObject;
@@ -299,10 +299,10 @@
                 var numDataless = this.statistics.confirmedStat.demo.gender["I prefer not to answer"];
 
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? Math.ceil(numMale / totalCount * 100) : 0)}%)`;
-                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? Math.ceil(numFemale / totalCount * 100) : 0)}%)`;
-                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? Math.ceil(numOther / totalCount * 100) : 0)}%)`;
-                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? Math.ceil(numDataless / totalCount * 100) : 0)}%)`;
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
                 console.log(returnObject);
                 return returnObject;
 
