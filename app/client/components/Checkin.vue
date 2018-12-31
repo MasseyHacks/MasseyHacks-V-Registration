@@ -82,7 +82,8 @@
                             'permissions.checkin': 'false',
                             'permissions.reviewer': 'false',
                             'permissions.admin': 'false',
-                            'status.confirmed': 'true'
+                            'status.confirmed': 'true',
+                            'status.declined': 'false'
                         }
                     ]
                 },

@@ -1335,7 +1335,8 @@ UserController.declineInvitation = function (executeUser, callback) {
     }, {
         $set: {
             'status.declined': true,
-            'confirmationTimestamp': null
+            'confirmationTimestamp': null,
+            'status.confirmed': false
         }
     }, {
         new: true
