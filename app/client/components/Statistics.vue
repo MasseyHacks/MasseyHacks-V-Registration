@@ -210,7 +210,7 @@
 
                         for (var human in statistics.votes) {
                             if (human[1] > this.maxVotes) {
-                                tthis.maxVotes = human[1]
+                                this.maxVotes = human[1]
                             }
                         }
                     }
