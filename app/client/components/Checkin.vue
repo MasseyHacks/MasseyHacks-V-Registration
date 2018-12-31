@@ -21,7 +21,7 @@
                         <hr>
                         <button class='generic-button-dark' @click='refresh()'>Refresh Table</button>
                         <hr>
-                        <div v-if='users.length != 0 && !queryError'>
+                        <div v-if='users.length != 0 && !queryError' style="overflow-x: auto; max-width: 100%">
                             <table class='data-table-generic'>
                                 <tr class='table-header'>
                                     <td>NAME</td>
