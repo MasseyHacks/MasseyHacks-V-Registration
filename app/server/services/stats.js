@@ -67,9 +67,11 @@ function calculateStats(callback) {
             },
 
             shirtSizes: {
+                'XS':0,
                 'S': 0,
                 'M': 0,
-                'L': 0
+                'L': 0,
+                'XL':0,
             },
             dietaryRestrictions: {}
         },
@@ -99,7 +101,7 @@ function calculateStats(callback) {
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                votes[adminUsers[i].email] = [adminUsers[i].profile.name ? adminUsers[i].profile.name : adminUsers[i].nickname, 0, 0, 0, 0];
+                votes[adminUsers[i].email] = [adminUsers[i].fullName, 0];
             }
 
 
@@ -114,13 +116,13 @@ function calculateStats(callback) {
                     newStats.total = users.length;
 
                     async.each(users, function(user, callback){
-                        /*
-                        for (var i = 0; i < user.votedBy.length; i++) {
-                            if (user.votedBy[i] in votes) {
-                                votes[user.votedBy[i]][user.wave] += 1;
+
+                        for (var i = 0; i < user.applicationVotes.length; i++) {
+                            if (user.applicationVotes[i] in votes) {
+                                votes[user.applicationVotes[i]] += 1;
                             }
                         }
-                        */
+
                         // Count verified
                         newStats.verified += user.permissions.verified ? 1 : 0;
 

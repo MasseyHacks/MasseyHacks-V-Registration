@@ -73,9 +73,11 @@
                         <li><i class="fas fa-globe-americas"></i>Non-Massey: {{statistics.demo.nonmassey}}</li>
                     </ul>
                     <ul class="custom-ul" style="text-align: left;">
-                        <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
-                        <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
-                        <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XS: {{statistics.shirtSizes.XS}}</li>
+                        <li><i class="fas fa-tshirt"></i>S: {{statistics.shirtSizes.S}}</li>
+                        <li><i class="fas fa-tshirt"></i>M: {{statistics.shirtSizes.M}}</li>
+                        <li><i class="fas fa-tshirt"></i>L: {{statistics.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XL: {{statistics.shirtSizes.XL}}</li>
                     </ul>
                 </div>
 
@@ -108,9 +110,11 @@
                         </li>
                     </ul>
                     <ul class="custom-ul" style="text-align: left;">
+                        <li><i class="fas fa-tshirt"></i>XS: {{statistics.confirmedStat.shirtSizes.XS}}</li>
                         <li><i class="fas fa-tshirt"></i>S: {{statistics.confirmedStat.shirtSizes.S}}</li>
                         <li><i class="fas fa-tshirt"></i>M: {{statistics.confirmedStat.shirtSizes.M}}</li>
                         <li><i class="fas fa-tshirt"></i>L: {{statistics.confirmedStat.shirtSizes.L}}</li>
+                        <li><i class="fas fa-tshirt"></i>XL: {{statistics.confirmedStat.shirtSizes.XL}}</li>
                     </ul>
                 </div>
             </div>
@@ -191,11 +195,8 @@
 
                 console.log(this.statistics);
 
-                for (var key in this.statistics.demo.gender) {
-                    totalCount += this.statistics.demo.gender[key];
-                    console.log("STUFF");
-                    console.log(this.statistics.demo.gender);
-                }
+                totalCount += this.statistics.total;
+
 
                 console.log(totalCount);
 
@@ -218,14 +219,14 @@
                     "Other": '<i class="fas fa-question-circle"></i>',
                     "No Data": '<i class="fas fa-ban"></i>'
                 };
-                for (var key in this.statistics.confirmedStat.gender) {
-                    totalCount += this.statistics.confirmedStat.gender[key];
-                }
+
+                totalCount += this.statistics.confirmedStat.total;
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.M / totalCount) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.F / totalCount) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.O / totalCount) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.gender.N / totalCount) : 0) + "%";
+                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Male / totalCount * 100) : 0) + "%";
+                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Female / totalCount * 100) : 0) + "%";
+                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Other / totalCount * 100) : 0) + "%";
+                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
                 console.log(returnObject);
                 return returnObject;
 
