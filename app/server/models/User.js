@@ -416,7 +416,9 @@ var filterSensitive = function (user, permission, page) {
                 name: user.fullName,
                 waiver: user.status.waiver,
                 checked: user.status.checkedIn,
-                email: user.email
+                email: user.email,
+                school: user.profile.hacker.school,
+                grade: user.profile.hacker.grade
             }
         }
 
