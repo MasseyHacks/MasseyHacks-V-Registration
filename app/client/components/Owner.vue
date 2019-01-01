@@ -22,16 +22,16 @@
                     <input class="form-control" type="datetime-local" v-model="timeConfirm"/><br><br>
 
 
-                    <button class="generic-button-dark" @click="changeTimes">Update time</button>
+                    <button class="generic-button-dark less-wide" @click="changeTimes">Update time</button>
                 </div>
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Participant Limit</h3>
                     <hr>
                     <p>
-                        <input type="number" v-model="maxParticipants" style="margin-bottom: 10px;">
+                        <input type="number" class="form-control" v-model="maxParticipants" style="margin-bottom: 10px;">
                         <br>
-                        <button class="generic-button-dark" @click="changeLimit">Update Participant Limit</button>
+                        <button class="generic-button-dark less-wide" @click="changeLimit">Update Participant Limit</button>
                     </p>
                 </div>
 
@@ -42,37 +42,37 @@
                     {{pendingSchools.length ? pendingSchools.length : 'No'}} schools pending review
 
                     <br>
-                    <button class="generic-button-dark" v-on:click="reviewSchools" :disabled="!pendingSchools.length">Review</button>
+                    <button class="generic-button-dark less-wide" v-on:click="reviewSchools" :disabled="!pendingSchools.length">Review</button>
                 </div>
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Global User Management</h3>
                     <hr>
 
-                    <button class="generic-button-dark" v-on:click="releaseAll">Release all status</button>
-                    <button class="generic-button-dark" v-on:click="releaseAccepted">Release all accepted</button>
-                    <button class="generic-button-dark" v-on:click="releaseWaitlisted">Release all waitlisted</button>
-                    <button class="generic-button-dark" v-on:click="releaseRejected">Release all rejected</button>
+                    <button class="generic-button-dark less-wide" v-on:click="releaseAll">Release all status</button>
+                    <button class="generic-button-dark less-wide" v-on:click="releaseAccepted">Release all accepted</button>
+                    <button class="generic-button-dark less-wide" v-on:click="releaseWaitlisted">Release all waitlisted</button>
+                    <button class="generic-button-dark less-wide" v-on:click="releaseRejected">Release all rejected</button>
 
                     <hr>
 
-                    <button class="generic-button-dark" v-on:click="rejectNoState">Reject no state</button>
-                    <button class="generic-button-dark" v-on:click="hideAll">Hide all status</button>
-                    <button class="generic-button-dark" v-on:click="flushAllEmails">Flush global email queue</button>
+                    <button class="generic-button-dark less-wide" v-on:click="rejectNoState">Reject no state</button>
+                    <button class="generic-button-dark less-wide" v-on:click="hideAll">Hide all status</button>
+                    <button class="generic-button-dark less-wide" v-on:click="flushAllEmails">Flush global email queue</button>
                 </div>
 
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Email Templates</h3>
                     <hr>
-                    <select style="margin-bottom: 10px;" v-model="selected">
+                    <select class="form-control" style="margin-bottom: 10px;" v-model="selected">
                         <option disabled value="">Select a template</option>
                         <option v-for="option in templateOptions.length">{{templateOptions[option-1]}}</option>
                     </select>
 
                     <br>
 
-                    <button class="generic-button-dark" @click="getTemplate">Get Template</button>
+                    <button class="generic-button-dark less-wide" @click="getTemplate">Get Template</button>
                 </div>
 
                 <div class="ui-card" id="dash-card-offset dash-card dash-card-large" style="margin-bottom: 50px" :style="{display: emailHTML?'block':'none'}">
@@ -87,7 +87,7 @@
                     <div id="email-editor">
                     </div>
 
-                    <button class="generic-button-dark" @click="saveTemplate">Save</button>
+                    <button class="generic-button-dark less-wide" @click="saveTemplate">Save</button>
                 </div>
             </div>
         </div>

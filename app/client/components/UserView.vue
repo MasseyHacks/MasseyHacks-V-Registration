@@ -41,34 +41,34 @@
                 <!-- DELETE USER -->
 
                 <router-link :to="{path: returnPath}">
-                    <button class="generic-button-dark">Back</button>
+                    <button class="generic-button-dark less-wide">Back</button>
                 </router-link>
 
-                <button class="generic-button-dark" v-on:click="voteAdmit">Vote Admit</button>
-                <button class="generic-button-dark" v-on:click="voteReject">Vote Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="voteAdmit">Vote Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="voteReject">Vote Reject</button>
 
                 <hr>
 
-                <button class="generic-button-dark" v-on:click="editUser">Edit User</button>
-                <button class="generic-button-dark" v-on:click="forceAdmit">Force Admit</button>
-                <button class="generic-button-dark" v-on:click="forceReject">Force Reject</button>
-                <button class="generic-button-dark" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
+                <button class="generic-button-dark less-wide" v-on:click="editUser">Edit User</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceAdmit">Force Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceReject">Force Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
 
                 <hr>
 
-                <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admit</button>
-                <button class="generic-button-dark" v-on:click="resetInvitation">Reset Invitation</button>
-                <button class="generic-button-dark" v-on:click="resetVotes">Reset Votes</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetAdmissionState">Reset Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetInvitation">Reset Invitation</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetVotes">Reset Votes</button>
 
                 <hr>
 
-                <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
+                <button class="generic-button-dark less-wide" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
                 </button>
-                <button class="generic-button-dark" v-on:click="changePassword">Change Password</button>
-                <button class="generic-button-dark" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+                <button class="generic-button-dark less-wide" v-on:click="changePassword">Change Password</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
 
-                <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
-                <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
+                <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue</button>
+                <button class="generic-button-dark less-wide" v-on:click="deleteUser">Delete User</button>
             </div>
         </div>
     </div>

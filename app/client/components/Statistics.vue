@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div v-if="loading" class="organizer-card">
             <div class="ui-card dash-card-large">
                 Loading...
@@ -15,7 +15,7 @@
                 <h3>AT A GLANCE:</h3>
                 <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                 <button v-on:click="refreshStatistics" v-if="user.permissions.developer"
-                        class="generic-button-dark">Refresh
+                        class="generic-button-dark less-wide">Refresh
                 </button>
                 <br>
                 <hr>

@@ -387,7 +387,8 @@ h2 {
 .organizer-card {
     margin-left: auto;
     margin-right: auto;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
     width: 90%;
     text-align: center;
 }
@@ -643,11 +644,42 @@ h4 {
         margin-top: 50px !important;
         position: relative !important;
     }
+}
 
+@media (max-width: 500px) {
+    .less-wide {
+        width: 100%;
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+}
 
+@media (max-width: 720px) {
+    .wide {
+        width: 100%;
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .filterEntry > .first {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    .filterEntry > .last {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 @media (max-width: 992px) {
+
+    .organizer-card {
+        padding-left: 0;
+        padding-right: 0;
+
+        width: 100%;
+    }
 
     #button-row button {
         width: 100%;

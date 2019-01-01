@@ -34,9 +34,15 @@
                             Remote Version: {{currentRemoteVersion}}
                         </span>
                     </p>
-
-
                 </div>
+
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
+                    <h3>SUDO MODE</h3>
+                    <hr>
+                    Developers are busy people, okay?<br><br>
+                    <button class="generic-button-dark less-wide" @click="sudoMode">Enter sudo mode</button>
+                </div>
+
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>SERVER LOG</h3>
                     <hr>
@@ -109,21 +115,13 @@
                     <h3>QR CODES</h3>
                     <h5><b>Warning:</b> You are about to reveal confidential information</h5>
                     <hr>
-                    <select style="margin-bottom: 10px;" v-model="selected">
+                    <select style="margin-bottom: 10px;" class="form-control" v-model="selected">
                         <option disabled value="">Select an Admin</option>
                         <option v-for="option in dropdown.length">{{dropdown[option-1]}}</option>
                     </select>
                     <hr>
                     <img v-bind:src="Admins[selected]" v-if="selected">
                 </div>
-
-                <div class="ui-card dash-card-offset dash-card dash-card-large">
-                    <h3>SUDO MODE</h3>
-                    <hr>
-                    Developers are busy people, okay?<br>
-                    <button class="generic-button-dark" @click="sudoMode">Enter sudo mode</button>
-                </div>
-
 
             </div>
         </div>

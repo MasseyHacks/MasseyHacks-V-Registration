@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div class="organizer-card">
             <div class="ui-card dash-card-large" id="users-table">
                 <div v-if="loading">
