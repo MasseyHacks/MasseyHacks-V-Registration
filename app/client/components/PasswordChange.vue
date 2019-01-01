@@ -1,8 +1,8 @@
 <template>
     <div class="app-screen">
-        <div class="spacer"></div>
+        <div class="spacer content-spacer"></div>
 
-        <div class="ui-card dash-card vertical-centered">
+        <div class="ui-card dash-card vertical-centered content-vertical-centered" style="margin-top: 10px; margin-bottom: 10px">
             <h3><i class="fas fa-lock"></i> Change Password</h3>
 
             <hr>

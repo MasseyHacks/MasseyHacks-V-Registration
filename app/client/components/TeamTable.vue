@@ -81,11 +81,11 @@
 
                     <div v-if="teams.length !== 0 && !queryError">
                         <hr>
-                        <button class="generic-button-dark" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-dark" :disabled="page == 1" v-on:click="switchPage(page - 1)">
+                        <button class="generic-button-dark wide" v-on:click="exportUsersCSV">Export</button>
+                        <button class="generic-button-dark wide" :disabled="page == 1" v-on:click="switchPage(page - 1)">
                             Previous
                         </button>
-                        <button class="generic-button-dark" :disabled="page == totalPages"
+                        <button class="generic-button-dark wide" :disabled="page == totalPages"
                                 v-on:click="switchPage(page + 1)">Next
                         </button>
 

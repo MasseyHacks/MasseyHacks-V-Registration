@@ -7,7 +7,7 @@
 
         <div class="spacer content-spacer">
         </div>
-        <div class="container vertical-centered content-vertical-centered">
+        <div class="container vertical-centered content-vertical-centered" style="margin-bottom: 10px">
             <div class="ui-card dash-card dash-card-medium">
                 <div v-if="loading">
                     <p>Loading...</p>
@@ -70,7 +70,7 @@
                     <br>
 
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="leaveTeam">Leave</button>
+                        <button class="generic-button-dark less-wide" v-on:click="leaveTeam">Leave</button>
                     </div>
                 </div>
 
