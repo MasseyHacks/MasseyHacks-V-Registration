@@ -11,6 +11,7 @@
 * {
     font-family: "Avenir", sans-serif;
     font-weight: normal;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 h2 {
@@ -279,7 +280,7 @@ h2 {
     left: 0px;
     width: 100vw;
     height: 70px;
-    position: absolute;
+    position: fixed;
 
     z-index: 600;
     font-family: "Avenir Next Bold", sans-serif;
