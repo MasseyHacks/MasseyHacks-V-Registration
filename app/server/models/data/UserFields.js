@@ -20,57 +20,68 @@ var status = {
     active: {
         type: Boolean,
         required: true,
-        default: true
+        default: true,
+        caption: "Account Active"
     },
     passwordSuspension: {
         type: Boolean,
         required: true,
         default: false,
+        caption: "Suspended until password change"
     },
     submittedApplication: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Submitted Application"
     },
     sentConfirmation: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Confirmation Email Sent"
     },
     waitlisted: {
         type: Boolean,
         required: true,
         default: false,
+        caption: "Waitlisted"
     },
     admitted: {
         type: Boolean,
         required: true,
         default: false,
-        condition: 'status.statusReleased'
+        condition: 'status.statusReleased',
+        caption: "Admitted"
     },
     admittedBy: {
         type: String,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Admitted By"
     },
     confirmed: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Confirmed Invitation"
     },
     waiver: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Waiver on File"
     },
     declined: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Declined Invitation"
     },
     noConfirmation: {
         type: Boolean,
         required:true,
-        default: false
+        default: false,
+        caption: "Failed to Confir,"
     },
     rejected: {
         type: Boolean,
@@ -81,19 +92,25 @@ var status = {
     checkedIn: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Checked In"
     },
     checkInTime: {
-        type: Number
+        type: Number,
+        caption: "Time of last checkin",
+        time: true
     },
     confirmBy: {
         type: Number,
-        condition: 'status.statusReleased'
+        condition: 'status.statusReleased',
+        caption: "Confirmation Deadline",
+        time: true
     },
     statusReleased: {
         type: Boolean,
         default: false,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Status Released"
     }
 };
 
@@ -385,13 +402,15 @@ var schema = {
     firstName: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 100,
+        caption: "First Name"
     },
 
     lastName: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 100,
+        caption: "Last Name"
     },
 
     email: {
@@ -401,7 +420,8 @@ var schema = {
         validate: [
             validator.isEmail,
             'Invalid Email'
-        ]
+        ],
+        caption: "Email"
     },
 
     password: {
@@ -432,49 +452,67 @@ var schema = {
     timestamp: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
+        caption: "Creation Time",
+        time: true
     },
 
     lastUpdated: {
         type: Number,
-        default: 0
+        default: 0,
+        caption: "Profile Last Updated",
+        time: true
     },
 
     confirmedTimestamp: {
         type: Number,
-        default: 0
+        default: 0,
+        caption: "Confirmation Last Updated",
+        time: true
     },
 
     passwordLastUpdated: {
         type: Number,
-        default: 0
+        default: 0,
+        caption: "Password Last Updated"
     },
 
     teamCode: {
         type: String,
         min: 0,
-        maxlength: 140
+        maxlength: 140,
+        caption: "Team Code"
     },
 
     applicationAdmit: {
         type: [String],
-        permission: OWNER
+        permission: OWNER,
+        caption: "Votes to Admit"
     },
 
     applicationReject: {
         type: [String],
-        permission: OWNER
+        permission: OWNER,
+        caption: "Votes to Reject"
     },
 
     applicationVotes: {
         type: [String],
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Application Votes"
+    },
+
+    emailsFlushed: {
+        type: [String],
+        permission: ADMIN,
+        caption: "Emails Flushed from Queue"
     },
 
     numVotes : {
         type: Number,
         default: 0,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Number of Votes"
     },
 
     status: status,

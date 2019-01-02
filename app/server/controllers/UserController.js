@@ -91,7 +91,9 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
                     if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
                         fieldsOut.push({
                             'name': (header ? header + '.' : '') + runner,
-                            'type': current[runner]['type'].name
+                            'type': current[runner]['type'].name,
+                            'time': current[runner]['time'],
+                            'caption': current[runner]['caption']
                         });
                     }
                 } else {
