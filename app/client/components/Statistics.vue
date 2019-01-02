@@ -82,20 +82,22 @@
                     </ul>
                 </div>
 
-                <table class='data-table-generic'>
-                    <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
-                        <td>DIETARY RESTRICTION</td>
-                        <td>COUNT</td>
-                    </tr>
-                    <tr v-for='restriction in statistics.dietaryRestrictions'>
-                        <td>
-                            {{restriction['name']}}
-                        </td>
-                        <td>
-                            {{restriction['count']}}
-                        </td>
-                    </tr>
-                </table>
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
+                            <td>DIETARY RESTRICTION</td>
+                            <td>COUNT</td>
+                        </tr>
+                        <tr v-for='restriction in statistics.dietaryRestrictions'>
+                            <td>
+                                {{restriction['name']}}
+                            </td>
+                            <td>
+                                {{restriction['count']}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </div>
             <div class="ui-card dash-card-large">
@@ -134,20 +136,22 @@
                     </ul>
                 </div>
 
-                <table class='data-table-generic'>
-                    <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
-                        <td>DIETARY RESTRICTION</td>
-                        <td>COUNT</td>
-                    </tr>
-                    <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
-                        <td>
-                            {{restriction['name']}}
-                        </td>
-                        <td>
-                            {{restriction['count']}}
-                        </td>
-                    </tr>
-                </table>
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
+                            <td>DIETARY RESTRICTION</td>
+                            <td>COUNT</td>
+                        </tr>
+                        <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
+                            <td>
+                                {{restriction['name']}}
+                            </td>
+                            <td>
+                                {{restriction['count']}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </div>
 
@@ -155,21 +159,24 @@
                 <h3>REVIEW STATISTICS</h3>
                 <h5>AKA: HAS LOGISTICS BEEN SLACKING OFF?</h5>
                 <hr>
-                <table class='data-table-generic'>
-                    <tr class='table-header'>
-                        <td>NAME</td>
-                        <td># VOTES</td>
-                    </tr>
-                    <tr v-for='human in statistics.votes'>
-                        <td>
-                            <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
-                            <span v-else>{{human[0]}}</span>
-                        </td>
-                        <td>
-                            {{human[1]}} / {{statistics.submitted}}
-                        </td>
-                    </tr>
-                </table>
+
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header'>
+                            <td>NAME</td>
+                            <td># VOTES</td>
+                        </tr>
+                        <tr v-for='human in statistics.votes'>
+                            <td>
+                                <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
+                                <span v-else>{{human[0]}}</span>
+                            </td>
+                            <td>
+                                {{human[1]}} / {{statistics.submitted}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
         </div>

@@ -14,11 +14,20 @@
             <div id="login-form-elements">
                 <form @submit.prevent="changePassword">
 
-                    <input v-model="oldPassword" class="form-control" placeholder="Old Password" type="password" required><br>
-                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required><br>
-                    <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
+                    <div style="text-align: left">
+
+                        <label>Old Password</label>
+                        <input v-model="oldPassword" class="form-control" placeholder="0ldp455w0rd" type="password" required><br>
+
+                        <label>New Password</label>
+                        <input v-model="password1" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
+
+                        <label>Confirm Password</label>
+                        <input v-model="password2" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
+
+                    </div>
                     <div class="button-row">
-                        <button class="generic-button-dark" type="submit">Save</button>
+                        <button class="generic-button-dark less-wide" type="submit">Save</button>
                     </div>
                 </form>
             </div>

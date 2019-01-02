@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>

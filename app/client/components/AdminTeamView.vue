@@ -1,7 +1,31 @@
 <template>
-    <div>
-        <div class="ui-card dash-card-large">
-            <h3>{{teamObj.name}}</h3>
+    <div style="width: 100%">
+        <div class="organizer-card">
+            <div class="ui-card dash-card-large">
+            <h3>Team Name: {{teamObj.name}}</h3>
+
+            <div style="overflow-x: auto; max-width: 100%">
+                <table class='data-table-generic'>
+                    <tr class='table-header'>
+                        <td>NAME</td>
+                        <td>ADMISSION STATUS</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr v-for="member in teamObj.memberNames">
+                        <td>{{member.name}}</td>
+                        <td>{{member.admissionState}}</td>
+                        <td>
+                            <router-link :to="{path: '/organizer/userview?username='+member.id+'&returnPath=/organizer/teamview', params: {username: member.id}}">
+                                <button class="generic-button-dark less-wide">View</button>
+                            </router-link>
+                        </td>
+                        <td><button class="generic-button-dark less-wide" v-on:click="removeUser(id)">Remove</button></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!--
             <div id="detailed-info" style="column-count: 2; column-width: 300px;">
                 <ul style="list-style: none">
                     <li v-for="member in teamObj.memberNames" style="overflow-wrap: break-word; text-align: left;">
@@ -11,14 +35,16 @@
                         <i class="fa fa-remove" style="color:red" :onclick="removeUser(id)"></i>
                     </li>
                 </ul>
-            </div>
+
+            </div>-->
             <hr>
 
-            <router-link :to="{path: returnPath}"><button class="generic-button-dark">Back</button></router-link>
-            <button class=generic-button-dark v-on:click="acceptTeam">Force Admit</button>
-            <button class=generic-button-dark v-on:click="rejectTeam">Force Reject</button>
+            <router-link :to="{path: returnPath}"><button class="generic-button-dark less-wide">Back</button></router-link>
+            <button class="generic-button-dark less-wide" v-on:click="acceptTeam">Force Admit</button>
+            <button class="generic-button-dark less-wide" v-on:click="rejectTeam">Force Reject</button>
 
-            <button class=generic-button-dark v-on:click="deleteTeam">Delete Team</button>
+            <button class="generic-button-dark less-wide" v-on:click="deleteTeam">Delete Team</button>
+        </div>
         </div>
     </div>
 </template>
