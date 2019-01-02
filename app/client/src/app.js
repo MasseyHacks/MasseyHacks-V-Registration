@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import swal from 'sweetalert2'
 import $ from 'jquery'
+import fs from 'floating-scroll'
 
 import Session from './Session'
 import AuthService from './AuthService'
@@ -72,6 +73,10 @@ Henry Tu (github.com/henrytwo)
 Ryan Zhang (github.com/ryanz34)
 David Hui (github.com/BlazingAsher)
 James Xu (github.com/JamesXu123)`)
+
+$(document).ready(function () {
+    $(".spacious-container").floatingScroll();
+});
 
 $.ajax({
     type: 'GET',

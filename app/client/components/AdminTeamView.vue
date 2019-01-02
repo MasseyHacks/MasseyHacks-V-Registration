@@ -20,7 +20,7 @@
                                 <button class="generic-button-dark less-wide">View</button>
                             </router-link>
                         </td>
-                        <td><button class="generic-button-dark less-wide" v-on:click="removeUser(id)">Remove</button></td>
+                        <td><button class="generic-button-dark less-wide" v-on:click="removeUser(member)">Remove</button></td>
                     </tr>
                 </table>
             </div>

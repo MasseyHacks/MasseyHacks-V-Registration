@@ -71,7 +71,6 @@ h2 {
     align-items: center;
     display: grid;
     margin: auto;
-
 }
 
 .login-header {
@@ -323,44 +322,14 @@ h2 {
     width: 100%;
     height: 100%; /* - 75px);*/
 
-    overflow-y: hidden;
+    /*overflow-y: hidden;*/
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
 .app-view-logged-in {
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     width: calc(100% - 230px) !important
-}
-
-/* width */
-#app-view::-webkit-scrollbar {
-    width: 10px;
-    z-index: 500;
-}
-
-/* Track disabled */
-#app-view::-webkit-scrollbar-track:disabled {
-    background: white;
-}
-
-/* Thumb disabled */
-#app-view::-webkit-scrollbar-thumb {
-    background: white;
-}
-
-/* Track */
-#app-view::-webkit-scrollbar-track {
-    background: lightgray;
-}
-
-/* Handle */
-#app-view::-webkit-scrollbar-thumb {
-    background: darkgrey;
-}
-
-/* Handle on hover */
-#app-view::-webkit-scrollbar-thumb:hover {
-    background: #575d62;
 }
 
 #tint {
@@ -629,6 +598,23 @@ h4 {
     cursor: pointer;
 }
 
+@media (max-height: 730px) {
+    .short-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+    }
+
+    .short-vertical-centered {
+        transform: translateY(0%);
+    }
+
+    #login-form-box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
 @media (max-width: 992px), (max-height: 730px) {
 
     .content-spacer {
@@ -671,6 +657,40 @@ h4 {
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
     }
+}
+
+@media (min-width: 992px) {
+    /* width */
+    #app-view::-webkit-scrollbar {
+        width: 10px;
+        z-index: 500;
+    }
+
+    /* Track disabled */
+    #app-view::-webkit-scrollbar-track:disabled {
+        background: white;
+    }
+
+    /* Thumb disabled */
+    #app-view::-webkit-scrollbar-thumb {
+        background: white;
+    }
+
+    /* Track */
+    #app-view::-webkit-scrollbar-track {
+        background: lightgray;
+    }
+
+    /* Handle */
+    #app-view::-webkit-scrollbar-thumb {
+        background: darkgrey;
+    }
+
+    /* Handle on hover */
+    #app-view::-webkit-scrollbar-thumb:hover {
+        background: #575d62;
+    }
+
 }
 
 @media (max-width: 992px) {
