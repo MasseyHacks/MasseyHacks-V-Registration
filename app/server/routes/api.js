@@ -481,6 +481,20 @@ module.exports = function(router) {
         UserController.deactivate(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
+    // Admin
+    // Release Status
+    router.post('/releaseStatus', permissions.isAdmin, function (req, res) {
+        var userID = req.body.userID;
+        UserController.releaseStatus(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
+    // Admin
+    // Hide status
+    router.post('/hideStatus', permissions.isAdmin, function (req, res) {
+        var userID = req.body.userID;
+        UserController.hideStatus(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
     // Developer
     // Reset votes
     router.post('/voteReset', permissions.isDeveloper, function (req, res) {

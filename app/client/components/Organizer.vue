@@ -13,16 +13,16 @@
                 <div class="row">
                     <div class="ui-card dash-card-large">
                         <router-link to="/organizer/statistics">
-                            <button class="generic-button-dark">Statistics</button>
+                            <button class="generic-button-dark wide">Statistics</button>
                         </router-link>
                         <router-link to="/organizer/users">
-                            <button class="generic-button-dark">Users</button>
+                            <button class="generic-button-dark wide">Users</button>
                         </router-link>
                         <router-link to="/organizer/teamview">
-                            <button class="generic-button-dark">Teams</button>
+                            <button class="generic-button-dark wide">Teams</button>
                         </router-link>
                         <router-link v-if="user.permissions.reviewer" to="/organizer/review">
-                            <button class="generic-button-dark">Review</button>
+                            <button class="generic-button-dark wide">Review</button>
                         </router-link>
                     </div>
                 </div>

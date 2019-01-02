@@ -19,7 +19,7 @@
                     <div v-else>
                         <input class='round-input' style='width: 100%' placeholder='Search for hacker here' v-on:input='updateSearch' v-model='searchQuery' type='text'>
                         <hr>
-                        <button class='generic-button-dark' @click='refresh()'>Refresh Table</button>
+                        <button class='generic-button-dark less-wide' @click='refresh()'>Refresh Table</button>
                         <hr>
                         <div v-if='users.length != 0 && !queryError' style="overflow-x: auto; max-width: 100%">
                             <table class='data-table-generic'>

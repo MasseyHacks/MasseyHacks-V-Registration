@@ -102,7 +102,7 @@
 
                 <br>
 
-                <button class="generic-button" v-on:click="acceptInvitation">
+                <button class="generic-button less-wide" v-on:click="acceptInvitation">
                     <span v-if="user.status.confirmed">
                         Update Confirmation
                     </span>
@@ -110,7 +110,7 @@
                         Confirm
                     </span>
                 </button>
-                <button class="generic-button" v-on:click="denyInvitation">Decline</button>
+                <button class="generic-button less-wide" v-on:click="denyInvitation">Decline</button>
             </div>
         </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div v-if="loading" class="organizer-card">
             <div class="ui-card dash-card-large">
                 Loading...
@@ -15,7 +15,7 @@
                 <h3>AT A GLANCE:</h3>
                 <p>Last Updated: {{statistics.lastUpdated | moment("from")}}</p>
                 <button v-on:click="refreshStatistics" v-if="user.permissions.developer"
-                        class="generic-button-dark">Refresh
+                        class="generic-button-dark less-wide">Refresh
                 </button>
                 <br>
                 <hr>
@@ -82,20 +82,22 @@
                     </ul>
                 </div>
 
-                <table class='data-table-generic'>
-                    <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
-                        <td>DIETARY RESTRICTION</td>
-                        <td>COUNT</td>
-                    </tr>
-                    <tr v-for='restriction in statistics.dietaryRestrictions'>
-                        <td>
-                            {{restriction['name']}}
-                        </td>
-                        <td>
-                            {{restriction['count']}}
-                        </td>
-                    </tr>
-                </table>
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header' v-if="statistics.dietaryRestrictions.length > 0">
+                            <td>DIETARY RESTRICTION</td>
+                            <td>COUNT</td>
+                        </tr>
+                        <tr v-for='restriction in statistics.dietaryRestrictions'>
+                            <td>
+                                {{restriction['name']}}
+                            </td>
+                            <td>
+                                {{restriction['count']}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </div>
             <div class="ui-card dash-card-large">
@@ -134,20 +136,22 @@
                     </ul>
                 </div>
 
-                <table class='data-table-generic'>
-                    <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
-                        <td>DIETARY RESTRICTION</td>
-                        <td>COUNT</td>
-                    </tr>
-                    <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
-                        <td>
-                            {{restriction['name']}}
-                        </td>
-                        <td>
-                            {{restriction['count']}}
-                        </td>
-                    </tr>
-                </table>
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header' v-if="statistics.confirmedStat.dietaryRestrictions.length > 0">
+                            <td>DIETARY RESTRICTION</td>
+                            <td>COUNT</td>
+                        </tr>
+                        <tr v-for='restriction in statistics.confirmedStat.dietaryRestrictions'>
+                            <td>
+                                {{restriction['name']}}
+                            </td>
+                            <td>
+                                {{restriction['count']}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </div>
 
@@ -155,21 +159,24 @@
                 <h3>REVIEW STATISTICS</h3>
                 <h5>AKA: HAS LOGISTICS BEEN SLACKING OFF?</h5>
                 <hr>
-                <table class='data-table-generic'>
-                    <tr class='table-header'>
-                        <td>NAME</td>
-                        <td># VOTES</td>
-                    </tr>
-                    <tr v-for='human in statistics.votes'>
-                        <td>
-                            <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
-                            <span v-else>{{human[0]}}</span>
-                        </td>
-                        <td>
-                            {{human[1]}} / {{statistics.submitted}}
-                        </td>
-                    </tr>
-                </table>
+
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header'>
+                            <td>NAME</td>
+                            <td># VOTES</td>
+                        </tr>
+                        <tr v-for='human in statistics.votes'>
+                            <td>
+                                <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
+                                <span v-else>{{human[0]}}</span>
+                            </td>
+                            <td>
+                                {{human[1]}} / {{statistics.submitted}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
 
         </div>
@@ -264,11 +271,18 @@
 
                 console.log(totalCount);
 
+
+                var numMale = this.statistics.demo.gender.Male;
+                var numFemale = this.statistics.demo.gender.Female;
+                var numOther = this.statistics.demo.gender.Other;
+                var numDataless = this.statistics.demo.gender["I prefer not to answer"];
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Male / totalCount * 100) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Female / totalCount * 100) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender.Other / totalCount * 100) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
+
                 console.log(returnObject);
                 return returnObject;
 
@@ -286,11 +300,16 @@
 
                 totalCount += this.statistics.confirmedStat.total;
 
+                var numMale = this.statistics.confirmedStat.demo.gender.Male;
+                var numFemale = this.statistics.confirmedStat.demo.gender.Female;
+                var numOther = this.statistics.confirmedStat.demo.gender.Other;
+                var numDataless = this.statistics.confirmedStat.demo.gender["I prefer not to answer"];
+
                 returnObject["Total"] += totalCount;
-                returnObject["Male"] += "Male: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Male / totalCount * 100) : 0) + "%";
-                returnObject["Female"] += "Female: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Female / totalCount * 100) : 0) + "%";
-                returnObject["Other"] += "Other: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender.Other / totalCount * 100) : 0) + "%";
-                returnObject["No Data"] += "No Data: " + (totalCount != 0 ? Math.round(this.statistics.confirmedStat.demo.gender["I prefer not to answer"] / totalCount * 100) : 0) + "%";
+                returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
+                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
                 console.log(returnObject);
                 return returnObject;
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <!--<h3>USERS:</h3>-->
@@ -10,14 +10,14 @@
                     {{loadingError}}
                 </div>
                 <div v-else>
-                    <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
+                    <input style="width: 100%" class="" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                     <div v-if="advancedQuery">
                         <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter"
                                   placeholder="Enter query here"></textarea>
                     </div>
                     <div class="filterEntry" v-else>
-                        <select class="first" v-model="queryLogical">
+                        <select class=" first wide" v-model="queryLogical">
                             <option value="$and">and</option>
                             <option value="$or">or</option>
                             <option value="$not">not</option>
@@ -25,12 +25,12 @@
                         </select>
 
                         <!-- Field Name -->
-                        <select class="middle" v-model="queryField" v-on:change="changeFieldName">
+                        <select class=" middle wide" v-model="queryField" v-on:change="changeFieldName">
                             <option v-bind:value="{}">Select a field</option>
                             <option v-for="field in fields" v-bind:value="field">{{prettify(field.name)}}</option>
                         </select>
 
-                        <select class="middle" v-model="queryComparison" :disabled="!queryField.name">
+                        <select class=" middle wide" v-model="queryComparison" :disabled="!queryField.name">
                             <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
                             <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
                             <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
@@ -43,15 +43,15 @@
                             <option value="false" :disabled="queryField.type!='Boolean'">False</option>
                         </select>
 
-                        <input class="last" v-model="queryTargetValue" type="text"
+                        <input class=" last wide" v-model="queryTargetValue" type="text"
                                :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
                     </div>
 
                     <br>
-                    <button class="generic-button-dark" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
-                    <button class="generic-button-dark" v-on:click="clearQuery">Clear</button>
-                    <button class="generic-button-dark" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ?
+                    <button class="generic-button-dark wide" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
+                    <button class="generic-button-dark wide" v-on:click="clearQuery">Clear</button>
+                    <button class="generic-button-dark wide" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ?
                         "Simple" : "Advanced"}} Query
                     </button>
 
@@ -78,11 +78,11 @@
 
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
-                        <button class="generic-button-dark" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-dark" :disabled="page == 1" v-on:click="switchPage(page - 1)">
+                        <button class="generic-button-dark wide" v-on:click="exportUsersCSV">Export</button>
+                        <button class="generic-button-dark wide" :disabled="page == 1" v-on:click="switchPage(page - 1)">
                             Previous
                         </button>
-                        <button class="generic-button-dark" :disabled="page == totalPages"
+                        <button class="generic-button-dark wide" :disabled="page == totalPages"
                                 v-on:click="switchPage(page + 1)">Next
                         </button>
 

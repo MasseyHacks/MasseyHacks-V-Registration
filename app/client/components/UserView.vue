@@ -1,5 +1,5 @@
 <template>
-    <div class="row" style="width: 100%">
+    <div style="width: 100%">
         <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
@@ -8,7 +8,10 @@
                         <li style="overflow-wrap: break-word; text-align: left;"
                             v-for="(value, key) in flatten(userObj,false)">
                             <span v-if="key !== 'Application'">
-                                <b>{{key}}:</b> {{value}}
+
+                                <b>{{Object.keys(fields).indexOf(key) != -1 ? fields[key]['caption']
+                                : key}}</b><br>{{value !== null ? value : "[null]"}}<br>
+
                             </span>
                         </li>
                     </ul>
@@ -21,7 +24,7 @@
                         <li v-for="(value, key) in userApp">
                             <br>
                             <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question']
-                                : key}}</b><br>{{value ? value : "[Question left blank]"}}<br>
+                                : key}}</b><br>{{value !== null ? value : "[Question left blank]"}}<br>
                         </li>
                     </ul>
                 </div>
@@ -41,32 +44,34 @@
                 <!-- DELETE USER -->
 
                 <router-link :to="{path: returnPath}">
-                    <button class="generic-button-dark">Back</button>
+                    <button class="generic-button-dark less-wide">Back</button>
                 </router-link>
 
-                <button class="generic-button-dark" v-on:click="voteAdmit">Vote Admit</button>
-                <button class="generic-button-dark" v-on:click="voteReject">Vote Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="voteAdmit">Vote Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="voteReject">Vote Reject</button>
 
                 <hr>
 
-                <button class="generic-button-dark" v-on:click="editUser">Edit User</button>
-                <button class="generic-button-dark" v-on:click="forceAdmit">Force Admit</button>
-                <button class="generic-button-dark" v-on:click="forceReject">Force Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="editUser">Edit User</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceAdmit">Force Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceReject">Force Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
 
                 <hr>
 
-                <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admit</button>
-                <button class="generic-button-dark" v-on:click="resetInvitation">Reset Invitation</button>
-                <button class="generic-button-dark" v-on:click="resetVotes">Reset Votes</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetAdmissionState">Reset Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetInvitation">Reset Invitation</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetVotes">Reset Votes</button>
 
                 <hr>
 
-                <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
+                <button class="generic-button-dark less-wide" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
                 </button>
-                <button class="generic-button-dark" v-on:click="changePassword">Change Password</button>
-                <button class="generic-button-dark" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
-                <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
-                <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
+                <button class="generic-button-dark less-wide" v-on:click="changePassword">Change Password</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+
+                <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue</button>
+                <button class="generic-button-dark less-wide" v-on:click="deleteUser">Delete User</button>
             </div>
         </div>
     </div>
@@ -77,6 +82,7 @@
     import AuthService from '../src/AuthService.js'
     import swal from 'sweetalert2'
     import ApiService from '../src/ApiService.js'
+    import moment from 'moment'
 
     export default {
         data() {
@@ -87,7 +93,8 @@
                 userObj: {},
                 userApp: {},
                 returnPath: "/organizer/users",
-                applications: {}
+                applications: {},
+                fields: {}
             }
         },
 
@@ -95,6 +102,14 @@
             if (this.$route.query["returnPath"]) {
                 this.returnPath = this.$route.query["returnPath"]
             }
+
+            ApiService.getFields((err, data) => {
+                if (err || !data) {
+                    this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                } else {
+                    this.fields = data
+                }
+            });
 
             ApiService.getApplications((err, applications) => {
                 this.applications = applications
@@ -115,6 +130,9 @@
         },
 
         methods: {
+            moment (date) {
+                return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
+            },
             changePassword: function() {
 
                 AuthService.adminChangePassword(this.userObj.fullName, this.userID, () => {
@@ -133,6 +151,21 @@
                     ApiService.activate(this.userObj.fullName, this.userID, (data) => {
                         this.userObj = data;
                         swal('Success!', 'Successfully activated user', 'success');
+                    });
+                }
+
+            },
+            toggleStatus: function() {
+
+                if (this.userObj.status.statusReleased) {
+                    ApiService.hideStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully hid status for user', 'success');
+                    });
+                } else {
+                    ApiService.releaseStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully released status for user', 'success');
                     });
                 }
 

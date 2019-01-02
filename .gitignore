@@ -3,3 +3,4 @@ node_modules
 app/client/dist
 .idea
 .DS_Store
+db

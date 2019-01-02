@@ -7,7 +7,7 @@
 
         <div class="spacer content-spacer">
         </div>
-        <div class="container vertical-centered content-vertical-centered">
+        <div class="container vertical-centered content-vertical-centered" style="margin-bottom: 10px">
             <div class="ui-card dash-card dash-card-medium">
                 <div v-if="loading">
                     <p>Loading...</p>
@@ -21,7 +21,7 @@
 
                     <br>
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = ''">Back</button>
+                        <button class="generic-button-dark less-wide" v-on:click="reset(); page = ''">Back</button>
                         <button :disabled="!teamName" class="generic-button-dark" v-on:click="createTeam">Create
                         </button>
                     </div>
@@ -37,7 +37,7 @@
 
                     <br>
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = ''">Back</button>
+                        <button class="generic-button-dark less-wide" v-on:click="reset(); page = ''">Back</button>
                         <button :disabled="!teamCode" class="generic-button-dark" v-on:click="joinTeam">Join</button>
                     </div>
                 </div>
@@ -47,8 +47,8 @@
                     <p>Registering as a team helps speed up the review process.</p>
 
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="reset(); page = 'create'">Create</button>
-                        <button class="generic-button-dark" v-on:click="reset(); page = 'join'">Join</button>
+                        <button class="generic-button-dark less-wide" v-on:click="reset(); page = 'create'">Create</button>
+                        <button class="generic-button-dark less-wide" v-on:click="reset(); page = 'join'">Join</button>
                     </div>
                 </div>
                 <div v-else-if="team">
@@ -70,7 +70,7 @@
                     <br>
 
                     <div class="button-row">
-                        <button class="generic-button-dark" v-on:click="leaveTeam">Leave</button>
+                        <button class="generic-button-dark less-wide" v-on:click="leaveTeam">Leave</button>
                     </div>
                 </div>
 

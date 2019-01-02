@@ -24,7 +24,7 @@
 
                         <hr>
 
-                        <router-link to="/organizer/statistics"><button class="generic-button-dark">Organizer Dashboard</button></router-link>
+                        <router-link to="/organizer/statistics"><button class="generic-button-dark less-wide">Organizer Dashboard</button></router-link>
 
                     </div>
                     <div v-else-if="user.status.name == 'incomplete'">

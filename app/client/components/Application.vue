@@ -80,8 +80,8 @@
                         <br>
                         <p v-if="user.profile.signature !== -1">Time of submission: {{moment(user.lastUpdated)}}</p>
                         <p v-if="!editDisabled">Remember: You <b>CANNOT</b> modify your application after you submit!</p>
-                        <button v-if="user.profile.signature === -1" type="button" class="generic-button-dark" v-on:click="saveApplication(false)">Save</button>
-                        <button v-if="!editDisabled" type="submit" class="generic-button-dark">Submit</button>
+                        <button v-if="user.profile.signature === -1" type="button" class="generic-button-dark less-wide" v-on:click="saveApplication(false)">Save</button>
+                        <button v-if="!editDisabled" type="submit" class="generic-button-dark less-wide">Submit</button>
                     </form>
                     <div v-else style="text-align:center; font-size:1.5em;"><span>You are not a hacker!</span></div>
                 </div>

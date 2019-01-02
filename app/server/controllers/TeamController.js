@@ -294,7 +294,7 @@ TeamController.getByCode = function(code, callback) {
 
             // Substitutes user objects with their names
             for (var u in team.memberNames) {
-                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id}
+                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id, admissionState: team.memberNames[u].status.name}
             }
 
             return callback(null, team);
