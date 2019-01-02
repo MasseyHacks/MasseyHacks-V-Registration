@@ -279,6 +279,18 @@ module.exports = function(router) {
         });
     });
 
+    // Admin
+    // Remove user from team
+    router.post('/removeFromTeam', permissions.isAdmin, function(req, res){
+        var user = req.userExecute;
+        var id = req.body.id;
+        var code = req.body.code;
+
+        console.log(id, code)
+
+        TeamController.removeFromTeam(user, id, code, logger.defaultResponse(req, res));
+    });
+
     // General
     // Upload waiver
     router.post('/uploadWaiver', /*permissions.isVerified,*/ function(req, res){

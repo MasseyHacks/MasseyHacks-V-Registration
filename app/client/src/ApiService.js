@@ -416,6 +416,13 @@ module.exports = {
         }, callback)
     },
 
+    removeFromTeam(id, code, callback) {
+        AuthService.sendRequest('POST', '/api/removeFromTeam', {
+            code: code,
+            id: id
+        }, callback)
+    },
+
     acceptTeam(code, callback) {
         AuthService.sendRequest('POST', '/api/admitTeam', {
             code: code

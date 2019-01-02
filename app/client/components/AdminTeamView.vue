@@ -4,11 +4,11 @@
             <h3>{{teamObj.name}}</h3>
             <div id="detailed-info" style="column-count: 2; column-width: 300px;">
                 <ul style="list-style: none">
-                    <li v-for="member in teamObj.memberNames" style="overflow-wrap: break-word; text-align: left;">
+                    <li v-for="member in teamMembers" style="overflow-wrap: break-word; text-align: left;">
                         <router-link :to="{path: '/organizer/userview?username='+member.id+'&returnPath=/organizer/teamview', params: {username: member.id}}">
                             {{member.name}}
                         </router-link>
-                        <i class="fa fa-remove" style="color:red" :onclick="removeUser(id)"></i>
+                        <i class="fa fa-times" style="color:red" v-on:click="removeUser(member)"></i>
                     </li>
                 </ul>
             </div>
@@ -35,7 +35,8 @@
                 error : '',
                 teamCode: '',
                 teamObj: [],
-                returnPath: "/organizer/users",
+                teamMembers: [],
+                returnPath: "/organizer/teamview",
             }
         },
 
@@ -51,6 +52,7 @@
                 } else {
                     console.log("data2");
                     this.teamObj = data;
+                    this.teamMembers = data.memberNames;
                 }
             })
         },
@@ -60,8 +62,47 @@
         },
 
         methods: {
-            removeUser(id) {
-                console.log(id);
+            removeUser(user) {
+                swal({
+                    title: 'Warning',
+                    type: 'warning',
+                    text: 'This action is irreversible! Are you sure you want to delete ' + user.name +' from this team (If this is the last member, the team will be deleted as well)',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        swal.showLoading();
+
+                        ApiService.removeFromTeam(user.id, this.teamCode, (err, data) => {
+                            if (err) {
+                                swal({
+                                    title: "Warning",
+                                    type: 'danger',
+                                    text: 'Unable to remove user'
+                                })
+                            } else {
+                                swal({
+                                    title: "Success",
+                                    type: 'success',
+                                    text: 'User has been removed'
+                                }).then(() => {
+                                    if (data.message) {
+                                        this.$router.push({path: this.returnPath});
+                                    } else {
+                                        for (let i = 0; i < this.teamMembers.length; i++) {
+                                            if (this.teamMembers[i] === user) {
+                                                this.$delete(this.teamMembers, i);
+                                                break
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
             },
             deleteTeam() {
                 swal({
