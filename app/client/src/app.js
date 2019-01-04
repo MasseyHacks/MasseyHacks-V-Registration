@@ -394,7 +394,7 @@ router.beforeEach((to, from, next) => {
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
-    if (Session.loggedIn() && loginLayout.indexOf(fromPath[1]) != -1) {
+    if (Session.loggedIn() && loginLayout.indexOf(fromPath[1]) == -1) {
         if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
             vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
         } else {
