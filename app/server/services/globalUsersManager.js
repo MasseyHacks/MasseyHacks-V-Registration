@@ -5,6 +5,31 @@ const UserController = require('../controllers/UserController');
 
 var globalUsersManager = {};
 
+globalUsersManager.unrejectAllRejected = function(adminUser, callback){
+    User.updateMany({
+        $and: [
+            {
+                'status.statusReleased': false
+            },
+            {
+                'status.rejected': true
+            }
+        ]
+    }, {
+        $set: {
+            'status.rejected': false
+        }
+    }, function(err, result){
+        if (err || !result) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, -1, 'Unrejected all rejected users without status release', 'EXECUTOR IP: ' + adminUser.ip);
+
+   re     return callback(err, result.nModified);
+    });
+}
+
 globalUsersManager.releaseAllStatus = function(adminUser, callback){
     User.updateMany({
         'status.statusReleased': false
