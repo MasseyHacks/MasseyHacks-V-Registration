@@ -520,12 +520,13 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({error: 'Invalid arguments'});
     }
 
+    /*
     if (email.includes('2009karlzhu')) {
         return callback({
             error: 'Karl Zhu detected. Please contact an administrator for assistance.',
             code: 403
         }, false);
-    }
+    }*/
 
     Settings.getSettings(function (err, settings) {
         if (!settings.registrationOpen) {

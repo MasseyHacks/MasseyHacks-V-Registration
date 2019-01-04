@@ -26,7 +26,7 @@
                         <input v-model="password2" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
 
                     </div>
-                    <div class="button-row">
+                    <div >
                         <button class="generic-button-dark less-wide" type="submit">Save</button>
                     </div>
                 </form>
