@@ -56,7 +56,7 @@
                     </button>
 
                     <br>
-                    <div class="spacious-container" style="overflow-x: auto; max-width: 100%">
+                    <div style="overflow-x: auto; max-width: 100%">
                         <table class="data-table-generic" v-for="(comparison, logical) in filters">
                             <tr class="table-header" v-if="comparison">
                                 <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>

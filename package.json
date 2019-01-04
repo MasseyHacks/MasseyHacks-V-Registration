@@ -44,7 +44,6 @@
     "express-rate-limit": "^2.12.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-saver": "^1.3.8",
-    "floating-scroll": "^3.0.4",
     "forever": "^0.15.3",
     "formidable": "^1.2.1",
     "gridfs-stream": "^1.1.1",

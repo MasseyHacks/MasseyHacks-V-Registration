@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import swal from 'sweetalert2'
 import $ from 'jquery'
-import fs from 'floating-scroll'
 
 import Session from './Session'
 import AuthService from './AuthService'
@@ -73,10 +72,6 @@ Henry Tu (github.com/henrytwo)
 Ryan Zhang (github.com/ryanz34)
 David Hui (github.com/BlazingAsher)
 James Xu (github.com/JamesXu123)`)
-
-$(document).ready(function () {
-    $(".spacious-container").floatingScroll();
-});
 
 $.ajax({
     type: 'GET',
@@ -394,7 +389,7 @@ router.beforeEach((to, from, next) => {
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
-    if (Session.loggedIn() && loginLayout.indexOf(fromPath[1]) == -1) {
+    if (Session.loggedIn()) {
         if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
             vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
         } else {
