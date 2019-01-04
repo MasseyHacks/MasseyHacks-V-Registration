@@ -26,7 +26,7 @@ globalUsersManager.unrejectAllRejected = function(adminUser, callback){
 
         logger.logAction(adminUser._id, -1, 'Unrejected all rejected users without status release', 'EXECUTOR IP: ' + adminUser.ip);
 
-   re     return callback(err, result.nModified);
+        return callback(err, result.nModified);
     });
 }
 
