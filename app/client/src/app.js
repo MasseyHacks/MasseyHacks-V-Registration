@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import swal from 'sweetalert2'
 import $ from 'jquery'
+import fs from 'floating-scroll'
 
 import Session from './Session'
 import AuthService from './AuthService'
@@ -34,6 +35,48 @@ import TeamManage from '../components/AdminTeamView.vue'
 
 import Raven from 'raven-js'
 import RavenVue from 'raven-js/plugins/vue'
+
+console.log(`                               ,-""   \`.
+                             ,'  _   e )\`-._
+                            /  ,' \`-._<.===-'
+                           /  /
+                          /  ;
+              _          /   ;
+ (\`._    _.-"" ""--..__,'    |
+ <_  \`-""                     \\
+  <\`-                          :
+   (__   <__.                  ;
+     \`-.   '-.__.      _.'    /
+        \\      \`-.__,-'    _,'
+         \`._    ,    /__,-'
+            ""._\\__,'< <____
+                 | |  \`----.\`.
+                 | |        \\ \`.
+                 ; |___      \\-\`\`
+                 \\   --<
+                  \`.\`.<
+             hjw    \`-'
+
+   _____  ____   _____  ______ ______
+  / ____|/ __ \\ / __ \\ / ____|  ____|
+  | |  __| |  | | |  | | (___ | |__   
+  | | |_ | |  | | |  | |\\___ \\|  __|  
+  | |__| | |__| | |__| |____) | |____ 
+  \\_____|\\____/ \\____/|_____/|______|
+
+"The comprehensive event registration system designed by hackers for hackers"
+
+github.com/MasseyHacks
+
+Developed by:
+Henry Tu (github.com/henrytwo)
+Ryan Zhang (github.com/ryanz34)
+David Hui (github.com/BlazingAsher)
+James Xu (github.com/JamesXu123)`)
+
+$(document).ready(function () {
+    $(".spacious-container").floatingScroll();
+});
 
 $.ajax({
     type: 'GET',
@@ -351,10 +394,14 @@ router.beforeEach((to, from, next) => {
     // Kind of ghetto way to transfer data
     // Couldn't find better way to detect router update :'(
 
-    if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
-        vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
+    if (Session.loggedIn() && loginLayout.indexOf(fromPath[1]) == -1) {
+        if (mainLayout.indexOf(fromPath[1]) != -1 || Session.loggedIn()) {
+            vue.transition = toDepth > fromDepth ? 'slide-up' : 'slide-down'
+        } else {
+            vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
+        }
     } else {
-        vue.transition = toDepth > fromDepth ? 'slide-left' : 'slide-right'
+        vue.transition = ''
     }
 
     next()

@@ -13,24 +13,29 @@
                 <div class="row">
                     <div class="ui-card dash-card-large">
                         <router-link to="/organizer/statistics">
-                            <button class="generic-button-dark">Statistics</button>
+                            <button class="generic-button-dark wide">Statistics</button>
                         </router-link>
                         <router-link to="/organizer/users">
-                            <button class="generic-button-dark">Users</button>
+                            <button class="generic-button-dark wide">Users</button>
                         </router-link>
                         <router-link to="/organizer/teamview">
-                            <button class="generic-button-dark">Teams</button>
+                            <button class="generic-button-dark wide">Teams</button>
                         </router-link>
                         <router-link v-if="user.permissions.reviewer" to="/organizer/review">
-                            <button class="generic-button-dark">Review</button>
+                            <button class="generic-button-dark wide">Review</button>
                         </router-link>
                     </div>
                 </div>
-                <transition :name="transitionName">
-                    <router-view class="child-view"></router-view>
-                </transition>
             </div>
         </div>
+
+
+        <transition :name="transitionName">
+            <router-view class="child-view">
+
+            </router-view>
+        </transition>
+
     </div>
 </template>
 
@@ -40,17 +45,25 @@
 
     export default {
         beforeRouteUpdate(to, from, next) {
-            const pageLayout = ['statistics', 'users', 'teamview', 'review'];
+            const pageLayout = ['statistics', 'users', 'teamview', 'userview', 'teammanage', 'review'];
             const toPath = to.path.split('/');
             const fromPath = from.path.split('/');
 
             console.log('dasd', toPath, fromPath);
             console.log('Hello there');
 
+            if (toPath[toPath.length - 1].indexOf('?') != -1) {
+                toPath[toPath.length - 1] = toPath[toPath.length - 1].split('?')[0]
+            }
+
             const toDepth = pageLayout.indexOf(toPath[toPath.length - 1]);
             const fromDepth = pageLayout.indexOf(fromPath[toPath.length - 1]);
 
             console.log(toDepth, fromDepth);
+
+            if (toDepth === -1) {
+                return next('/organizer/statistics')
+            }
 
             this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
 

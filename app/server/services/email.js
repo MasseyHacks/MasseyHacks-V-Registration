@@ -263,12 +263,24 @@ module.exports = {
                                         $pull: pullObj
                                     }, {}, function (err, settings) {
                                         console.log(err, settings.emailQueue);
+
+                                        User.findOneAndUpdate({
+                                            email: userEmail
+                                        }, {
+                                            $push: {
+                                                emailsFlushed: Object.keys(pullObj)[0]
+                                            }
+                                        }, {},
+                                            function (err, user) {
+
+                                            return callback(null,{message: 'Success'});
+                                        });
                                     });
                                 }
                             }
                         }
                     }
-                    return callback(null,{message: "Success"});
+
                 });
             }
         });

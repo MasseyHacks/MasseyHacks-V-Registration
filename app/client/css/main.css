@@ -11,6 +11,7 @@
 * {
     font-family: "Avenir", sans-serif;
     font-weight: normal;
+    -webkit-overflow-scrolling: touch !important;
 }
 
 h2 {
@@ -24,7 +25,7 @@ h2 {
 }
 
 .spacer {
-    height: 50vh; /*- 75px);*/
+    min-height: 50vh; /*- 75px);*/
 }
 
 .hidden {
@@ -64,24 +65,35 @@ h2 {
 
     max-width: 550px;
     width: 100%;
-    padding: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
     color: black !important;
     align-items: center;
     display: grid;
     margin: auto;
-    font-size: 2rem;
+}
+
+.login-header {
     text-align: center;
+    margin-bottom: 10px;
 }
 
-#login-form-box p {
-    font-size: 0.5em;
-}
+.error-banner {
 
-#login-form-box h2 {
     color: black;
-    font-family: "Avenir Next Bold", sans-serif;
-    text-align: center;
-    font-size: 1em;
+    background-color: #f0f0f0;
+    width: 100%;
+
+    margin-top: 5px;
+    margin-bottom: 10px;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+}
+
+.error-banner p {
+    margin: 0;
 }
 
 ::placeholder {
@@ -89,57 +101,31 @@ h2 {
     font-size: 0.7rem;
 }
 
-
-#login-form-box input {
-    padding: 1%;
-    margin-bottom: 5px;
-    background: transparent;
-    width: 100%;
-    height: 40px;
-    border: none;
-    border-bottom: 1px solid #919eaf;
-    /*border-radius: 15px;*/
-    position: relative;
-    font-size: 0.5em;
-    color: #505050;
-    text-align: left;
-    outline: none;
-}
-
-
-#login-form-elements button {
-    outline: none;
-    margin-top: 5%;
-    background-color: transparent;
-    color: black;
-    border-radius: 20px;
-    border: 2px solid black;
-    width: 30%;
-    height: 40px;
-    font-size: 0.9rem;
-    text-align: center;
-    transition: background-color 0.1s;
-    transition: border 0.1s;
-}
-
-#login-form-elements button:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
 #button-row {
     text-align: center;
-    /*    position: relative;
-        left: 50%;
-        transform: translateX(-50%);*/
     margin: auto;
 }
 
-#login-form-elements button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+#button-row button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    width: 40%;
+}
+
+#forget-button {
+    margin: 0;
+    color: black;
 }
 
 #login-form-elements {
     margin: auto;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+#login-form-elements input {
+    margin-bottom: 10px !important;
 }
 
 #login-form-elements form {
@@ -293,7 +279,7 @@ h2 {
     left: 0px;
     width: 100vw;
     height: 70px;
-    position: absolute;
+    position: fixed;
 
     z-index: 600;
     font-family: "Avenir Next Bold", sans-serif;
@@ -336,43 +322,14 @@ h2 {
     width: 100%;
     height: 100%; /* - 75px);*/
 
+    /*overflow-y: hidden;*/
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 .app-view-logged-in {
+    overflow-y: auto !important;
     width: calc(100% - 230px) !important
-}
-
-/* width */
-#app-view::-webkit-scrollbar {
-    width: 10px;
-    z-index: 500;
-}
-
-/* Track disabled */
-#app-view::-webkit-scrollbar-track:disabled {
-    background: white;
-}
-
-/* Thumb disabled */
-#app-view::-webkit-scrollbar-thumb {
-    background: white;
-}
-
-/* Track */
-#app-view::-webkit-scrollbar-track {
-    background: lightgray;
-}
-
-/* Handle */
-#app-view::-webkit-scrollbar-thumb {
-    background: darkgrey;
-}
-
-/* Handle on hover */
-#app-view::-webkit-scrollbar-thumb:hover {
-    background: #575d62;
 }
 
 #tint {
@@ -388,7 +345,6 @@ h2 {
 }
 
 .app-screen {
-    /*padding-left: 10px; /* Makes it even with the scrollbar */
     margin: 0 auto;
     text-align: center;
     width: 100%;
@@ -396,6 +352,15 @@ h2 {
     left: 50%;
     transform: translateX(-50%);*/
 
+}
+
+.organizer-card {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 90%;
+    text-align: center;
 }
 
 .ui-card {
@@ -416,7 +381,7 @@ h2 {
 .title-card {
     /*    padding: 1%;*/
     text-align: center;
-    margin-top: 50px;
+    margin-top: 15vh !important;
     /*border-bottom: 2px solid black;*/
 }
 
@@ -438,24 +403,33 @@ h2 {
     border-color: rgb(220, 220, 220) !important;
     border-width: 1px !important;
 
-    width: 50vw;
-    margin-top: 30px;
+    min-width: 250px;
 
+    width: 50%;
     padding: 20px;
 }
 
+.dash-card-offset {
+    margin-top: 30px;
+}
+
+.dash-card-medium {
+    width: 80%;
+}
+
 .dash-card-large {
-    width: 70vw;
+    /*width: 70vw;*/
+    width: 100%;
     margin-top: 30px;
     /*background: #fafafa;
     box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.34);
     border-radius: 10px;*/
-    color: black;
 }
 
+/*
 .dash-card-large hr {
     border-color: black;
-}
+}*/
 
 .duo-col {
     column-count: 2;
@@ -480,7 +454,6 @@ h2 {
 .data-table-generic {
     width: 100% !important;
     margin-bottom: 30px;
-    overflow-x: auto;
     color: black;
 }
 
@@ -625,13 +598,118 @@ h4 {
     cursor: pointer;
 }
 
-@media (max-width: 992px) {
-    .dash-card {
-        width: 95vw;
+@media (max-height: 730px) {
+    .short-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
     }
 
-    .dash-card-large {
-        width: 95vw;
+    .short-vertical-centered {
+        transform: translateY(0%);
+    }
+
+    #login-form-box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 992px), (max-height: 730px) {
+
+    .content-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+    }
+
+    .content-vertical-centered {
+        transform: translateY(0%);
+    }
+
+    .title-card {
+        margin-top: 50px !important;
+        position: relative !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .less-wide {
+        width: 100%;
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .wide {
+        width: 100%;
+        margin-top: 2px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .filterEntry > .first {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    .filterEntry > .last {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+@media (min-width: 992px) {
+    /* width */
+    #app-view::-webkit-scrollbar {
+        width: 10px;
+        z-index: 500;
+    }
+
+    /* Track disabled */
+    #app-view::-webkit-scrollbar-track:disabled {
+        background: white;
+    }
+
+    /* Thumb disabled */
+    #app-view::-webkit-scrollbar-thumb {
+        background: white;
+    }
+
+    /* Track */
+    #app-view::-webkit-scrollbar-track {
+        background: lightgray;
+    }
+
+    /* Handle */
+    #app-view::-webkit-scrollbar-thumb {
+        background: darkgrey;
+    }
+
+    /* Handle on hover */
+    #app-view::-webkit-scrollbar-thumb:hover {
+        background: #575d62;
+    }
+
+}
+
+@media (max-width: 992px) {
+
+    .organizer-card {
+        padding-left: 0;
+        padding-right: 0;
+
+        width: 100%;
+    }
+
+    #button-row button {
+        width: 100%;
+    }
+
+    .dash-card {
+        width: 95%;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 
     #nav-main {
@@ -649,8 +727,12 @@ h4 {
         height: calc(100% - 70px) !important;
     }
 
+    .app-view-logged-in .spacer {
+        min-height: calc(50vh - 70px);
+    }
+
     .title-card h2 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
 }
 
@@ -672,28 +754,10 @@ h4 {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-.generic-button-light {
-    border-radius: 2em;
-    padding: 10px;
-    min-width: 10rem;
-    background-color: transparent;
-    color: white;
-    border: 2px solid white;
-    transition: background-color 0.1s;
-}
-
-.generic-button-light:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-}
-
-.generic-button-light:focus {
-    outline: none;
-}
-
 .generic-button-dark {
     border-radius: 2em;
     padding: 10px;
-    min-width: 10rem;
+    min-width: 9em;
     background-color: transparent;
     color: black;
     border: 2px solid black;
@@ -702,6 +766,11 @@ h4 {
 
 .generic-button-dark:hover {
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+.generic-button-dark:disabled {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 /* State transitions */

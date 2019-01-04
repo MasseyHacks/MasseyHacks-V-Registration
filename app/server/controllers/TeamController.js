@@ -294,11 +294,49 @@ TeamController.getByCode = function(code, callback) {
 
             // Substitutes user objects with their names
             for (var u in team.memberNames) {
-                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id}
+                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id, admissionState: team.memberNames[u].status.name}
             }
 
             return callback(null, team);
         });
+};
+
+TeamController.removeFromTeam = function (userExcute, id, code, callback) {
+    if (!code || !id) {
+        return callback({error: 'Invalid arguments'})
+    }
+
+    User.findOne({
+        _id: id
+    }, function (err, user) {
+        if (err || !user) {
+            console.log(err)
+            return callback({ error : 'User doesn\'t exist' });
+        }
+
+        if (user.teamCode !== code) {
+            return callback({ error : 'The user doesn\'t belong in this team'})
+        }
+
+        TeamController.leaveTeam(id, function (err, data) {
+            if (err || !data) {
+                return callback(err);
+            }
+
+            logger.logAction(userExcute.id, -1, 'Removed: ' + user.email + 'from team ' + code, 'EXECUTOR IP: ' + userExcute.ip);
+
+            Team.findOne({
+                code: code
+            }).populate('memberNames')
+                .exec(function (err, team) {
+                    if (err || !team) {
+                        return callback(null, {message : true})
+                    } else {
+                        return callback(null, {message : false})
+                    }
+                })
+        })
+    })
 };
 
 TeamController.deleteTeamByCode = function (userExcute, code, callback) {

@@ -19,9 +19,9 @@
                     <div v-else>
                         <input class='round-input' style='width: 100%' placeholder='Search for hacker here' v-on:input='updateSearch' v-model='searchQuery' type='text'>
                         <hr>
-                        <button class='generic-button-dark' @click='refresh()'>Refresh Table</button>
+                        <button class='generic-button-dark less-wide' @click='refresh()'>Refresh Table</button>
                         <hr>
-                        <div v-if='users.length != 0 && !queryError'>
+                        <div v-if='users.length != 0 && !queryError' style="overflow-x: auto; max-width: 100%">
                             <table class='data-table-generic'>
                                 <tr class='table-header'>
                                     <td>NAME</td>
@@ -39,8 +39,8 @@
                                     <td><span v-html='userWaiverConverter(users[i-1])'></span></td>
                                     <td><span v-html='userCheckinConverter(users[i-1])'></span></td>
                                     <td class='email-col'>{{users[i-1].email}}</td>
-                                    <td>N/A</td>
-                                    <td>N/A</td>
+                                    <td>{{users[i-1].school}}</td>
+                                    <td>{{users[i-1].grade}}</td>
                                     <td>
                                         <button class='generic-button-dark' @click='inputwaiver(users[i-1], i-1)' v-if='!users[i-1].waiver'>
                                             WAIVER-IN
@@ -82,7 +82,8 @@
                             'permissions.checkin': 'false',
                             'permissions.reviewer': 'false',
                             'permissions.admin': 'false',
-                            'status.confirmed': 'true'
+                            'status.confirmed': 'true',
+                            'status.declined': 'false'
                         }
                     ]
                 },

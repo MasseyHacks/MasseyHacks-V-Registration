@@ -1,69 +1,78 @@
 <template>
-    <div>
-        <div class="ui-card dash-card-large">
-            <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
-            <div class="duo-col" id="detailed-info">
-                <ul style="list-style: none">
-                    <li style="overflow-wrap: break-word; text-align: left;"
-                        v-for="(value, key) in flatten(userObj,false)">
-                        <span v-if="key !== 'Application'">
-                            <b>{{key}}:</b> {{value}}
-                        </span>
-                    </li>
-                </ul>
+    <div style="width: 100%">
+        <div class="organizer-card">
+            <div class="ui-card dash-card-large">
+                <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
+                <div class="duo-col" id="detailed-info">
+                    <ul style="list-style: none">
+                        <li style="overflow-wrap: break-word; text-align: left;"
+                            v-for="(value, key) in flatten(userObj,false)">
+                            <span v-if="key !== 'Application'">
+
+                                <b>{{Object.keys(fields).indexOf(key) != -1 ? fields[key]['caption']
+                                : key}}</b><br>{{value !== null ? value : "[null]"}}<br>
+
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+
+                <h4>APPLICATION</h4>
+                <div class="duo-col">
+                    <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
+                        <li v-for="(value, key) in userApp">
+                            <br>
+                            <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question']
+                                : key}}</b><br>{{value !== null ? value : "[Question left blank]"}}<br>
+                        </li>
+                    </ul>
+                </div>
+
+                <!--             <p>User Object: </p>
+                            {{userObj}} -->
+
+
+                <!-- TODO -->
+
+                <!-- VIEW TEAM -->
+
+                <!-- FLUSH EMAIL QUEUE -->
+                <!-- TOGGLE ACCOUNT ACTIVATION -->
+                <!-- TOGGLE WAIVER -->
+                <!-- TOGGLE CHECKIN -->
+                <!-- DELETE USER -->
+
+                <router-link :to="{path: returnPath}">
+                    <button class="generic-button-dark less-wide">Back</button>
+                </router-link>
+
+                <button class="generic-button-dark less-wide" v-on:click="voteAdmit">Vote Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="voteReject">Vote Reject</button>
+
+                <hr>
+
+                <button class="generic-button-dark less-wide" v-on:click="editUser">Edit User</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceAdmit">Force Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="forceReject">Force Reject</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
+
+                <hr>
+
+                <button class="generic-button-dark less-wide" v-on:click="resetAdmissionState">Reset Admit</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetInvitation">Reset Invitation</button>
+                <button class="generic-button-dark less-wide" v-on:click="resetVotes">Reset Votes</button>
+
+                <hr>
+
+                <button class="generic-button-dark less-wide" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
+                </button>
+                <button class="generic-button-dark less-wide" v-on:click="changePassword">Change Password</button>
+                <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+
+                <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue</button>
+                <button class="generic-button-dark less-wide" v-on:click="deleteUser">Delete User</button>
             </div>
-            <hr>
-
-            <h4>APPLICATION</h4>
-            <div class="duo-col">
-                <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
-                    <li v-for="(value, key) in userApp">
-                        <br>
-                        <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question']
-                            : key}}</b><br>{{value ? value : "[Question left blank]"}}<br>
-                    </li>
-                </ul>
-            </div>
-
-            <!--             <p>User Object: </p>
-                        {{userObj}} -->
-
-
-            <!-- TODO -->
-
-            <!-- VIEW TEAM -->
-
-            <!-- FLUSH EMAIL QUEUE -->
-            <!-- TOGGLE ACCOUNT ACTIVATION -->
-            <!-- TOGGLE WAIVER -->
-            <!-- TOGGLE CHECKIN -->
-            <!-- DELETE USER -->
-
-            <router-link :to="{path: returnPath}">
-                <button class="generic-button-dark">Back</button>
-            </router-link>
-
-            <button class="generic-button-dark" v-on:click="voteAdmit">Vote Admit</button>
-            <button class="generic-button-dark" v-on:click="voteReject">Vote Reject</button>
-
-            <hr>
-
-            <button class="generic-button-dark" v-on:click="editUser">Edit User</button>
-            <button class="generic-button-dark" v-on:click="forceAdmit">Force Admit</button>
-            <button class="generic-button-dark" v-on:click="forceReject">Force Reject</button>
-
-            <hr>
-
-            <button class="generic-button-dark" v-on:click="resetAdmissionState">Reset Admit</button>
-            <button class="generic-button-dark" v-on:click="resetInvitation">Reset Invitation</button>
-            <button class="generic-button-dark" v-on:click="resetVotes">Reset Votes</button>
-
-            <hr>
-
-            <button class="generic-button-dark" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
-            </button>
-            <button class="generic-button-dark" v-on:click="flushEmailQueue">Flush Email Queue</button>
-            <button class="generic-button-dark" v-on:click="deleteUser">Delete User</button>
         </div>
     </div>
 </template>
@@ -73,6 +82,7 @@
     import AuthService from '../src/AuthService.js'
     import swal from 'sweetalert2'
     import ApiService from '../src/ApiService.js'
+    import moment from 'moment'
 
     export default {
         data() {
@@ -83,7 +93,8 @@
                 userObj: {},
                 userApp: {},
                 returnPath: "/organizer/users",
-                applications: {}
+                applications: {},
+                fields: {}
             }
         },
 
@@ -91,6 +102,14 @@
             if (this.$route.query["returnPath"]) {
                 this.returnPath = this.$route.query["returnPath"]
             }
+
+            ApiService.getFields((err, data) => {
+                if (err || !data) {
+                    this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
+                } else {
+                    this.fields = data
+                }
+            });
 
             ApiService.getApplications((err, applications) => {
                 this.applications = applications
@@ -111,8 +130,49 @@
         },
 
         methods: {
+            moment (date) {
+                return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
+            },
+            changePassword: function() {
+
+                AuthService.adminChangePassword(this.userObj.fullName, this.userID, () => {
+                    swal('Success!', 'Successfully changed password', 'success');
+                });
+
+            },
+            toggleSuspend: function() {
+
+                if (this.userObj.status.active) {
+                    ApiService.deactivate(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully deactivated user', 'success');
+                    });
+                } else {
+                    ApiService.activate(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully activated user', 'success');
+                    });
+                }
+
+            },
+            toggleStatus: function() {
+
+                if (this.userObj.status.statusReleased) {
+                    ApiService.hideStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully hid status for user', 'success');
+                    });
+                } else {
+                    ApiService.releaseStatus(this.userObj.fullName, this.userID, (data) => {
+                        this.userObj = data;
+                        swal('Success!', 'Successfully released status for user', 'success');
+                    });
+                }
+
+            },
             deleteUser: function () {
-                ApiService.deleteUser(this.userObj.fullName, this.userID, () => {
+                ApiService.deleteUser(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully deleted user', 'success').then(function () {
                         window.location.href = this.returnPath;
                     });
@@ -120,42 +180,50 @@
                 });
             },
             flushEmailQueue: function () {
-                ApiService.flushEmailQueue(this.userObj.fullName, this.userID, () => {
+                ApiService.flushEmailQueue(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully flushed email queue', 'success');
                 });
             },
             resetVotes: function () {
-                ApiService.resetVotes(this.userObj.fullName, this.userID, () => {
+                ApiService.resetVotes(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset votes', 'success');
                 });
             },
             resetInvitation: function () {
-                ApiService.resetInvitation(this.userObj.fullName, this.userID, () => {
+                ApiService.resetInvitation(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset invitation status', 'success');
                 });
             },
             resetAdmissionState: function () {
-                ApiService.resetAdmissionState(this.userObj.fullName, this.userID, () => {
+                ApiService.resetAdmissionState(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully reset admission state', 'success');
                 });
             },
             forceAdmit: function () {
-                ApiService.forceAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.forceAdmit(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully force admitted user', 'success');
                 });
             },
             forceReject: function () {
-                ApiService.forceReject(this.userObj.fullName, this.userID, () => {
+                ApiService.forceReject(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully force rejected user', 'success');
                 });
             },
             voteAdmit: function () {
-                ApiService.voteAdmit(this.userObj.fullName, this.userID, () => {
+                ApiService.voteAdmit(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully voted to admit user', 'success');
                 });
             },
             voteReject: function () {
-                ApiService.voteReject(this.userObj.fullName, this.userID, () => {
+                ApiService.voteReject(this.userObj.fullName, this.userID, (data) => {
+                    this.userObj = data;
                     swal('Success!', 'Successfully voted to reject user', 'success');
                 });
             },
@@ -248,58 +316,57 @@
                                 title: 'Enter a value for ' + keys[field],
                                 input: 'text',
                                 inputValue: flatWithHistory[keys[field]],
-                                showCancelButton: true,
+                                showCancelButton: true/*,
                                 inputValidator: (value) => {
                                     return !value && 'You need to write something!'
-                                }
+                                }*/
                             });
 
-                            if (newValue) {
-                                swal({
-                                    title: 'Are you sure?',
-                                    type: 'warning',
-                                    html: `You are directly modifying ${this.userObj.fullName}!<br>` +
-                                        '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>' +
-                                        '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation' +
-                                        `<br><br>Field: ${keys[field]}` +
-                                        `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}` +
-                                        `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Yes!'
-                                }).then((result) => {
-                                    if (result.value) {
-                                        AuthService.skillTest(() => {
-                                            swal.showLoading();
+                            swal({
+                                title: 'Are you sure?',
+                                type: 'warning',
+                                html: `You are directly modifying ${this.userObj.fullName}!<br>` +
+                                    '<br>Changes will be pushed <span style="color:red; font-weight:bold;">IMMEDIATELY</span>' +
+                                    '<br>There is <span style="color:red; font-weight:bold;">NO</span> value validation' +
+                                    `<br><br>Field: ${keys[field]}` +
+                                    `<br><span style="font-weight:bold;">Old</span> value: ${flatWithHistory[keys[field]]}` +
+                                    `<br><span style="font-weight:bold;">New</span> value: ${newValue}`,
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes!'
+                            }).then((result) => {
+                                if (result.value) {
+                                    AuthService.skillTest(() => {
+                                        swal.showLoading();
 
-                                            var postData = {};
-                                            postData[keys[field]] = newValue;
+                                        var postData = {};
+                                        postData[keys[field]] = newValue;
 
-                                            AuthService.sendRequest('POST', '/api/modifyUser', {
-                                                userID: this.userObj._id,
-                                                data: postData
-                                            }, (err, data) => {
-                                                if (err) {
-                                                    swal('Error', err.error, 'error')
-                                                } else {
-                                                    swal('Success', 'Field has been changed', 'success').then((result) => {
-                                                        ApiService.getUser(this.userID, (err, data) => {
-                                                            if (err || !data) {
-                                                                console.log("ERROR")
-                                                            } else {
-                                                                console.log("data2");
-                                                                this.userObj = data
-                                                            }
-                                                        })
-                                                    });
+                                        AuthService.sendRequest('POST', '/api/modifyUser', {
+                                            userID: this.userObj._id,
+                                            data: postData
+                                        }, (err, data) => {
+                                            if (err) {
+                                                swal('Error', err.error, 'error')
+                                            } else {
+                                                swal('Success', 'Field has been changed', 'success').then((result) => {
+                                                    ApiService.getUser(this.userID, (err, data) => {
+                                                        if (err || !data) {
+                                                            console.log("ERROR")
+                                                        } else {
+                                                            console.log("data2");
+                                                            this.userObj = data
+                                                        }
+                                                    })
+                                                });
 
-                                                }
-                                            })
+                                            }
                                         })
-                                    }
-                                })
-                            }
+                                    })
+                                }
+                            })
+
                         }
                     }
                 })

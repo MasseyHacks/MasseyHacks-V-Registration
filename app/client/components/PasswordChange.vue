@@ -1,8 +1,11 @@
 <template>
     <div class="app-screen">
-        <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle" style="padding-top:8px;"><i class="fas fa-lock"></i> Change Password</h2>
+        <div class="spacer content-spacer"></div>
+
+        <div class="ui-card dash-card vertical-centered content-vertical-centered" style="margin-top: 10px; margin-bottom: 10px">
+            <h3><i class="fas fa-lock"></i> Change Password</h3>
+
+            <hr>
 
             <p><b>Warning: </b> All other active session tokens will be revoked</p>
 
@@ -10,11 +13,21 @@
 
             <div id="login-form-elements">
                 <form @submit.prevent="changePassword">
-                    <input v-model="oldPassword" placeholder="Old Password" type="password" required>
-                    <input v-model="password1" placeholder="Password" type="password" required>
-                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <div class="button-row">
-                        <button class="generic-button-dark" type="submit">Save</button>
+
+                    <div style="text-align: left">
+
+                        <label>Old Password</label>
+                        <input v-model="oldPassword" class="form-control" placeholder="0ldp455w0rd" type="password" required><br>
+
+                        <label>New Password</label>
+                        <input v-model="password1" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
+
+                        <label>Confirm Password</label>
+                        <input v-model="password2" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
+
+                    </div>
+                    <div >
+                        <button class="generic-button-dark less-wide" type="submit">Save</button>
                     </div>
                 </form>
             </div>

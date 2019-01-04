@@ -1,56 +1,107 @@
 <template>
     <div class="app-screen" v-if="!token">
+        <div class="main main-login" style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
+            <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
+                <div class="spacer"></div>
+                <div id="login-form-box" class="vertical-centered">
+                    <h3><i class="fas fa-lock"></i> Request Password Reset</h3>
 
-        <!--         <form @submit.prevent="requestReset">
-                    <label><input v-model="email" type="email" placeholder="hacker@hackermail.io" autofocus required></label>
-                    <button type="submit">Submit</button>
-                    <p v-if="error" class="error">{{error}}</p>
-                </form> -->
+                    <div v-if="error" class="error-banner">
+                        <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
+                    </div>
+
+                    <br>
+
+                    <div id="login-form-elements">
+                        <form @submit.prevent="requestReset">
+
+                            <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
+
+                            <br>
+
+                            <div >
+                                <button class="generic-button-dark" type="submit">Request</button>
+                                <router-link to="/login">
+                                    <button class="generic-button-dark">Back</button>
+                                </router-link>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else-if="loggedIn" class="app-screen">
+
         <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle" style="padding-top:8px;"><i class="fas fa-lock"></i> Change Password</h2>
+
+        <div class="ui-card dash-card vertical-centered">
+            <h3><i class="fas fa-lock"></i> Change Password</h3>
+
+            <hr>
 
             <p><b>Warning: </b> All other active session tokens will be revoked</p>
 
             <p v-if="error" class="error">{{error}}</p>
 
             <div id="login-form-elements">
-                <form @submit.prevent="changePassword">
-                    <input v-model="email" placeholder="email" type="email" autofocus required>
-                    <div class="button-row">
-                        <button type="submit" class="generic-button-dark">Reset</button>
-                        <router-link to="/login">
-                            <button class="generic-button-dark">Back</button>
-                        </router-link>
+                <form @submit.prevent="resetPassword">
+                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required><br>
+                    <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
+                    <div >
+                        <button class="generic-button-dark" type="submit">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div v-else>
-        <div class="spacer"></div>
-        <div id="login-form-box" class="vertical-centered">
-            <h2 class="subtitle">Reset Password</h2>
-            <div id="login-form-elements">
-                <form @submit.prevent="resetPassword">
-                    <input v-model="password1" placeholder="Password" type="password" required>
-                    <input v-model="password2" placeholder="Confirm Password" type="password" required>
-                    <div class="button-row">
-                        <button type="submit">reset</button>
-                        <router-link to="/login">
-                            <button class="generic-button-dark">cancel</button>
-                        </router-link>
+
+    <div v-else="" class="main main-login" style="background: url('/img/2.jpg') center; background-size: cover; min-height: 100vh; min-width: 100vw; background-position: right 0 top 0;">
+        <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%;">
+            <div class="spacer short-spacer"></div>
+            <div id="login-form-box" class="vertical-centered short-vertical-centered">
+
+                <div>
+
+                    <div class="login-header">
+
+                        <h3><i class="fas fa-lock"></i> Change Password</h3>
+
+                        <p><b>Warning: </b> All other active session tokens will be revoked</p>
+
+                        <div v-if="error" class="error-banner">
+                            <p><i class="fas fa-exclamation-circle" style="color: #f27474"></i> {{error}}</p>
+                        </div>
+
                     </div>
-                    <p v-if="error" class="error">{{error}}</p>
-                </form>
+
+                    <div id="login-form-elements">
+                        <form @submit.prevent="resetPassword">
+
+                            <label>Password</label>
+                            <input v-model="password1" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+
+                            <label>Confirm Password</label>
+                            <input v-model="password2" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+
+                            <div id="button-row">
+                                <button class="generic-button-dark" type="submit">Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
+
+
 <script>
     import AuthService from '../src/AuthService'
     import swal from 'sweetalert2'
+    import Session from '../src/Session'
 
     export default {
         props: {
@@ -63,7 +114,8 @@
                 email: '',
                 password1: '',
                 password2: '',
-                error: false
+                error: false,
+                loggedIn: Session.loggedIn()
             }
         },
         methods: {

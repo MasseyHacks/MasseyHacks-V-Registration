@@ -218,54 +218,67 @@ schema.statics.getByEmail = function (email, callback, permissionLevel) {
     });
 };
 
-schema.statics.validateProfile = function (id, profile, callback) {
+schema.statics.validateProfile = function (profile, callback) {
 
-    var queue = [[fields.profile, profile]];
-    var runner;
-    var userpath;
-    var keys;
+    console.log('Validating profile!')
+    try {
+        var queue = [[fields.profile, profile]];
+        var runner;
+        var userpath;
+        var keys;
 
-    while (queue.length !== 0) {
-        runner = queue[0][0];
-        userpath = queue.shift()[1];
-        keys = Object.keys(runner);
+        while (queue.length !== 0) {
+            runner = queue[0][0];
+            userpath = queue.shift()[1];
+            keys = Object.keys(runner);
 
-        for (var i = 0; i < keys.length; i++) {
-            if ('type' in runner[keys[i]]) {
-                if (runner[keys[i]].required && userpath[keys[i]] && userpath[keys[i]] !== '') {
-                    return callback({error: 'Field "' + keys[i] + '" is required'})
-                }
-
-                if (runner[keys[i]].maxlength && userpath[keys[i]] != null && userpath[keys[i]].length > runner[keys[i]].maxlength) {
-                    return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
-                }
-
-                if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
-                    if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] != '' && !runner[keys[i]].required)) {
-                        return callback({error: 'Field "' + keys[i] + '" is invalid'})
+            for (var i = 0; i < keys.length; i++) {
+                if ('type' in runner[keys[i]]) {
+                    if (profile.signature !== -1 && runner[keys[i]].mandatory && !userpath[keys[i]]) {
+                        return callback({error: 'Field "' + keys[i] + '" is required'})
                     }
-                }
 
-                if (runner[keys[i]].required && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'dropdown' && userpath[keys[i]] == ' ') {
-                    return callback({error: 'Field "' + keys[i] + '" is required'})
-                }
+                    if (runner[keys[i]].maxlength && userpath[keys[i]] && userpath[keys[i]].length > runner[keys[i]].maxlength) {
+                        return callback({error: 'Field "' + keys[i] + '" exceeds character limit'})
+                    }
 
-                if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck') {
-                    for (var r in userpath[keys[i]]) {
-                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1) {
-                            return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
+                    if (runner[keys[i]]['questionType'] && ['dropdown', 'multiradio'].indexOf(runner[keys[i]]['questionType']) != -1) {
+                        if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]]) == -1 && (userpath[keys[i]] || runner[keys[i]].mandatory) && !(profile.signature === -1 && !userpath[keys[i]])) {
+                            return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]] + '" is invalid'})
                         }
                     }
-                }
-            } else {
-                if (userpath[keys[i]]) {
-                    queue.push([runner[keys[i]], userpath[keys[i]]])
+
+                    if (runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'multicheck' && ((userpath[keys[i]] && userpath[keys[i]].length > 0) || runner[keys[i]].mandatory)) {
+                        for (var r in userpath[keys[i]]) {
+                            if (runner[keys[i]]['enum']['values'].split('|').indexOf(userpath[keys[i]][r]) == -1 && !(profile.signature === -1 && !userpath[keys[i]][r])) {
+                                return callback({error: 'Field "' + keys[i] + '" with value "' + userpath[keys[i]][r] + '"is invalid'})
+                            }
+                        }
+                    }
+
+                    if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
+                        if (userpath[keys[i]] != 'true') {
+                            return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
+                        }
+                    }
+                } else {
+                    if (userpath[keys[i]]) {
+                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                    }
                 }
             }
         }
-    }
 
-    return callback(null, profile);
+        console.log('Profile accepted!')
+
+        return callback(null, profile);
+    } catch (e) {
+
+        console.log('Dammit! Something broke...', e)
+
+        return callback({ error: 'You broke something...' })
+
+    }
 };
 
 
@@ -403,7 +416,9 @@ var filterSensitive = function (user, permission, page) {
                 name: user.fullName,
                 waiver: user.status.waiver,
                 checked: user.status.checkedIn,
-                email: user.email
+                email: user.email,
+                school: user.profile.hacker.school,
+                grade: user.profile.hacker.grade
             }
         }
 
@@ -426,6 +441,8 @@ var filterSensitive = function (user, permission, page) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
             keys = Object.keys(runner);
+
+            /*
             async.eachSeries(keys, (key) => {
                 if ('type' in runner[key]) {
                     if (runner[key].permission && runner[key].permission >= permissionLevel) {
@@ -445,27 +462,27 @@ var filterSensitive = function (user, permission, page) {
                         queue.push([runner[key], userpath[key]])
                     }
                 }
-            });
-            // for (var i = 0; i < keys.length; i++) {
-            //     if ('type' in runner[keys[i]]) {
-            //         if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
-            //             try {
-            //                 delete userpath[keys[i]];
-            //             } catch (e) {
-            //                 console.log(e)
-            //             }
-            //         }
-            //
-            //         if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
-            //             userpath[keys[i]] = runner[keys[i]].default;
-            //         }
-            //
-            //     } else {
-            //         if (userpath[keys[i]]) {
-            //             queue.push([runner[keys[i]], userpath[keys[i]]])
-            //         }
-            //     }
-            // }
+            });*/
+
+            for (var i = 0; i < keys.length; i++) {
+                if ('type' in runner[keys[i]]) {
+                   if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
+                        try {
+                            delete userpath[keys[i]];
+                        } catch (e) {
+                            console.log(e)
+                        }
+                    }
+                    if (permissionLevel < 2 && runner[keys[i]].condition && !navigate(user, runner[keys[i]].condition)) {
+                        userpath[keys[i]] = runner[keys[i]].default;
+                    }
+
+                } else {
+                  if (userpath[keys[i]]) {
+                        queue.push([runner[keys[i]], userpath[keys[i]]])
+                   }
+               }
+            }
         }
 
         return u;

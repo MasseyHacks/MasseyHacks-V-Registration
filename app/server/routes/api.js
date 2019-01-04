@@ -2,7 +2,11 @@ const jwt                = require('jsonwebtoken');
 const validator          = require('validator');
 const express            = require('express');
 const request            = require('request');
+const mongodb            = require('mongodb');
+const fs                 = require('fs');
+const formidable         = require('formidable');
 
+const GridStore             = require('../models/GridStore');
 const User               = require('../models/User');
 const UserFields         = require('../models/data/UserFields');
 const Settings           = require('../models/Settings');
@@ -276,6 +280,68 @@ module.exports = function(router) {
     });
 
     // Admin
+    // Remove user from team
+    router.post('/removeFromTeam', permissions.isAdmin, function(req, res){
+        var user = req.userExecute;
+        var id = req.body.id;
+        var code = req.body.code;
+
+        console.log(id, code)
+
+        TeamController.removeFromTeam(user, id, code, logger.defaultResponse(req, res));
+    });
+
+    // General
+    // Upload waiver
+    router.post('/uploadWaiver', /*permissions.isVerified,*/ function(req, res){
+        var userID = 'asdsad'//req.body.id;
+
+        var form = new formidable.IncomingForm();
+
+        console.log(req)
+
+        form.parse(req, function (err, fields, files) {
+            try {
+                //console.log(err, fields, 'shit', files)
+
+                GridStore.write(userID, userID + '-waiver-' + files.data.name, files.data.path, function(err) {
+
+                    if (err) {
+                        return logger.defaultResponse(req, res)(err);
+                    }
+
+                    fs.unlink(files.data.path, function() {
+                        console.log('Deleted temp')
+
+                        return logger.defaultResponse(req, res)(null, 'ok');
+                    })
+                });
+
+            } catch (e) {
+                return logger.defaultResponse(req, res)({ error : 'Something went wrong' });
+                console.log(e)
+            }
+        });
+    });
+
+    // General
+    // Get authorization
+    router.get('/getResourceAuthorization', permissions.isVerified, function(req, res){
+        var user = req.userExecute;
+        var filename = req.query.filename;
+
+        GridStore.authorize(user, filename, function (err, msg) {
+            logger.defaultResponse(req, res)(err, msg);
+        })
+    });
+
+    // General
+    // Upload waiver
+    router.get('/getResource', function(req, res){
+        GridStore.read(req.query.token, res)
+    });
+
+    // Admin
     // Get team by code
     router.get('/getTeamByCode', permissions.isAdmin, function (req, res) {
         var code = req.query.code;
@@ -325,16 +391,14 @@ module.exports = function(router) {
         UserController.updateConfirmation(req.userExecute, userID, confirmation, logger.defaultResponse(req, res));
     });*/
 
-    router.post('/acceptInvitation', permissions.isUser, function(req, res) {
-        var userID = req.body.userID;
+    router.post('/acceptInvitation', permissions.isVerified, function(req, res) {
+        var confirmation = req.body.confirmation;
 
-        UserController.acceptInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+        UserController.acceptInvitation(req.userExecute, confirmation, logger.defaultResponse(req, res));
     });
 
-    router.post('/declineInvitation', permissions.isUser, function(req, res) {
-        var userID = req.body.userID;
-
-        UserController.declineInvitation(req.userExecute, userID, logger.defaultResponse(req, res));
+    router.post('/declineInvitation', permissions.isVerified, function(req, res) {
+        UserController.declineInvitation(req.userExecute, logger.defaultResponse(req, res));
     });
 
     router.post('/resetInvitation', permissions.isOwner, function(req, res) {
@@ -423,6 +487,20 @@ module.exports = function(router) {
         UserController.deactivate(req.userExecute, userID, logger.defaultResponse(req, res));
     });
 
+    // Admin
+    // Release Status
+    router.post('/releaseStatus', permissions.isAdmin, function (req, res) {
+        var userID = req.body.userID;
+        UserController.releaseStatus(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
+    // Admin
+    // Hide status
+    router.post('/hideStatus', permissions.isAdmin, function (req, res) {
+        var userID = req.body.userID;
+        UserController.hideStatus(req.userExecute, userID, logger.defaultResponse(req, res));
+    });
+
     // Developer
     // Reset votes
     router.post('/voteReset', permissions.isDeveloper, function (req, res) {
@@ -461,7 +539,7 @@ module.exports = function(router) {
     });
 
     // Checkin
-    // Waiver in
+    // GridStore in
     router.post('/waiverIn', permissions.isAdmin, function (req, res) {
         var userID = req.body.userID;
         var appPage = req.body.appPage ? req.body.appPage : null;
@@ -469,7 +547,7 @@ module.exports = function(router) {
     });
 
     // Checkin
-    // Waiver out
+    // GridStore out
     router.post('/waiverOut', permissions.isCheckin, function (req, res) {
         var userID = req.body.userID;
         UserController.waiverOut(req.userExecute, userID, logger.defaultResponse(req, res));

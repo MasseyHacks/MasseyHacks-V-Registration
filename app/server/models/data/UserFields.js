@@ -20,57 +20,68 @@ var status = {
     active: {
         type: Boolean,
         required: true,
-        default: true
+        default: true,
+        caption: "Account Active"
     },
     passwordSuspension: {
         type: Boolean,
         required: true,
         default: false,
+        caption: "Suspended until password change"
     },
     submittedApplication: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Submitted Application"
     },
     sentConfirmation: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Confirmation Email Sent"
     },
     waitlisted: {
         type: Boolean,
         required: true,
         default: false,
+        caption: "Waitlisted"
     },
     admitted: {
         type: Boolean,
         required: true,
         default: false,
-        condition: 'status.statusReleased'
+        condition: 'status.statusReleased',
+        caption: "Admitted"
     },
     admittedBy: {
         type: String,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Admitted By"
     },
     confirmed: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Confirmed Invitation"
     },
     waiver: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Waiver on File"
     },
     declined: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Declined Invitation"
     },
     noConfirmation: {
         type: Boolean,
         required:true,
-        default: false
+        default: false,
+        caption: "Failed to Confir,"
     },
     rejected: {
         type: Boolean,
@@ -81,18 +92,25 @@ var status = {
     checkedIn: {
         type: Boolean,
         required: true,
-        default: false
+        default: false,
+        caption: "Checked In"
     },
     checkInTime: {
-        type: Number
+        type: Number,
+        caption: "Time of last checkin",
+        time: true
     },
     confirmBy: {
-        type: Number
+        type: Number,
+        condition: 'status.statusReleased',
+        caption: "Confirmation Deadline",
+        time: true
     },
     statusReleased: {
         type: Boolean,
         default: false,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Status Released"
     }
 };
 
@@ -105,7 +123,8 @@ var hackerApplication = {
         enum: {
             values: ' |Male|Female|Other|I prefer not to answer'
         },
-        mandatory: false
+        mandatory: false,
+        precaption: 'BASIC INFORMATION'
     },
 
     grade: {
@@ -116,17 +135,6 @@ var hackerApplication = {
             values: ' |<=8|9|10|11|12'
         },
         mandatory: true
-    },
-
-    dietaryRestrictions: {
-        type: [String],
-        questionType: 'multicheck',
-        question: 'Please indicate any dietary restrictions.',
-        note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
-        enum: {
-            values: '5|1|4|3'
-        },
-        mandatory: false
     },
 
     shirt: {
@@ -155,26 +163,39 @@ var hackerApplication = {
         mandatory: true
     },
 
+
+    dietaryRestrictions: {
+        type: [String],
+        questionType: 'multicheck',
+        question: 'Please indicate any dietary restrictions.',
+        note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
+        enum: {
+            values: 'Vegetarian|Vegan|Halal|Kosher|Nut Allergy|Gluten Free'
+        },
+        mandatory: false
+    },
+
     departure: {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
         question: 'What city are you travelling from?',
-        mandatory: true
+        mandatory: true,
+        precaption: 'TRAVEL'
     },
 
     bus: {
         type: Boolean,
         questionType: 'boolean',
         question: 'Will you be travelling on our Toronto/Waterloo bus? (If funding permits)',
-        mandatory: false
+        mandatory: true
     },
 
     reimbursement: {
         type: Boolean,
         questionType: 'boolean',
         question: 'Do you need travel reimbursement? (If funding permits)',
-        mandatory: false
+        mandatory: true
     },
 
     github: {
@@ -182,7 +203,8 @@ var hackerApplication = {
         maxlength: 100,
         questionType: 'shortAnswer',
         question: 'GitHub',
-        mandatory: false
+        mandatory: false,
+        precaption: 'EXPERIENCE'
     },
 
     devpost: {
@@ -209,7 +231,7 @@ var hackerApplication = {
         mandatory: false
     },
 
-    q1: {
+    fullResponse1: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
@@ -217,7 +239,7 @@ var hackerApplication = {
         mandatory: true
     },
 
-    q2: {
+    fullResponse2: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
@@ -225,7 +247,7 @@ var hackerApplication = {
         mandatory: true
     },
 
-    q3: {
+    fullResponse3: {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
@@ -233,18 +255,50 @@ var hackerApplication = {
         mandatory: true
     },
 
-    tc: {
-        type: Boolean,
-        questionType: 'boolean',
-        question: 'I agree to MLH Contest Terms and Conditions.',
-        mandatory: true
+    discovery: {
+        type: String,
+        questionType: 'dropdown',
+        question: 'How did you find us?',
+        enum: {
+            values: ' |MLH|Social Media|Word of mouth|Other'
+        },
+        mandatory: true,
+        precaption: 'FINAL QUESTIONS'
     },
 
-    cc: {
-        type: Boolean,
-        questionType: 'boolean',
+    termsAndConditions: {
+        type: String,
+        questionType: 'contract',
+        question: 'I agree to MLH Contest Terms and Conditions.',
+        mandatory: true,
+        warning: 'You must agree to MLH Contest Terms and Conditions.'
+    },
+
+    codeOfConduct: {
+        type: String,
+        questionType: 'contract',
         question: 'I agree to MLH Code of Conduct.',
-        mandatory: true
+        mandatory: true,
+        warning: 'You must agree to MLH Code of Conduct.'
+    },
+
+    tabsOrSpaces: {
+        type: String,
+        questionType: 'multiradio',
+        question: 'Tabs or spaces?',
+        enum: {
+            values: 'Tabs|Spaces'
+        },
+        mandatory: false
+    },
+
+    comment: {
+        type: String,
+        maxlength: 1500,
+        questionType: 'fullResponse',
+        question: 'Anything else you want to let us know?',
+        mandatory: false,
+        precaption: 'FREE COMMENT'
     }
 };
 
@@ -256,18 +310,33 @@ var workshopHost = {
 
 };
 
+var confirmation = {
+    bus: {
+        type: Boolean,
+        questionType: 'boolean',
+        question: 'Will you be travelling on our Toronto/Waterloo bus?',
+        mandatory: true,
+        precaption: 'TRANSPORTATION'
+    },
+
+    additionalNotes: {
+        type: String,
+        questionType: 'fullResponse',
+        question: 'Is there anything else you\'d like us to know?',
+        mandatory: false,
+        precaption: 'ADDITIONAL NOTES'
+    }
+};
+
 var profile = {
     hacker: hackerApplication,
     mentor: mentorApplication,
     workshop: workshopHost,
+    confirmation: confirmation,
     signature: {
         type: Number,
         default: -1
     }
-};
-
-var confirmation = {
-
 };
 
 var userType = {
@@ -301,13 +370,13 @@ var permissions = {
         default: false,
         permissionLevel: 2
     },
-    reviewer: {
+    admin: {
         type: Boolean,
         required: true,
         default: false,
         permissionLevel: 3
     },
-    admin: {
+    reviewer: {
         type: Boolean,
         required: true,
         default: false,
@@ -333,13 +402,15 @@ var schema = {
     firstName: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 100,
+        caption: "First Name"
     },
 
     lastName: {
         type: String,
         required: true,
-        maxlength: 100
+        maxlength: 100,
+        caption: "Last Name"
     },
 
     email: {
@@ -349,7 +420,8 @@ var schema = {
         validate: [
             validator.isEmail,
             'Invalid Email'
-        ]
+        ],
+        caption: "Email"
     },
 
     password: {
@@ -380,44 +452,67 @@ var schema = {
     timestamp: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
+        caption: "Creation Time",
+        time: true
     },
 
     lastUpdated: {
         type: Number,
-        default: 0
+        default: 0,
+        caption: "Profile Last Updated",
+        time: true
+    },
+
+    confirmedTimestamp: {
+        type: Number,
+        default: 0,
+        caption: "Confirmation Last Updated",
+        time: true
     },
 
     passwordLastUpdated: {
         type: Number,
-        default: 0
+        default: 0,
+        caption: "Password Last Updated"
     },
 
     teamCode: {
         type: String,
         min: 0,
-        maxlength: 140
+        maxlength: 140,
+        caption: "Team Code"
     },
 
     applicationAdmit: {
         type: [String],
-        permission: OWNER
+        permission: OWNER,
+        caption: "Votes to Admit"
     },
 
     applicationReject: {
         type: [String],
-        permission: OWNER
+        permission: OWNER,
+        caption: "Votes to Reject"
     },
 
     applicationVotes: {
         type: [String],
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Application Votes"
+    },
+
+    emailsFlushed: {
+        type: [String],
+        permission: ADMIN,
+        caption: "Emails Flushed from Queue"
     },
 
     numVotes : {
         type: Number,
         default: 0,
-        permission: ADMIN
+        permission: ADMIN,
+        caption: "Number of Votes"
     },
 
     status: status,
@@ -425,8 +520,7 @@ var schema = {
     userType: userType,
 
     // Only parts user can update
-    profile: profile,
-    confirmation: confirmation
+    profile: profile
 };
 
 module.exports = schema;

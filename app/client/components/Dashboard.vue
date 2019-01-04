@@ -1,15 +1,16 @@
 <template>
     <div class="app-screen">
 
-        <div class="title-card col-md-12" style="position: absolute; top: 10% !important;">
-            <h2>DASHBOARD</h2>
+        <div class="spacer">
+            <!--
+            <div class="title-card col-md-12">
+                <h2>DASHBOARD</h2>
+            </div>-->
         </div>
-
-        <div class="spacer"></div>
         <div class="container vertical-centered">
             <div class="row">
 
-                <div class="ui-card dash-card" style="text-align: center">
+                <div class="ui-card dash-card dash-card-medium" style="text-align: center">
                     <h3>Application Status</h3>
 
 
@@ -23,7 +24,7 @@
 
                         <hr>
 
-                        <router-link to="/organizer/statistics"><button class="generic-button-dark">Organizer Dashboard</button></router-link>
+                        <router-link to="/organizer/statistics"><button class="generic-button-dark less-wide">Organizer Dashboard</button></router-link>
 
                     </div>
                     <div v-else-if="user.status.name == 'incomplete'">

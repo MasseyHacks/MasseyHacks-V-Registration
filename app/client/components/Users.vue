@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="row">
+    <div style="width: 100%">
+        <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <!--<h3>USERS:</h3>-->
                 <div v-if="loading">
@@ -10,14 +10,14 @@
                     {{loadingError}}
                 </div>
                 <div v-else>
-                    <input style="width: 100%" v-on:input="updateSearch" v-model="searchQuery" type="text">
+                    <input style="width: 100%" class="" v-on:input="updateSearch" v-model="searchQuery" type="text">
 
                     <div v-if="advancedQuery">
                         <textarea v-model="advancedQueryContent" v-on:input="updateAdvancedFilter"
                                   placeholder="Enter query here"></textarea>
                     </div>
                     <div class="filterEntry" v-else>
-                        <select class="first" v-model="queryLogical">
+                        <select class=" first wide" v-model="queryLogical">
                             <option value="$and">and</option>
                             <option value="$or">or</option>
                             <option value="$not">not</option>
@@ -25,12 +25,12 @@
                         </select>
 
                         <!-- Field Name -->
-                        <select class="middle" v-model="queryField" v-on:change="changeFieldName">
+                        <select class=" middle wide" v-model="queryField" v-on:change="changeFieldName">
                             <option v-bind:value="{}">Select a field</option>
                             <option v-for="field in fields" v-bind:value="field">{{prettify(field.name)}}</option>
                         </select>
 
-                        <select class="middle" v-model="queryComparison" :disabled="!queryField.name">
+                        <select class=" middle wide" v-model="queryComparison" :disabled="!queryField.name">
                             <option value="$eq" :disabled="queryField.type=='Boolean'">equal</option>
                             <option value="$ne" :disabled="queryField.type=='Boolean'">not equal</option>
                             <option value="$regex" :disabled="queryField.type!='String'">contains (regex)</option>
@@ -43,54 +43,46 @@
                             <option value="false" :disabled="queryField.type!='Boolean'">False</option>
                         </select>
 
-                        <input class="last" v-model="queryTargetValue" type="text"
+                        <input class=" last wide" v-model="queryTargetValue" type="text"
                                :disabled="(queryField && queryField.type=='Boolean') || !queryField.name">
 
                     </div>
 
                     <br>
-                    <button class="generic-button-dark" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
-                    <button class="generic-button-dark" v-on:click="clearQuery">Clear</button>
-                    <button class="generic-button-dark" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ?
+                    <button class="generic-button-dark wide" v-on:click="addQuery" :disabled="!queryField.name">Add</button>
+                    <button class="generic-button-dark wide" v-on:click="clearQuery">Clear</button>
+                    <button class="generic-button-dark wide" v-on:click="advancedQuery = !advancedQuery">{{advancedQuery ?
                         "Simple" : "Advanced"}} Query
                     </button>
 
                     <br>
+                    <div class="spacious-container" style="overflow-x: auto; max-width: 100%">
+                        <table class="data-table-generic" v-for="(comparison, logical) in filters">
+                            <tr class="table-header" v-if="comparison">
+                                <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>
+                                <td>CONDITION</td>
+                                <td>DELETE</td>
+                            </tr>
+                            <tr v-for="filter in comparison">
 
-                    <table class="data-table-generic" v-for="(comparison, logical) in filters">
-                        <tr class="table-header" v-if="comparison">
-                            <td>"{{logical.slice(1).toUpperCase()}}" FILTERS</td>
-                            <td></td>
-                            <td>CONDITION</td>
-                            <td></td>
-                            <td>DELETE</td>
-                            <td></td>
-                        </tr>
-                        <tr v-for="filter in comparison">
-
-                            <td></td>
-                            <td></td>
-
-                            <td>{{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}</td>
-
-                            <td></td>
-
-                            <td>
-                                <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
-                            </td>
-
-                            <td></td>
-
-                        </tr>
-                    </table>
+                                <td></td>
+                                <td>
+                                    {{prettify(Object.keys(filter)[0])}}: {{filter[Object.keys(filter)[0]]}}
+                                </td>
+                                <td>
+                                    <button style="margin-left: auto; margin-right: auto" class="generic-button-dark" v-on:click="deleteFilter(logical, filter)">Delete</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
                     <div v-if="users.length != 0 && !queryError">
                         <hr>
-                        <button class="generic-button-dark" v-on:click="exportUsersCSV">Export</button>
-                        <button class="generic-button-dark" :disabled="page == 1" v-on:click="switchPage(page - 1)">
+                        <button class="generic-button-dark wide" v-on:click="exportUsersCSV">Export</button>
+                        <button class="generic-button-dark wide" :disabled="page == 1" v-on:click="switchPage(page - 1)">
                             Previous
                         </button>
-                        <button class="generic-button-dark" :disabled="page == totalPages"
+                        <button class="generic-button-dark wide" :disabled="page == totalPages"
                                 v-on:click="switchPage(page + 1)">Next
                         </button>
 
@@ -99,28 +91,30 @@
                         {{page}} of {{totalPages}} | {{count}} result<span v-if="count > 1">s</span>
 
                         <hr>
-                        <table class="data-table-generic">
-                            <tr class="table-header">
-                                <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
-                                <td>V/S/A/C/W</td>
-                                <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
-                                <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
-                                <td>SCHOOL</td>
-                                <td>GRADE</td>
-                            </tr>
-                            <router-link type="tr" v-for="user in users"
-                                         :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
-                                         tag="tr">
-                                <td>
-                                    {{user.fullName}}
-                                </td>
-                                <td><span v-html="userStatusConverter(user)"></span></td>
-                                <td>{{user.numVotes}}</td>
-                                <td class="email-col">{{user.email}}</td>
-                                <td>{{user.profile.hacker.school}}</td>
-                                <td>{{user.profile.hacker.grade}}</td>
-                            </router-link>
-                        </table>
+                        <div style="overflow-x: auto; max-width: 100%">
+                            <table class="data-table-generic">
+                                <tr class="table-header">
+                                    <td><a class="sortable" @click="sortBy('fullName')">NAME</a></td>
+                                    <td>V/S/A/R/C/W</td>
+                                    <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
+                                    <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
+                                    <td>SCHOOL</td>
+                                    <td>GRADE</td>
+                                </tr>
+                                <router-link type="tr" v-for="user in users"
+                                             :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
+                                             tag="tr">
+                                    <td>
+                                        {{user.fullName}}
+                                    </td>
+                                    <td><span v-html="userStatusConverter(user)"></span></td>
+                                    <td>{{user.numVotes}}</td>
+                                    <td class="email-col">{{user.email}}</td>
+                                    <td>{{user.profile.hacker.school}}</td>
+                                    <td>{{user.profile.hacker.grade}}</td>
+                                </router-link>
+                            </table>
+                        </div>
                     </div>
                     <p v-else>
                         {{queryError}}
@@ -189,6 +183,14 @@
                     this.fields = data
                 }
             });
+
+            if (sessionStorage.searchQuery) {
+                this.searchQuery = JSON.parse(sessionStorage.searchQuery);
+            }
+
+            if (sessionStorage.filters) {
+                this.filters = JSON.parse(sessionStorage.filters);
+            }
 
             ApiService.getUsers({page: this.page, size: 100, filters: this.filters}, (err, data) => {
                 this.loading = false;
@@ -356,6 +358,9 @@
                 // Update content of advanced query box
                 this.advancedQueryContent = JSON.stringify(this.filters);
 
+                sessionStorage.searchQuery = JSON.stringify(this.searchQuery);
+                sessionStorage.filters = JSON.stringify(this.filters)
+
                 ApiService.getUsers({
                     page: this.page,
                     size: 100,
@@ -472,6 +477,7 @@
                     'V': '',
                     'S': '',
                     'A': '',
+                    'R': '',
                     'C': '',
                     'W': ''
                 };
@@ -501,6 +507,13 @@
                 } else {
                     repsonseArray['W'] = '<i class="fas fa-ban"></i>'
                 }
+
+                if (user.status.statusReleased) {
+                    repsonseArray['R'] = '<i class="fas fa-check"></i>'
+                } else {
+                    repsonseArray['R'] = '<i class="fas fa-ban"></i>'
+                }
+
 
                 var finalReponse = '';
 

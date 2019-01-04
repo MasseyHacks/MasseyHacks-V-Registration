@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="row">
+    <div style="width: 100%">
+        <div class="organizer-card">
             <div class="ui-card dash-card-large" id="users-table">
                 <div v-if="loading">
                     Loading...
@@ -15,7 +15,7 @@
                         <hr>
                         <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
                         <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
-                        <hr>
+                        <hr v-if="this.user.permissions.owner">
                         <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
                                 class="generic-button-dark">Admit [FORCE]
                         </button>

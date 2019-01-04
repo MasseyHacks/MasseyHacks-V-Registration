@@ -44,7 +44,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -65,7 +65,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -86,7 +86,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -107,7 +107,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -128,7 +128,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -149,7 +149,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     },
@@ -170,7 +170,7 @@ module.exports = {
             }
 
             return res.status(403).send({
-                message: 'Access Denied'
+                error: 'Access Denied'
             });
         });
     }

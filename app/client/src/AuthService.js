@@ -6,11 +6,12 @@ import swal from 'sweetalert2'
 
 module.exports = {
 
-    sendRequest (type, url, data, callback) {
+    sendRequest (type, url, data, callback, contentType, async) {
         var request = {
             type: type,
             url: url,
-            contentType: 'application/json; charset=utf-8',
+            async: async,
+            contentType: contentType || 'application/json; charset=utf-8',
             dataType: 'json',
             success: data => {
                 if (callback) callback(null, data)
@@ -54,6 +55,7 @@ module.exports = {
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Confirm',
+                    dangerMode: true,
                     footer: 'MasseyHacks | Platform Division',
                 }).then((result) => {
                     if (result.value) {
@@ -102,6 +104,49 @@ module.exports = {
             }
         })
 
+    },
+
+    adminChangePassword(fullName, userID, callback) {
+        swal({
+            title: 'Change user password',
+            html: 'Enter a new password for ' + fullName,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Change',
+            input: 'password',
+            footer: 'MasseyHacks | Platform Division',
+            preConfirm: (pw) => {
+
+                if (pw.length < 6) {
+                    swal.showValidationError(
+                        `Must be at least 6 characters long!`
+                    )
+                } else {
+                    return pw
+                }
+            }
+        }).then((result) => {
+
+            if (result.value) {
+
+                this.skillTest(() => {
+
+                    this.sendRequest('POST', '/auth/adminChangePassword', {
+                        userID: userID,
+                        password: result.value
+                    }, (err, data) => {
+                        if (err) {
+                            if (callback) callback(err.responseJSON.error)
+                        } else {
+                            if (callback) callback(null, data)
+                        }
+                    })
+
+                })
+
+            }
+        });
     },
 
     changePassword(oldPassword, newPassword, callback) {
@@ -180,7 +225,7 @@ module.exports = {
                 Session.create(data['token'], data['user']);
                 this.updateLoginState(true)
             }
-        })
+        }, null, false)
     },
 
     loginWithCode (code, callback) {

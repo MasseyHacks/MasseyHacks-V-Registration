@@ -91,7 +91,9 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
                     if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
                         fieldsOut.push({
                             'name': (header ? header + '.' : '') + runner,
-                            'type': current[runner]['type'].name
+                            'type': current[runner]['type'].name,
+                            'time': current[runner]['time'],
+                            'caption': current[runner]['caption']
                         });
                     }
                 } else {
@@ -185,20 +187,23 @@ UserController.getByQuery = function (adminUser, query, callback) {
                 }
 
                 if (users) {
-                    async.eachOfSeries(users, (user, i) => {
+                    async.eachOfSeries(users, (user, i, cb) => {
                         users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
+
+                        return cb()
                     }, (err) => {
                         console.log("FINISHED ASYNC USER FIND");
                         if (err) {
                             console.log(err);
                             return callback({error: err})
                         }
+
+                        return callback(null, {
+                            users: users,
+                            totalPages: Math.ceil(count / size),
+                            count: count
+                        })
                     });
-                    return callback(null, {
-                        users: users,
-                        totalPages: Math.ceil(count / size),
-                        count: count
-                    })
                 }
             });
     });
@@ -515,12 +520,13 @@ UserController.createUser = function (email, firstName, lastName, password, call
         return callback({error: 'Invalid arguments'});
     }
 
+    /*
     if (email.includes('2009karlzhu')) {
         return callback({
             error: 'Karl Zhu detected. Please contact an administrator for assistance.',
             code: 403
         }, false);
-    }
+    }*/
 
     Settings.getSettings(function (err, settings) {
         if (!settings.registrationOpen) {
@@ -638,7 +644,7 @@ UserController.loginWithToken = function (token, callback, ip) {
         if (!user || err) {
 
             if (!!user && user.permissions.checkin) {
-                logger.logAction(user._id, user._id, 'Organized failed token login.', 'IP: ' + ip);
+                logger.logAction(user._id, user._id, 'Organizer failed token login.', 'IP: ' + ip);
             }
 
             return callback(err);
@@ -681,7 +687,7 @@ UserController.loginWithPassword = function (email, password, callback, ip) {
         if (err || !user || user == null || !user.checkPassword(password)) {
 
             if (!!user && user.permissions.checkin) {
-                logger.logAction(user._id, user._id, 'Organized failed password login.', 'IP: ' + ip);
+                logger.logAction(user._id, user._id, 'Organizer failed password login.', 'IP: ' + ip);
             }
 
             return callback({
@@ -745,99 +751,111 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
     // Validate the user profile, and mark the user as profile completed
     // when successful.
     console.log('Updating ' + profile);
-    User.validateProfile(id, profile, function (err, profileValidated) {
-        if (err) {
-            return callback(err);
+
+    User.getByID(id, function(err, validationUser) {
+        // Already submitted
+        if (validationUser.profile.signature !== -1) {
+            return callback({
+                error: 'Sorry, you have already submitted.'
+            });
         }
 
-        // Check if its within the registration window.
-        Settings.getSettings(function (err, times) {
-            if (profileValidated.signature === -1) {
-                return User.findOneAndUpdate({
-                        _id: id
-                    },
-                    {
-                        $set: {
-                            'lastUpdated': Date.now(),
-                            'profile': profileValidated
-                        }
-                    },
-                    {
-                        new: true
-                    },
-                    callback);
-            }
-
+        User.validateProfile(profile, function (err, profileValidated) {
             if (err) {
                 return callback(err);
             }
 
-            var now = Date.now();
+            // Check if its within the registration window.
+            Settings.getSettings(function (err, times) {
 
-            if (!userExecute.admin && now < times.timeOpen) {
-                return callback({
-                    message: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
-                });
-            }
+                if (err) {
+                    return callback(err);
+                }
 
-            if (!userExecute.admin && now > times.timeClose) {
-                return callback({
-                    message: 'Sorry, registration is closed.'
-                });
-            }
+                var now = Date.now();
 
-            User.findOne(
-                {
-                    _id: id
-                },
-                function (err, user) {
-                    if (err || !user) {
-                        return callback(err ? err : {error: 'Unable to perform action.', code: 500})
-                    }
+                if (!userExecute.admin && now < times.timeOpen) {
+                    return callback({
+                        error: 'Registration opens in ' + moment(times.timeOpen).fromNow() + '!'
+                    });
+                }
 
-                    if (user.status.released && (user.status.rejected || user.status.waitlisted || user.status.admitted)) {
-                        return callback({
-                            message: 'Sorry, registration is closed.'
-                        });
-                    }
+                if (!userExecute.admin && now > times.timeClose) {
+                    return callback({
+                        error: 'Sorry, registration is closed.'
+                    });
+                }
 
-                    User.findOneAndUpdate({
-                            _id: id,
+                // Saving
+                if (profileValidated.signature === -1) {
+                    return User.findOneAndUpdate({
+                            _id: id
                         },
                         {
                             $set: {
                                 'lastUpdated': Date.now(),
-                                'profile': profileValidated,
-                                'status.submittedApplication': true
+                                'profile': profileValidated
                             }
                         },
                         {
                             new: true
                         },
                         callback);
+                }
 
-                    logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+                User.findOne(
+                    {
+                        _id: id
+                    },
+                    function (err, user) {
+                        if (err || !user) {
+                            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                        }
 
-                    SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function (err, msg) {
-                        console.log(err, msg);
-                    });
+                        if (user.status.released && (user.status.rejected || user.status.waitlisted || user.status.admitted)) {
+                            return callback({
+                                message: 'Sorry, registration is closed.'
+                            });
+                        }
 
-                    if (!user.status.submittedApplication) {
-                        User.findById(id, function (err, user) {
-                            if (err) {
-                                console.log('Could not send email:');
-                                console.log(err);
-                            }
-                            mailer.sendTemplateEmail(user.email, 'applicationemails', {
-                                nickname: user['firstName'],
-                                dashUrl: process.env.ROOT_URL
-                            })
+                        User.findOneAndUpdate({
+                                _id: id,
+                            },
+                            {
+                                $set: {
+                                    'lastUpdated': Date.now(),
+                                    'profile': profileValidated,
+                                    'status.submittedApplication': true
+                                }
+                            },
+                            {
+                                new: true
+                            },
+                            callback);
+
+                        logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+
+                        SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function (err, msg) {
+                            console.log(err, msg);
                         });
-                    }
 
-                });
+                        if (!user.status.submittedApplication) {
+                            User.findById(id, function (err, user) {
+                                if (err) {
+                                    console.log('Could not send email:');
+                                    console.log(err);
+                                }
+                                mailer.sendTemplateEmail(user.email, 'applicationemails', {
+                                    nickname: user['firstName'],
+                                    dashUrl: process.env.ROOT_URL
+                                })
+                            });
+                        }
+
+                    });
+            });
         });
-    });
+    })
 };
 
 UserController.voteAdmitUser = function (adminUser, userID, callback) {
@@ -916,26 +934,6 @@ UserController.voteRejectUser = function (adminUser, userID, callback) {
     });
 };
 
-function updateStatus(id, status) {
-    User.findOneAndUpdate({
-            '_id': id,
-            'permissions.verified': true,
-            'status.rejected': false,
-            'status.admitted': false,
-        },
-        {
-            $set: {
-                'status': status
-            }
-        },
-        {
-            new: true
-        },
-        function (err, user) {
-            console.log(err, user)
-        });
-}
-
 UserController.checkAdmissionStatus = function (id) {
 
     User.getByID(id, function (err, user) {
@@ -949,13 +947,19 @@ UserController.checkAdmissionStatus = function (id) {
 
             if (!user.status.admitted && !user.status.rejected && !user.status.waitlisted) {
                 if (user.applicationReject.length >= 3) {
-                    user.status.admitted = false;
-                    user.status.rejected = true;
-                    console.log('Rejected user');
+                    //user.status.admitted = false;
+                    //user.status.rejected = true;
+                    //console.log('Rejected user');
 
-                    logger.logAction(-1, user._id, 'Soft rejected user.');
+                    //logger.logAction(-1, user._id, 'Soft rejected user.');
 
-                    updateStatus(id, user.status);
+                    UserController.rejectUser({_id: -1}, user._id, function(err, user) {
+
+                        console.log(err, user)
+
+                    })
+
+                    //updateStatus(id, user.status);
 
                 } else {
                     console.log(user);
@@ -979,18 +983,29 @@ UserController.checkAdmissionStatus = function (id) {
                                 }
 
                                 if (count < settings.maxParticipants) {
+
+                                    /*
                                     user.status.admitted = true;
                                     user.status.rejected = false;
                                     user.status.admittedBy = 'MasseyHacks Admission Authority';
-                                    console.log('Admitted user');
+                                    console.log('Admitted user');*/
 
-                                    logger.logAction(-1, user._id, 'Accepted user.');
+                                    UserController.admitUser({_id: -1, email: 'MasseyHacks Admission Authority'}, user._id, function(err, user) {
+                                        console.log(err, user);
+                                    })
+
+                                    //logger.logAction(-1, user._id, 'Accepted user.');
                                 } else {
+                                    /*
                                     user.status.waitlisted = true;
                                     user.status.rejected = false;
                                     console.log('Waitlisted User');
 
-                                    logger.logAction(-1, user._id, 'Waitlisted user.');
+                                    logger.logAction(-1, user._id, 'Waitlisted user.');*/
+
+                                    UserController.waitlistUser({_id: -1}, user._id, function(err, user) {
+                                        console.log(err, user);
+                                    })
                                 }
 
                                 updateStatus(id, user.status)
@@ -1097,7 +1112,8 @@ UserController.admitUser = function (adminUser, userID, callback) {
             _id: userID,
             'permissions.verified': true,
             'status.rejected': false,
-            'status.admitted': false
+            'status.admitted': false,
+            'status.waitlisted': false
         }, {
             $set: {
                 'status.admitted': true,
@@ -1105,7 +1121,7 @@ UserController.admitUser = function (adminUser, userID, callback) {
                 'status.waitlisted': false,
                 'statusReleased': false,
                 'status.admittedBy': adminUser.email,
-                'status.confirmBy': settings.timeConfirm
+                'status.confirmBy': Date.now() > settings.timeConfirm ? Date.now() + 604800000 : settings.timeConfirm
             }
         }, {
             new: true
@@ -1140,12 +1156,53 @@ UserController.rejectUser = function (adminUser, userID, callback) {
         _id: userID,
         'permissions.verified': true,
         'status.rejected': false,
-        'status.admitted': false
+        'status.admitted': false,
+        'status.waitlisted': false
     }, {
         $set: {
             'status.admitted': false,
             'status.rejected': true,
             'status.waitlisted': false,
+            'statusReleased': false
+        }
+    }, {
+        new: true
+    }, function (err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
+
+        mailer.queueEmail(user.email, 'rejectionemails', function (err) {
+            if (err) {
+                return callback(err);
+            }
+        });
+
+        return callback(err, user);
+
+    });
+};
+
+UserController.waitlistUser = function (adminUser, userID, callback) {
+
+    if (!adminUser || !userID) {
+        return callback({error: 'Invalid arguments'});
+    }
+
+    User.findOneAndUpdate({
+        _id: userID,
+        'permissions.verified': true,
+        'status.rejected': false,
+        'status.admitted': false,
+        'status.waitlisted': false
+    }, {
+        $set: {
+            'status.admitted': false,
+            'status.rejected': false,
+            'status.waitlisted': true,
             'statusReleased': false
         }
     }, {
@@ -1256,58 +1313,72 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
 
 };
 
-UserController.acceptInvitation = function (executeUser, userID, callback) {
+UserController.acceptInvitation = function (executeUser, confirmation, callback) {
+    User.validateProfile(confirmation, function (err, profileValidated) {
+        if (err) {
+            return callback(err);
+        }
 
-    if (!userID) {
-        return callback({error: 'Invalid arguments'});
-    }
+        console.log(err, profileValidated)
+
+        // Only send email if user hasn't confirmed yet
+        User.findOne({
+                _id: executeUser._id,
+                'permissions.verified': true,
+                'status.rejected': false,
+                'status.admitted': true,
+                'status.declined': false,
+                'status.confirmed': false
+            }, function(err, user) {
+
+                if (user && !err) {
+                    mailer.sendTemplateEmail(user.email, 'confirmationemails', {
+                        nickname: user.firstName,
+                        dashUrl: process.env.ROOT_URL
+                    });
+                }
+        });
+
+        User.findOneAndUpdate({
+            _id: executeUser._id,
+            'permissions.verified': true,
+            'status.rejected': false,
+            'status.admitted': true,
+            'status.declined': false
+        }, {
+            $set: {
+                'status.confirmed': true,
+                'profile.confirmation': profileValidated,
+                'confirmedTimestamp':  Date.now()
+            }
+        }, {
+            new: true
+        }, function (err, user) {
+
+            if (err || !user) {
+                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            }
+
+            logger.logAction(executeUser._id, user._id, 'Updated confirmation.', 'EXECUTOR IP: ' + executeUser.ip + ' | ' + JSON.stringify(profileValidated));
+
+            return callback(err, user);
+        });
+    });
+};
+
+UserController.declineInvitation = function (executeUser, callback) {
 
     User.findOneAndUpdate({
-        _id: userID,
+        _id: executeUser._id,
         'permissions.verified': true,
         'status.rejected': false,
         'status.admitted': true,
         'status.declined': false
     }, {
         $set: {
-            'status.confirmed': true
-        }
-    }, {
-        new: true
-    }, function (err, user) {
-
-        if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
-        }
-
-        logger.logAction(executeUser._id, user._id, 'Accepted invitation.', 'EXECUTOR IP: ' + executeUser.ip);
-
-        mailer.sendTemplateEmail(user.email, 'confirmationemails', {
-            nickname: user.firstName,
-            dashUrl: process.env.ROOT_URL
-        });
-
-        return callback(err, user);
-
-    });
-
-};
-
-UserController.declineInvitation = function (executeUser, userID, callback) {
-
-    if (!userID) {
-        return callback({error: 'Invalid arguments'});
-    }
-
-    User.findOneAndUpdate({
-        _id: userID,
-        'permissions.verified': true,
-        'status.rejected': false,
-        'status.admitted': true,
-        'status.confirmed': false
-    }, {
-        $set: {
-            'status.declined': true
+            'status.declined': true,
+            'confirmationTimestamp': null,
+            'status.confirmed': false
         }
     }, {
         new: true
@@ -1343,6 +1414,7 @@ UserController.resetInvitation = function (adminUser, userID, callback) {
         $set: {
             'status.confirmed': false,
             'status.declined': false,
+            'confirmedTimestamp': null
         }
     }, {
         new: true
@@ -1535,6 +1607,7 @@ UserController.releaseStatus = function (adminUser, userID, callback) {
         }
 
         logger.logAction(adminUser._id, user._id, 'Released user status', 'EXECUTOR IP: ' + adminUser.ip);
+
         mailer.flushQueueUser(user.email, function(err, message){
             return callback(err, user);
         });
