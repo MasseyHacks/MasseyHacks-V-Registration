@@ -15,7 +15,7 @@
                         <hr>
                         <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
                         <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
-                        <hr>
+                        <hr v-if="this.user.permissions.owner">
                         <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
                                 class="generic-button-dark">Admit [FORCE]
                         </button>
