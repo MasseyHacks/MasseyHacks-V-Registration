@@ -444,6 +444,12 @@ module.exports = function(router) {
     });
 
     // Owner
+    // Unreject rejected users without status release
+    router.post('/unrejectAllRejected', permissions.isOwner, function (req, res) {
+        globalUsersManager.unrejectAllRejected(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
     // Release all status waitlisted
     router.post('/releaseAllWaitlisted', permissions.isOwner, function (req, res) {
         globalUsersManager.releaseAllWaitlisted(req.userExecute, logger.defaultResponse(req, res));
