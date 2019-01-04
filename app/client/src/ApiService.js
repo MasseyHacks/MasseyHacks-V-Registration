@@ -324,8 +324,7 @@ module.exports = {
     voteAdmit(userName, userID, callback) {
         swal({
             title: "Confirm Your Vote [ADMIT]",
-            html: 'Vote to <span style="color:#00FF00; font-weight:bold;">ADMIT</span> '+ userName +
-            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+            html: 'Vote to <span style="color:#00FF00; font-weight:bold;">ADMIT</span> this user?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
             type: "warning",
             showConfirmButton: true,
             confirmButtonText: 'Yes, vote admit',
@@ -357,8 +356,7 @@ module.exports = {
     voteReject(userName, userID, callback) {
         swal({
             title: "Confirm Your Vote [REJECT]",
-            html: 'Vote to <span style="color:#d33; font-weight:bold;">REJECT</span> ' + userName +
-            '?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
+            html: 'Vote to <span style="color:#d33; font-weight:bold;">REJECT</span> this user?<br>You <span style="color:#d33; font-weight:bold;">CANNOT</span> undo this decision.',
             type: "warning",
             showConfirmButton: true,
             confirmButtonText: 'Yes, vote reject',

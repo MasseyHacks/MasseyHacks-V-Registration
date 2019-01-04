@@ -37,13 +37,15 @@
                 </ul>
 
             </div>-->
-            <hr>
+                <div v-if="user.permissions.owner">
+                    <hr>
 
-            <router-link :to="{path: returnPath}"><button class="generic-button-dark less-wide">Back</button></router-link>
-            <button class="generic-button-dark less-wide" v-on:click="acceptTeam">Force Admit</button>
-            <button class="generic-button-dark less-wide" v-on:click="rejectTeam">Force Reject</button>
+                    <router-link :to="{path: returnPath}"><button class="generic-button-dark less-wide">Back</button></router-link>
+                    <button class="generic-button-dark less-wide" v-on:click="acceptTeam">Force Admit</button>
+                    <button class="generic-button-dark less-wide" v-on:click="rejectTeam">Force Reject</button>
 
-            <button class="generic-button-dark less-wide" v-on:click="deleteTeam">Delete Team</button>
+                    <button class="generic-button-dark less-wide" v-on:click="deleteTeam">Delete Team</button>
+                </div>
         </div>
         </div>
     </div>
