@@ -454,6 +454,7 @@ h2 {
 .custom-ul {
     list-style: none;
     text-align: justify;
+    overflow-wrap: break-word;
 }
 
 .custom-ul i {
