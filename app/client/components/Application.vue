@@ -367,7 +367,7 @@
             },
             saveApplication(auto) {
                 var parsedForm = this.parseForm(this.applications.hacker, false)
-
+                swal.showLoading()
                 //ajax submit code
                 var data = {};
                 data.userID = Session.getUserID();
