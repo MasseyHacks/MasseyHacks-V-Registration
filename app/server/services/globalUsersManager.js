@@ -20,7 +20,7 @@ globalUsersManager.pushBackRejected = function(adminUser, callback){
             'status.rejected': false
         },
         $inc: {
-            'lastUpdated': 10000000
+            'lastUpdated': 10000000000000
         }
     }, function(err, result){
         if (err || !result) {
