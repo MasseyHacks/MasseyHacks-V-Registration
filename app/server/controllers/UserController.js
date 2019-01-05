@@ -279,6 +279,16 @@ UserController.magicLogin = function (token, callback, ip) {
         }
 
         User.findOne({_id: payload.id}, '+magicJWT', function (err, user) {
+
+            if (err || !user) {
+                console.log(err, user)
+
+                return callback({
+                    error: 'Something went wrong.',
+                    code: 500
+                });
+            }
+
             console.log(user);
             if (token === user.magicJWT) {
                 User.findOneAndUpdate({
