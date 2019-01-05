@@ -23,8 +23,8 @@
                     <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
                         <li v-for="(value, key) in userApp">
                             <br>
-                            <b>{{Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key]['question']
-                                : key}}</b><br>{{value !== null ? value : "[Question left blank]"}}<br>
+                            <b v-html="Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key].reviewerText ? applications.hacker[key]['reviewerText'] : applications.hacker[key]['question']
+                                : key"></b><br>{{value !== null ? value : "[Question left blank]"}}<br>
                         </li>
                     </ul>
                 </div>
