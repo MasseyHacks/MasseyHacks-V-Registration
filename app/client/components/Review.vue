@@ -68,7 +68,7 @@
         beforeMount() {
             this.user = Session.getUser();
             console.log(this.user);
-            ApiService.getUsers({ page: 1, size: 10000, filters: {
+            ApiService.getUsers({ sort: { lastUpdated: '1' }, page: 1, size: 10000, filters: {
                 $and:[{
                     'status.admitted': false,
                     'status.rejected': false,

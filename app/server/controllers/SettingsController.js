@@ -69,7 +69,18 @@ SettingsController.getCurrentVersion = function(callback){
 
 };
 
-SettingsController.getVerificationProblem = function(callback){
+SettingsController.getVerificationProblem = function(adminUser, callback){
+
+    User.findOneAndUpdate({
+        _id: adminUser._id
+    }, {
+        $inc : {
+            'skillRequest': 1
+        }
+    }, {}, function () {
+        
+    })
+    
     var alphabet = 'abcdefghijklmnopqrstuvwxyz';
     var returnData = {};
 

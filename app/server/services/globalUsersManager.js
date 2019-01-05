@@ -5,7 +5,7 @@ const UserController = require('../controllers/UserController');
 
 var globalUsersManager = {};
 
-globalUsersManager.unrejectAllRejected = function(adminUser, callback){
+globalUsersManager.pushBackRejected = function(adminUser, callback){
     User.updateMany({
         $and: [
             {
@@ -18,6 +18,9 @@ globalUsersManager.unrejectAllRejected = function(adminUser, callback){
     }, {
         $set: {
             'status.rejected': false
+        },
+        $inc: {
+            'lastUpdated': 10000000
         }
     }, function(err, result){
         if (err || !result) {

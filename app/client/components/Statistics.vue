@@ -179,6 +179,38 @@
                 </div>
             </div>
 
+
+            <div class="ui-card dash-card-large">
+                <h3>SKILL VERIFICATION STATISTICS</h3>
+                <h5>AKA: who is big nurd</h5>
+                <hr>
+
+                <div style="overflow-x: auto; max-width: 100%">
+                    <table class='data-table-generic'>
+                        <tr class='table-header'>
+                            <td>NAME</td>
+                            <td># REQUESTS</td>
+                            <td># PASSED</td>
+                            <td># FAILED</td>
+                        </tr>
+                        <tr v-for='human in statistics.skill'>
+                            <td>
+                                {{human[0]}}
+                            </td>
+                            <td>
+                                {{human[1]}}
+                            </td>
+                            <td>
+                                {{human[2]}}
+                            </td>
+                            <td>
+                                {{human[3]}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>

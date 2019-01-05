@@ -388,8 +388,7 @@ module.exports = {
     forceAdmit(userName, userID, callback) {
         swal({
             title: "Whoa, wait a minute!<br>[FORCE ACTION]",
-            html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE</span> <span style="color:#00FF00; font-weight:bold;">ADMIT</span> ' + userName +
-            '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
+            html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE</span> <span style="color:#00FF00; font-weight:bold;">ADMIT</span> ' + userName + '!',
             type: "warning",
             showConfirmButton: true,
             confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> admit',
@@ -423,8 +422,7 @@ module.exports = {
     forceReject(userName, userID, callback) {
         swal({
             title: "Whoa, wait a minute!<br>[FORCE ACTION]",
-            html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE REJECT</span> ' + userName +
-            '!<br>They will be notified <span style="color:#d33; font-weight:bold;">IMMEDIATELY</span>',
+            html: 'You are about to <span style="color:#d33; font-weight:bold;">FORCE REJECT</span> ' + userName + '!',
             type: "warning",
             showConfirmButton: true,
             confirmButtonText: 'Yes, <span style="font-weight:bold;">FORCE</span> reject',

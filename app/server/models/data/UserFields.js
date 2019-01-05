@@ -515,6 +515,24 @@ var schema = {
         caption: "Number of Votes"
     },
 
+    skillRequest : {
+        type: Number,
+        default: 0,
+        permission: ADMIN,
+        caption: "Number of skill questions requested"
+    },
+    skillPass : {
+        type: Number,
+        default: 0,
+        permission: ADMIN,
+        caption: "Number of skill questions passed"
+    },
+    skillFail : {
+        type: Number,
+        default: 0,
+        permission: ADMIN,
+        caption: "Number of skill questions failed"
+    },
     status: status,
     permissions : permissions,
     userType: userType,

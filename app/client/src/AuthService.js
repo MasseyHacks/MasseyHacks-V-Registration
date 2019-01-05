@@ -84,10 +84,16 @@ module.exports = {
                     preConfirm: (answer) => {
 
                         if (answer != data.answer) {
+
+                            this.sendRequest('POST', '/api/skillFail', {}, (err, data) => {});
+
                             swal.showValidationError(
                                 `Wrong answer!`
                             )
+
                         } else {
+                            this.sendRequest('POST', '/api/skillPass', {}, (err, data) => {});
+
                             return 'ok'
                         }
                     }
