@@ -339,7 +339,7 @@ h2 {
 
 .app-view-logged-in {
     overflow-y: auto !important;
-    overflow: overlay !important;
+    /*overflow: overlay !important;*/
     width: calc(100% - 230px) !important
 }
 
@@ -613,7 +613,7 @@ h4 {
 @media (max-height: 730px) {
     #app-view {
         overflow-y: auto !important;
-        overflow: overlay !important;
+        /*overflow: overlay !important;*/
     }
 
     /*
