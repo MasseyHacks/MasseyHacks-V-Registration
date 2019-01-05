@@ -1,8 +1,7 @@
 <template>
-    <div class="main main-login"
-         style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
+    <div class="main main-login" style="background: url('/img/2.jpg') center;background-size: cover; min-height: 800px; height: 100vh; width: 100vw; background-position: right 0 top 0;">
         <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
-            <div class="spacer"></div>
+            <div class="register-spacer"></div>
             <div id="login-form-box" class="vertical-centered">
                 <div>
 

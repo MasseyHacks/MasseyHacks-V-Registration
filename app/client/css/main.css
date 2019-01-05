@@ -33,6 +33,11 @@ h2 {
     height: 50vh; /*- 75px);*/
 }
 
+.register-spacer {
+    min-height: 400px;
+    height: 50vh; /*- 75px);*/
+}
+
 .hidden {
     display: none;
 }
@@ -613,19 +618,7 @@ h4 {
 @media (max-height: 730px) {
     #app-view {
         overflow-y: auto !important;
-        /*overflow: overlay !important;*/
     }
-
-    /*
-
-    .spacer {
-        min-height: 0 !important;
-        height: 0 !important;
-    }
-
-    .vertical-centered {
-        transform: translateY(50px);
-    }*/
 }
 
 @media (max-width: 992px), (max-height: 730px) {
@@ -637,7 +630,11 @@ h4 {
     }
 
     .content-vertical-centered {
-        transform: translateY(0%);
+        transform: translateY(25px);
+    }
+
+    #dashboard {
+        margin-top: 20px;
     }
 
     .title-card {

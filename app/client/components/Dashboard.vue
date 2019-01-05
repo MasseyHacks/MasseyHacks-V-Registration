@@ -7,7 +7,7 @@
                 <h2>DASHBOARD</h2>
             </div>-->
         </div>
-        <div class="container vertical-centered">
+        <div id="dashboard" class="container vertical-centered">
             <div class="row">
 
                 <div class="ui-card dash-card dash-card-medium" style="text-align: center">
