@@ -7,18 +7,27 @@
                 <h2>DASHBOARD</h2>
             </div>-->
         </div>
-        <div class="container vertical-centered">
+        <div id="dashboard" class="container vertical-centered">
             <div class="row">
 
                 <div class="ui-card dash-card dash-card-medium" style="text-align: center">
                     <h3>Application Status</h3>
 
-
-                    <h5>{{user.status.name.toUpperCase()}}</h5>
+                    <h5 v-if="user.permissions.owner && !user.permissions.developer">SUPREME LEADER</h5>
+                    <h5 v-else>{{user.status.name.toUpperCase()}}</h5>
 
                     <hr>
 
-                    <div v-if="user.status.name == 'organizer'">
+                    <div v-if="user.permissions.owner && !user.permissions.developer">
+                        <p>All hail the king!</p>
+
+                        <hr>
+
+                        <router-link to="/organizer/statistics"><button class="generic-button-dark less-wide">Kingdom Overview</button></router-link>
+
+                    </div>
+
+                    <div v-else-if="user.status.name == 'organizer'">
                         <p><b>Hello there fellow organizer, welcome to your administrative dashboard.</b><br>
                             Remember, with great power, comes great responsibility.</p>
 

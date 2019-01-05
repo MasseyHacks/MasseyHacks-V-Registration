@@ -15,6 +15,7 @@ function calculateStats(callback) {
 
         total: 0,
         votes: {},
+        skill: {},
 
         demo: {
             gender: {
@@ -93,6 +94,19 @@ function calculateStats(callback) {
 
 
     User
+        .find({'permissions.admin':true})
+        .exec(function(err, adminUsers) {
+            if (err || !adminUsers) {
+                throw err;
+            }
+
+            for (var i = 0; i < adminUsers.length; i++) {
+                newStats.skill[adminUsers[i].email] = [adminUsers[i].fullName, adminUsers[i].skillRequest, adminUsers[i].skillPass, adminUsers[i].skillFail];
+            }
+
+        });
+
+            User
         .find({'permissions.reviewer':true, 'permissions.developer':false})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {

@@ -1,15 +1,14 @@
 <template>
-    <div class="main main-login"
-         style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
+    <div class="main main-login" style="background: url('/img/2.jpg') center;background-size: cover; min-height: 600px; height: 100vh; width: 100vw; background-position: right 0 top 0;">
         <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
-            <div class="spacer"></div>
+            <div class="login-spacer"></div>
             <div id="login-form-box" class="vertical-centered">
 
                 <div>
 
                     <div class="login-header">
 
-                        <img src="logo/logowide.svg"
+                        <img src="/logo/logowide.svg"
                              style="width: 45%; min-width: 200px">
 
                         <div v-if="$route.query.redirect && !error" class="error-banner">

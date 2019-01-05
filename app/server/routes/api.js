@@ -31,8 +31,38 @@ module.exports = function(router) {
     // Admin
     // Get skill question
     router.get('/skill', permissions.isAdmin, function(req, res) {
-        SettingsController.getVerificationProblem(logger.defaultResponse(req, res));
+        SettingsController.getVerificationProblem(req.userExecute, logger.defaultResponse(req, res));
     });
+
+    // Admin
+    // Some stats..
+    router.post('/skillFail', permissions.isAdmin, function (req,res) {
+        User.findOneAndUpdate({
+            _id: req.userExecute._id
+        }, {
+            $inc : {
+                'skillFail': 1
+            }
+        }, {}, function () {
+            logger.defaultResponse(req,res)(null, {message: 'ok'});
+        })
+    });
+
+    // Admin
+    // More stats...
+    router.post('/skillPass', permissions.isAdmin, function (req,res){
+
+        User.findOneAndUpdate({
+            _id: req.userExecute._id
+        }, {
+            $inc : {
+                'skillPass': 1
+            }
+        }, {}, function () {
+            logger.defaultResponse(req,res)(null, {message: 'ok'});
+        })
+    });
+
 
     // Owner
     // List emails
@@ -441,6 +471,12 @@ module.exports = function(router) {
     // Release all status accepted
     router.post('/releaseAllAccepted', permissions.isOwner, function (req, res) {
         globalUsersManager.releaseAllAccepted(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Unreject rejected users without status release
+    router.post('/pushBackRejected', permissions.isOwner, function (req, res) {
+        globalUsersManager.pushBackRejected(req.userExecute, logger.defaultResponse(req, res));
     });
 
     // Owner

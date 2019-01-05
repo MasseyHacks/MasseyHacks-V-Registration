@@ -28,6 +28,16 @@ h2 {
     min-height: 50vh; /*- 75px);*/
 }
 
+.login-spacer {
+    min-height: 300px;
+    height: 50vh; /*- 75px);*/
+}
+
+.register-spacer {
+    min-height: 400px;
+    height: 50vh; /*- 75px);*/
+}
+
 .hidden {
     display: none;
 }
@@ -70,8 +80,12 @@ h2 {
     color: black !important;
     align-items: center;
     display: grid;
-    margin: auto;
 
+    margin-top: 0;
+    margin-bottom: 0;
+
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .login-header {
@@ -324,43 +338,14 @@ h2 {
     height: 100%; /* - 75px);*/
 
     overflow-y: hidden;
+    /*overflow-y: auto;*/
     overflow-x: hidden;
 }
 
 .app-view-logged-in {
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
+    /*overflow: overlay !important;*/
     width: calc(100% - 230px) !important
-}
-
-/* width */
-#app-view::-webkit-scrollbar {
-    width: 10px;
-    z-index: 500;
-}
-
-/* Track disabled */
-#app-view::-webkit-scrollbar-track:disabled {
-    background: white;
-}
-
-/* Thumb disabled */
-#app-view::-webkit-scrollbar-thumb {
-    background: white;
-}
-
-/* Track */
-#app-view::-webkit-scrollbar-track {
-    background: lightgray;
-}
-
-/* Handle */
-#app-view::-webkit-scrollbar-thumb {
-    background: darkgrey;
-}
-
-/* Handle on hover */
-#app-view::-webkit-scrollbar-thumb:hover {
-    background: #575d62;
 }
 
 #tint {
@@ -474,6 +459,7 @@ h2 {
 .custom-ul {
     list-style: none;
     text-align: justify;
+    overflow-wrap: break-word;
 }
 
 .custom-ul i {
@@ -629,6 +615,12 @@ h4 {
     cursor: pointer;
 }
 
+@media (max-height: 730px) {
+    #app-view {
+        overflow-y: auto !important;
+    }
+}
+
 @media (max-width: 992px), (max-height: 730px) {
 
     .content-spacer {
@@ -638,7 +630,11 @@ h4 {
     }
 
     .content-vertical-centered {
-        transform: translateY(0%);
+        transform: translateY(25px);
+    }
+
+    #dashboard {
+        margin-top: 20px;
     }
 
     .title-card {
@@ -671,6 +667,33 @@ h4 {
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
     }
+}
+
+@media (min-width: 992px) and (min-height: 730px) {
+    #app-view::-webkit-scrollbar {
+        width: 14px;
+        height: 18px;
+    }
+    #app-view::-webkit-scrollbar-thumb {
+        height: 6px;
+        border: 4px solid rgba(0, 0, 0, 0);
+        background-clip: padding-box;
+        -webkit-border-radius: 7px;
+        background-color: rgba(0, 0, 0, 0.15);
+        -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+    }
+    #app-view::-webkit-scrollbar-button {
+        width: 0;
+        height: 0;
+        display: none;
+    }
+    #app-view::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    #app-view::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+
 }
 
 @media (max-width: 992px) {

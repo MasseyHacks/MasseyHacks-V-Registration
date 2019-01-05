@@ -15,7 +15,7 @@
                         <hr>
                         <button v-on:click="applicationVote('admit')" class="generic-button-dark">Vote Admit</button>
                         <button v-on:click="applicationVote('reject')" class="generic-button-dark">Vote Reject</button>
-                        <hr>
+                        <hr v-if="this.user.permissions.owner">
                         <button v-if="this.user.permissions.owner" v-on:click="applicationVote('admit-force')"
                                 class="generic-button-dark">Admit [FORCE]
                         </button>
@@ -68,7 +68,7 @@
         beforeMount() {
             this.user = Session.getUser();
             console.log(this.user);
-            ApiService.getUsers({ page: 1, size: 10000, filters: {
+            ApiService.getUsers({ sort: { lastUpdated: '1' }, page: 1, size: 10000, filters: {
                 $and:[{
                     'status.admitted': false,
                     'status.rejected': false,
