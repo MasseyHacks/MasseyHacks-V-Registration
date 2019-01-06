@@ -1,5 +1,9 @@
 require('dotenv').load();
 
+
+const logger = require('../services/logger');
+const mailer = require('../services/email');
+
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const validator = require('validator');
@@ -102,6 +106,93 @@ schema.set('toObject', {
 
 schema.statics.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
+
+
+schema.statics.admitUser = function (adminUser, userID, callback) {
+
+    if (!adminUser || !userID) {
+        return callback({error: 'Invalid arguments'});
+    }
+
+    Settings.findOne({}, function (err, settings) {
+        User.findOneAndUpdate({
+            _id: userID,
+            'permissions.verified': true,
+            'status.rejected': false,
+            'status.admitted': false,
+            'status.waitlisted': false
+        }, {
+            $set: {
+                'status.admitted': true,
+                'status.rejected': false,
+                'status.waitlisted': false,
+                'statusReleased': false,
+                'status.admittedBy': adminUser.email,
+                'status.confirmBy': Date.now() > settings.timeConfirm ? Date.now() + 604800000 : settings.timeConfirm
+            }
+        }, {
+            new: true
+        }, function (err, user) {
+
+            if (err || !user) {
+                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            }
+
+            logger.logAction(adminUser._id, user._id, 'Admitted user.', 'EXECUTOR IP: ' + adminUser.ip);
+
+            //send the email
+            mailer.queueEmail(user.email, 'acceptanceemails', function (err) {
+                if (err) {
+                    return callback(err);
+                }
+            });
+
+            return callback(err, user);
+
+        });
+    });
+};
+
+schema.statics.rejectUser = function (adminUser, userID, callback) {
+
+    if (!adminUser || !userID) {
+        return callback({error: 'Invalid arguments'});
+    }
+
+    User.findOneAndUpdate({
+        _id: userID,
+        'permissions.verified': true,
+        'status.rejected': false,
+        'status.admitted': false,
+        'status.waitlisted': false
+    }, {
+        $set: {
+            'status.admitted': false,
+            'status.rejected': true,
+            'status.waitlisted': false,
+            'statusReleased': false
+        }
+    }, {
+        new: true
+    }, function (err, user) {
+
+        if (err || !user) {
+            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+        }
+
+        logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
+
+        mailer.queueEmail(user.email, 'rejectionemails', function (err) {
+            if (err) {
+                return callback(err);
+            }
+        });
+
+        return callback(err, user);
+
+    });
 };
 
 schema.statics.getByID = function (id, callback, permissionLevel) {

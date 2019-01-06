@@ -1,8 +1,6 @@
 const LogEvent        = require('../models/LogEvent');
 const request         = require('request');
 const Raven           = require('raven');
-const permission      = require('../services/permissions');
-const User            = require('../models/User');
 
 module.exports = {
     defaultResponse : function(req, res, responseJSON = true){
