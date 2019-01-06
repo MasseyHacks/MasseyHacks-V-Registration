@@ -118,7 +118,7 @@ schema.statics.admitUser = function (adminUser, userID, callback) {
     }
 
     Settings.findOne({}, function (err, settings) {
-        this.findOneAndUpdate({
+        module.exports.findOneAndUpdate({
             _id: userID,
             'permissions.verified': true,
             'status.rejected': false,
@@ -162,7 +162,7 @@ schema.statics.rejectUser = function (adminUser, userID, callback) {
         return callback({error: 'Invalid arguments'});
     }
 
-    this.findOneAndUpdate({
+    module.exports.findOneAndUpdate({
         _id: userID,
         'permissions.verified': true,
         'status.rejected': false,

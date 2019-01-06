@@ -59,7 +59,7 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
         logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
 
         for (var teamMember in team.memberNames) {
-            User.admitUser(adminUser, team.memberNames[teamMember]._id, function (err, user) {
+            User.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
                 if (err || !user){
                     console.log(err)
                 }
@@ -81,7 +81,7 @@ TeamController.teamReject = function(adminUser, teamCode, callback) {
         logger.logAction(adminUser._id, -1, 'Rejected team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
 
         for (var teamMember in team.memberNames) {
-            User.rejectUser(adminUser, team.memberNames[teamMember]._id, function (err, user) {
+            User.rejectUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
                 if (err || !user){
                     console.log(err)
                 }
@@ -327,7 +327,7 @@ TeamController.getByCode = function(code, callback) {
 
             // Substitutes user objects with their names
             for (var u in team.memberNames) {
-                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id, admissionState: team.memberNames[u].status.name}
+                team.memberNames[u] = {name: team.memberNames[u].fullName, id: team.memberNames[u]._id, status: team.memberNames[u].status}
             }
 
             return callback(null, team);
