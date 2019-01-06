@@ -14,7 +14,7 @@
                     </tr>
                     <tr v-for="member in teamObj.memberNames">
                         <td>{{member.name}}</td>
-                        <td>{{member.admissionState}}</td>
+                        <td>{{status(member.status)}}</td>
                         <td>
                             <router-link :to="{path: '/organizer/userview?username='+member.id+'&returnPath=/organizer/teamview', params: {username: member.id}}">
                                 <button class="generic-button-dark less-wide">View</button>
@@ -90,6 +90,39 @@
         },
 
         methods: {
+            status(rawStatus) {
+                
+                if (rawStatus.checkedIn && rawStatus.statusReleased) {
+                    return 'checked in';
+                }
+
+                if (rawStatus.declined && rawStatus.statusReleased) {
+                    return 'declined';
+                }
+
+                if (rawStatus.waitlisted && rawStatus.statusReleased) {
+                    return 'waitlisted';
+                }
+
+                if (rawStatus.confirmed && rawStatus.statusReleased) {
+                    return 'confirmed';
+                }
+
+                if (rawStatus.admitted && rawStatus.statusReleased) {
+                    return 'admitted';
+                }
+
+                if (rawStatus.rejected && rawStatus.statusReleased) {
+                    return 'rejected';
+                }
+
+                if (rawStatus.submittedApplication) {
+                    return 'submitted';
+                }
+
+                return 'incomplete';
+
+            },
             removeUser(user) {
                 swal({
                     title: 'Warning',

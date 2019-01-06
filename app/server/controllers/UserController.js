@@ -3,6 +3,7 @@ const User = require('../models/User');
 const Team = require('../models/Team');
 const Settings = require('../models/Settings');
 const SettingsController = require('./SettingsController');
+const TeamController = require('./TeamController');
 
 const jwt = require('jsonwebtoken');
 const request = require('request');
@@ -1143,7 +1144,9 @@ UserController.admitUser = function (adminUser, userID, callback) {
 
             logger.logAction(adminUser._id, user._id, 'Admitted user.', 'EXECUTOR IP: ' + adminUser.ip);
 
-
+            TeamController.checkIfAutoAdmit(adminUser, user.teamCode, function (err, team) {
+               console.log(err, team)
+            });
 
             //send the email
             mailer.queueEmail(user.email, 'acceptanceemails', function (err) {
