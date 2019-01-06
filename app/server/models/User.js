@@ -1,5 +1,6 @@
 require('dotenv').load();
 
+const Settings = require('../models/Settings');
 
 const logger = require('../services/logger');
 const mailer = require('../services/email');
