@@ -184,7 +184,7 @@
                 }
             },
             populateApplication() {
-                if (this.user.status.submittedApplication && this.user.profile.hacker != null) {
+                if (this.user.profile.hacker != null) {
 
                     console.log('adding values');
                     //populate the fields with what they submitted
