@@ -1080,6 +1080,7 @@ UserController.resetAdmissionState = function (adminUser, userID, callback) {
             'applicationAdmit': [],
             'applicationReject': [],
             'applicationVotes': [],
+            'admittedBy': '',
             'numVotes': 0
         }
     }, {
