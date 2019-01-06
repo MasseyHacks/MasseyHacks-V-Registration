@@ -163,7 +163,9 @@
                         this.applications = applications;
                         this.populateApplication();
                         if (this.user.profile.signature === -1) {
-                            this.saveTimer = setInterval(this.autoSave, 60000)
+                            this.saveTimer = setInterval(function () {
+                                this.autoSave();
+                            }.bind(this), 60000);
                             console.log(this.user.profile.signature)
                         }
                     }
