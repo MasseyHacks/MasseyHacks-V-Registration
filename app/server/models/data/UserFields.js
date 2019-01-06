@@ -243,14 +243,6 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'What entices you about hacking? What do you gain out of it or like about it?',
-        mandatory: true
-    },
-
-    fullResponse3: {
-        type: String,
-        maxlength: 1500,
-        questionType: 'fullResponse',
         question: 'Why do you want to attend MasseyHacks?',
         mandatory: true
     },
