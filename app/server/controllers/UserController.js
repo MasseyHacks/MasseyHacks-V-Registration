@@ -14,6 +14,7 @@ const moment = require('moment');
 
 const logger = require('../services/logger');
 const mailer = require('../services/email');
+const flush = require('../services/flush');
 const stats = require('../services/stats');
 
 const UserFields = require('../models/data/UserFields');
@@ -1256,7 +1257,7 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
         if (err || !user) {
             return callback(err ? err : {error: 'Unable to perform action.', code: 500})
         }
-        mailer.flushQueueUser(user.email, callback);
+        flush.flushQueueUser(user.email, callback);
     })
 
 };
@@ -1556,7 +1557,7 @@ UserController.releaseStatus = function (adminUser, userID, callback) {
 
         logger.logAction(adminUser._id, user._id, 'Released user status', 'EXECUTOR IP: ' + adminUser.ip);
 
-        mailer.flushQueueUser(user.email, function(err, message){
+        flush.flushQueueUser(user.email, function(err, message){
             return callback(err, user);
         });
     })
