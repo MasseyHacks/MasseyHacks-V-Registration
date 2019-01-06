@@ -119,7 +119,7 @@ var hackerApplication = {
     gender: {
         type: String,
         questionType: 'dropdown',
-        question: 'What gender do you identify as?',
+        question: '<b>What gender do you identify as?</b>',
         enum: {
             values: ' |Male|Female|Other|I prefer not to answer'
         },
@@ -130,7 +130,7 @@ var hackerApplication = {
     grade: {
         type: String,
         questionType: 'dropdown',
-        question: 'What grade are you in?',
+        question: '<b>What grade are you in?</b>',
         enum: {
             values: ' |<=8|9|10|11|12'
         },
@@ -140,7 +140,7 @@ var hackerApplication = {
     shirt: {
         type: String,
         questionType: 'multiradio',
-        question: 'What is your shirt size?',
+        question: '<b>What is your shirt size?</b>',
         enum: {
             values: 'XS|S|M|L|XL'
         },
@@ -151,14 +151,14 @@ var hackerApplication = {
         type: String,
         maxlength: 500,
         questionType: 'fullResponse',
-        question: 'Which hackathons have you attended? (If any)',
+        question: '<b>Which hackathons have you attended? (If any)</b>',
         mandatory: false
     },
 
     school: {
         type: String,
         questionType: 'schoolSearch',
-        question: 'What school do you go to?',
+        question: '<b>What school do you go to?</b>',
         maxlength: 100,
         mandatory: true
     },
@@ -167,7 +167,7 @@ var hackerApplication = {
     dietaryRestrictions: {
         type: [String],
         questionType: 'multicheck',
-        question: 'Please indicate any dietary restrictions.',
+        question: '<b>Please indicate any dietary restrictions.</b>',
         note: 'If your restrictions are not included here, please let us know in the free comment section at the bottom.',
         enum: {
             values: 'Vegetarian|Vegan|Halal|Kosher|Nut Allergy|Gluten Free'
@@ -179,7 +179,7 @@ var hackerApplication = {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
-        question: 'What city are you travelling from?',
+        question: '<b>What city are you travelling from?</b>',
         mandatory: true,
         precaption: 'TRAVEL'
     },
@@ -187,14 +187,14 @@ var hackerApplication = {
     bus: {
         type: Boolean,
         questionType: 'boolean',
-        question: 'Will you be travelling on our Toronto/Waterloo bus? (If funding permits)',
+        question: '<b>Will you be travelling on our Toronto/Waterloo bus? (If funding permits)</b>',
         mandatory: true
     },
 
     reimbursement: {
         type: Boolean,
         questionType: 'boolean',
-        question: 'Do you need travel reimbursement? (If funding permits)',
+        question: '<b>Do you need travel reimbursement? (If funding permits)</b>',
         mandatory: true
     },
 
@@ -202,7 +202,7 @@ var hackerApplication = {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
-        question: 'GitHub',
+        question: '<b>GitHub</b>',
         mandatory: false,
         precaption: 'EXPERIENCE'
     },
@@ -211,7 +211,7 @@ var hackerApplication = {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
-        question: 'Devpost',
+        question: '<b>Devpost</b>',
         mandatory: false
     },
 
@@ -219,7 +219,7 @@ var hackerApplication = {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
-        question: 'Personal Website',
+        question: '<b>Personal Website</b>',
         mandatory: false
     },
 
@@ -227,7 +227,7 @@ var hackerApplication = {
         type: String,
         maxlength: 100,
         questionType: 'shortAnswer',
-        question: 'Link to resume',
+        question: '<b>Link to resume</b>',
         mandatory: false
     },
 
@@ -235,7 +235,7 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'Tell us about a recent project you worked on, computer science-related or not. It’ll help get us an idea of your skills and what you’re all about.',
+        question: '<b>Tell us about a recent project you worked on, computer science-related or not. It’ll help get us an idea of your skills and what you’re all about.</b>',
         mandatory: true
     },
 
@@ -243,14 +243,14 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'Why do you want to attend MasseyHacks?',
+        question: '<b>Why do you want to attend MasseyHacks?</b>',
         mandatory: true
     },
 
     discovery: {
         type: String,
         questionType: 'dropdown',
-        question: 'How did you find us?',
+        question: '<b>How did you find us?</b>',
         enum: {
             values: ' |MLH|Social Media|Word of mouth|Other'
         },
@@ -261,7 +261,7 @@ var hackerApplication = {
     termsAndConditions: {
         type: String,
         questionType: 'contract',
-        question: 'I agree to MLH Contest Terms and Conditions.',
+        question: '<b>I agree to <a href="https://github.com/MLH/mlh-policies/blob/master/prize-terms-and-conditions/contest-terms.md" target="_blank">MLH Contest Terms and Conditions</a>.</b>',
         mandatory: true,
         warning: 'You must agree to MLH Contest Terms and Conditions.'
     },
@@ -269,7 +269,8 @@ var hackerApplication = {
     codeOfConduct: {
         type: String,
         questionType: 'contract',
-        question: 'I agree to MLH Code of Conduct.',
+        question: '<b>I agree to <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf" target="_blank">MLH Code of Conduct</a>.</b>',
+		reviewerText: '<b>I agree to MLH Code of Conduct.</b>',
         mandatory: true,
         warning: 'You must agree to MLH Code of Conduct.'
     },
@@ -277,7 +278,7 @@ var hackerApplication = {
     tabsOrSpaces: {
         type: String,
         questionType: 'multiradio',
-        question: 'Tabs or spaces?',
+        question: '<b>Tabs or spaces?</b>',
         enum: {
             values: 'Tabs|Spaces'
         },
@@ -288,7 +289,7 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: 'Anything else you want to let us know?',
+        question: '<b>Anything else you want to let us know?</b>',
         mandatory: false,
         precaption: 'FREE COMMENT'
     }
