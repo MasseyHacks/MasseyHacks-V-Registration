@@ -197,7 +197,7 @@
 
                                 if (!this.pendingSchools.length) {
                                     swal({
-                                        title: 'Reviewed complete!',
+                                        title: 'Review complete!',
                                         type: 'success'
                                     })
                                 }
@@ -214,7 +214,7 @@
 
                                 if (!this.pendingSchools.length) {
                                     swal({
-                                        title: 'Reviewed complete!',
+                                        title: 'Review complete!',
                                         type: 'success'
                                     })
                                 }

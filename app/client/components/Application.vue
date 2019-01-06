@@ -21,15 +21,13 @@
 
                         <div class="form-group" v-for="(question,questionName) in applications.hacker">
 
-                            <h4 v-if="question.precaption" style="margin-top: 50px">
-                               {{question.precaption}}
-                            </h4>
+                            <h4 v-if="question.precaption" style="margin-top: 50px" v-html="question.precaption"></h4>
 
-                            <label :for="questionName" v-if="question.questionType != 'contract'"><b>{{question.question}} <span v-if="question.mandatory"
+                            <label :for="questionName" v-if="question.questionType != 'contract'"><span v-html="question.question"></span> <b><span v-if="question.mandatory"
                                                                                       style="color: red">*</span></b></label>
 
                             <br v-if="question.note">
-                            <label :for="questionName" v-if="question.note">{{question.note}}</label>
+                            <label :for="questionName" v-if="question.note" v-html="question.note"></label>
 
                             <textarea :disabled="editDisabled" class="form-control" v-if="question.questionType == 'fullResponse'"
                                       :id="questionName" :maxlength="question.maxlength"></textarea>
@@ -65,7 +63,7 @@
                             </div>
                             <div v-if="question.questionType == 'contract'" style="margin-left: 20px" >
                                 <input class="form-check-input" :disabled="editDisabled" type="checkbox" :name="questionName" :id="questionName">
-                                <label :for="questionName"><b>{{question.question}} <span v-if="question.mandatory"
+                                <label :for="questionName"><b><span v-html="question.question"></span> <span v-if="question.mandatory"
                                                                                                                                      style="color: red">*</span></b></label>
                             </div>
                             <select  :disabled="editDisabled" v-if="question.questionType == 'dropdown'" class="form-control" :id="questionName">
