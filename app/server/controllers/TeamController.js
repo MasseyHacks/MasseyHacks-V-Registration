@@ -14,6 +14,39 @@ function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
+TeamController.checkIfAutoAdmit = function (adminUser, teamCode, callback) {
+
+    Team
+        .findOne({
+            code : teamCode
+        })
+        .populate('memberNames')
+        .exec(function (err, team) {
+            if (err || !team) { // Team doesn't exist
+                return callback({ error : 'Team doesn\'t exist' });
+            }
+
+            var numAdmitted = 0;
+
+            if (team.memberNames.length > 2) {
+                // Substitutes user objects with their names
+                for (var u in team.memberNames) {
+                    numAdmitted += team.memberNames[u].status.admitted ? 1 : 0;
+                }
+
+                if (numAdmitted >= 2) {
+                    TeamController.teamAccept(adminUser, teamCode, function (err, team) {
+                        return callback(null, team);
+                    });
+                }
+            }
+
+            console.log('Team not eligable for auto admit')
+
+            return callback({ error : 'Team doesn\'t meet criteria'});
+        });
+
+};
 
 TeamController.teamAccept = function(adminUser, teamCode, callback) {
     console.log(teamCode)

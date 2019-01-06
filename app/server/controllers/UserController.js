@@ -1143,6 +1143,8 @@ UserController.admitUser = function (adminUser, userID, callback) {
 
             logger.logAction(adminUser._id, user._id, 'Admitted user.', 'EXECUTOR IP: ' + adminUser.ip);
 
+
+
             //send the email
             mailer.queueEmail(user.email, 'acceptanceemails', function (err) {
                 if (err) {
