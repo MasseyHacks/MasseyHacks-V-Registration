@@ -1018,7 +1018,7 @@ UserController.checkAdmissionStatus = function (id) {
                                     })
                                 }
 
-                                updateStatus(id, user.status)
+                                //updateStatus(id, user.status)
                             });
                         })
                     }
