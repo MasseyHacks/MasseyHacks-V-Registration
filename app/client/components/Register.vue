@@ -29,7 +29,7 @@
                             <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
 
                             <label>Password</label>
-                            <input class="form-control" v-model="password1" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+                            <input class="form-control" v-model="password1" placeholder="5up3r53cr3tp455w0rd" type="password" required>
 
                             <label>Confirm Password</label>
                             <input class="form-control" v-model="password2" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>

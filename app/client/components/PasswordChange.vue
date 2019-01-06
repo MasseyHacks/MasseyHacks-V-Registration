@@ -17,10 +17,10 @@
                     <div style="text-align: left">
 
                         <label>Old Password</label>
-                        <input v-model="oldPassword" class="form-control" placeholder="0ldp455w0rd" type="password" required><br>
+                        <input v-model="oldPassword" class="form-control" placeholder="0ldp455w0rd" type="password" required>
 
                         <label>New Password</label>
-                        <input v-model="password1" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>
+                        <input v-model="password1" class="form-control" placeholder="n3wp455w0rd" type="password" required>
 
                         <label>Confirm Password</label>
                         <input v-model="password2" class="form-control" placeholder="n3wp455w0rd" type="password" required><br>

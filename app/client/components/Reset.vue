@@ -46,7 +46,7 @@
 
             <div id="login-form-elements">
                 <form @submit.prevent="resetPassword">
-                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required><br>
+                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required>
                     <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
                     <div >
                         <button class="generic-button-dark" type="submit">Save</button>
@@ -79,7 +79,7 @@
                         <form @submit.prevent="resetPassword">
 
                             <label>Password</label>
-                            <input v-model="password1" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+                            <input v-model="password1" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required>
 
                             <label>Confirm Password</label>
                             <input v-model="password2" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
