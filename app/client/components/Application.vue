@@ -192,37 +192,40 @@
 
                     Object.keys(userApp).forEach((field) => {
 
-                        console.log(userApp[field])
+                        if (field in this.applications.hacker) {
 
-                        if (this.applications.hacker[field].questionType == 'multicheck') {
-                            userApp[field].forEach((checkedBox) => {
-                                //check 'em all!
-                                document.getElementById(field + checkedBox).checked = true;
-                            });
-                        } else if (this.applications.hacker[field].questionType == 'multiradio' || this.applications.hacker[field].questionType == 'boolean') {
-                            //check only the radio box that was checked
+                            console.log(userApp[field])
 
-                            if (this.applications.hacker[field].questionType == 'boolean') {
-                                if (userApp[field]) {
-                                    userApp[field] = 1;
-                                } else {
-                                    userApp[field] = 0;
+                            if (this.applications.hacker[field].questionType == 'multicheck') {
+                                userApp[field].forEach((checkedBox) => {
+                                    //check 'em all!
+                                    document.getElementById(field + checkedBox).checked = true;
+                                });
+                            } else if (this.applications.hacker[field].questionType == 'multiradio' || this.applications.hacker[field].questionType == 'boolean') {
+                                //check only the radio box that was checked
+
+                                if (this.applications.hacker[field].questionType == 'boolean') {
+                                    if (userApp[field]) {
+                                        userApp[field] = 1;
+                                    } else {
+                                        userApp[field] = 0;
+                                    }
                                 }
-                            }
-                            console.log("field", field + userApp[field]);
+                                console.log("field", field + userApp[field]);
 
-                            if (document.getElementById(field + userApp[field])) {
-                                document.getElementById(field + userApp[field]).checked = true;
+                                if (document.getElementById(field + userApp[field])) {
+                                    document.getElementById(field + userApp[field]).checked = true;
+                                }
+                            } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
+                                this.schoolPlaceholder = userApp[field];
+                                this.school = userApp[field];
+                            } else if (this.applications.hacker[field].questionType == 'contract') {
+                                document.getElementById(field).checked = userApp[field] == "true";
+                            } else if (document.getElementById(field)) {
+                                document.getElementById(field).value = userApp[field];
+                            } else {
+                                console.log(field, 'is broken!')
                             }
-                        } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
-                            this.schoolPlaceholder = userApp[field];
-                            this.school = userApp[field];
-                        } else if (this.applications.hacker[field].questionType == 'contract') {
-                            document.getElementById(field).checked = userApp[field] == "true";
-                        } else if (document.getElementById(field)) {
-                            document.getElementById(field).value = userApp[field];
-                        } else {
-                            console.log(field, 'is broken!')
                         }
                     })
                 }
