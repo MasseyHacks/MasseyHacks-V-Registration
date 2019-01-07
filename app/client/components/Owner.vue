@@ -60,6 +60,21 @@
                     <button class="generic-button-dark less-wide" v-on:click="rejectNoState">Reject no state</button>
                     <button class="generic-button-dark less-wide" v-on:click="hideAll">Hide all status</button>
                     <button class="generic-button-dark less-wide" v-on:click="flushAllEmails">Flush global email queue</button>
+					
+                </div>
+				
+				<div class="ui-card dash-card-offset dash-card dash-card-large">
+                    <h3>Email Queue Stats</h3>
+                    <hr>
+					<h6 v-for="(queue, name) in emailQueueStats">
+						<span v-if="name != 'total'">
+							{{name}}, size {{queue.size}}, last flush: 
+								{{moment(queue.lastFlushed)}}
+						</span>
+						<span v-else>{{name}}, size {{queue}}</span>
+					
+					</h6>
+					
                 </div>
 
 
@@ -122,7 +137,9 @@
                 maxParticipants: 0,
                 templateOptions: [],
                 selected: '',
-                pendingSchools: []
+                pendingSchools: [],
+				emailQueueStats: null,
+				queuesWithLastFlush: []
             }
         },
         beforeMount() {
@@ -144,6 +161,12 @@
                     this.templateOptions = data.validTemplates
                 }
             });
+			
+			AuthService.sendRequest('GET', '/api/getEmailQueueStats', null, (err, data) => {
+				console.log(data.stats);
+				this.emailQueueStats = data.stats;
+				
+			});
 
             AuthService.sendRequest('GET', '/api/email/get/base', null, (err, data) => {
                 if (err) {
