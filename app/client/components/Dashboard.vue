@@ -56,7 +56,10 @@
                         Your application for MasseyHacks was strong, but unfortunately, due to overwhelming interest in the event, you have been placed on the waiting list. Don’t worry; we will notify you immediately when a spot opens up for you. Thank you for applying to MasseyHacks V!
                     </div>
                     <div v-else-if="user.status.name == 'declined'">
-                        We're sorry to hear that you aren't able to make it this year :(
+                        We’re sorry to hear that you won’t be attending, but don’t worry, we won’t take it personally. Or will we?
+                        <br>
+                        <br>
+                        All jokes aside, we thank you for applying, and we hope that you will be able to make it next time.
                     </div>
                     <div v-else-if="user.status.name == 'checkedin'">
                         Welcome to MasseyHacks! If you have any questions or concerns, feel free to speak to an organizer.
