@@ -143,7 +143,7 @@ globalUsersManager.hideAllStatusRelease = function(adminUser, callback){
 
 globalUsersManager.flushAllEmails = function (adminUser, callback) {
     User.find({}, function (err, users) {
-        console.log('Users to be flushed.', users, err);
+        //console.log('Users to be flushed.', users, err);
 
         logger.logAction(adminUser._id, -1, 'Flushed all emails from queue.', 'EXECUTOR IP: ' + adminUser.ip);
 

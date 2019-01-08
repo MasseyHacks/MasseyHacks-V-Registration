@@ -91,6 +91,19 @@ module.exports = {
 
                     });
 
+					// update the last flush time
+					
+					var pushObj = {};
+					pushObj['emailQueueLastFlushed.'+validTemplates[queue]['queueName']] = Date.now();
+					
+					Settings.findOneAndUpdate({}, {
+						$set: pushObj
+					}, {}, function(err, settings){
+						if(err){
+							console.log(err);
+						}
+					});
+
                     return callback(null, {message: 'Success'});
 
                 }
@@ -139,7 +152,7 @@ module.exports = {
                     };
                     for (var emailQueueName in settings.emailQueue) {
                         if (typeof settings.emailQueue[emailQueueName] === 'object') {
-                            console.log(typeof settings.emailQueue[emailQueueName]);
+                            //console.log(typeof settings.emailQueue[emailQueueName]);
                             for (var i = 0; i < settings.emailQueue[emailQueueName].length; i++) {
 
                                 if (settings.emailQueue[emailQueueName][i] === userEmail) {
@@ -152,11 +165,14 @@ module.exports = {
                                     //kinda sketchy too
                                     pullObj['emailQueue.' + emailQueueName] = userEmail;
                                     //remove it from the queue
-
-                                    console.log(pullObj);
+									
+									// update last flush time
+									var pushObj = {};
+									pushObj['emailQueueLastFlushed.'+emailQueueName] = Date.now();
 
                                     Settings.findOneAndUpdate({}, {
-                                        $pull: pullObj
+                                        $pull: pullObj,
+										$set: pushObj
                                     }, {}, function (err, settings) {
                                         console.log(err, settings.emailQueue);
 

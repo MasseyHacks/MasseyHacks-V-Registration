@@ -28,6 +28,12 @@ JWT_SECRET             = process.env.JWT_SECRET;
 module.exports = function(router) {
     router.use(express.json());
 
+	// Owner
+	// Get queue size
+	router.get('/getEmailQueueStats', permissions.isOwner, function(req, res){
+		Settings.getEmailQueueStats(logger.defaultResponse(req, res));
+	});
+	
     // Admin
     // Get skill question
     router.get('/skill', permissions.isAdmin, function(req, res) {

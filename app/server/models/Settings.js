@@ -23,8 +23,32 @@ var emailQueue = {
   }
 };
 
+var emailQueueLastFlushed = {
+  acceptanceEmails : {
+      type: Number,
+	  default: 0
+  },
+  rejectionEmails: {
+      type: Number,
+	  default: 0
+  },
+  waitlistEmails: {
+      type: Number,
+	  default: 0
+  },
+  laggerConfirmEmails: {
+      type: Number,
+	  default: 0
+  },
+  laggerEmails: {
+      type: Number,
+	  default: 0
+  }
+};
+
 var schema = new mongoose.Schema({
     emailQueue : emailQueue,
+	emailQueueLastFlushed: emailQueueLastFlushed,
     pendingSchools : {
         type: [String],
         required: true
@@ -84,6 +108,30 @@ schema.virtual('applicationsReleased').get(function() {
 schema.virtual('registrationOpen').get(function() {
    return this.timeClose >= Date.now() && Date.now() >= this.timeOpen;
 });
+
+schema.statics.getEmailQueueStats = function(callback) {
+	this.findOne({}, {emailQueue: 1, emailQueueLastFlushed: 1}, function(err, settings) {
+		if(err || !settings){
+			return callback(err ? err : {error: "Unable to find any email queues.", code: 500})
+		}
+		
+		console.log("settings",settings);
+		var emailQueue = settings.emailQueue;
+		var emailQueueLastFlushed = settings.emailQueueLastFlushed;
+		var dataPack = {total:0};
+		for (var queue in emailQueue) {
+			if (emailQueue.hasOwnProperty(queue)) {
+				dataPack[queue] = {};
+				dataPack[queue].size = emailQueue[queue].length;
+				dataPack[queue].lastFlushed = emailQueueLastFlushed[queue];
+				dataPack.total += emailQueue[queue].length ? emailQueue[queue].length : 0;
+			}
+		}
+		delete dataPack["$init"];
+		console.log("queuestats", dataPack);
+		return callback(null, {stats: dataPack});
+	});
+};
 
 schema.statics.requestSchool = function(schoolName, callback) {
     this.findOneAndUpdate({
