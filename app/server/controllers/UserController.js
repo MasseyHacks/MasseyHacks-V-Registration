@@ -1257,7 +1257,9 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
         if (err || !user) {
             return callback(err ? err : {error: 'Unable to perform action.', code: 500})
         }
-        flush.flushQueueUser(user.email, callback);
+        flush.flushQueueUser(user.email, function(err, msg) {
+            return callback(err, msg);
+        });
     })
 
 };

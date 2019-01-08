@@ -81,13 +81,14 @@ var status = {
         type: Boolean,
         required:true,
         default: false,
-        caption: "Failed to Confir,"
+        caption: "Failed to Confirm"
     },
     rejected: {
         type: Boolean,
         required: true,
         default: false,
-        condition: 'status.statusReleased'
+        condition: 'status.statusReleased',
+        caption: "Rejected"
     },
     checkedIn: {
         type: Boolean,
