@@ -479,7 +479,7 @@
                 this.maxParticipants = this.settings.maxParticipants
             },
             moment (date) {
-                return moment(date).format('MMMM Do YYYY, h:mm:ss')
+                return moment(date).format('LLLL')
             },
             changeLimit() {
                 swal({

@@ -37,13 +37,13 @@
 
                     </div>
                     <div v-else-if="user.status.name == 'incomplete'">
-                        Your application is still incomplete. You must complete your application before the submission deadline of {date} to be considered.
+                        Your application is still incomplete. You must complete your application before the submission deadline of {{moment(settings.timeClose)}} to be considered.
                     </div>
                     <div v-else-if="user.status.name == 'submitted'">
                         You have successfully submitted your application! Our team is working hard on reviewing applications, so please be patient and check your email (including spam) often for updates!
                     </div>
                     <div v-else-if="user.status.name == 'admitted'">
-                        You are admitted! Don't get excited just yet, you still need to confirm here, or your chance will fly away! You must confirm before {date}.
+                        You are admitted! Don't get excited just yet, you still need to confirm here, or your chance will fly away! You must confirm before {{moment(user.status.confirmBy)}}.
                         <router-link to="/confirmation">Confirm your spot!</router-link>
                     </div>
                     <div v-else-if="user.status.name == 'confirmed'">
@@ -80,15 +80,20 @@
     import Session from '../src/Session'
     import AuthService from '../src/AuthService.js'
     import swal from 'sweetalert2'
+    import moment from 'moment'
 
     export default {
         data() {
             return {
                 user: Session.getUser(),
+                settings: Session.getSettings(),
                 error: ''
             }
         },
         methods: {
+            moment (date) {
+                return moment(date).format('LLLL')
+            },
             resendVerify() {
                 AuthService.requestVerify((err,data) => {
                     if (err) {

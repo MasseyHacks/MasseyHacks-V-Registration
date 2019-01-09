@@ -173,7 +173,7 @@
         },
         methods: {
             moment (date) {
-                return moment(date).format('MMMM Do YYYY, h:mm:ss')
+                return moment(date).format('LLLL')
             },
             populateApplication() {
                 if (this.user.status.confirmed && this.user.profile.confirmation != null) {

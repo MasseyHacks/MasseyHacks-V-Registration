@@ -172,7 +172,7 @@
         },
         methods: {
             moment (date) {
-                return moment(date).format('MMMM Do YYYY, h:mm:ss')
+                return moment(date).format('LLLL')
             },
             checkEditState() {
                 this.editDisabled = this.user.profile.isSigned || !this.settings.registrationOpen;
