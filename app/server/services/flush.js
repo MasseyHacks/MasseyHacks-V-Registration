@@ -185,13 +185,17 @@ module.exports = {
                                             }, {},
                                             function (err, user) {
 
-                                                return callback(null,{message: 'Success'});
+                                                console.log(err, user);
+
+
                                             });
                                     });
                                 }
                             }
                         }
                     }
+
+                    return callback(null,{message: 'Success'});
 
                 });
             }
