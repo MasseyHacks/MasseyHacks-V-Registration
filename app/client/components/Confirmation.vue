@@ -340,8 +340,8 @@
                     })
                 } else {
                     swal({
-                        title: "Accept Invitation?",
-                        text: "Are you sure you want to accept your invitation?",
+                        title: "Confirm?",
+                        text: "Are you sure you want to confirm?",
                         type: "question",
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
