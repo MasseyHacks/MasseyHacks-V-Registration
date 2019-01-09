@@ -46,9 +46,17 @@
 
             <div id="login-form-elements">
                 <form @submit.prevent="resetPassword">
-                    <input v-model="password1" class="form-control" placeholder="Password" type="password" required>
-                    <input v-model="password2" class="form-control" placeholder="Confirm Password" type="password" required><br>
-                    <div >
+
+                    <div style="text-align: left">
+
+                        <label>Password</label>
+                        <input v-model="password1" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required>
+
+                        <label>Confirm Password</label>
+                        <input v-model="password2" class="form-control" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
+
+                    </div>
+                    <div>
                         <button class="generic-button-dark" type="submit">Save</button>
                     </div>
                 </form>
@@ -56,11 +64,10 @@
         </div>
     </div>
 
-    <div v-else="" class="main main-login" style="background: url('/img/2.jpg') center; background-size: cover; min-height: 100vh; min-width: 100vw; background-position: right 0 top 0;">
-        <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%;">
-            <div class="spacer short-spacer"></div>
-            <div id="login-form-box" class="vertical-centered short-vertical-centered">
-
+     <div v-else="" class="main main-login" style="background: url('/img/2.jpg') center;background-size: cover; height: 100vh; width: 100vw; background-position: right 0 top 0;">
+        <div style="background-color: rgba(0, 0, 0, 0.6); height: 100%">
+            <div class="spacer"></div>
+            <div id="login-form-box" class="vertical-centered">
                 <div>
 
                     <div class="login-header">
