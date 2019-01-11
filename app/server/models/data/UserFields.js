@@ -142,6 +142,7 @@ var hackerApplication = {
         type: String,
         questionType: 'shortAnswer',
         question: '<b>When is your birthday (YYYY/MM/DD)?</b>',
+        maxlength: 11,
         mandatory: true
     },
 
@@ -259,7 +260,6 @@ var hackerApplication = {
 
     fullResponse2: {
         type: String,
-        maxlength: 1500,
         questionType: 'fullResponse',
         question: '<b>Why do you want to attend MasseyHacks?</b>',
         mandatory: true
@@ -269,6 +269,7 @@ var hackerApplication = {
         type: String,
         questionType: 'shortAnswer',
         question: '<b>What is your phone number?</b>',
+        maxlength: 15,
         mandatory: false,
         precaption: 'FINAL QUESTIONS'
     },
