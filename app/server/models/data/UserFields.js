@@ -260,6 +260,7 @@ var hackerApplication = {
 
     fullResponse2: {
         type: String,
+        maxlength: 1500,
         questionType: 'fullResponse',
         question: '<b>Why do you want to attend MasseyHacks?</b>',
         mandatory: true
@@ -286,7 +287,7 @@ var hackerApplication = {
     },
 
     codeOfConduct: {
-        type: String,
+        type: Boolean,
         questionType: 'contract',
         question: '<b>I have read and agree to the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf" target="_blank">MLH Code of Conduct</a>.</b>',
         reviewerText: '<b>I have read and agree to the MLH Code of Conduct.</b>',
@@ -295,7 +296,7 @@ var hackerApplication = {
     },
 
     termsAndConditions: {
-        type: String,
+        type: Boolean,
         questionType: 'contract',
         question: '<b>I authorize you to share my application/registration information for event administration, ranking, MLH administration, pre- and post-event informational e-mails, and occasional messages about hackathons in-line with the <a href="https://mlh.io/privacy" target="_blank">MLH Privacy Policy</a>. I further I agree to the terms of both the <a href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions" target="_blank">MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank">MLH Privacy Policy</a>.</b>',
         mandatory: true,

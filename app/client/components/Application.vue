@@ -220,7 +220,7 @@
                                 this.schoolPlaceholder = userApp[field];
                                 this.school = userApp[field];
                             } else if (this.applications.hacker[field].questionType == 'contract') {
-                                document.getElementById(field).checked = userApp[field] == "true";
+                                document.getElementById(field).checked = userApp[field];
                             } else if (document.getElementById(field)) {
                                 document.getElementById(field).value = userApp[field];
                             } else {
@@ -252,10 +252,10 @@
                         formValue[question] = checked;
                     } else if (template[question].questionType == 'contract') {
 
-                        var agreed = 'false'
+                        var agreed = false
 
                         $("input[name='" + question + "']:checked").each(function () {
-                            agreed = 'true'
+                            agreed = true
                         });
 
                         if (validate && template[question].mandatory && agreed != 'true') {
