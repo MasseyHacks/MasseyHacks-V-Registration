@@ -124,17 +124,24 @@ var hackerApplication = {
         enum: {
             values: ' |Male|Female|Other|I prefer not to answer'
         },
-        mandatory: false,
+        mandatory: true,
         precaption: 'BASIC INFORMATION'
     },
 
-    grade: {
+    ethnicity: {
         type: String,
         questionType: 'dropdown',
-        question: '<b>What grade are you in?</b>',
+        question: '<b>What is your ethnicity?</b>',
         enum: {
-            values: ' |<=8|9|10|11|12'
+            values: ' |White/Caucasian|Asian/Pacific Islander|Hispanic|African American|Other/multiple ethnicities|I prefer not to answer'
         },
+        mandatory: true
+    },
+
+    birthday: {
+        type: String,
+        questionType: 'shortAnswer',
+        question: '<b>When is your birthday (YYYY/MM/DD)?</b>',
         mandatory: true
     },
 
@@ -154,6 +161,16 @@ var hackerApplication = {
         questionType: 'fullResponse',
         question: '<b>Which hackathons have you attended? (If any)</b>',
         mandatory: false
+    },
+
+    grade: {
+        type: String,
+        questionType: 'dropdown',
+        question: '<b>What grade are you in?</b>',
+        enum: {
+            values: ' |<=8|9|10|11|12'
+        },
+        mandatory: true
     },
 
     school: {
@@ -248,6 +265,14 @@ var hackerApplication = {
         mandatory: true
     },
 
+    phoneNumber: {
+        type: String,
+        questionType: 'shortAnswer',
+        question: '<b>What is your phone number?</b>',
+        mandatory: false,
+        precaption: 'FINAL QUESTIONS'
+    },
+
     discovery: {
         type: String,
         questionType: 'dropdown',
@@ -256,25 +281,27 @@ var hackerApplication = {
             values: ' |MLH|Social Media|Word of mouth|Other'
         },
         mandatory: true,
-        precaption: 'FINAL QUESTIONS'
-    },
 
-    termsAndConditions: {
-        type: String,
-        questionType: 'contract',
-        question: '<b>I agree to <a href="https://github.com/MLH/mlh-policies/blob/master/prize-terms-and-conditions/contest-terms.md" target="_blank">MLH Contest Terms and Conditions</a>.</b>',
-        mandatory: true,
-        warning: 'You must agree to MLH Contest Terms and Conditions.'
     },
 
     codeOfConduct: {
         type: String,
         questionType: 'contract',
-        question: '<b>I agree to <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf" target="_blank">MLH Code of Conduct</a>.</b>',
-		reviewerText: '<b>I agree to MLH Code of Conduct.</b>',
+        question: '<b>I have read and agree to the <a href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf" target="_blank">MLH Code of Conduct</a>.</b>',
+        reviewerText: '<b>I have read and agree to the MLH Code of Conduct.</b>',
         mandatory: true,
-        warning: 'You must agree to MLH Code of Conduct.'
+        warning: 'You must agree to the MLH Code of Conduct.'
     },
+
+    termsAndConditions: {
+        type: String,
+        questionType: 'contract',
+        question: '<b>I authorize you to share my application/registration information for event administration, ranking, MLH administration, pre- and post-event informational e-mails, and occasional messages about hackathons in-line with the <a href="https://mlh.io/privacy" target="_blank">MLH Privacy Policy</a>. I further I agree to the terms of both the <a href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions" target="_blank">MLH Contest Terms and Conditions</a> and the <a href="https://mlh.io/privacy" target="_blank">MLH Privacy Policy</a>.</b>',
+        mandatory: true,
+        reviewerText: '<b>I have read and agree to the MLH Contest Terms and data-sharing policy.</b>',
+        warning: 'You must agree to the MLH Contest Terms and Conditions and data-sharing policy.'
+    },
+
 
     tabsOrSpaces: {
         type: String,
