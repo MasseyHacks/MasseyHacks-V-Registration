@@ -258,7 +258,7 @@
                             agreed = true
                         });
 
-                        if (validate && template[question].mandatory && agreed != 'true') {
+                        if (validate && template[question].mandatory && !agreed) {
                             submissionErrors.push(template[question].warning);
                             doNotSubmit = true;
                         }
