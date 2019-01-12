@@ -349,7 +349,7 @@ schema.statics.validateProfile = function (profile, callback) {
                     }
 
                     if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
-                        if (userpath[keys[i]] != 'true') {
+                        if (!userpath[keys[i]]) {
                             return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})
                         }
                     }
