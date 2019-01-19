@@ -15,9 +15,11 @@
                     <div id="login-form-elements">
                         <form @submit.prevent="requestReset">
 
-                            <label>Email</label>
-                            <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
 
+                            <div style="text-align: left">
+                                <label>Email</label>
+                                <input v-model="email" class="form-control" placeholder="hacker@hackermail.io" type="email" required>
+                            </div>
                             <br>
 
                             <div >
