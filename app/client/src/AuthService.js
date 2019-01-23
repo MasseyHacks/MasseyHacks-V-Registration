@@ -50,7 +50,7 @@ module.exports = {
             if (err || sudoMode) {
                 swal({
                     title: (sudoMode ? '[SUDO MODE]\n' : '') + 'Disastrous Action Final Confirmation',
-                    html: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.<br><br>',
+                    html: 'Security policy requires that all \'disastrous\' actions be confirmed with a skill test. By proceeding, you understand and assume full responsibility of all risks and/or damage (potentially) incurred.<br><br>To promote mathematics and STEM, MasseyHacks Platform Department will issue a SkillTest Fail Bad no good point if you bypass using SUDO mode. K thx bye.<br><br>',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -59,6 +59,8 @@ module.exports = {
                     footer: 'MasseyHacks | Platform Division',
                 }).then((result) => {
                     if (result.value) {
+                        this.sendRequest('POST', '/api/skillFail', {}, (err, data) => {});
+
                         callback()
                     } else {
                         swal({
