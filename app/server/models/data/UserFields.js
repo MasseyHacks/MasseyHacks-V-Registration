@@ -425,21 +425,21 @@ var schema = {
     firstName: {
         type: String,
         required: true,
-        maxlength: 100,
+        maxlength: 50,
         caption: "First Name"
     },
 
     lastName: {
         type: String,
         required: true,
-        maxlength: 100,
+        maxlength: 50,
         caption: "Last Name"
     },
 
     email: {
         type: String,
         required: true,
-        maxlength: 100,
+        maxlength: 50,
         validate: [
             validator.isEmail,
             'Invalid Email'
