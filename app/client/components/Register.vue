@@ -20,13 +20,13 @@
                         <form @submit.prevent="register">
 
                             <label>First Name</label>
-                            <input class="form-control" v-model="firstName" placeholder="Hax0r" autofocus required>
+                            <input class="form-control" :maxlength="100" v-model="firstName" placeholder="Hax0r" autofocus required>
 
                             <label>Last Name</label>
-                            <input class="form-control" v-model="lastName" placeholder="M4ast3r" required>
+                            <input class="form-control" :maxlength="100" v-model="lastName" placeholder="M4ast3r" required>
 
                             <label>Email</label>
-                            <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
+                            <input class="form-control" :maxlength="100" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
 
                             <label>Password</label>
                             <input class="form-control" v-model="password1" placeholder="5up3r53cr3tp455w0rd" type="password" required>

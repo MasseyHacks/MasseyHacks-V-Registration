@@ -28,7 +28,7 @@
                     <div id="login-form-elements">
                         <form @submit.prevent="login">
                             <label>Email</label>
-                            <input class="form-control" v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
+                            <input class="form-control" :maxlength="100" v-model="email" placeholder="hacker@hackermail.io" type="email" autofocus required>
 
                             <label>Password</label>
                             <input class="form-control" v-model="pass" placeholder="5up3r53cr3tp455w0rd" type="password" required><br>
