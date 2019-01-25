@@ -27,10 +27,8 @@ const autoRemove      = require('./app/server/services/autoRemove');
 const waiverReceiver  = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
 const stats           = require('./app/server/services/stats');
-
 Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
-
     var app = express();
     console.log(database);
     mongoose.connect(database, {server: {auto_reconnect: true}})
