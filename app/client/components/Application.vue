@@ -145,29 +145,28 @@
             if (this.modified()) {
 
                 swal({
-                    title: 'Wait! You have unsaved changed!',
-                    html: 'You have not saved or submitted your application! Do you want to continue?',
+                    title: 'Are you sure you want to leave?',
+                    html: 'Changes you made have not been saved!<br>Do you want to continue?',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Continue',
+                    confirmButtonText: 'Leave page',
                     dangerMode: true,
                     type: 'warning'
                 }).then((result) => {
                     if (result.value) {
-                        document.addEventListener('beforeunload');
+                        document.removeEventListener('beforeunload', this.handler);
                         next();
                     }
                 });
             }  else {
-                document.addEventListener('beforeunload');
+                console.log('unloaded')
+                document.removeEventListener('beforeunload', this.handler);
                 next();
             }
 
         },
         beforeMount() {
-
-            document.addEventListener('beforeunload', this.handler)
 
             this.checkEditState();
 
@@ -184,12 +183,7 @@
         },
         mounted() {
 
-            window.addEventListener('beforeunload', (event) => {
-
-                if (this.modified()) {
-                    event.returnValue = `Are you sure you want to leave?`;
-                }
-            });
+            //window.addEventListener('beforeunload', this.handler);
 
             this.$nextTick(function () {
                 ApiService.getApplications((err, applications) => {
@@ -209,8 +203,12 @@
             })
         },
         methods: {
-            handler() {
-                alert('nooo');
+            handler(event) {
+                console.log('Exit listener triggered');
+
+                if (this.modified()) {
+                    event.returnValue = `Are you sure you want to leave?`;
+                }
             },
             moment (date) {
                 return moment(date).format('LLLL')
@@ -258,6 +256,7 @@
 
                                 if (document.getElementById(field + userApp[field])) {
                                     document.getElementById(field + userApp[field]).checked = true;
+                                    console.log('CHECKINGOFF BUSS')
                                 }
                             } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
                                 this.schoolPlaceholder = userApp[field];
@@ -401,7 +400,7 @@
                                     Session.setUser(user);
 
                                     this.user = user;
-                                    this.oldApplication = this.user.profile.hacker;
+                                    this.oldApplication = user.profile.hacker;
 
                                     this.checkEditState();
                                     swal("Success", "Your application has been submitted!", "success");
@@ -460,7 +459,7 @@
                             Session.setUser(user);
 
                             this.user = user;
-                            this.oldApplication = this.user.profile.hacker;
+                            this.oldApplication = user.profile.hacker;
 
                             this.checkEditState();
 
