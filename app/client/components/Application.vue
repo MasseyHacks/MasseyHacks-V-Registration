@@ -139,6 +139,32 @@
         components: {
             vSelect
         },
+        beforeRouteLeave(to, from, next) {
+            console.log('hai', to, from);
+
+            if (this.modified()) {
+
+                swal({
+                    title: 'Wait! You have unsaved changed!',
+                    html: 'You have not saved or submitted your application! Do you want to continue?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Continue',
+                    dangerMode: true,
+                    type: 'warning'
+                }).then((result) => {
+                    if (result.value) {
+                        document.addEventListener('beforeunload');
+                        next();
+                    }
+                });
+            }  else {
+                document.addEventListener('beforeunload');
+                next();
+            }
+
+        },
         beforeMount() {
 
             document.addEventListener('beforeunload', this.handler)
