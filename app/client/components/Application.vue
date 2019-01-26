@@ -141,6 +141,8 @@
         },
         beforeMount() {
 
+            document.addEventListener('beforeunload', this.handler)
+
             this.checkEditState();
 
             console.log(this.settings);
@@ -155,6 +157,14 @@
             });
         },
         mounted() {
+
+            window.addEventListener('beforeunload', (event) => {
+
+                if (this.modified()) {
+                    event.returnValue = `Are you sure you want to leave?`;
+                }
+            });
+
             this.$nextTick(function () {
                 ApiService.getApplications((err, applications) => {
                     if (err || !applications) {
@@ -173,6 +183,9 @@
             })
         },
         methods: {
+            handler() {
+                alert('nooo');
+            },
             moment (date) {
                 return moment(date).format('LLLL')
             },
@@ -360,7 +373,10 @@
                                     swal("Error", err.responseJSON['error'], "error");
                                 } else {
                                     Session.setUser(user);
+
                                     this.user = user;
+                                    this.oldApplication = this.user.profile.hacker;
+
                                     this.checkEditState();
                                     swal("Success", "Your application has been submitted!", "success");
                                 }
@@ -399,9 +415,6 @@
                 return false;
             },
             saveApplication(auto) {
-
-                alert(this.modified());
-
                 var parsedForm = this.parseForm(this.applications.hacker, false)
                 if (!auto) {
                     swal.showLoading()
@@ -419,7 +432,10 @@
                         } else {
                             swal("Success", "Your application has been saved!", "success");
                             Session.setUser(user);
+
                             this.user = user;
+                            this.oldApplication = this.user.profile.hacker;
+
                             this.checkEditState();
 
                         }
