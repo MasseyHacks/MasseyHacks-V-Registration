@@ -162,7 +162,7 @@
                     } else {
                         this.applications = applications;
                         this.populateApplication();
-                        if (this.user.profile.signature === -1) {
+                        if (this.user.profile.signature === -1 && this.settings.registrationOpen) {
                             this.saveTimer = setInterval(function () {
                                 this.autoSave();
                             }.bind(this), 60000);
