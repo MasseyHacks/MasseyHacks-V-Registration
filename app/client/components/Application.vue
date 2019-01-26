@@ -130,6 +130,8 @@
                 school: null,
                 user: Session.getUser(),
 
+                oldApplication: {},
+
                 editDisabled: false,
                 editWarning: ''
             }
@@ -189,6 +191,8 @@
                     console.log('adding values');
                     //populate the fields with what they submitted
                     var userApp = this.user.profile.hacker;
+
+                    this.oldApplication = this.user.profile.hacker;
 
                     Object.keys(userApp).forEach((field) => {
 
@@ -368,7 +372,36 @@
             autoSave () {
               this.saveApplication(true)
             },
+            modified() {
+
+                var profile = this.parseForm(this.applications.hacker, false).profile;
+                var oldApp = JSON.parse(JSON.stringify(this.oldApplication));
+
+                console.log(oldApp, profile);
+
+                for (var field in profile) {
+
+                    // Ghetto boolean parsing
+                    if (['true', 'false', '1', '0', true, false, 1, 0].includes(profile[field])) {
+                        profile[field] = ['true', '1', true, 1].includes(profile[field]);
+                    }
+
+                    if (['true', 'false', '1', '0', true, false, 1, 0].includes(oldApp[field])) {
+                        oldApp[field] = ['true', '1', true, 1].includes(oldApp[field]);
+                    }
+
+                    if (JSON.stringify(oldApp[field]) != JSON.stringify(profile[field])) {
+                        console.log('field is diff!!!', field, oldApp[field], profile[field]);
+                        return true;
+                    }
+                }
+
+                return false;
+            },
             saveApplication(auto) {
+
+                alert(this.modified());
+
                 var parsedForm = this.parseForm(this.applications.hacker, false)
                 if (!auto) {
                     swal.showLoading()
