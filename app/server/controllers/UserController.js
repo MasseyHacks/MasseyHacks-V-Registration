@@ -811,8 +811,12 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
                         },
                         {
                             new: true
-                        },
-                        callback);
+                        },function (err, user) {
+
+                            logger.logAction(userExecute._id, user._id, 'Saved application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+
+                            return callback(err, user);
+                        });
                 }
 
                 User.findOne(

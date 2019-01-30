@@ -140,9 +140,9 @@ var hackerApplication = {
 
     birthday: {
         type: String,
-        questionType: 'shortAnswer',
+        questionType: 'birthday',
         question: '<b>When is your birthday (YYYY/MM/DD)?</b>',
-        maxlength: 11,
+        maxlength: 10,
         mandatory: true
     },
 

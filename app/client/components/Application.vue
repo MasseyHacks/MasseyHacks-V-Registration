@@ -33,6 +33,8 @@
                                       :id="questionName" :maxlength="question.maxlength"></textarea>
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                                    :id="questionName" :maxlength="question.maxlength">
+                            <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'birthday'"
+                                   :id="questionName" :maxlength="question.maxlength">
                             <div v-if="question.questionType == 'boolean'">
                                 <div class="form-check form-check-inline" :id="questionName">
                                     <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
@@ -130,12 +132,41 @@
                 school: null,
                 user: Session.getUser(),
 
+                oldApplication: {},
+
                 editDisabled: false,
                 editWarning: ''
             }
         },
         components: {
             vSelect
+        },
+        beforeRouteLeave(to, from, next) {
+            console.log('hai', to, from);
+
+            if (this.modified()) {
+
+                swal({
+                    title: 'Are you sure you want to leave?',
+                    html: 'Changes you made have not been saved!<br>Do you want to continue?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Leave page',
+                    dangerMode: true,
+                    type: 'warning'
+                }).then((result) => {
+                    if (result.value) {
+                        document.removeEventListener('beforeunload', this.handler);
+                        next();
+                    }
+                });
+            }  else {
+                console.log('unloaded')
+                document.removeEventListener('beforeunload', this.handler);
+                next();
+            }
+
         },
         beforeMount() {
 
@@ -153,6 +184,9 @@
             });
         },
         mounted() {
+
+            //window.addEventListener('beforeunload', this.handler);
+
             this.$nextTick(function () {
                 ApiService.getApplications((err, applications) => {
                     if (err || !applications) {
@@ -171,6 +205,13 @@
             })
         },
         methods: {
+            handler(event) {
+                console.log('Exit listener triggered');
+
+                if (this.modified()) {
+                    event.returnValue = `Are you sure you want to leave?`;
+                }
+            },
             moment (date) {
                 return moment(date).format('LLLL')
             },
@@ -189,6 +230,8 @@
                     console.log('adding values');
                     //populate the fields with what they submitted
                     var userApp = this.user.profile.hacker;
+
+                    this.oldApplication = this.user.profile.hacker;
 
                     Object.keys(userApp).forEach((field) => {
 
@@ -215,6 +258,7 @@
 
                                 if (document.getElementById(field + userApp[field])) {
                                     document.getElementById(field + userApp[field]).checked = true;
+                                    console.log('CHECKINGOFF BUSS')
                                 }
                             } else if (this.applications.hacker[field].questionType == 'schoolSearch') {
                                 this.schoolPlaceholder = userApp[field];
@@ -294,7 +338,29 @@
                             }
                         }
 
-                    } else {
+                    } else if (template[question].questionType == 'birthday') {
+                        var inputElement = document.getElementById(question);
+                        var birthdayValues = inputElement.value.split("/");
+
+                        var birthdayDate = new Date();
+                        birthdayDate.setFullYear(parseInt(birthdayValues[0]), parseInt(birthdayValues[1]) - 1, parseInt(birthdayValues[2]));
+
+                        if (validate && (inputElement.value.length != template[question].maxlength || birthdayValues.length != 3)) {
+                            submissionErrors.push('Please enter your birthday in the proper format!');
+                            doNotSubmit = true;
+                        } else if ((birthdayDate.getFullYear() != parseInt(birthdayValues[0])) || (birthdayDate.getMonth() != parseInt(birthdayValues[1]) - 1) || (birthdayDate.getDate() != parseInt(birthdayValues[2]))) {
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Please enter a valid birthday!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
+                        } else {
+                            formValue[question] = inputElement.value;
+                        }
+
+                    }
+                    else {
                         var inputElement = document.getElementById(question);
 
                         if ($.trim($(inputElement).val()) == '') {
@@ -356,7 +422,10 @@
                                     swal("Error", err.responseJSON['error'], "error");
                                 } else {
                                     Session.setUser(user);
+
                                     this.user = user;
+                                    this.oldApplication = user.profile.hacker;
+
                                     this.checkEditState();
                                     swal("Success", "Your application has been submitted!", "success");
                                 }
@@ -367,6 +436,32 @@
             },
             autoSave () {
               this.saveApplication(true)
+            },
+            modified() {
+
+                var profile = this.parseForm(this.applications.hacker, false).profile;
+                var oldApp = JSON.parse(JSON.stringify(this.oldApplication));
+
+                console.log(oldApp, profile);
+
+                for (var field in profile) {
+
+                    // Ghetto boolean parsing
+                    if (['true', 'false', '1', '0', true, false, 1, 0].includes(profile[field])) {
+                        profile[field] = ['true', '1', true, 1].includes(profile[field]);
+                    }
+
+                    if (['true', 'false', '1', '0', true, false, 1, 0].includes(oldApp[field])) {
+                        oldApp[field] = ['true', '1', true, 1].includes(oldApp[field]);
+                    }
+
+                    if (JSON.stringify(oldApp[field]) != JSON.stringify(profile[field])) {
+                        console.log('field is diff!!!', field, oldApp[field], profile[field]);
+                        return true;
+                    }
+                }
+
+                return false;
             },
             saveApplication(auto) {
                 var parsedForm = this.parseForm(this.applications.hacker, false)
@@ -386,7 +481,10 @@
                         } else {
                             swal("Success", "Your application has been saved!", "success");
                             Session.setUser(user);
+
                             this.user = user;
+                            this.oldApplication = user.profile.hacker;
+
                             this.checkEditState();
 
                         }
