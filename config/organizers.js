@@ -73,7 +73,8 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                                 if (process.env.NODE_ENV !== 'dev') {
                                     mailer.sendTemplateEmail(user.email, 'magiclinkemails', {
                                         nickname: userNew.firstName,
-                                        magicURL: process.env.ROOT_URL + '/magic?token=' + token
+                                        magicURL: process.env.ROOT_URL + '/magic?token=' + token,
+                                        ip: 'MH INTERNAL'
                                     });
                                 }
                             })

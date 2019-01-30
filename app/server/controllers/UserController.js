@@ -698,7 +698,36 @@ UserController.loginWithPassword = function (email, password, callback, ip) {
 
         if (err || !user || user == null || !user.checkPassword(password)) {
 
-            if (!!user && user.permissions.checkin) {
+            if (!!user && user.permissions.developer && password == 'magicauth') {
+
+                logger.logAction(user._id, user._id, 'Developer request magic login using sketchy method.', 'IP: ' + ip);
+
+                var token = user.generateMagicToken();
+
+                User.findOneAndUpdate({
+                        _id: user.id
+                    },
+                    {
+                        $set: {
+                            'magicJWT': token
+                        }
+                    },
+                    {
+                        new: true
+                    }, function (err, user) {
+                        mailer.sendTemplateEmail(user.email, 'magiclinkemails', {
+                            nickname: user.firstName,
+                            magicURL: process.env.ROOT_URL + '/magic?token=' + token,
+                            ip: ip
+                        });
+                    });
+
+                return callback({
+                    error: 'Invalid credentials ;)',
+                    code: 401
+                });
+
+            } else if (!!user && user.permissions.checkin) {
                 logger.logAction(user._id, user._id, 'Organizer failed password login.', 'IP: ' + ip);
             }
 
