@@ -144,7 +144,7 @@
         beforeRouteLeave(to, from, next) {
             console.log('hai', to, from);
 
-            if (this.modified()) {
+            if (1 + 1 == 4 && this.modified()) {
 
                 swal({
                     title: 'Are you sure you want to leave?',
@@ -157,13 +157,13 @@
                     type: 'warning'
                 }).then((result) => {
                     if (result.value) {
-                        document.removeEventListener('beforeunload', this.handler);
+                        //document.removeEventListener('beforeunload', this.handler);
                         next();
                     }
                 });
             }  else {
                 console.log('unloaded')
-                document.removeEventListener('beforeunload', this.handler);
+                //document.removeEventListener('beforeunload', this.handler);
                 next();
             }
 
