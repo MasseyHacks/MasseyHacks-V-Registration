@@ -348,6 +348,18 @@ schema.statics.validateProfile = function (profile, callback) {
                         }
                     }
 
+                    if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'birthday') {
+                        var birthdayValues = userpath[keys[i]].split("/");
+                        var birthdayDate = new Date();
+                        birthdayDate.setFullYear(parseInt(birthdayValues[0]), parseInt(birthdayValues[1]) - 1, parseInt(birthdayValues[2]));
+                        if (birthdayValues.length != 3 || userpath[keys[i]].length != runner[keys[i]].maxlength) {
+                            return callback({error: 'Birthday given in incorrect format'})
+                        }
+                        else if((birthdayDate.getFullYear() != parseInt(birthdayValues[0])) || (birthdayDate.getMonth() != parseInt(birthdayValues[1]) - 1) || (birthdayDate.getDate() != parseInt(birthdayValues[2]))){
+                            return callback({error: 'Invalid birthday'})
+                        }
+                    }
+
                     if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
                         if (!userpath[keys[i]]) {
                             return callback({error: 'Contract field "' + keys[i] + '" must be agreed to'})

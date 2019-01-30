@@ -33,6 +33,8 @@
                                       :id="questionName" :maxlength="question.maxlength"></textarea>
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                                    :id="questionName" :maxlength="question.maxlength">
+                            <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'birthday'"
+                                   :id="questionName" :maxlength="question.maxlength">
                             <div v-if="question.questionType == 'boolean'">
                                 <div class="form-check form-check-inline" :id="questionName">
                                     <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
@@ -336,7 +338,29 @@
                             }
                         }
 
-                    } else {
+                    } else if (template[question].questionType == 'birthday') {
+                        var inputElement = document.getElementById(question);
+                        var birthdayValues = inputElement.value.split("/");
+
+                        var birthdayDate = new Date();
+                        birthdayDate.setFullYear(parseInt(birthdayValues[0]), parseInt(birthdayValues[1]) - 1, parseInt(birthdayValues[2]));
+
+                        if (validate && (inputElement.value.length != template[question].maxlength || birthdayValues.length != 3)) {
+                            submissionErrors.push('Please enter your birthday in the proper format!');
+                            doNotSubmit = true;
+                        } else if ((birthdayDate.getFullYear() != parseInt(birthdayValues[0])) || (birthdayDate.getMonth() != parseInt(birthdayValues[1]) - 1) || (birthdayDate.getDate() != parseInt(birthdayValues[2]))) {
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Please enter a valid birthday!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
+                        } else {
+                            formValue[question] = inputElement.value;
+                        }
+
+                    }
+                    else {
                         var inputElement = document.getElementById(question);
 
                         if ($.trim($(inputElement).val()) == '') {
