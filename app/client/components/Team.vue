@@ -58,7 +58,8 @@
                     {{team.code}} <br>
                     <br>
 
-                    <p>Teammates can join by entering the Team Code above</p>
+                    <p v-if="team.memberNames.length < 4">Teammates can join by entering the Team Code above</p>
+                    <p v-else>Team is full!</p>
 
                     <hr>
 

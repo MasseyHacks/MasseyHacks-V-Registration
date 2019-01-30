@@ -251,7 +251,7 @@ module.exports = function(router) {
 
     // General
     // Send slack invite
-    router.post('/slack', permissions.isVerified, function(req, res){
+    /*router.post('/slack', permissions.isVerified, function(req, res){
         var user = req.userExecute;
 
         UserController.inviteToSlack(user._id, function(err, data){
@@ -261,7 +261,7 @@ module.exports = function(router) {
 
             return logger.defaultResponse(req, res)(null, data);
         });
-    });
+    });*/
 
     // General
     // Create team

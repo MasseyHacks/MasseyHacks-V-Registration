@@ -26,7 +26,7 @@
   "confirmationemails":{
     "queueName":"confirmEmails",
     "templateLocation":"./app/server/templates/email-confirmation/html.hbs",
-    "emailTitle":"You have been confirmed!",
+    "emailTitle":"You have confirmed!",
     "canQueue":false
   },
   "declineemails":{

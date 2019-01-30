@@ -1287,6 +1287,11 @@ UserController.acceptInvitation = function (executeUser, confirmation, callback)
             }, function(err, user) {
 
                 if (user && !err) {
+                    UserController.inviteToSlack(user._id, function(err, data){
+                        console.log(err, data);
+
+                    });
+
                     mailer.sendTemplateEmail(user.email, 'confirmationemails', {
                         nickname: user.firstName,
                         dashUrl: process.env.ROOT_URL

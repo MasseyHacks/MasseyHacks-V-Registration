@@ -38,7 +38,7 @@
                     </div>
                     <div v-else-if="user.status.name == 'incomplete'">
                         <p>
-                            Your application is still incomplete. You must complete your application before the submission deadline of {{moment(settings.timeClose)}} to be considered.
+                            Your application is still incomplete.<br><br><b>You must complete your application before the submission deadline of {{moment(settings.timeClose)}} to be considered.</b>
                         </p>
                     </div>
                     <div v-else-if="user.status.name == 'submitted'">
@@ -48,18 +48,32 @@
                     </div>
                     <div v-else-if="user.status.name == 'admitted'">
                         <p>
-                            You have been accepted! Don't get excited just yet, you still need to confirm here, or your chance will fly away! You must confirm before {{moment(user.status.confirmBy)}}.
+                            You have been accepted! Don't get excited just yet, you still need to confirm here, or your chance will fly away!<br><br><b>You must confirm before {{moment(user.status.confirmBy)}}.</b>
                         </p>
                         <router-link to="/confirmation">
                             <button class="generic-button-dark less-wide">
                                 Confirm your spot!
                             </button>
                         </router-link>
+                        <button class="generic-button-dark less-wide" v-on:click="declineInvitation">Sorry, I can't make it</button>
                     </div>
                     <div v-else-if="user.status.name == 'confirmed'">
                         <p>
-                            Your spot has been confirmed! We hope to see you on  March 23rd, ready and excited for 24 hours of hard work and fun! Don’t forget to sign the waiver form in order to be admitted. It's never too early to start thinking about your hack! Here are some of last year's hacks for inspiration.
+                            Your spot has been confirmed! We hope to see you on  March 23rd, ready and excited for 24 hours of hard work and fun! It's never too early to start thinking about your hack! <a href="https://masseyhacks4.devpost.com" target="_blank">Here</a> are some of last year's hacks for inspiration.<br><br>Don’t forget, you <b>MUST</b> have your waiver signed to attend MasseyHacks.<br><br>
+                            We've sent a Slack invitation to <b>{{user.email}}</b>. Be sure to check your spam/junk folder if you don't see it! If you have any problems, please email us at hello@masseyhacks.ca for assistance.
                         </p>
+
+                        <a href="https://docs.google.com/document/d/1Wogov8OfqV8ltNf0FyMvpkyYu4CyGEdH7yraIg2S8LA/edit?usp=sharing" target="_blank">
+                            <button class="generic-button-dark less-wide">
+                                Waiver
+                            </button>
+                        </a>
+                        <router-link to="/confirmation">
+                            <button class="generic-button-dark less-wide">
+                                Edit Confirmation
+                            </button>
+                        </router-link>
+                        <button class="generic-button-dark less-wide" v-on:click="declineInvitation">Sorry, I can't make it</button>
                     </div>
                     <div v-else-if="user.status.name == 'rejected'">
                         <p>
@@ -111,6 +125,38 @@
             }
         },
         methods: {
+            declineInvitation() {
+                swal({
+                    title: "Decline invitation?",
+                    html: "Are you sure you want to decline your invitation? You <b>CANNOT</b> undo this action!",
+                    type: "question",
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    focusCancel: true,
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        AuthService.sendRequest('POST', '/api/declineInvitation', {
+
+                        }, (err, data) => {
+                            if (err || !data) {
+                                swal("Error", err.error, "error");
+                            } else {
+                                swal({
+                                    title: "Success",
+                                    text: "You have declined your invitation.",
+                                    type: "success"
+                                });
+                                this.user = data
+                                Session.setUser(data)
+                            }
+
+                        })
+                    }
+
+                })
+            },
             moment (date) {
                 return moment(date).format('LLLL')
             },
