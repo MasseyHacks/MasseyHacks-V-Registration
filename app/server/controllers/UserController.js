@@ -80,7 +80,7 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
 
     UserController.getUserFields = function (userExecute, callback) {
 
-        var fieldsOut = [];
+        var fieldsOut = {};
         var queue = [[UserFields, '']];
 
         while (queue.length != 0) {
@@ -91,12 +91,11 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
             for (var runner in current) {
                 if (current[runner]['type']) {
                     if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
-                        fieldsOut.push({
-                            'name': (header ? header + '.' : '') + runner,
+                        fieldsOut[(header ? header + '.' : '') + runner] = {
                             'type': current[runner]['type'].name,
                             'time': current[runner]['time'],
                             'caption': current[runner]['caption']
-                        });
+                        };
                     }
                 } else {
                     queue.push([current[runner], (header ? header + '.' : '') + runner])

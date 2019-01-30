@@ -12,12 +12,12 @@
                         <button class="menu-button" v-on:click="retractSidebar">Dashboard</button>
                     </router-link>
                 </li>
-                <li v-if="!(user.status.admitted || user.status.rejected) && user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                <li v-if="user.permissions.verified && (user.permissions.developer || (!user.permissions.admin && !(user.status.admitted || user.status.rejected)))">
                     <router-link tag="a" to="/application">
                         <button class="menu-button" v-on:click="retractSidebar">Application</button>
                     </router-link>
                 </li>
-                <li v-if="!(user.status.admitted || user.status.rejected) && user.permissions.verified && (user.permissions.developer || !user.permissions.admin)">
+                <li v-if="user.permissions.verified && (user.permissions.developer || (!user.permissions.admin && !(user.status.admitted || user.status.rejected)))">
                     <router-link tag="a" to="/team">
                         <button class="menu-button" v-on:click="retractSidebar">Team</button>
                     </router-link>

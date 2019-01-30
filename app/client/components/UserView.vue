@@ -19,7 +19,7 @@
                     </ul>
                 </div>-->
 
-                <json-tree :raw="JSON.stringify(userObj)" :level="1"></json-tree>
+                <json-tree :raw="JSON.stringify(formatUser(userObj))" :level="1"></json-tree>
 
 
                 <hr>
@@ -131,6 +131,29 @@
         },
 
         methods: {
+            formatUser(user) {
+
+                user = JSON.parse(JSON.stringify(user));
+
+                for (var key in this.fields) {
+
+                    key = key.split('.')
+                    var runner = null;
+
+                    for (var subkey in key) {
+
+                        subkey = key[subkey]
+
+                        runner = user[subkey]
+                        console.log(runner, subkey, 'subkey')
+                    }
+
+                    console.log(key, runner)
+
+                }
+
+                return user;
+            },
             moment (date) {
                 return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
             },
