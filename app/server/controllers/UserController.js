@@ -845,7 +845,7 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
                             },
                             callback);
 
-                        logger.logAction(userExecute._id, user._id, 'Modified application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
+                        logger.logAction(userExecute._id, user._id, 'Signed application', 'EXECUTOR IP: ' + userExecute.ip + ' | ' + JSON.stringify(profileValidated));
 
                         SettingsController.requestSchool(userExecute, profileValidated.hacker.school, function (err, msg) {
                             console.log(err, msg);

@@ -3,11 +3,25 @@
         <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
+
+                <!--
                 <div class="duo-col" id="detailed-info">
                     <ul style="list-style: none">
-                        <span v-html="this.profileHTML"></span>
+                        <li style="overflow-wrap: break-word; text-align: left;"
+                            v-for="(value, key) in flatten(userObj,false)">
+                            <span v-if="key !== 'Application'">
+
+                                <b>{{Object.keys(fields).indexOf(key) != -1 ? fields[key]['caption']
+                                : key}}</b><br>{{value !== null ? value : "[null]"}}<br>
+
+                            </span>
+                        </li>
                     </ul>
-                </div>
+                </div>-->
+
+                <json-tree :raw="JSON.stringify(userObj)"></json-tree>
+
+
                 <hr>
 
                 <h4>APPLICATION</h4>
@@ -15,25 +29,11 @@
                     <ul style="overflow-wrap: break-word; text-align: left; list-style: none">
                         <li v-for="(value, key) in userApp">
                             <br>
-                            <b v-html="Object.keys(applications.hacker).indexOf(key) !== -1 ? applications.hacker[key].reviewerText ? applications.hacker[key]['reviewerText'] : applications.hacker[key]['question']
-                                : key"></b><br>{{value != null ? value : "[Question left blank]"}}<br>
+                            <b v-html="Object.keys(applications.hacker).indexOf(key) != -1 ? applications.hacker[key].reviewerText ? applications.hacker[key]['reviewerText'] : applications.hacker[key]['question']
+                                : key"></b><br>{{value !== null ? value : "[Question left blank]"}}<br>
                         </li>
                     </ul>
                 </div>
-
-                <!--             <p>User Object: </p>
-                            {{userObj}} -->
-
-
-                <!-- TODO -->
-
-                <!-- VIEW TEAM -->
-
-                <!-- FLUSH EMAIL QUEUE -->
-                <!-- TOGGLE ACCOUNT ACTIVATION -->
-                <!-- TOGGLE WAIVER -->
-                <!-- TOGGLE CHECKIN -->
-                <!-- DELETE USER -->
 
                 <router-link :to="{path: returnPath}">
                     <button class="generic-button-dark less-wide">Back</button>
@@ -48,9 +48,7 @@
                     <button class="generic-button-dark less-wide" v-on:click="editUser">Edit User</button>
                     <button class="generic-button-dark less-wide" v-on:click="forceAdmit">Force Admit</button>
                     <button class="generic-button-dark less-wide" v-on:click="forceReject">Force Reject</button>
-                    <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span
-                            v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span>
-                    </button>
+                    <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
 
                     <hr>
 
@@ -60,15 +58,12 @@
 
                     <hr>
 
-                    <button @click="requestSuperToken" class="generic-button-dark less-wide"
-                            v-if="user.permissions.developer">SU Login
+                    <button class="generic-button-dark less-wide" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
                     </button>
                     <button class="generic-button-dark less-wide" v-on:click="changePassword">Change Password</button>
-                    <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span
-                            v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+                    <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
 
-                    <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue
-                    </button>
+                    <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue</button>
                     <button class="generic-button-dark less-wide" v-on:click="deleteUser">Delete User</button>
                 </div>
             </div>
@@ -82,14 +77,12 @@
     import swal from 'sweetalert2'
     import ApiService from '../src/ApiService.js'
     import moment from 'moment'
-
-    async function asyncForEach(object, callback) {
-        for (const key in object.documentKeys) {
-            await callback(key, object[key]);
-        }
-    }
+    import JsonTree from 'vue-json-tree'
 
     export default {
+        components: {
+            JsonTree
+        },
         data() {
             return {
                 user: Session.getUser(),
@@ -99,8 +92,7 @@
                 userApp: {},
                 returnPath: "/organizer/users",
                 applications: {},
-                fields: {},
-                profileHTML: ''
+                fields: {}
             }
         },
 
@@ -123,7 +115,6 @@
         },
 
         mounted() {
-            console.log("HELLO!!!")
             this.userID = this.$route.query["username"];
             console.log(this.userID);
             ApiService.getUser(this.userID, (err, data) => {
@@ -131,87 +122,24 @@
                     console.log("ERROR")
                 } else {
                     console.log("data2");
-                    this.userObj = data
-                    this.buildProfileHTML().then((result) => {
-                        this.profileHTML = result
-                        console.log("HTML BUILT:")
-                    });
+                    this.userObj = data;
+                    this.flatten(this.userObj,false);
                 }
             })
-
         },
 
         methods: {
-            buildProfileHTML: async function () {
-                if (this.flattenWithHistory(this.userObj) != null) {
-                    let html = '<ul style="list-style: none">';
-                    for (var key in this.userObj) {
-                        console.log("USEROBJ KEY: " + key)
-                    }
-                    // await asyncForEach(this.flattenWithHistory(this.userObj), (key, value) => {
-                    //     console.log("VALUE: " + value)
-                    //     html += '<li style="overflow-wrap: break-word; text-align: left;">'
-                    //     html += '<b>' + this.findKeyAsCaption(key) + ':</b><br>' + this.parseValue(value) + '</li>'
-                    // })
-                    const thing = this.flattenWithHistory(this.userObj)
-                    for (const key in thing) {
-                        value = thing[key]
-                        console.log("VALUE: " + value)
-                        html += '<li style="overflow-wrap: break-word; text-align: left;">'
-                        html += '<b>' + this.findKeyAsCaption(key) + ':</b><br>' + this.parseValue(value) + '</li>'
-                    }
-                    return html
-                } else {
-                    console.log("NULL USER!")
-                }
-            },
-            moment: function (date) {
+            moment (date) {
                 return moment(date).format('MMMM Do YYYY [at] h:mm:ss a')
             },
-            findKeyAsObject: async function (key) {
-                await asyncForEach(this.fields, async (obj) => {
-                    console.log("STUFF: " + obj);
-                    if (this.fields[obj]['name'] === key) {
-                        return obj
-                    }
-                });
-                return false
-            },
-            findKeyAsCaption: function (key) {
-                this.findKeyAsObject(key).then((result) => {
-                    if (result) {
-                        // console.log("key found")
-                        return result['caption']
-                    } else {
-                        // console.log("key not found: " + key)
-                        return key
-                    }
-                })
-
-            },
-            parseValue: function (key, value) {
-                if (value == null) {
-                    return "[null]"
-                } else {
-                    this.findKeyAsObject(key).then((result) => {
-                        if (result) {
-                            if (result["time"]) {
-                                return moment(value)
-                            }
-                        }
-                    });
-
-                    return value
-                }
-            },
-            changePassword: function () {
+            changePassword: function() {
 
                 AuthService.adminChangePassword(this.userObj.fullName, this.userID, () => {
                     swal('Success!', 'Successfully changed password', 'success');
                 });
 
             },
-            toggleSuspend: function () {
+            toggleSuspend: function() {
 
                 if (this.userObj.status.active) {
                     ApiService.deactivate(this.userObj.fullName, this.userID, (data) => {
@@ -226,7 +154,7 @@
                 }
 
             },
-            toggleStatus: function () {
+            toggleStatus: function() {
 
                 if (this.userObj.status.statusReleased) {
                     ApiService.hideStatus(this.userObj.fullName, this.userID, (data) => {
@@ -444,7 +372,7 @@
             },
             flattenWithHistory: function (data, prefix = "", level = 0) {
                 var tempObj = {};
-                if (level < 12) {
+                if (level < 7) {
                     Object.keys(data).forEach((key) => {
                         if (data[key] === Object(data[key])) {
                             //iterate again!
