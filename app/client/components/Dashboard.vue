@@ -86,7 +86,7 @@
                     </div>
                     <!-- unverified -->
                     <div v-else-if="!user.permissions.verified">
-                        <p>Hey! You haven't verified your email! You must do this before you can apply to MasseyHacks.</p>
+                        <p>Hey! You haven't verified your email! You must do this before you can apply to MasseyHacks.<br><br>We sent an email to {{user.email}}! If you can't find it, please check your spam/junk folders.</p>
                         <button class="generic-button-dark less-wide" v-on:click="resendVerify">Resend</button>
                     </div>
 
