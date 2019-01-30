@@ -176,7 +176,7 @@
 
         beforeMount() {
             // Get fields for filters
-            ApiService.getFields((err, data) => {
+            ApiService.getFields(false, (err, data) => {
                 if (err || !data) {
                     this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {

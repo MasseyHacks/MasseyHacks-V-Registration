@@ -506,8 +506,8 @@ module.exports = {
         AuthService.sendRequest('GET', '/api/applications', {}, callback)
     },
 
-    getFields(callback) {
-        AuthService.sendRequest('GET', '/api/fields', {}, callback)
+    getFields(userview, callback) {
+        AuthService.sendRequest('GET', '/api/fields', {userview: userview}, callback)
     },
 
     getStatistics(callback) {

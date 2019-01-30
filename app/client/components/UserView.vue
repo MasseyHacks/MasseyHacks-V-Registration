@@ -103,7 +103,7 @@
                 this.returnPath = this.$route.query["returnPath"]
             }
 
-            ApiService.getFields((err, data) => {
+            ApiService.getFields(true, (err, data) => {
                 if (err || !data) {
                     this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                 } else {

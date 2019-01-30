@@ -76,35 +76,48 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
 
             return callback(null, user);
         });
-},
+};
 
-    UserController.getUserFields = function (userExecute, callback) {
+UserController.getUserFields = function (userExecute, userview, callback) {
 
+    if (userview) {
         var fieldsOut = {};
-        var queue = [[UserFields, '']];
+    } else {
+        var fieldsOut = [];
+    }
+    var queue = [[UserFields, '']];
 
-        while (queue.length != 0) {
-            var data = queue.pop();
-            var current = data[0];
-            var header = data[1];
+    while (queue.length != 0) {
+        var data = queue.pop();
+        var current = data[0];
+        var header = data[1];
 
-            for (var runner in current) {
-                if (current[runner]['type']) {
-                    if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
+        for (var runner in current) {
+            if (current[runner]['type']) {
+                if (!current[runner]['permission'] || current[runner]['permission'] <= userExecute.permissions.level) {
+                    if (userview) {
                         fieldsOut[(header ? header + '.' : '') + runner] = {
                             'type': current[runner]['type'].name,
                             'time': current[runner]['time'],
                             'caption': current[runner]['caption']
                         };
+                    } else {
+                        fieldsOut.push({
+                            'name': (header ? header + '.' : '') + runner,
+                            'type': current[runner]['type'].name,
+                            'time': current[runner]['time'],
+                            'caption': current[runner]['caption']
+                        });
                     }
-                } else {
-                    queue.push([current[runner], (header ? header + '.' : '') + runner])
                 }
+            } else {
+                queue.push([current[runner], (header ? header + '.' : '') + runner])
             }
         }
+    }
 
-        callback(null, fieldsOut)
-    };
+    callback(null, fieldsOut)
+};
 
 UserController.getAdmins = function (callback) {
     User.find({'permissions.admin': true}, '+QRCode', function (err, data) {
