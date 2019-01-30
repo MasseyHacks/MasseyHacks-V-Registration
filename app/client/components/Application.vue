@@ -439,6 +439,10 @@
             },
             modified() {
 
+                if (this.editDisabled) {
+                    return false;
+                }
+
                 var profile = this.parseForm(this.applications.hacker, false).profile;
                 var oldApp = JSON.parse(JSON.stringify(this.oldApplication));
 

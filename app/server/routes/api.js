@@ -33,7 +33,14 @@ module.exports = function(router) {
 	router.get('/getEmailQueueStats', permissions.isOwner, function(req, res){
 		Settings.getEmailQueueStats(logger.defaultResponse(req, res));
 	});
-	
+
+    // Owner
+    // Get raw settings
+    router.get('/getRawSettings', permissions.isOwner, function(req, res){
+        Settings.getRawSettings(logger.defaultResponse(req, res));
+    });
+
+
     // Admin
     // Get skill question
     router.get('/skill', permissions.isAdmin, function(req, res) {

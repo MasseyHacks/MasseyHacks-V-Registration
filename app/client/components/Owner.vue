@@ -79,6 +79,13 @@
 
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
+                    <h3>Raw Global Data</h3>
+                    <hr>
+                    <json-tree :raw="JSON.stringify(globalSettings)" :level="1"></json-tree>
+                </div>
+
+
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>Email Templates</h3>
                     <hr>
                     <select class="form-control" style="margin-bottom: 10px;" v-model="selected">
@@ -121,8 +128,12 @@
     import 'highlight.js/styles/monokai-sublime.css'
     import 'quill/dist/quill.snow.css'
     import Quill from 'quill'
+    import JsonTree from 'vue-json-tree'
 
     export default {
+        components: {
+            JsonTree
+        },
         data() {
             return {
                 timeOpen: 0,
@@ -134,6 +145,7 @@
                 previewHTML: '',
                 baseHTMLFront: '',
                 baseHTMLBack: '',
+                globalSettings: '',
                 maxParticipants: 0,
                 templateOptions: [],
                 selected: '',
@@ -161,7 +173,13 @@
                     this.templateOptions = data.validTemplates
                 }
             });
-			
+
+            AuthService.sendRequest('GET', '/api/getRawSettings', null, (err, data) => {
+                console.log(data);
+                this.globalSettings = data;
+
+            });
+
 			AuthService.sendRequest('GET', '/api/getEmailQueueStats', null, (err, data) => {
 				console.log(data.stats);
 				this.emailQueueStats = data.stats;

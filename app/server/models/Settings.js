@@ -153,6 +153,12 @@ schema.statics.requestSchool = function(schoolName, callback) {
 
 schema.statics.confirmationOpen = function() {
     return this.timeConfirm >= Date.now();
+
+};
+
+
+schema.statics.getRawSettings = function(callback) {
+    this.findOne({}, callback);
 };
 
 schema.statics.getSettings = function(callback){

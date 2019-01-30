@@ -19,7 +19,7 @@
                     </ul>
                 </div>-->
 
-                <json-tree :raw="JSON.stringify(userObj)"></json-tree>
+                <json-tree :raw="JSON.stringify(userObj)" :level="1"></json-tree>
 
 
                 <hr>
@@ -35,6 +35,8 @@
                     </ul>
                 </div>
 
+                <hr>
+
                 <router-link :to="{path: returnPath}">
                     <button class="generic-button-dark less-wide">Back</button>
                 </router-link>
@@ -48,7 +50,7 @@
                     <button class="generic-button-dark less-wide" v-on:click="editUser">Edit User</button>
                     <button class="generic-button-dark less-wide" v-on:click="forceAdmit">Force Admit</button>
                     <button class="generic-button-dark less-wide" v-on:click="forceReject">Force Reject</button>
-                    <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
+                    <button class="generic-button-dark less-wide" v-on:click="toggleStatus"><span v-if="userObj && userObj.status.statusReleased">Hide Status</span><span v-else>Release Status</span></button>
 
                     <hr>
 
@@ -61,7 +63,7 @@
                     <button class="generic-button-dark less-wide" @click="requestSuperToken" v-if="user.permissions.developer">SU Login
                     </button>
                     <button class="generic-button-dark less-wide" v-on:click="changePassword">Change Password</button>
-                    <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
+                    <button class="generic-button-dark less-wide" v-on:click="toggleSuspend"><span v-if="userObj && userObj.status.active">Deactivate</span><span v-else>Activate</span></button>
 
                     <button class="generic-button-dark less-wide" v-on:click="flushEmailQueue">Flush Email Queue</button>
                     <button class="generic-button-dark less-wide" v-on:click="deleteUser">Delete User</button>
