@@ -144,7 +144,7 @@
                         for (var subkey in key) {
 
                             if (subkey == key.length - 1) {
-                                runner[key[subkey]] = this.moment(runner[key[subkey]])
+                                runner[key[subkey]] = runner[key[subkey]] ? this.moment(runner[key[subkey]]) : 'N/A'
                             } else {
                                 runner = runner[key[subkey]]
                             }
