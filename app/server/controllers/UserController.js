@@ -80,6 +80,8 @@ UserController.modifyUser = function (adminUser, userID, data, callback) {
 
 UserController.getUserFields = function (userExecute, userview, callback) {
 
+    userview = userview['userview'] == 'true'
+
     if (userview) {
         var fieldsOut = {};
     } else {

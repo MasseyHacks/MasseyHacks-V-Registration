@@ -104,7 +104,7 @@ module.exports = function(router) {
     // Admin
     // Get list of user fields
     router.get('/fields', permissions.isAdmin, function (req, res) {
-        UserController.getUserFields(req.userExecute, req.params.userview, logger.defaultResponse(req, res));
+        UserController.getUserFields(req.userExecute, req.query, logger.defaultResponse(req, res));
     });
 
     // Public

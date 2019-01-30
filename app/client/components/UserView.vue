@@ -135,21 +135,21 @@
 
                 user = JSON.parse(JSON.stringify(user));
 
-                for (var key in this.fields) {
+                for (var key in this.fields) { // Replace unix timestamps with human readable
 
-                    key = key.split('.')
-                    var runner = null;
+                    if (this.fields[key].time) {
+                        key = key.split('.')
+                        var runner = user;
 
-                    for (var subkey in key) {
+                        for (var subkey in key) {
 
-                        subkey = key[subkey]
-
-                        runner = user[subkey]
-                        console.log(runner, subkey, 'subkey')
+                            if (subkey == key.length - 1) {
+                                runner[key[subkey]] = this.moment(runner[key[subkey]])
+                            } else {
+                                runner = runner[key[subkey]]
+                            }
+                        }
                     }
-
-                    console.log(key, runner)
-
                 }
 
                 return user;

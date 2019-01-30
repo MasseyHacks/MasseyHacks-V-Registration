@@ -497,7 +497,8 @@ var schema = {
     passwordLastUpdated: {
         type: Number,
         default: 0,
-        caption: "Password Last Updated"
+        caption: "Password Last Updated",
+        time: true
     },
 
     teamCode: {
