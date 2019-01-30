@@ -203,6 +203,7 @@ UserController.getByQuery = function (adminUser, query, callback) {
                 }
 
                 if (users) {
+
                     async.eachOfSeries(users, (user, i, cb) => {
                         users[i] = User.filterSensitive(user, adminUser.permissions.level, appPage);
 
@@ -220,6 +221,19 @@ UserController.getByQuery = function (adminUser, query, callback) {
                             count: count
                         })
                     });
+
+                    /*
+                    for (var i = 0; i < users.length; i++) {
+                        users[i] = User.filterSensitive(users[i], adminUser.permissions.level, appPage);
+
+                        console.log('out', users[i]);
+                    }
+
+                    return callback(null, {
+                        users: users,
+                        totalPages: Math.ceil(count / size),
+                        count: count
+                    })*/
                 }
             });
     });

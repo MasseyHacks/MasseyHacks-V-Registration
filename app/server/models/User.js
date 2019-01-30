@@ -214,7 +214,7 @@ schema.statics.getByID = function (id, callback, permissionLevel) {
 
         }
 
-        return callback(null, user); //filterSensitive(user, permissionLevel));
+        return callback(null, filterSensitive(user, permissionLevel));
     });
 };
 
@@ -541,37 +541,18 @@ var filterSensitive = function (user, permission, page) {
         var userpath;
         var keys;
 
+        console.log('Permission level:', permissionLevel)
+
         while (queue.length !== 0) {
             runner = queue[0][0];
             userpath = queue.shift()[1];
             keys = Object.keys(runner);
 
-            /*
-            async.eachSeries(keys, (key) => {
-                if ('type' in runner[key]) {
-                    if (runner[key].permission && runner[key].permission >= permissionLevel) {
-                        try {
-                            delete userpath[key];
-                        } catch (e) {
-                            console.log(e)
-                        }
-                    }
-
-                    if (permissionLevel < 2 && runner[key].condition && !navigate(user, runner[key].condition)) {
-                        userpath[key] = runner[key].default;
-                    }
-
-                } else {
-                    if (userpath[key]) {
-                        queue.push([runner[key], userpath[key]])
-                    }
-                }
-            });*/
-
             for (var i = 0; i < keys.length; i++) {
                 if ('type' in runner[keys[i]]) {
                    if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
                         try {
+                            console.log('deleting', userpath[keys[i]])
                             delete userpath[keys[i]];
                         } catch (e) {
                             console.log(e)
