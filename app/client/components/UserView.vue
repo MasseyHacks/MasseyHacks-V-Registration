@@ -3,6 +3,8 @@
         <div class="organizer-card">
             <div class="ui-card dash-card-large">
                 <h3 v-if="userObj.fullName">{{userObj.fullName.toUpperCase()}}</h3>
+
+                <!--
                 <div class="duo-col" id="detailed-info">
                     <ul style="list-style: none">
                         <li style="overflow-wrap: break-word; text-align: left;"
@@ -15,7 +17,11 @@
                             </span>
                         </li>
                     </ul>
-                </div>
+                </div>-->
+
+                <json-tree :raw="JSON.stringify(userObj)"></json-tree>
+
+
                 <hr>
 
                 <h4>APPLICATION</h4>
@@ -28,20 +34,6 @@
                         </li>
                     </ul>
                 </div>
-
-                <!--             <p>User Object: </p>
-                            {{userObj}} -->
-
-
-                <!-- TODO -->
-
-                <!-- VIEW TEAM -->
-
-                <!-- FLUSH EMAIL QUEUE -->
-                <!-- TOGGLE ACCOUNT ACTIVATION -->
-                <!-- TOGGLE WAIVER -->
-                <!-- TOGGLE CHECKIN -->
-                <!-- DELETE USER -->
 
                 <router-link :to="{path: returnPath}">
                     <button class="generic-button-dark less-wide">Back</button>
@@ -85,8 +77,12 @@
     import swal from 'sweetalert2'
     import ApiService from '../src/ApiService.js'
     import moment from 'moment'
+    import JsonTree from 'vue-json-tree'
 
     export default {
+        components: {
+            JsonTree
+        },
         data() {
             return {
                 user: Session.getUser(),
@@ -126,7 +122,8 @@
                     console.log("ERROR")
                 } else {
                     console.log("data2");
-                    this.userObj = data
+                    this.userObj = data;
+                    this.flatten(this.userObj,false);
                 }
             })
         },
