@@ -2,7 +2,7 @@
     "apps": [
         {
             "name": "server",
-            "script": "gulp server"
+            "script": "gulp"
         }
     ]
 }

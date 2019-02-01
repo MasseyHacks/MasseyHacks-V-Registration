@@ -42,7 +42,7 @@ gulp.task('watch', ['js', 'css'], function() {
 });
 
 // Restart server upon detecting change
-gulp.task('server', ['watch'], function() {
+gulp.task('default', ['watch'], function() {
     nodemon({
         script: 'app.js',
         env: { 'NODE_ENV': process.env.NODE_ENV || 'DEV'},
