@@ -28,9 +28,6 @@ const waiverReceiver  = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
 const stats           = require('./app/server/services/stats');
 
-
-console.log('The meaning of life is:', asd.asdas)
-
 Raven.config(process.env.SERVER_RAVEN_KEY).install();
 Raven.context(function() {
     var app = express();
