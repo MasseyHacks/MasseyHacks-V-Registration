@@ -4,7 +4,7 @@
   "description": "MasseyHacks Registration System",
   "main": "app.js",
   "scripts": {
-    "start": "gulp server",
+    "start": "gulp",
     "db": "mongod --dbpath db --bind_ip 127.0.0.1",
     "init": "cp .env.template .env",
     "build": "./node_modules/gulp/bin/gulp.js js && ./node_modules/gulp/bin/gulp.js css && node app.js"
