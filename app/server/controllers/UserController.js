@@ -16,6 +16,8 @@ const logger = require('../services/logger');
 const mailer = require('../services/email');
 const flush = require('../services/flush');
 const stats = require('../services/stats');
+const autoRemove = require('../services/autoRemove');
+const waiverReceiver = require('../services/waiverReceiver');
 
 const UserFields = require('../models/data/UserFields');
 const FilterFields = require('../models/data/FilterFields');
