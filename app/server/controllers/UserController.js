@@ -657,6 +657,9 @@ UserController.superToken = function (userExcute, userID, callback) {
             logger.logAction(userExcute.id, userID, "Tried to generate super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Error when generating superLink" + err);
             return callback({error: "Error has occured"})
         }
+
+        console.log(user);
+
         var token = user.generateMagicToken();
         User.findOneAndUpdate({
                 _id: user.id
@@ -673,7 +676,7 @@ UserController.superToken = function (userExcute, userID, callback) {
                 logger.logAction(userExcute.id, userID, "Generated super Link", 'EXECUTOR IP: ' + userExcute.ip + " | Developer has generated a super link. Link: " + link);
                 callback(false, {url: link})
             })
-    })
+    }, 0, true);
 };
 
 UserController.loginWithToken = function (token, callback, ip) {

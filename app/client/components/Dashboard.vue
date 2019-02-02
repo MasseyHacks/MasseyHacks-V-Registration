@@ -63,7 +63,7 @@
                             We've sent a Slack invitation to <b>{{user.email}}</b>. Be sure to check your spam/junk folder if you don't see it! If you have any problems, please email us at hello@masseyhacks.ca for assistance.
                         </p>
 
-                        <a href="https://docs.google.com/document/d/1Wogov8OfqV8ltNf0FyMvpkyYu4CyGEdH7yraIg2S8LA/edit?usp=sharing" target="_blank">
+                        <a href="https://docs.google.com/document/d/10BuXfp0PlrNDA7DY6fx_T13VZLbQh1FMUbDYAdZyOYo/edit?usp=sharing" target="_blank">
                             <button class="generic-button-dark less-wide">
                                 Waiver
                             </button>
