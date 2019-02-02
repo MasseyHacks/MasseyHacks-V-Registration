@@ -2,7 +2,7 @@
   "apps" : [{
     "name"        : "GOOSE",
     "script"      : "npm",
-    "script_args" : ["run", "build"],
+    "args" : "run build",
     "watch": ["**"],
     "ignore_watch" : ["node_modules", "app/client/dist"],
     "watch_options": {

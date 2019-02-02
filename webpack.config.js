@@ -8,7 +8,7 @@ module.exports = {
     output: {
         filename: 'main.js'
     },
-    watch: true,
+    watch: process.env.NODE_ENV === 'dev',
     module: {
         loaders: [
             {
