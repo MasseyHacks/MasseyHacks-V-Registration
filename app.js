@@ -1,5 +1,3 @@
-// Test
-
 require('dotenv').load();
 
 const express         = require('express');
