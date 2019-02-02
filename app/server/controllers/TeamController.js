@@ -60,12 +60,17 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
 
         for (var teamMember in team.memberNames) {
 
+
             User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
 
-                User.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                console.log('Done resetting user status', user.fullName, user)
+
+                User.admitUser(adminUser, user._id, function (err, user) {
                     if (err || !user) {
                         console.log(err)
                     }
+
+                    console.log('Admitted user', user.fullName)
                 })
 
             });
@@ -86,11 +91,14 @@ TeamController.teamReject = function(adminUser, teamCode, callback) {
         logger.logAction(adminUser._id, -1, 'Rejected team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
 
         for (var teamMember in team.memberNames) {
-            User.rejectUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
-                if (err || !user){
-                    console.log(err)
-                }
-            })
+
+            User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
+                User.rejectUser(adminUser, user._id, function (err, user) {
+                    if (err || !user) {
+                        console.log(err)
+                    }
+                })
+            });
         }
 
         return callback(false, team);

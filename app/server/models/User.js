@@ -152,16 +152,19 @@ schema.statics.resetAdmissionState = function (adminUser, userID, callback) {
             if (err || !settings) {
                 return callback(err ? err : {error: 'Unable to perform action.', code: 400})
             }
+
+
+            logger.logAction(adminUser._id, user._id, 'Reset admission status.', 'EXECUTOR IP: ' + adminUser.ip);
+
+            return callback(err, user);
+
         });
-
-        logger.logAction(adminUser._id, user._id, 'Reset admission status.', 'EXECUTOR IP: ' + adminUser.ip);
-
-        return callback(err, user);
 
     });
 }
 
 schema.statics.admitUser = function (adminUser, userID, callback) {
+    console.log('trying to admit', userID);
 
     if (!adminUser || !userID) {
         return callback({error: 'Invalid arguments'});
@@ -186,6 +189,8 @@ schema.statics.admitUser = function (adminUser, userID, callback) {
         }, {
             new: true
         }, function (err, user) {
+
+            console.log('user back:', user)
 
             if (err || !user) {
                 return callback(err ? err : {error: 'Unable to perform action.', code: 400})
