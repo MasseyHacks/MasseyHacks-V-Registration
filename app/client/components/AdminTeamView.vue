@@ -100,7 +100,7 @@
                     return 'declined';
                 }
 
-                if (rawStatus.waitlisted {
+                if (rawStatus.waitlisted) {
                     return 'waitlisted';
                 }
 
