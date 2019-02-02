@@ -1126,53 +1126,10 @@ UserController.resetVotes = function (adminUser, userID, callback) {
 
 UserController.resetAdmissionState = function (adminUser, userID, callback) {
 
-    if (!adminUser || !userID) {
-        return callback({error: 'Invalid arguments'});
-    }
-
-    User.findOneAndUpdate({
-        _id: userID,
-        'permissions.verified': true
-    }, {
-        $set: {
-            'status.admitted': false,
-            'status.rejected': false,
-            'status.waitlisted': false,
-            'statusReleased': false,
-            'applicationAdmit': [],
-            'applicationReject': [],
-            'applicationVotes': [],
-            'status.admittedBy': '',
-            'numVotes': 0
-        }
-    }, {
-        new: true
-    }, function (err, user) {
-
-        if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
-        }
-
-        Settings.findOneAndUpdate({}, {
-            $pull: {
-                'emailQueue.acceptanceEmails': user.email,
-                'emailQueue.rejectionEmails': user.email,
-                'emailQueue.waitlistEmails': user.email,
-                'emailQueue.laggerEmails': user.email,
-                'emailQueue.laggerConfirmEmails': user.email
-            }
-        }, function (err, settings) {
-            if (err || !settings) {
-                return callback(err ? err : {error: 'Unable to perform action.', code: 400})
-            }
-        });
-
-
-        logger.logAction(adminUser._id, user._id, 'Reset admission status.', 'EXECUTOR IP: ' + adminUser.ip);
-
+    User.resetAdmissionState(adminUser, usuerID, function(err, user) {
         return callback(err, user);
-
     });
+
 };
 
 UserController.admitUser = function (adminUser, userID, callback) {

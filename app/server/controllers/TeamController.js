@@ -60,7 +60,7 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
 
         for (var teamMember in team.memberNames) {
 
-            UserController.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
+            User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
 
                 User.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
                     if (err || !user) {
