@@ -35,6 +35,8 @@
                                    :id="questionName" :maxlength="question.maxlength">
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'birthday'"
                                    :id="questionName" :maxlength="question.maxlength">
+                            <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'phoneNumber'"
+                                   :id="questionName" :maxlength="question.maxlength">
                             <div v-if="question.questionType == 'boolean'">
                                 <div class="form-check form-check-inline" :id="questionName">
                                     <input :disabled="editDisabled" class="form-check-input" type="radio" :name="questionName"
@@ -355,10 +357,37 @@
                             } else {
                                 formValue[question] = null;
                             }
+                        } else if((new Date()).getFullYear() - birthdayDate.getFullYear() > 130){
+                            if (validate && template[question].mandatory) {
+                                submissionErrors.push('Sorry, but you cannot be over 130 years old!');
+                                doNotSubmit = true;
+                            } else {
+                                formValue[question] = null;
+                            }
                         } else {
                             formValue[question] = inputElement.value;
                         }
 
+                    } else if(template[question].questionType == 'phoneNumber') {
+                        var phoneNumber = document.getElementById(question).value;
+                        if(phoneNumber.length > template[question].maxlength){
+                            if (validate) {
+                                submissionErrors.push('Your phone number is too long! The maximum length is 11 digits.')
+                                doNotSubmit = true
+                            } else {
+                                formValue[question] = null;
+                            }
+                        } else if(isNaN(phoneNumber)){
+                            if (validate) {
+                                submissionErrors.push('Please enter your phone number without any symbols or letters!')
+                                doNotSubmit = true
+                            } else {
+                                formValue[question] = null;
+                            }
+                        }
+                        else {
+                            formValue[question] = phoneNumber
+                        }
                     }
                     else {
                         var inputElement = document.getElementById(question);

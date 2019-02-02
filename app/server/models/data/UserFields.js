@@ -268,9 +268,9 @@ var hackerApplication = {
 
     phoneNumber: {
         type: String,
-        questionType: 'shortAnswer',
+        questionType: 'phoneNumber',
         question: '<b>What is your phone number?</b>',
-        maxlength: 15,
+        maxlength: 11,
         mandatory: false,
         precaption: 'FINAL QUESTIONS'
     },

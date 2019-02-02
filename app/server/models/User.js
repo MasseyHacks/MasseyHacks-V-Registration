@@ -358,6 +358,19 @@ schema.statics.validateProfile = function (profile, callback) {
                         else if((birthdayDate.getFullYear() != parseInt(birthdayValues[0])) || (birthdayDate.getMonth() != parseInt(birthdayValues[1]) - 1) || (birthdayDate.getDate() != parseInt(birthdayValues[2]))){
                             return callback({error: 'Invalid birthday'})
                         }
+                        else if((new Date()).getFullYear() - birthdayDate.getFullYear() > 130){
+                            return callback({error: 'User claims they are over 130 years old'})
+                        }
+                    }
+
+                    if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'phoneNumber') {
+                        var phoneNumber = userpath[keys[i]];
+                        if(phoneNumber.length > runner[keys[i]].maxlength){
+                            return callback({error: 'Phone number is too long'})
+                        } else if(isNaN(phoneNumber)) {
+                            return callback({error: 'Phone number is not a number'})
+                        }
+
                     }
 
                     if (profile.signature !== -1 && runner[keys[i]]['questionType'] && runner[keys[i]]['questionType'] == 'contract') {
