@@ -23,7 +23,7 @@ TeamController.checkIfAutoAdmit = function (adminUser, teamCode, callback) {
         .populate('memberNames')
         .exec(function (err, team) {
             if (err || !team) { // Team doesn't exist
-                return callback({ error : 'Team doesn\'t exist' });
+                return callback({ error : 'Team doesn\'t exist', code: 404 });
             }
 
             var numAdmitted = 0;
@@ -174,7 +174,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
             .select('+memberIDs')
             .exec(function (err, team) {
                 if (err || !team) { // Team doesn't exist yet
-                    return callback({ error : 'Team doesn\'t exist' });
+                    return callback({ error : 'Team doesn\'t exist', code: 404 });
                 }
 
                 if (team.memberIDs.length < process.env.TEAM_MAX_SIZE) { // Can still join team
@@ -310,7 +310,7 @@ TeamController.getTeam = function(id, callback) {
             .populate('memberNames')
             .exec(function (err, team) {
                 if (err || !team) { // Team doesn't exist
-                    return callback({ error : 'Team doesn\'t exist' });
+                    return callback({ error : 'Team doesn\'t exist', code: 404 });
                 }
 
                 // Substitutes user objects with their names
@@ -335,7 +335,7 @@ TeamController.getByCode = function(code, callback) {
         .populate('memberNames')
         .exec(function (err, team) {
             if (err || !team) { // Team doesn't exist
-                return callback({ error : 'Team doesn\'t exist' });
+                return callback({ error : 'Team doesn\'t exist', code: 404 });
             }
 
             // Substitutes user objects with their names
@@ -393,7 +393,7 @@ TeamController.deleteTeamByCode = function (userExcute, code, callback) {
         code: code
     }, function (err, team) {
         if (err || !team) {
-            return callback({ error : 'Team doesn\'t exist' });
+            return callback({ error : 'Team doesn\'t exist', code: 404 });
         }
         User.updateMany({teamCode: code}, {teamCode: ''}, function (err) {
             Team.findOneAndRemove({

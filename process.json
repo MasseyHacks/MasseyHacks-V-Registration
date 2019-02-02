@@ -3,10 +3,12 @@
     "name"        : "GOOSE",
     "script"      : "npm",
     "args" : "run build",
-    "watch": ["**"],
+    "watch": true,
     "ignore_watch" : ["node_modules", "app/client/dist"],
     "watch_options": {
+      "usePolling": true,
       "followSymlinks": false
     }
   }]
 }
+
