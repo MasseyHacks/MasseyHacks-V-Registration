@@ -7,7 +7,7 @@ function removeUnverifiedUser(){
     var now = Date.now();
 
     // Only delete users below checkin
-    User.find({'permissions.level' : { $lt : 2 }}, function(err, users) {
+    User.find({'permissions.level' : { $eq : 0 }}, function(err, users) {
         if (err || !users) {
             throw err;
         }
