@@ -24,7 +24,7 @@ globalUsersManager.pushBackRejected = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Unrejected all rejected users without status release', 'EXECUTOR IP: ' + adminUser.ip);
@@ -42,7 +42,7 @@ globalUsersManager.releaseAllStatus = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Released all user status', 'EXECUTOR IP: ' + adminUser.ip);
@@ -61,7 +61,7 @@ globalUsersManager.releaseAllAccepted = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Released all accepted user status', 'EXECUTOR IP: ' + adminUser.ip);
@@ -80,7 +80,7 @@ globalUsersManager.releaseAllWaitlisted = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Released all waitlisted user status', 'EXECUTOR IP: ' + adminUser.ip);
@@ -99,7 +99,7 @@ globalUsersManager.releaseAllRejected = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Released all rejected user status', 'EXECUTOR IP: ' + adminUser.ip);
@@ -131,7 +131,7 @@ globalUsersManager.hideAllStatusRelease = function(adminUser, callback){
         }
     }, function(err, result){
         if (err || !result) {
-            return callback(err ? err : { error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, -1, 'Hid all user status', 'EXECUTOR IP: ' + adminUser.ip);
