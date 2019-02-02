@@ -1126,7 +1126,7 @@ UserController.resetVotes = function (adminUser, userID, callback) {
 
 UserController.resetAdmissionState = function (adminUser, userID, callback) {
 
-    User.resetAdmissionState(adminUser, usuerID, function(err, user) {
+    User.resetAdmissionState(adminUser, userID, function(err, user) {
         return callback(err, user);
     });
 
