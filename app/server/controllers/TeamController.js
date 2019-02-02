@@ -59,11 +59,16 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
         logger.logAction(adminUser._id, -1, 'Admitted team ' + team.name, 'EXECUTOR IP: ' + adminUser.ip);
 
         for (var teamMember in team.memberNames) {
-            User.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
-                if (err || !user){
-                    console.log(err)
-                }
-            })
+
+            UserController.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
+
+                User.admitUser(adminUser, team.memberNames[teamMember].id, function (err, user) {
+                    if (err || !user) {
+                        console.log(err)
+                    }
+                })
+
+            });
         }
 
         return callback(false, team);

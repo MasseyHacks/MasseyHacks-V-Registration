@@ -92,27 +92,27 @@
         methods: {
             status(rawStatus) {
                 
-                if (rawStatus.checkedIn && rawStatus.statusReleased) {
+                if (rawStatus.checkedIn) {
                     return 'checked in';
                 }
 
-                if (rawStatus.declined && rawStatus.statusReleased) {
+                if (rawStatus.declined) {
                     return 'declined';
                 }
 
-                if (rawStatus.waitlisted && rawStatus.statusReleased) {
+                if (rawStatus.waitlisted {
                     return 'waitlisted';
                 }
 
-                if (rawStatus.confirmed && rawStatus.statusReleased) {
+                if (rawStatus.confirmed) {
                     return 'confirmed';
                 }
 
-                if (rawStatus.admitted && rawStatus.statusReleased) {
+                if (rawStatus.admitted) {
                     return 'admitted';
                 }
 
-                if (rawStatus.rejected && rawStatus.statusReleased) {
+                if (rawStatus.rejected) {
                     return 'rejected';
                 }
 

@@ -1180,7 +1180,7 @@ UserController.admitUser = function (adminUser, userID, callback) {
     User.admitUser(adminUser, userID, function(err, user) {
 
         if (!err && user) {
-            TeamController.teamAccept(adminUser, user.teamCode, function (err, team) {
+            TeamController.checkIfAutoAdmit(adminUser, user.teamCode, function (err, team) {
                 console.log(err, team);
             });
         }

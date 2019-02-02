@@ -19,7 +19,7 @@ module.exports = {
                                 JSON.stringify(err, null, 2) +
                                 '``` \n';
 
-                    if (process.env.SERVER_RAVEN_KEY) {
+                    if (process.env.SERVER_RAVEN_KEY && (!err.code || err.code >= 500)) {
                         Raven.captureMessage(data, {
                             level: 'error'
                         })
@@ -35,7 +35,7 @@ module.exports = {
                                         'icon_emoji': ':happydoris:',
                                         'username': 'CrashBot',
                                         'text':
-                                        'Hey! ' + process.env.ADMIN_UIDS + ' An issue was detected with the server.\n\n```' +
+                                        'Hey! ' + ((!err.code || err.code >= 500) ? process.env.ADMIN_UIDS : '') + ' An issue was detected with the server.\n\n```' +
                                         data
                                     })
                                 }
