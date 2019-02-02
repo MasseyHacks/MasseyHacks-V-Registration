@@ -104,7 +104,7 @@
                                 <router-link type="tr" v-for="user in users"
                                              :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"
                                              tag="tr">
-                                    <td>
+                                    <td style="max-width: 150px;">
                                         {{user.fullName}}
                                     </td>
                                     <td style="min-width: 150px;"><span v-html="userStatusConverter(user)"></span></td>
