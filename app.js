@@ -23,8 +23,6 @@ const organizers      = require('./config/organizers');
 const settings        = require('./config/settings');
 
 // Start services
-const autoRemove      = require('./app/server/services/autoRemove');
-const waiverReceiver  = require('./app/server/services/waiverReceiver');
 const Raven           = require('raven');
 const stats           = require('./app/server/services/stats');
 
