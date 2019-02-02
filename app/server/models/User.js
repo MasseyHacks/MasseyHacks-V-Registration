@@ -138,7 +138,7 @@ schema.statics.admitUser = function (adminUser, userID, callback) {
         }, function (err, user) {
 
             if (err || !user) {
-                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                return callback(err ? err : {error: 'Unable to perform action.', code: 400})
             }
 
             logger.logAction(adminUser._id, user._id, 'Admitted user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -180,7 +180,7 @@ schema.statics.rejectUser = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);

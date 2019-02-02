@@ -882,7 +882,7 @@ UserController.updateProfile = function (userExecute, id, profile, callback) {
                     },
                     function (err, user) {
                         if (err || !user) {
-                            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
                         }
 
                         if (user.status.released && (user.status.rejected || user.status.waitlisted || user.status.admitted)) {
@@ -957,7 +957,7 @@ UserController.voteAdmitUser = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to admit.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -995,7 +995,7 @@ UserController.voteRejectUser = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Voted to reject.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1114,7 +1114,7 @@ UserController.resetVotes = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Reset votes.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1150,7 +1150,7 @@ UserController.resetAdmissionState = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         Settings.findOneAndUpdate({}, {
@@ -1163,7 +1163,7 @@ UserController.resetAdmissionState = function (adminUser, userID, callback) {
             }
         }, function (err, settings) {
             if (err || !settings) {
-                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                return callback(err ? err : {error: 'Unable to perform action.', code: 400})
             }
         });
 
@@ -1220,7 +1220,7 @@ UserController.waitlistUser = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1316,7 +1316,7 @@ UserController.flushEmailQueue = function (adminUser, userID, callback) {
 
     User.getByID(userID, function (err, user) {
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
         flush.flushQueueUser(user.email, function(err, msg) {
             return callback(err, msg);
@@ -1373,7 +1373,7 @@ UserController.acceptInvitation = function (executeUser, confirmation, callback)
         }, function (err, user) {
 
             if (err || !user) {
-                return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+                return callback(err ? err : {error: 'Unable to perform action.', code: 400})
             }
 
             logger.logAction(executeUser._id, user._id, 'Updated confirmation.', 'EXECUTOR IP: ' + executeUser.ip + ' | ' + JSON.stringify(profileValidated));
@@ -1402,7 +1402,7 @@ UserController.declineInvitation = function (executeUser, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(executeUser._id, user._id, 'Declined invitation.', 'EXECUTOR IP: ' + executeUser.ip);
@@ -1438,7 +1438,7 @@ UserController.resetInvitation = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Reset invitation.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1466,7 +1466,7 @@ UserController.activate = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Activated user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1492,7 +1492,7 @@ UserController.deactivate = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Deactivated user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1519,7 +1519,7 @@ UserController.checkIn = function (adminUser, userID, page, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked In user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1545,7 +1545,7 @@ UserController.checkOut = function (adminUser, userID, page, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Checked Out user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1571,7 +1571,7 @@ UserController.waiverIn = function (adminUser, userID, page, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as on file for user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1596,7 +1596,7 @@ UserController.waiverOut = function (adminUser, userID, callback) {
     }, function (err, user) {
 
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Waiver flagged as not on file for user.', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1620,7 +1620,7 @@ UserController.releaseStatus = function (adminUser, userID, callback) {
         new: true
     }, function (err, user) {
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Released user status', 'EXECUTOR IP: ' + adminUser.ip);
@@ -1646,7 +1646,7 @@ UserController.hideStatus = function (adminUser, userID, callback) {
         new: true
     }, function (err, user) {
         if (err || !user) {
-            return callback(err ? err : {error: 'Unable to perform action.', code: 500})
+            return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
         logger.logAction(adminUser._id, user._id, 'Hid user status', 'EXECUTOR IP: ' + adminUser.ip);
