@@ -107,10 +107,10 @@
                                     <td>
                                         {{user.fullName}}
                                     </td>
-                                    <td><span v-html="userStatusConverter(user)"></span></td>
+                                    <td style="min-width: 150px;"><span v-html="userStatusConverter(user)"></span></td>
                                     <td>{{user.numVotes}}</td>
                                     <td class="email-col">{{user.email}}</td>
-                                    <td>{{user.profile.hacker.school}}</td>
+                                    <td style="max-width: 100px;">{{user.profile.hacker.school}}</td>
                                     <td>{{user.profile.hacker.grade}}</td>
                                 </router-link>
                             </table>
@@ -473,7 +473,7 @@
                 return arr;
             },
             userStatusConverter: function (user) {
-                var repsonseArray = {
+                var responseArray = {
                     'V': '',
                     'S': '',
                     'A': '',
@@ -483,42 +483,45 @@
                 };
 
                 if (user.permissions.verified) {
-                    repsonseArray['V'] = '<i class="fas fa-check"></i>'
+                    responseArray['V'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['V'] = '<i class="fas fa-ban"></i>'
+                    responseArray['V'] = '<i class="fas fa-ban"></i>'
                 }
                 if (user.status.submittedApplication) {
-                    repsonseArray['S'] = '<i class="fas fa-check"></i>'
+                    responseArray['S'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['S'] = '<i class="fas fa-ban"></i>'
+                    responseArray['S'] = '<i class="fas fa-ban"></i>'
                 }
                 if (user.status.admitted) {
-                    repsonseArray['A'] = '<i class="fas fa-check"></i>'
+                    responseArray['A'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['A'] = '<i class="fas fa-ban"></i>'
+                    if (!user.status.rejected) {
+                        responseArray['A'] = '<i class="far fa-question-circle"></i>'
+                    } else {
+                        responseArray['A'] = '<i class="fas fa-ban"></i>'
+                    }
                 }
                 if (user.status.confirmed) {
-                    repsonseArray['C'] = '<i class="fas fa-check"></i>'
+                    responseArray['C'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['C'] = '<i class="fas fa-ban"></i>'
+                    responseArray['C'] = '<i class="fas fa-ban"></i>'
                 }
                 if (user.status.waiver) {
-                    repsonseArray['W'] = '<i class="fas fa-check"></i>'
+                    responseArray['W'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['W'] = '<i class="fas fa-ban"></i>'
+                    responseArray['W'] = '<i class="fas fa-ban"></i>'
                 }
-
                 if (user.status.statusReleased) {
-                    repsonseArray['R'] = '<i class="fas fa-check"></i>'
+                    responseArray['R'] = '<i class="fas fa-check"></i>'
                 } else {
-                    repsonseArray['R'] = '<i class="fas fa-ban"></i>'
+                    responseArray['R'] = '<i class="fas fa-ban"></i>'
                 }
 
 
                 var finalReponse = '';
 
-                for (var str in repsonseArray) {
-                    finalReponse += repsonseArray[str]
+                for (var str in responseArray) {
+                    finalReponse += responseArray[str]
                 }
                 return finalReponse
             },
