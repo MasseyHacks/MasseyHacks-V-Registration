@@ -23,7 +23,7 @@
                             <input class="form-control" :maxlength="50" v-model="firstName" placeholder="Hax0r" autofocus required>
 
                             <label>Last Name</label>
-                            <input class="form-control" :maxlength="50" v-model="lastName" placeholder="M4ast3r" required>
+                            <input class="form-control" :maxlength="50" v-model="lastName" placeholder="M4st3r" required>
 
                             <label>Email</label>
                             <input class="form-control" :maxlength="50" v-model="email" placeholder="hacker@hackermail.io" type="email" required>
