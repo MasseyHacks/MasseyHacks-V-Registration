@@ -221,7 +221,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
                             });
                         });
                 } else {
-                    return callback({ error : 'Team is full' });
+                    return callback({ error : 'Team is full', code: 400 });
                 }
             });
     });
