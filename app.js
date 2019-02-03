@@ -67,8 +67,6 @@ Raven.context(function() {
 
         console.log(`Worker ${process.pid} started`);
 
-        //app.use(express.bodyParser({limit: '15mb'}));
-
         // Start routers
         app.use(express.static('app/client/'));
 
