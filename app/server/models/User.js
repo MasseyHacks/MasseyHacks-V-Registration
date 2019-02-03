@@ -251,8 +251,7 @@ schema.statics.rejectUser = function (adminUser, userID, callback) {
     });
 };
 
-schema.statics.getByID = function (id, callback, permissionLevel) {
-
+schema.statics.getByID = function (id, callback, permissionLevel, bypass) {
     /*
     if (permissionLevel == null) {
         permissionLevel = 1;
@@ -267,6 +266,10 @@ schema.statics.getByID = function (id, callback, permissionLevel) {
                 code: 404
             })
 
+        }
+
+        if (bypass) {
+            return callback(null, user);
         }
 
         return callback(null, filterSensitive(user, permissionLevel));
