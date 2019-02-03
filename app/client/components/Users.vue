@@ -167,7 +167,7 @@
                 loadingError: '',
                 queryError: '',
 
-                currentSorting: '',
+                currentSorting: 'fullName',
                 reverseSorted: true,
 
                 users: {}
