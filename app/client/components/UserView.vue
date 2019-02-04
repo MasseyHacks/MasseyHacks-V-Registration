@@ -54,6 +54,7 @@
 
                     <hr>
 
+                    <button class="generic-button-dark less-wide" v-on:click="unlockApplication">Unlock Application</button>
                     <button class="generic-button-dark less-wide" v-on:click="resetAdmissionState">Reset Admit</button>
                     <button class="generic-button-dark less-wide" v-on:click="resetInvitation">Reset Invitation</button>
                     <button class="generic-button-dark less-wide" v-on:click="resetVotes">Reset Votes</button>
@@ -297,6 +298,31 @@
                         }
                     })
                 })
+            },
+            unlockApplication: function() {
+                AuthService.skillTest(() => {
+                    AuthService.sendRequest('POST', '/api/modifyUser', {
+                        userID: this.userObj._id,
+                        data: {"profile.signature": "-1"}
+                    }, (err, data) => {
+                        if (err) {
+                            swal('Error', err.error, 'error')
+                        } else {
+                            swal('Success', 'Application has been unlocked', 'success').then((result) => {
+                                ApiService.getUser(this.userID, (err, data) => {
+                                    if (err || !data) {
+                                        console.log("ERROR")
+                                    } else {
+                                        console.log("data2");
+                                        this.userObj = data
+                                    }
+                                })
+                            });
+
+                        }
+                    })
+                });
+
             },
             editUser: function () {
                 var flatWithHistory = this.flattenWithHistory(this.userObj);
