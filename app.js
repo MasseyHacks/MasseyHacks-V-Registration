@@ -1,5 +1,4 @@
 require('dotenv').load();
-
 const express         = require('express');
 const cors            = require('cors');
 const fs              = require('fs');
@@ -67,8 +66,6 @@ Raven.context(function() {
     } else {
 
         console.log(`Worker ${process.pid} started`);
-
-        //app.use(express.bodyParser({limit: '15mb'}));
 
         // Start routers
         app.use(express.static('app/client/'));
