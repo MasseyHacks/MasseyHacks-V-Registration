@@ -137,7 +137,7 @@
 
                 for (var key in this.fields) { // Replace unix timestamps with human readable
 
-                    if (this.fields[key].time) {
+                    if (this.fields[key] && this.fields[key].time) {
                         key = key.split('.')
                         var runner = user;
 
