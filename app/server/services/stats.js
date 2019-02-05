@@ -135,11 +135,14 @@ function calculateStats(callback) {
                             if (user.applicationVotes[i] in newStats.votes) {
                                 newStats.votes[user.applicationVotes[i]][1] += 1;
 
-                                if (user.applicationVotes[i] in user.applicationAdmit) {
+                                console.log(user.applicationVotes[i], user.applicationAdmit, user.applicationReject)
+
+                                if (user.applicationAdmit.includes(user.applicationVotes[i])) {
                                     newStats.votes[user.applicationVotes[i]][2] += 1;
                                 }
 
-                                if (user.applicationVotes[i] in user.applicationReject) {
+                                if (user.applicationReject.includes(user.applicationVotes[i])) {
+                                    console.log('Got a reject!')
                                     newStats.votes[user.applicationVotes[i]][3] += 1;
                                 }
                             }
