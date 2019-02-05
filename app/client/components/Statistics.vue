@@ -174,6 +174,12 @@
                             <td>
                                 {{human[1]}} / {{statistics.submitted}}
                             </td>
+                            <td>
+                                {{human[2]}}
+                            </td>
+                            <td>
+                                {{human[3]}}
+                            </td>
                         </tr>
                     </table>
                 </div>
