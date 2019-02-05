@@ -165,6 +165,8 @@
                         <tr class='table-header'>
                             <td>NAME</td>
                             <td># VOTES</td>
+                            <td># VOTE ADMIT</td>
+                            <td># VOTE REJECT</td>
                         </tr>
                         <tr v-for='human in statistics.votes'>
                             <td>
