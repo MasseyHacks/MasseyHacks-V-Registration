@@ -114,7 +114,7 @@ function calculateStats(callback) {
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0];
+                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0, 0, 0];
             }
 
 
@@ -132,6 +132,14 @@ function calculateStats(callback) {
                         for (var i = 0; i < user.applicationVotes.length; i++) {
                             if (user.applicationVotes[i] in newStats.votes) {
                                 newStats.votes[user.applicationVotes[i]][1] += 1;
+                            }
+
+                            if (user.applicationAdmit[i] in newStats.votes) {
+                                newStats.votes[user.applicationVotes[i]][2] += 1;
+                            }
+
+                            if (user.applicationReject[i] in newStats.votes) {
+                                newStats.votes[user.applicationVotes[i]][3] += 1;
                             }
                         }
 
