@@ -129,7 +129,7 @@ function calculateStats(callback) {
 
                     async.each(users, function(user, callback){
 
-                        console.log(newStats.votes)
+                        //console.log(newStats.votes)
 
                         for (var i = 0; i < user.applicationVotes.length; i++) {
                             if (user.applicationVotes[i] in newStats.votes) {
