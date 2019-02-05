@@ -8,6 +8,22 @@
         <link async type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+        <script src="https://browser.sentry-cdn.com/4.5.3/bundle.min.js" crossorigin="anonymous"></script>
+
+        <script>
+            Sentry.init({
+                dsn: 'https://4847023082204ef8b35b1ea961567902@sentry.io/1256194',
+                beforeSend(event) {
+                    // Check if it is an exception, if so, show the report dialog
+                    if (event.exception) {
+                        Sentry.showReportDialog();
+                    }
+                    return event;
+                }
+            });
+        </script>
+
         <script async src="/dist/main.js"></script>
 
         <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
@@ -21,6 +37,8 @@
         <meta name="msapplication-TileColor" content="#2b5797">
         <meta name="theme-color" content="#ffffff">
     </head>
+
+
 
     <body style="font-family: 'Futura'; overflow-x: hidden;"> <!-- background: url('/img/background.svg'); background-position: center; background-size: cover"> -->
 
