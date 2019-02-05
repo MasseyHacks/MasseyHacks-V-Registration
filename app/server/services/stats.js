@@ -129,17 +129,19 @@ function calculateStats(callback) {
 
                     async.each(users, function(user, callback){
 
+                        console.log(newStats.votes)
+
                         for (var i = 0; i < user.applicationVotes.length; i++) {
                             if (user.applicationVotes[i] in newStats.votes) {
                                 newStats.votes[user.applicationVotes[i]][1] += 1;
-                            }
 
-                            if (user.applicationAdmit[i] in newStats.votes) {
-                                newStats.votes[user.applicationVotes[i]][2] += 1;
-                            }
+                                if (user.applicationVotes[i] in user.applicationAdmit) {
+                                    newStats.votes[user.applicationVotes[i]][2] += 1;
+                                }
 
-                            if (user.applicationReject[i] in newStats.votes) {
-                                newStats.votes[user.applicationVotes[i]][3] += 1;
+                                if (user.applicationVotes[i] in user.applicationReject) {
+                                    newStats.votes[user.applicationVotes[i]][3] += 1;
+                                }
                             }
                         }
 
