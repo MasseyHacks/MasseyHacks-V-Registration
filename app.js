@@ -44,7 +44,7 @@ Raven.context(function() {
     if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
 
-        for (let i = 0; i < cpuCount; i++) {
+        for (let i = 0; i < 1; i++) {
             cluster.fork();
         }
 
