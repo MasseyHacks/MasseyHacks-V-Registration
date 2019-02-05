@@ -44,6 +44,12 @@
                 </div>
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
+                    <h3>Trigger Crash</h3>
+                    <hr>
+                    <button class="generic-button-dark less-wide" @click="crash">Do it.</button>
+                </div>
+
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>SERVER LOG</h3>
                     <hr>
                     <div v-if="loading">
@@ -193,6 +199,9 @@
             });
         },
         methods: {
+            crash: function() {
+              intentional.crash
+            },
             sudoMode: function() {
                 swal({
                     title: 'Enter SUDO MODE?',
