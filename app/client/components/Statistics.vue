@@ -165,6 +165,8 @@
                         <tr class='table-header'>
                             <td>NAME</td>
                             <td># VOTES</td>
+                            <td>VOTE ADMIT</td>
+                            <td>VOTE REJECT</td>
                         </tr>
                         <tr v-for='human in statistics.votes'>
                             <td>
@@ -173,6 +175,12 @@
                             </td>
                             <td>
                                 {{human[1]}} / {{statistics.submitted}}
+                            </td>
+                            <td>
+                                {{human[2]}}
+                            </td>
+                            <td>
+                                {{human[3]}}
                             </td>
                         </tr>
                     </table>
