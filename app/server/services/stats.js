@@ -16,6 +16,7 @@ function calculateStats(callback) {
         total: 0,
         votes: {},
         skill: {},
+        charLength: [],
 
         demo: {
             gender: {
@@ -175,6 +176,11 @@ function calculateStats(callback) {
                         if (user.status.submittedApplication) {
 
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
+
+                            if (user.status.admitted) {
+                                newStats.charLength.push(user.profile['hacker']['fullResponse1'].length)
+                                newStats.charLength.push(user.profile['hacker']['fullResponse2'].length)
+                            }
 
                             // Add to the gender
                             if (user.profile.hacker.gender) {
