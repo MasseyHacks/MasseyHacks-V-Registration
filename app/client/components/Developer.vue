@@ -95,7 +95,7 @@
                                             <b>TO</b><br>
                                             Name: {{event.to.name}}<br>
                                             Email: {{event.to.email}}<br>
-                                            ID: {{event.to.ID}}<br>
+                                            ID: <router-link v-if="event.to.ID !== '-1'" :to="{path: '/organizer/userview?username='+event.to.ID+'&returnPath=/developer', params: {username: event.to.ID}}">{{event.to.ID}}</router-link> <span v-if="event.to.ID === '-1'" >{{event.to.ID}}</span><br>
                                             <br>
                                             <b>ACTION</b><br>
                                             {{event.message}}<br>
