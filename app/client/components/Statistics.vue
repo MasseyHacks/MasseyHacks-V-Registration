@@ -291,7 +291,7 @@
                     "Waitlisted": this.statistics.waitlisted,
                     "Rejected": this.statistics.rejected,
                     "Declined": this.statistics.declined,
-                    "Average Char Count (Admitted)": this.statistics.charLength.reduce(function(a, b) {return a + b}, 0) / this.statistics.charLength.length
+                    "Average Char Count (Admitted)": this.statistics.avgCharLength
                 }
             },
 

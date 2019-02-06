@@ -10,13 +10,16 @@ var stats = {};
 
 function calculateStats(callback) {
     console.log('Calculating stats...');
+
+    var charLength = [];
+
     var newStats = {
         lastUpdated: 0,
 
         total: 0,
         votes: {},
         skill: {},
-        charLength: [],
+        avgCharLength: 0,
 
         demo: {
             gender: {
@@ -178,8 +181,8 @@ function calculateStats(callback) {
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
 
                             if (user.status.admitted) {
-                                newStats.charLength.push(user.profile['hacker']['fullResponse1'].length)
-                                newStats.charLength.push(user.profile['hacker']['fullResponse2'].length)
+                                charLength.push(user.profile['hacker']['fullResponse1'].length)
+                                charLength.push(user.profile['hacker']['fullResponse2'].length)
                             }
 
                             // Add to the gender
@@ -264,6 +267,8 @@ function calculateStats(callback) {
                         callback(); // let async know we've finished
                     }, function() {
                         //console.log(newStats.review);
+
+                        newStats.avgCharLength = charLength.reduce(function(a, b) {return a + b}, 0) / charLength.length
 
                         // Transform dietary restrictions into a series of objects
                         var restrictions = [];
