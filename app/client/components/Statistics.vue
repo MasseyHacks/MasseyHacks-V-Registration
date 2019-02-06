@@ -304,26 +304,19 @@
                     "No Data": '<i class="fas fa-ban"></i>'
                 };
 
-                console.log(this.statistics);
-
                 totalCount += this.statistics.total;
 
 
-                console.log(totalCount);
-
-
-                var numMale = this.statistics.demo.gender.Male;
-                var numFemale = this.statistics.demo.gender.Female;
-                var numOther = this.statistics.demo.gender.Other;
-                var numDataless = this.statistics.demo.gender["I prefer not to answer"];
-
+                let numMale = this.statistics.demo.gender.Male;
+                let numFemale = this.statistics.demo.gender.Female;
+                let numOther = this.statistics.demo.gender.Other;
+                // var numDataless = this.statistics.demo.gender["I prefer not to answer"];
+                let numDataless = totalCount - numMale - numFemale - numOther;
                 returnObject["Total"] += totalCount;
                 returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
                 returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
                 returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
                 returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
-
-                console.log(returnObject);
                 return returnObject;
 
             },
@@ -343,14 +336,15 @@
                 var numMale = this.statistics.confirmedStat.demo.gender.Male;
                 var numFemale = this.statistics.confirmedStat.demo.gender.Female;
                 var numOther = this.statistics.confirmedStat.demo.gender.Other;
-                var numDataless = this.statistics.confirmedStat.demo.gender["I prefer not to answer"];
+                // var numNoData = this.statistics.confirmedStat.demo.gender["I prefer not to answer"];
+                let numNoData = totalCount - numMale - numFemale - numOther;
+
 
                 returnObject["Total"] += totalCount;
                 returnObject["Male"] += `Male: ${numMale} (${(totalCount != 0 ? (numMale / totalCount * 100).toFixed(2) : 0)}%)`;
                 returnObject["Female"] += `Female: ${numFemale} (${(totalCount != 0 ? (numFemale / totalCount * 100).toFixed(2) : 0)}%)`;
                 returnObject["Other"] += `Other: ${numOther} (${(totalCount != 0 ? (numOther / totalCount * 100).toFixed(2) : 0)}%)`;
-                returnObject["No Data"] += `No Data: ${numDataless} (${(totalCount != 0 ? (numDataless / totalCount * 100).toFixed(2) : 0)}%)`;
-                console.log(returnObject);
+                returnObject["No Data"] += `No Data: ${numNoData} (${(totalCount != 0 ? (numNoData / totalCount * 100).toFixed(2) : 0)}%)`;
                 return returnObject;
 
             }
