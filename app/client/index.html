@@ -16,6 +16,8 @@
                 dsn: 'https://4847023082204ef8b35b1ea961567902@sentry.io/1256194',
                 beforeSend(event) {
                     // Check if it is an exception, if so, show the report dialog
+                    console.log(event)
+
                     if (event.exception) {
                         Sentry.showReportDialog();
                     }
