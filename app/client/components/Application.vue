@@ -463,7 +463,9 @@
                 }
             },
             autoSave () {
-              this.saveApplication(true)
+                if (this.modified()) {
+                    this.saveApplication(true)
+                }
             },
             modified() {
 
