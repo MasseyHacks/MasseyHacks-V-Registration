@@ -111,14 +111,14 @@ function calculateStats(callback) {
         });
 
             User
-        .find({'permissions.reviewer':true, 'permissions.developer':false})
+        .find({'permissions.reviewer':true})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {
                 throw err;
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0, 0, 0];
+                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0, 0, 0, adminUsers[i].permissions.developer];
             }
 
 
