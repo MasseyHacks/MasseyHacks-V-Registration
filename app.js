@@ -41,20 +41,10 @@ Raven.context(function() {
 
     app.enable('trust proxy'); // For reverse proxy
 
-    var apiLimiter = new RateLimit({
-        windowMs: 15*60*1000,
-        max: 100,
-        delayMs: 0 // disabled
-    });
-
-    var authLimiter = new RateLimit({
-        windowMs: 15*60*1000, 
-        max: 100,
-        delayMs: 0 // disabled
-    });
-
     if (!cluster.isMaster) {
         console.log(`Master ${process.pid} is running`);
+
+        console.log(cpuCount + ' CPUS DETECTED!')
 
         for (let i = 0; i < cpuCount; i++) {
             cluster.fork();

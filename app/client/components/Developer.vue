@@ -44,6 +44,12 @@
                 </div>
 
                 <div class="ui-card dash-card-offset dash-card dash-card-large">
+                    <h3>Trigger Crash</h3>
+                    <hr>
+                    <button class="generic-button-dark less-wide" @click="crash">Do it.</button>
+                </div>
+
+                <div class="ui-card dash-card-offset dash-card dash-card-large">
                     <h3>SERVER LOG</h3>
                     <hr>
                     <div v-if="loading">
@@ -89,7 +95,7 @@
                                             <b>TO</b><br>
                                             Name: {{event.to.name}}<br>
                                             Email: {{event.to.email}}<br>
-                                            ID: {{event.to.ID}}<br>
+                                            ID: <router-link v-if="event.to.ID !== '-1'" :to="{path: '/organizer/userview?username='+event.to.ID+'&returnPath=/developer', params: {username: event.to.ID}}">{{event.to.ID}}</router-link> <span v-if="event.to.ID === '-1'" >{{event.to.ID}}</span><br>
                                             <br>
                                             <b>ACTION</b><br>
                                             {{event.message}}<br>
@@ -193,6 +199,9 @@
             });
         },
         methods: {
+            crash: function() {
+              intentional.crash
+            },
             sudoMode: function() {
                 swal({
                     title: 'Enter SUDO MODE?',

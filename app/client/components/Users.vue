@@ -168,7 +168,7 @@
                 queryError: '',
 
                 currentSorting: 'fullName',
-                reverseSorted: true,
+                reverseSorted: false,
 
                 users: {}
             }
@@ -192,7 +192,7 @@
                 this.filters = JSON.parse(sessionStorage.filters);
             }
 
-            ApiService.getUsers({page: this.page, size: 100, filters: this.filters}, (err, data) => {
+            ApiService.getUsers({page: this.page, size: 100, filters: this.filters, sort: {"firstName": 1, "lastName": 1}}, (err, data) => {
                 this.loading = false;
 
                 if (err || !data) {

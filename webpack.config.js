@@ -38,7 +38,8 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY)
+            CLIENT_RAVEN_KEY: JSON.stringify(process.env.CLIENT_RAVEN_KEY),
+            'process.env.NODE_ENV': JSON.stringify('production')
         })
     ]
 };

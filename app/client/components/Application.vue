@@ -171,9 +171,6 @@
 
         },
         beforeMount() {
-
-            this.checkEditState();
-
             console.log(this.settings);
             ApiService.getApplications((err, applications) => {
                 this.loading = false;
@@ -182,6 +179,7 @@
                     this.loadingError = err ? err : 'Something went wrong :\'('
                 } else {
                     this.applications = applications
+                    this.checkEditState();
                 }
             });
         },
@@ -202,6 +200,7 @@
                             }.bind(this), 60000);
                             console.log(this.user.profile.signature)
                         }
+                        this.checkEditState();
                     }
                 });
             })
@@ -464,7 +463,9 @@
                 }
             },
             autoSave () {
-              this.saveApplication(true)
+                if (this.modified()) {
+                    this.saveApplication(true)
+                }
             },
             modified() {
 

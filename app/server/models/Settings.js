@@ -162,7 +162,7 @@ schema.statics.getRawSettings = function(callback) {
 };
 
 schema.statics.getSettings = function(callback){
-    this.findOne({}, '-emailQueue -_id -__v -pendingSchools', callback);
+    this.findOne({}, '-emailQueue -_id -__v -pendingSchools -emailQueueLastFlushed', callback);
 };
 
 module.exports = mongoose.model('Settings', schema);

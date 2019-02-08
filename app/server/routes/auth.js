@@ -217,14 +217,30 @@ module.exports = function(router) {
         var newPassword = req.body.newPassword;
         var oldPassword = req.body.oldPassword;
 
-        UserController.selfChangePassword(token, oldPassword, newPassword, logger.defaultResponse(req, res), getIp(req));
+        UserController.selfChangePassword(token, oldPassword, newPassword, function(err, data) {
+            if (err || !data) {
+                return res.status(err.code ? err.code : 500).json(err);
+            } else {
+
+                return res.json(data);
+
+            }
+        }, getIp(req));
     });
 
     // Change password
     router.post('/adminChangePassword', permissions.isOwner, function (req, res) {
         var userID = req.body.userID;
         var password = req.body.password;
-        UserController.adminChangePassword(req.userExecute, userID, password, logger.defaultResponse(req, res));
+        UserController.adminChangePassword(req.userExecute, userID, password, function(err, data) {
+            if (err || !data) {
+                return res.status(err.code ? err.code : 500).json(err);
+            } else {
+
+                return res.json(data);
+
+            }
+        });
     });
 
     // Request Super Token

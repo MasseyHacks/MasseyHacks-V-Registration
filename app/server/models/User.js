@@ -623,7 +623,6 @@ var filterSensitive = function (user, permission, page) {
                 if ('type' in runner[keys[i]]) {
                    if (runner[keys[i]].permission && runner[keys[i]].permission >= permissionLevel) {
                         try {
-                            console.log('deleting', userpath[keys[i]])
                             delete userpath[keys[i]];
                         } catch (e) {
                             console.log(e)

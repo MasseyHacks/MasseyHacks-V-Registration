@@ -15,6 +15,10 @@
                     </div>
                     <div v-else-if="status == 'invalid'">
                         <h5 style="margin-bottom: 0">Invalid Token</h5>
+
+                        <br>
+
+                        <router-link to="/"><button class="generic-button-dark">Return to Dashboard</button></router-link>
                     </div>
                     <div v-else>
                         <h5 style="margin-bottom: 0">Loading...</h5>
