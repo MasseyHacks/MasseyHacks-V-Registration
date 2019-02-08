@@ -10,7 +10,8 @@ module.exports = {
                 // Keep everyone happy
                 if (process.env.NODE_ENV === 'production'){
 
-                    var data =  'Request: ' + req.method + ' ' + req.url +
+                    var data =  'Request: ' + req.method + ' ' + req.url + '\n' +
+                                'User: ' + req.userExecute['fullName'] + ' ' + req.userExecute['ip'] + '\n' +
                                 '\n -------------------------- \n' +
                                 'Body: \n ' +
                                 JSON.stringify(req.body, null, 2) +
@@ -32,6 +33,7 @@ module.exports = {
                             {
                                 form: {
                                     payload: JSON.stringify({
+
                                         'icon_emoji': ':happydoris:',
                                         'username': 'CrashBot',
                                         'text':

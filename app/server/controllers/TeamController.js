@@ -27,14 +27,16 @@ TeamController.checkIfAutoAdmit = function (adminUser, teamCode, callback) {
             }
 
             var numAdmitted = 0;
+            var numSubmitted = 0;
 
             if (team.memberNames.length > 2) {
                 // Substitutes user objects with their names
                 for (var u in team.memberNames) {
                     numAdmitted += team.memberNames[u].status.admitted ? 1 : 0;
+                    numSubmitted += team.memberNames[u].status.submittedApplication ? 1 : 0;
                 }
 
-                if (numAdmitted >= 2) {
+                if (numAdmitted >= 2 && numSubmitted > 2) {
                     TeamController.teamAccept(adminUser, teamCode, function (err, team) {
                         return callback(null, team);
                     });
@@ -60,20 +62,21 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
 
         for (var teamMember in team.memberNames) {
 
+            if (team.memberNames[teamMember]['status']['submittedApplication']) {
+                User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function (err, user) {
 
-            User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function(err, user) {
+                    console.log('Done resetting user status', user.fullName, user)
 
-                console.log('Done resetting user status', user.fullName, user)
+                    User.admitUser(adminUser, user._id, function (err, user) {
+                        if (err || !user) {
+                            console.log(err)
+                        }
 
-                User.admitUser(adminUser, user._id, function (err, user) {
-                    if (err || !user) {
-                        console.log(err)
-                    }
+                        console.log('Admitted user', user.fullName)
+                    })
 
-                    console.log('Admitted user', user.fullName)
-                })
-
-            });
+                });
+            }
         }
 
         return callback(false, team);
@@ -221,7 +224,7 @@ TeamController.joinTeam = function(id, teamCode, callback) {
                             });
                         });
                 } else {
-                    return callback({ error : 'Team is full' });
+                    return callback({ error : 'Team is full', code: 400 });
                 }
             });
     });

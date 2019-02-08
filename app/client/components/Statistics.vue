@@ -165,14 +165,22 @@
                         <tr class='table-header'>
                             <td>NAME</td>
                             <td># VOTES</td>
+                            <td># VOTE ADMIT</td>
+                            <td># VOTE REJECT</td>
                         </tr>
                         <tr v-for='human in statistics.votes' v-if="!human[4] || user.permissions.developer">
                             <td>
                                 <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
-                                <span v-else>{{human[0]}}</span>
+                                <span v-else>{{human[0]}}</span> <span v-if="human[4]"><b>[DEVELOPER]</b></span>
                             </td>
                             <td>
                                 {{human[1]}} / {{statistics.submitted}}
+                            </td>
+                            <td>
+                                {{human[2]}}
+                            </td>
+                            <td>
+                                {{human[3]}}
                             </td>
                         </tr>
                     </table>
@@ -238,6 +246,7 @@
 
 
         methods: {
+
             getStat: function () {
                 ApiService.getStatistics((loadingError, statistics) => {
                     this.loading = false;
@@ -246,6 +255,24 @@
                         this.loadingError = loadingError ? loadingError.responseJSON.error : 'Unable to process request'
                     } else {
                         this.statistics = statistics
+
+                        if (!this.user.permissions.developer) {
+
+
+                            var newVotes = [];
+
+                            for (var v in this.statistics.votes) {
+                                if (!this.statistics.votes[v][4]) {
+                                    newVotes.push(this.statistics.votes[v]);
+                                }
+                            }
+
+                            this.statistics.votes = newVotes;
+                        }
+
+
+
+
 
                         for (var human in statistics.votes) {
                             if (statistics.votes[human][1] > this.maxVotes) {
@@ -282,7 +309,8 @@
                     "Admitted": this.statistics.admitted,
                     "Waitlisted": this.statistics.waitlisted,
                     "Rejected": this.statistics.rejected,
-                    "Declined": this.statistics.declined
+                    "Declined": this.statistics.declined,
+                    "Average Char Count (Admitted)": this.statistics.avgCharLength
                 }
             },
 

@@ -111,7 +111,7 @@ function calculateStats(callback) {
         });
 
             User
-                .find({'permissions.reviewer': true})
+        .find({'permissions.reviewer':true})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {
                 throw err;
@@ -268,9 +268,7 @@ function calculateStats(callback) {
                     }, function() {
                         //console.log(newStats.review);
 
-                        newStats.avgCharLength = charLength.reduce(function (a, b) {
-                            return a + b
-                        }, 0) / charLength.length
+                        newStats.avgCharLength = charLength.reduce(function(a, b) {return a + b}, 0) / charLength.length
 
                         // Transform dietary restrictions into a series of objects
                         var restrictions = [];
