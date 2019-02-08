@@ -166,7 +166,7 @@
                             <td>NAME</td>
                             <td># VOTES</td>
                         </tr>
-                        <tr v-for='human in statistics.votes'>
+                        <tr v-for='human in statistics.votes' v-if="!human[4] || user.permissions.developer">
                             <td>
                                 <b v-if="human[1] == maxVotes && maxVotes > 0">{{human[0]}} <- Top logistics member!!!!</b>
                                 <span v-else>{{human[0]}}</span>

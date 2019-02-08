@@ -10,12 +10,16 @@ var stats = {};
 
 function calculateStats(callback) {
     console.log('Calculating stats...');
+
+    var charLength = [];
+
     var newStats = {
         lastUpdated: 0,
 
         total: 0,
         votes: {},
         skill: {},
+        avgCharLength: 0,
 
         demo: {
             gender: {
@@ -107,14 +111,14 @@ function calculateStats(callback) {
         });
 
             User
-        .find({'permissions.reviewer':true, 'permissions.developer':false})
+                .find({'permissions.reviewer': true})
         .exec(function(err, adminUsers) {
             if (err || !adminUsers) {
                 throw err;
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0];
+                newStats.votes[adminUsers[i].email] = [adminUsers[i].fullName, 0, 0, 0, adminUsers[i].permissions.developer];
             }
 
 
@@ -129,9 +133,19 @@ function calculateStats(callback) {
 
                     async.each(users, function(user, callback){
 
+                        //console.log(newStats.votes)
+
                         for (var i = 0; i < user.applicationVotes.length; i++) {
                             if (user.applicationVotes[i] in newStats.votes) {
                                 newStats.votes[user.applicationVotes[i]][1] += 1;
+
+                                if (user.applicationAdmit.includes(user.applicationVotes[i])) {
+                                    newStats.votes[user.applicationVotes[i]][2] += 1;
+                                }
+
+                                if (user.applicationReject.includes(user.applicationVotes[i])) {
+                                    newStats.votes[user.applicationVotes[i]][3] += 1;
+                                }
                             }
                         }
 
@@ -165,6 +179,11 @@ function calculateStats(callback) {
                         if (user.status.submittedApplication) {
 
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
+
+                            if (user.status.admitted) {
+                                charLength.push(user.profile['hacker']['fullResponse1'].length)
+                                charLength.push(user.profile['hacker']['fullResponse2'].length)
+                            }
 
                             // Add to the gender
                             if (user.profile.hacker.gender) {
@@ -248,6 +267,10 @@ function calculateStats(callback) {
                         callback(); // let async know we've finished
                     }, function() {
                         //console.log(newStats.review);
+
+                        newStats.avgCharLength = charLength.reduce(function (a, b) {
+                            return a + b
+                        }, 0) / charLength.length
 
                         // Transform dietary restrictions into a series of objects
                         var restrictions = [];
