@@ -105,7 +105,7 @@ function calculateStats(callback) {
             }
 
             for (var i = 0; i < adminUsers.length; i++) {
-                newStats.skill[adminUsers[i].email] = [adminUsers[i].fullName, adminUsers[i].skillRequest, adminUsers[i].skillPass, adminUsers[i].skillFail];
+                newStats.skill[adminUsers[i].email] = [adminUsers[i].fullName, adminUsers[i].skillRequest, adminUsers[i].skillPass, adminUsers[i].skillFail, adminUsers[i].permissions.developer];
             }
 
         });
