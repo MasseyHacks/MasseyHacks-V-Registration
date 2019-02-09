@@ -254,7 +254,7 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: '<b>Tell us about a recent project you worked on, computer science-related or not. It’ll help get us an idea of your skills and what you’re all about. (One sentence minimum)</b>',
+        question: '<b>Tell us about a recent project you worked on, computer science-related or not. It’ll help get us an idea of your skills and what you’re all about. (Two sentence minimum)</b>',
         mandatory: true
     },
 
@@ -262,7 +262,7 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: '<b>Why do you want to attend MasseyHacks? (One sentence minimum)</b>',
+        question: '<b>Why do you want to attend MasseyHacks? (Two sentence minimum)</b>',
         mandatory: true
     },
 

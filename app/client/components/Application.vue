@@ -6,7 +6,6 @@
             </div>
             <div class="ui-card dash-card-large">
 
-
                 <div v-if="loading">
                     Loading...
                 </div>
@@ -19,7 +18,7 @@
 
                         <h5 v-if="editWarning"><b>{{editWarning}}</b></h5>
 
-                        <div class="form-group" v-for="(question,questionName) in applications.hacker">
+                        <div class="form-group" v-for="(question,questionName) in applications.hacker" :key="questionName">
 
                             <h4 v-if="question.precaption" style="margin-top: 50px" v-html="question.precaption"></h4>
 
@@ -30,7 +29,9 @@
                             <label :for="questionName" v-if="question.note" v-html="question.note"></label>
 
                             <textarea :disabled="editDisabled" class="form-control" v-if="question.questionType == 'fullResponse'"
-                                      :id="questionName" :maxlength="question.maxlength"></textarea>
+                                      :id="questionName" :maxlength="question.maxlength" v-model="frqModels[questionName]"></textarea>
+                            <label v-if="question.questionType == 'fullResponse'">{{question.maxlength - (frqModels[questionName] ? frqModels[questionName].length : 0)}} characters remaining</label>
+
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                                    :id="questionName" :maxlength="question.maxlength">
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'birthday'"
@@ -137,7 +138,8 @@
                 oldApplication: {},
 
                 editDisabled: false,
-                editWarning: ''
+                editWarning: '',
+                frqModels: {}
             }
         },
         components: {
@@ -180,6 +182,11 @@
                 } else {
                     this.applications = applications
                     this.checkEditState();
+                    for (var question in this.applications.hacker) {
+                        if (question.questionType == 'fullResponse') {
+                            this.frqModels['question'] = ''
+                        }
+                    }
                 }
             });
         },
@@ -206,6 +213,9 @@
             })
         },
         methods: {
+            getFieldLength(element) {
+                return this.frqModels[element].length
+            },
             handler(event) {
                 console.log('Exit listener triggered');
 
@@ -276,7 +286,7 @@
                 }
             },
             parseForm(template, validate) {
-                
+
                 var doNotSubmit = false;
                 var submissionErrors = [];
                 var formValue = {};
@@ -411,9 +421,9 @@
 
                     }
                 });
-                
+
                 return {doNotSubmit: doNotSubmit, submissionErrors: submissionErrors, profile: formValue}
-                
+
             },
             submitApplication() {
 
