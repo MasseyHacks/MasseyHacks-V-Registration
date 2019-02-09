@@ -408,6 +408,12 @@ module.exports = function(router) {
     });
 
     // Owner
+    // Accept team
+    router.post('/checkAllTeams', permissions.isOwner, function (req, res) {
+        TeamController.checkAllTeams(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
     // Reject team
     router.post('/rejectTeam', permissions.isOwner, function (req, res) {
         var teamCode = req.body.code;

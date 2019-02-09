@@ -14,6 +14,25 @@ function escapeRegExp(str) {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
+TeamController.checkAllTeams = function(adminUser, callback) {
+    Team
+        .find({})
+        .populate('memberNames')
+        .exec(function(err, teams) {
+
+            for (var team in teams) {
+
+                TeamController.checkIfAutoAdmit(adminUser, teams[team].code, function(err, msg) {
+                    console.log(err, msg)
+                })
+            }
+
+            return callback(null, teams.length)
+
+
+        });
+}
+
 TeamController.checkIfAutoAdmit = function (adminUser, teamCode, callback) {
 
     Team

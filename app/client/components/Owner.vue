@@ -56,6 +56,7 @@
 
                     <hr>
 
+                    <button class="generic-button-dark less-wide" v-on:click="checkAllTeams">Check all teams admit</button>
                     <button class="generic-button-dark less-wide" v-on:click="pushBackRejected">Push Back Rejected</button>
                     <button class="generic-button-dark less-wide" v-on:click="rejectNoState">Reject no state</button>
                     <button class="generic-button-dark less-wide" v-on:click="hideAll">Hide all status</button>
@@ -274,6 +275,32 @@
                         break
                     }
                 }
+            },
+            checkAllTeams() {
+                swal({
+                    title: 'Are you sure you?',
+                    text: 'YOU ARE ABOUT TO RECHECK ADMISSION STATUS FOR ALL TEAMS!',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        AuthService.skillTest(() => {
+                            swal.showLoading();
+                            AuthService.sendRequest('POST', '/api/checkAllTeams', {
+
+                            }, (err, msg) => {
+                                if (err) {
+                                    swal('Error', err ? err.error : 'Something went wrong...', 'error')
+                                } else {
+                                    swal('Success', `Successfully checked ${msg} teams!`, 'success');
+                                }
+                            })
+                        })
+                    }
+                })
             },
             pushBackRejected() {
                 swal({
