@@ -148,7 +148,7 @@
         beforeRouteLeave(to, from, next) {
             console.log('hai', to, from);
 
-            if (1 + 1 == 4 && this.modified()) {
+            if (this.modified()) {
 
                 swal({
                     title: 'Are you sure you want to leave?',
@@ -161,13 +161,13 @@
                     type: 'warning'
                 }).then((result) => {
                     if (result.value) {
-                        //document.removeEventListener('beforeunload', this.handler);
+                        document.removeEventListener('beforeunload', this.handler);
                         next();
                     }
                 });
             }  else {
                 console.log('unloaded')
-                //document.removeEventListener('beforeunload', this.handler);
+                document.removeEventListener('beforeunload', this.handler);
                 next();
             }
 
@@ -192,7 +192,7 @@
         },
         mounted() {
 
-            //window.addEventListener('beforeunload', this.handler);
+            window.addEventListener('beforeunload', this.handler);
 
             this.$nextTick(function () {
                 ApiService.getApplications((err, applications) => {
@@ -250,7 +250,7 @@
 
                     Object.keys(userApp).forEach((field) => {
 
-                        if (field in this.applications.hacker) {
+                        if (document.getElementById(field) && field in this.applications.hacker) {
 
                             console.log(userApp[field])
 
@@ -495,6 +495,10 @@
                 console.log(oldApp, profile);
 
                 for (var field in profile) {
+
+                    if (!oldApp[field] && !profile[field]) {
+                        continue;
+                    }
 
                     // Ghetto boolean parsing
                     if (['true', 'false', '1', '0', true, false, 1, 0].includes(profile[field])) {
