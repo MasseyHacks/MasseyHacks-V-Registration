@@ -17,7 +17,11 @@ globalUsersManager.pushBackRejected = function(adminUser, callback){
         ]
     }, {
         $set: {
-            'status.rejected': false
+            'status.rejected': false,
+            'applicationAdmit': [],
+            'applicationReject': [],
+            'applicationVotes': [],
+            'numVotes': 0
         },
         $inc: {
             'lastUpdated': 10000000000000
