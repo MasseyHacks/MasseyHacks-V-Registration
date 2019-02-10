@@ -242,7 +242,11 @@
                     //populate the fields with what they submitted
                     var userApp = this.user.profile.hacker;
 
+                    console.log(this.user.profile.hacker);
+
                     this.oldApplication = this.user.profile.hacker;
+
+                    console.log(userApp);
 
                     Object.keys(userApp).forEach((field) => {
 
@@ -276,6 +280,8 @@
                                 this.school = userApp[field];
                             } else if (this.applications.hacker[field].questionType == 'contract') {
                                 document.getElementById(field).checked = userApp[field];
+                            } else if (this.applications.hacker[field].questionType == 'fullResponse') {
+                                this.frqModels[field] = userApp[field];
                             } else if (document.getElementById(field)) {
                                 document.getElementById(field).value = userApp[field];
                             } else {
