@@ -81,7 +81,7 @@ TeamController.teamAccept = function(adminUser, teamCode, callback) {
 
         for (var teamMember in team.memberNames) {
 
-            if (team.memberNames[teamMember]['status']['submittedApplication']) {
+            if (team.memberNames[teamMember]['status']['submittedApplication'] && !team.memberNames[teamMember]['status']['admitted']) {
                 User.resetAdmissionState(adminUser, team.memberNames[teamMember].id, function (err, user) {
 
                     console.log('Done resetting user status', user.fullName, user)
