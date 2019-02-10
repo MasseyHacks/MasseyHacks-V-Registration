@@ -68,7 +68,7 @@
   "rejectionemails":{
     "queueName":"rejectionEmails",
     "templateLocation":"./app/server/templates/email-reject/html.hbs",
-    "emailTitle":"You have been rejected. :(",
+    "emailTitle":"MasseyHacks Admission Status",
     "canQueue":true
   },
   "verifyemails":{
