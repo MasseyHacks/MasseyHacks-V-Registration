@@ -9,23 +9,6 @@
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
-        <script src="https://browser.sentry-cdn.com/4.5.3/bundle.min.js" crossorigin="anonymous"></script>
-
-        <script>
-            Sentry.init({
-                dsn: 'https://4847023082204ef8b35b1ea961567902@sentry.io/1256194',
-                beforeSend(event) {
-                    // Check if it is an exception, if so, show the report dialog
-                    console.log(event)
-
-                    if (event.exception) {
-                        Sentry.showReportDialog();
-                    }
-                    return event;
-                }
-            });
-        </script>
-
         <script async src="/dist/main.js"></script>
 
         <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
