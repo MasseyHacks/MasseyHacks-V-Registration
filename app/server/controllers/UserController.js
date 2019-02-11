@@ -1223,47 +1223,28 @@ UserController.remove = function (adminUser, userID, callback) {
     });
 };
 
-UserController.inviteToSlack = function (id, callback) {
+UserController.inviteToSlack = function (id, email, callback) {
 
     if (!id) {
         return callback({error: 'Invalid arguments'});
     }
 
-    User.getByID(id, function (err, user) {
+    logger.logAction(id, id, 'Requested Slack invite.');
 
-        if (err || !user) {
-            return callback(err ? err : {error: 'User not found'});
+    request.post({
+        url: 'https://' + process.env.SLACK_INVITE + '.slack.com/api/users.admin.invite',
+        form: {
+            email: email,
+            token: process.env.SLACK_INVITE_TOKEN,
+            set_active: true
         }
+    }, function (err, httpResponse, body) {
+        console.log(err, httpResponse, body);
 
-        if (user.status.confirmed && user.status.admitted && user.status.statusReleased && !user.status.declined) {
+        return callback(null, {message: 'Success'});
 
-            logger.logAction(user._id, user._id, 'Requested Slack invite.');
-
-            request.post({
-                url: 'https://' + process.env.SLACK_INVITE + '.slack.com/api/users.admin.invite',
-                form: {
-                    email: user.email,
-                    token: process.env.SLACK_INVITE_TOKEN,
-                    set_active: true
-                }
-            }, function (err, httpResponse, body) {
-                console.log(err, httpResponse, body);
-                if (err || body !== '{\'ok\':true}') {
-                    if (body && body.includes('already_in_team')) {
-                        return callback({error: 'You have already joined the Slack!\n(' + process.env.SLACK_INVITE + '.slack.com)'});
-                    } else if (body && body.includes('already_invited')) {
-                        return callback({error: 'We already sent an invitation!\nBe sure to check your spam in case it was filtered :\'(\n\n(We sent it to ' + user.email + ')'});
-                    } else {
-                        return callback({error: 'Something went wrong...\nThat\'s all we know :/'});
-                    }
-                } else {
-                    return callback(null, {message: 'Success'});
-                }
-            });
-        } else {
-            return callback({error: 'You do not have permission to send an invitation.'});
-        }
     });
+
 };
 
 UserController.flushEmailQueue = function (adminUser, userID, callback) {
@@ -1306,7 +1287,7 @@ UserController.acceptInvitation = function (executeUser, confirmation, callback)
             }, function(err, user) {
 
                 if (user && !err) {
-                    UserController.inviteToSlack(user._id, function(err, data){
+                    UserController.inviteToSlack(user._id, user.email,function(err, data){
                         console.log(err, data);
 
                     });

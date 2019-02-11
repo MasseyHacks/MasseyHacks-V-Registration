@@ -100,7 +100,17 @@
 
                 </div>
 
+
+                Don’t forget, you <b>MUST</b> have your waiver signed to attend MasseyHacks.<br> You can either give us the hard copy at the front desk during registration or email a copy to <a href="mailto:hello@masseyhacks.ca" target="_blank">hello@masseyhacks.ca</a>.
+
                 <br>
+                <br>
+
+                <a href="https://docs.google.com/document/d/10BuXfp0PlrNDA7DY6fx_T13VZLbQh1FMUbDYAdZyOYo/edit?usp=sharing" target="_blank">
+                    <button class="generic-button-dark less-wide">
+                        Waiver
+                    </button>
+                </a>
 
                 <button class="generic-button less-wide" v-on:click="acceptInvitation">
                     <span v-if="user.status.confirmed">
