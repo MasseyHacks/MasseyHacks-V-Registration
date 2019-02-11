@@ -59,7 +59,7 @@
                     </div>
                     <div v-else-if="user.status.name == 'confirmed'">
                         <p>
-                            Your spot has been confirmed! We hope to see you on  March 23rd, ready and excited for 24 hours of hard work and fun! It's never too early to start thinking about your hack! <a href="https://masseyhacks4.devpost.com" target="_blank">Here</a> are some of last year's hacks for inspiration.<br><br>Don’t forget, you <b>MUST</b> have your waiver signed to attend MasseyHacks.<br><br>
+                            Your spot has been confirmed! We hope to see you on  March 23rd, ready and excited for 24 hours of hard work and fun! It's never too early to start thinking about your hack! <a href="https://masseyhacks4.devpost.com" target="_blank">Here</a> are some of last year's hacks for inspiration.<br><br>Don’t forget, you <b>MUST</b> have your waiver signed to attend MasseyHacks.<br> You can either give us the hard copy at the front desk during registration or email a copy to <a href="mailto:waiver@masseyhacks.ca" target="_blank">waiver@masseyhacks.ca</a>.<br><br>
                             We've sent a Slack invitation to <b>{{user.email}}</b>. Be sure to check your spam/junk folder if you don't see it! If you have any problems, please email us at hello@masseyhacks.ca for assistance.
                         </p>
 
