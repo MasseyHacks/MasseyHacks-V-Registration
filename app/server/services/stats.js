@@ -179,10 +179,13 @@ function calculateStats(callback) {
                         if (user.status.submittedApplication) {
 
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
+                            try {
+                                if (user.status.admitted) {
+                                    charLength.push(user.profile['hacker']['fullResponse1'].length)
+                                    charLength.push(user.profile['hacker']['fullResponse2'].length)
+                                }
+                            } catch (e) {
 
-                            if (user.status.admitted) {
-                                charLength.push(user.profile['hacker']['fullResponse1'].length)
-                                charLength.push(user.profile['hacker']['fullResponse2'].length)
                             }
 
                             // Add to the gender

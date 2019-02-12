@@ -12,8 +12,8 @@ const mongoose        = require('mongoose');
 
 mongoose.connect(database);
 
-for(var i = 0; i < 1000; i++) {
-    email      = 'hacker' + i + '@rastera.xyz';
+for(var i = 100; i < 400; i++) {
+    email      = 'xujames007+' + i + '@gmail.com';
     firstName  = 'first' + i;
     lastName   = 'last' + i;
 
@@ -42,8 +42,8 @@ function makeOrganizer(email, firstName, lastName) {
                 "devpost": "https://devpost.com/karlzhu",
                 "website": "http://karlzhu.com/",
                 "resume": "https://karlzhu.com/resume",
-                "q1": "I don't actually want to come.",
-                "q2": "this is beautiful response",
+                "fullResponse1": "I don't actually want to come.",
+                "fullResponse2": "this is beautiful response",
                 "q3": "much nice.",
                 "tc": true,
                 "cc": true /*,
@@ -60,7 +60,7 @@ function makeOrganizer(email, firstName, lastName) {
                 'password': User.generateHash(password),
                 'status.passwordSuspension': suspension,
                 'status.submittedApplication': true,
-                'status.statusReleased': true,
+                'status.statusReleased': false,
                 'status.timestamp': Date.now(),
                 'permissions.verified': true,
                 'verified': true,
