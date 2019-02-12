@@ -98,7 +98,7 @@
         },
 
         beforeMount() {
-            ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin'}, (err, data) => {
+            ApiService.getUsers({ page: 1, size: 0, filters: this.filters, appPage: 'checkin', sort: {"firstName": 1, "lastName": 1}}, (err, data) => {
                 this.loading = false;
 
                 if (err || !data) {

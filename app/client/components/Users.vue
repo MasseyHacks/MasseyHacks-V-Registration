@@ -98,8 +98,8 @@
                                     <td>V/S/A/R/C/W</td>
                                     <td><a class="sortable" @click="sortBy('numVotes')">VOTES</a></td>
                                     <td><a class="sortable" @click="sortBy('email')">EMAIL</a></td>
-                                    <td>SCHOOL</td>
-                                    <td>GRADE</td>
+                                    <td><a class="sortable" @click="sortBy('profile.hacker.school')">SCHOOL</a></td>
+                                    <td><a class="sortable" @click="sortBy('profile.hacker.grade')">GRADE</a></td>
                                 </tr>
                                 <router-link type="tr" v-for="user in users"
                                              :to="{path: '/organizer/userview?username='+user.id, params: {username: user.fullName}}"

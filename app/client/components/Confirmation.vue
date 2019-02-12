@@ -376,6 +376,10 @@
                                         text: "You have confirmed your spot!",
                                         type: "success"
                                     });
+
+                                    this.$router.replace('/dashboard');
+
+                                    
                                 }
 
                             })
