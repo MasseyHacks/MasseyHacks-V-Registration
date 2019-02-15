@@ -38,13 +38,13 @@
   "laggeremails":{
     "queueName":"laggerEmails",
     "templateLocation":"./app/server/templates/email-lagger/html.hbs",
-    "emailTitle":"WhY u LaG liKe mienCraft oN the scKool coMputEr",
+    "emailTitle":"You haven't submitted your application!",
     "canQueue":true
   },
   "laggerconfirmemails":{
     "queueName":"laggerConfirmEmails",
     "templateLocation":"./app/server/templates/email-lagger-confirmation/html.hbs",
-    "emailTitle":"WhY u LaG liKe mienCraft oN the scKool coMputEr conFiRm",
+    "emailTitle":"You haven't confirmed your invitation!",
     "canQueue":true
   },
   "passwordchangedemails":{

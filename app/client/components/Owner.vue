@@ -53,6 +53,7 @@
                     <button class="generic-button-dark less-wide" v-on:click="releaseAccepted">Release all accepted</button>
                     <button class="generic-button-dark less-wide" v-on:click="releaseWaitlisted">Release all waitlisted</button>
                     <button class="generic-button-dark less-wide" v-on:click="releaseRejected">Release all rejected</button>
+                    <button class="generic-button-dark less-wide" v-on:click="queueLagger">Queue lagger emails</button>
 
                     <hr>
 
@@ -434,6 +435,35 @@
                     }
                 })
             },
+
+
+            queueLagger() {
+                swal({
+                    title: 'Are you sure you?',
+                    text: 'YOU ARE ABOUT TO QUEUE LAGGER EMAILS! ARE YOU SURE YOU WANT TO PROCEED?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes!'
+                }).then((result) => {
+                    if (result.value) {
+                        AuthService.skillTest(() => {
+                            swal.showLoading();
+                            AuthService.sendRequest('POST', '/api/queueLagger', {
+
+                            }, (err, msg) => {
+                                if (err) {
+                                    swal('Error', err ? err.error : 'Something went wrong...', 'error')
+                                } else {
+                                    swal('Success', `Successfully queued lagger emails!`, 'success');
+                                }
+                            })
+                        })
+                    }
+                })
+            },
+
 
             releaseRejected() {
                 swal({

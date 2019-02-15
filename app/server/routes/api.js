@@ -482,6 +482,12 @@ module.exports = function(router) {
 
     // Owner
     // Release all status
+    router.post('/queueLagger', permissions.isOwner, function (req, res) {
+        globalUsersManager.queueLagger(req.userExecute, logger.defaultResponse(req, res));
+    });
+
+    // Owner
+    // Release all status
     router.post('/releaseAllStatus', permissions.isOwner, function (req, res) {
         globalUsersManager.releaseAllStatus(req.userExecute, logger.defaultResponse(req, res));
     });

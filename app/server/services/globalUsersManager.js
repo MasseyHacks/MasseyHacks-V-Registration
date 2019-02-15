@@ -1,6 +1,7 @@
 const User   = require('../models/User');
 const logger = require('../services/logger');
 const async  = require('async');
+const mailer = require('../services/email');
 const UserController = require('../controllers/UserController');
 
 var globalUsersManager = {};
@@ -35,6 +36,59 @@ globalUsersManager.pushBackRejected = function(adminUser, callback){
 
         return callback(err, result.nModified);
     });
+}
+
+globalUsersManager.queueLagger = function(adminUser, callback){
+
+    logger.logAction(adminUser._id, -1, 'Queued lagger emails', 'EXECUTOR IP: ' + adminUser.ip);
+
+    User.find({
+        'status.confirmed': false,
+        'status.statusReleased': true,
+        'status.admitted': true,
+        'status.declined': false,
+        'permissions.checkin': false
+    }, function(err, users) {
+
+
+        console.log('laggerconf', users)
+
+        for (var i = 0; i < users.length; i++) {
+
+            //send the email
+            mailer.queueEmail(users[i].email, 'laggerconfirmemails', function (err) {
+                if (err) {
+                    return callback(err);
+                }
+            });
+        }
+
+    });
+
+    User.find({
+        'status.admitted': false,
+        'status.rejected': false,
+        'status.waitlisted': false,
+        'status.submittedApplication': false,
+        'permissions.checkin': false
+    }, function(err, users) {
+
+        console.log('laggerapps', users)
+
+        for (var i = 0; i < users.length; i++) {
+
+
+            //send the email
+            mailer.queueEmail(users[i].email, 'laggeremails', function (err) {
+                if (err) {
+                    return callback(err);
+                }
+            });
+        }
+
+    });
+
+    return callback(null, 'ok');
 }
 
 globalUsersManager.releaseAllStatus = function(adminUser, callback){
