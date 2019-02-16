@@ -254,7 +254,7 @@ var hackerApplication = {
         type: String,
         maxlength: 1500,
         questionType: 'fullResponse',
-        question: '<b>Tell us about a recent project you worked on, computer science-related or not. (ie. Organizing an event, side projects, making art, leading a club, etc.) It’ll help get us an idea of your skills and what you’re all about. (Two sentence minimum)</b>',
+        question: '<b>Tell us about a recent project you worked on, computer science-related or not. (ie. Organizing an event, side projects, making art, leading a club, etc.) It’ll help give us an idea of your skills and what you’re all about. (Two sentence minimum)</b>',
         mandatory: true
     },
 
