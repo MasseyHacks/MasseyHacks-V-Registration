@@ -174,7 +174,7 @@ function calculateStats(callback) {
                         newStats.checkedIn += user.status.checkedIn ? 1 : 0;
 
                         // Count released
-                        newStats.released += user.status.released ? 1 : 0;
+                        newStats.released += user.status.statusReleased ? 1 : 0;
 
                         if (user.status.submittedApplication) {
 
