@@ -92,7 +92,10 @@ function calculateStats(callback) {
         released: 0,
         bus: 0,
 
-        dietaryRestrictions: {}
+        dietaryRestrictions: {},
+
+        tabs: 0,
+        spaces: 0
 
     };
 
@@ -177,6 +180,9 @@ function calculateStats(callback) {
                         newStats.released += user.status.statusReleased ? 1 : 0;
 
                         if (user.status.submittedApplication) {
+
+                            newStats.spaces += user.profile.hacker.tabsOrSpaces == "Spaces";
+                            newStats.tabs += user.profile.hacker.tabsOrSpaces == "Tabs";
 
                             newStats.bus += user.profile.hacker.bus ? 1 : 0;
                             try {

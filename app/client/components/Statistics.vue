@@ -310,7 +310,9 @@
                     "Waitlisted": this.statistics.waitlisted,
                     "Rejected": this.statistics.rejected,
                     "Declined": this.statistics.declined,
-                    "Average Char Count (Admitted)": this.statistics.avgCharLength
+                    "Average Char Count (Admitted)": this.statistics.avgCharLength,
+                    "Tabs": this.statistics.tabs,
+                    "Spaces": this.statistics.spaces
                 }
             },
 
