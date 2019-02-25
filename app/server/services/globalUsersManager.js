@@ -43,6 +43,7 @@ globalUsersManager.queueLagger = function(adminUser, callback){
     logger.logAction(adminUser._id, -1, 'Queued lagger emails', 'EXECUTOR IP: ' + adminUser.ip);
 
     User.find({
+        'permissions.verified': false,
         'status.confirmed': false,
         'status.statusReleased': true,
         'status.admitted': true,
@@ -66,6 +67,7 @@ globalUsersManager.queueLagger = function(adminUser, callback){
     });
 
     User.find({
+        'permissions.verified': false,
         'status.admitted': false,
         'status.rejected': false,
         'status.waitlisted': false,
@@ -90,6 +92,7 @@ globalUsersManager.queueLagger = function(adminUser, callback){
 
 
     User.find({
+        'permissions.verified': false,
         'status.confirmed': true,
         'status.statusReleased': true,
         'status.admitted': true,
