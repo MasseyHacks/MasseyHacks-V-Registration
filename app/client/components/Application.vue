@@ -30,7 +30,6 @@
 
                             <textarea :disabled="editDisabled" class="form-control" v-if="question.questionType == 'fullResponse'"
                                       :id="questionName" :maxlength="question.maxlength" v-model="frqModels[questionName]"></textarea>
-                            <label v-if="question.questionType == 'fullResponse'">{{question.maxlength - (frqModels[questionName] ? frqModels[questionName].length : 0)}} characters remaining</label>
 
                             <input :disabled="editDisabled" class="form-control" type="text" v-if="question.questionType == 'shortAnswer'"
                                    :id="questionName" :maxlength="question.maxlength">
