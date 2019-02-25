@@ -47,6 +47,12 @@
     "emailTitle":"You haven't confirmed your invitation!",
     "canQueue":true
   },
+  "laggerwaiveremails":{
+  "queueName":"laggerWaiverEmails",
+  "templateLocation":"./app/server/templates/email-lagger-waiver/html.hbs",
+  "emailTitle":"You haven't submitted your waiver!",
+  "canQueue":true
+  },
   "passwordchangedemails":{
     "queueName":"passwordChangedEmails",
     "templateLocation":"./app/server/templates/email-password-changed/html.hbs",

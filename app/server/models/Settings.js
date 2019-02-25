@@ -18,6 +18,9 @@ var emailQueue = {
   laggerConfirmEmails: {
       type: [String]
   },
+  laggerWaiverEmails: {
+      type: [String]
+  },
   laggerEmails: {
       type: [String]
   }
@@ -39,6 +42,10 @@ var emailQueueLastFlushed = {
   laggerConfirmEmails: {
       type: Number,
 	  default: 0
+  },
+  laggerWaiverEmails: {
+      type: Number,
+      default: 0
   },
   laggerEmails: {
       type: Number,

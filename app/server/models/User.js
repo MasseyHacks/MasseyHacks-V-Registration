@@ -146,7 +146,8 @@ schema.statics.resetAdmissionState = function (adminUser, userID, callback) {
                 'emailQueue.rejectionEmails': user.email,
                 'emailQueue.waitlistEmails': user.email,
                 'emailQueue.laggerEmails': user.email,
-                'emailQueue.laggerConfirmEmails': user.email
+                'emailQueue.laggerConfirmEmails': user.email,
+                'emailQueue.laggerWaiverEmails': user.email
             }
         }, function (err, settings) {
             if (err || !settings) {

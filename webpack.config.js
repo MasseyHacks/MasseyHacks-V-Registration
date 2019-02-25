@@ -6,7 +6,7 @@ module.exports = {
         './app/client/src/app.js'
     ],
     output: {
-        filename: 'main.js'
+        filename: 'main-1.js'
     },
     watch: process.env.NODE_ENV === 'dev',
     module: {

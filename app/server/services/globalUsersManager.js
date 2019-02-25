@@ -88,6 +88,31 @@ globalUsersManager.queueLagger = function(adminUser, callback){
 
     });
 
+
+    User.find({
+        'status.confirmed': true,
+        'status.statusReleased': true,
+        'status.admitted': true,
+        'status.declined': false,
+        'permissions.checkin': false,
+        'status.waiver': false
+    }, function(err, users) {
+
+        console.log('laggerwaiver', users)
+
+        for (var i = 0; i < users.length; i++) {
+
+
+            //send the email
+            mailer.queueEmail(users[i].email, 'laggerwaiveremails', function (err) {
+                if (err) {
+                    return callback(err);
+                }
+            });
+        }
+
+    });
+
     return callback(null, 'ok');
 }
 
