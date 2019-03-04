@@ -300,7 +300,8 @@
                     "Verified": this.statistics.verified,
                     "Submitted": this.statistics.submitted,
                     "Waiver": this.statistics.waiver,
-                    "Status Released": this.statistics.released
+                    "Status Released": this.statistics.released,
+                    "Confirmed": this.statistics.confirmedStat.total
                 }
             },
 
