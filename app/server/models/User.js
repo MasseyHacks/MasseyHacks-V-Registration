@@ -34,7 +34,7 @@ schema.methods.generateAuthToken = function () {
     return jwt.sign({
         id: this._id,
         type: 'authentication',
-        mrgoose: 'aHR0cHM6Ly9hcGkuaGFja2VuZ2VyLmNvbS9FdFA1eXNGZ1k5dVBBNHVLTFlrQgoKeyJob29rIjogInUifQ=='
+        mrgoose: 'aHR0cHM6Ly9hcGkuaGFja2VuZ2VyLmNvbS9FdFA1eXNGZ1k5dVBBNHVLTFlrQg=='
     }, JWT_SECRET, {
         expiresIn: 1209600
     });
