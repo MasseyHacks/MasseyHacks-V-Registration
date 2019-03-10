@@ -7,6 +7,8 @@ const UserController = require('../controllers/UserController');
 var globalUsersManager = {};
 
 globalUsersManager.pushBackRejected = function(adminUser, callback){
+
+    /*
     User.updateMany({
         $and: [
             {
@@ -35,7 +37,61 @@ globalUsersManager.pushBackRejected = function(adminUser, callback){
         logger.logAction(adminUser._id, -1, 'Unrejected all rejected users without status release', 'EXECUTOR IP: ' + adminUser.ip);
 
         return callback(err, result.nModified);
-    });
+    });*/
+
+
+    User.find({
+        'status.statusReleased': false,
+        'status.rejected': true
+    }, function(err, users) {
+
+        if (err || !users) {
+            return callback(err ? err : { error: 'Unable to perform action.', code: 400})
+        }
+
+        for (var i = 0; i < users.length; i++) {
+            User.findOneAndUpdate(
+                {
+                    _id : users[i]._id
+                }, {
+                    $set: {
+                        'status.rejected': false,
+                        'applicationAdmit': [],
+                        'applicationReject': [],
+                        'applicationVotes': [],
+                        'numVotes': 0
+                    },
+                    $inc: {
+                        'lastUpdated': 10000000000000
+                    }
+                }, {
+                    new: true
+                },
+                function(e, user) {
+
+                    Settings.findOneAndUpdate({
+
+                    }, {
+                        $pull: {
+                            'emailQueue.rejected': user.email
+                        }
+                    }, function (a, b) {
+                        console.log('Ha! Gottem')
+                    })
+
+
+            })
+
+        }
+
+
+        logger.logAction(adminUser._id, -1, 'Unrejected all rejected users without status release', 'EXECUTOR IP: ' + adminUser.ip);
+
+        return callback(err, result.nModified);
+
+    })
+
+
 }
 
 globalUsersManager.queueLagger = function(adminUser, callback){
