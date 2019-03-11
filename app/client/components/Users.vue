@@ -431,11 +431,16 @@
                 output[0] = headers.toString();
 
                 //generate the output
+                var regex = new RegExp("\"", 'g');
                 for (var i = 0; i < objArray.length; i++) {
                     output[i + 1] = "";
                     for (var j = 0; j < headers.length; j++) {
                         if (objArray[i][headers[j]] !== undefined) {
-                            output[i + 1] += JSON.stringify(objArray[i][headers[j]]) + ",";
+                            if (typeof objArray[i][headers[j]] === "string" || objArray[i][headers[j]] instanceof String) {
+                                output[i + 1] += "\"" + objArray[i][headers[j]].replace(regex, "\"\"") + "\"" + ",";
+                            } else {
+                                output[i + 1] += JSON.stringify(objArray[i][headers[j]]) + ",";
+                            }
                         }
                         else {
                             output[i + 1] += ",";
