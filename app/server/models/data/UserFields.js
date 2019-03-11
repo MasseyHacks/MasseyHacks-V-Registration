@@ -169,7 +169,7 @@ var hackerApplication = {
         questionType: 'dropdown',
         question: '<b>What grade are you in?</b>',
         enum: {
-            values: ' |<=8|9|10|11|12'
+            values: ' |<9|9|10|11|12'
         },
         mandatory: true
     },
