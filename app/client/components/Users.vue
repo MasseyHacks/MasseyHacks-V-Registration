@@ -384,7 +384,7 @@
             },
 
             exportUsersCSV: function () {
-                ApiService.getUsers({page: 1, size: 100000, text: this.searchQuery}, (err, data) => {
+                ApiService.getUsers({page: 1, size: 100000, text: this.searchQuery, filters: this.filters}, (err, data) => {
                     if (err || !data) {
                         this.loadingError = err ? err.responseJSON.error : 'Unable to process request'
                     } else {
