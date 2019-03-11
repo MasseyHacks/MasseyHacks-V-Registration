@@ -435,7 +435,7 @@
                     output[i + 1] = "";
                     for (var j = 0; j < headers.length; j++) {
                         if (objArray[i][headers[j]] !== undefined) {
-                            output[i + 1] += "\"" + JSON.stringify(objArray[i][headers[j]]) + "\",";
+                            output[i + 1] += JSON.stringify(objArray[i][headers[j]]) + ",";
                         }
                         else {
                             output[i + 1] += ",";
