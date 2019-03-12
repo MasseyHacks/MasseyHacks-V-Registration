@@ -1185,9 +1185,9 @@ UserController.waitlistUser = function (adminUser, userID, callback) {
             return callback(err ? err : {error: 'Unable to perform action.', code: 400})
         }
 
-        logger.logAction(adminUser._id, user._id, 'Rejected user.', 'EXECUTOR IP: ' + adminUser.ip);
+        logger.logAction(adminUser._id, user._id, 'Waitlisted user.', 'EXECUTOR IP: ' + adminUser.ip);
 
-        mailer.queueEmail(user.email, 'rejectionemails', function (err) {
+        mailer.queueEmail(user.email, 'waitlistEmails', function (err) {
             if (err) {
                 return callback(err);
             }
