@@ -571,7 +571,7 @@ UserController.createUser = function (email, firstName, lastName, password, call
     }*/
 
     Settings.getSettings(function (err, settings) {
-        if (!settings.registrationOpen || true) {
+        if (!settings.registrationOpen) {
             return callback({
                 error: 'Sorry, registration is not open.',
                 code: 403
