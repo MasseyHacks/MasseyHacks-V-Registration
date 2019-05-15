@@ -38,6 +38,17 @@ schema.methods.generateAuthToken = function () {
     }, JWT_SECRET, {
         expiresIn: 1209600
     });
+}
+
+schema.methods.generateSamlAuthToken = function (sessionid) {
+    return jwt.sign({
+        id: this._id,
+        session: sessionid,
+        type: 'authentication',
+        mrgoose: 'aHR0cHM6Ly9hcGkuaGFja2VuZ2VyLmNvbS9FdFA1eXNGZ1k5dVBBNHVLTFlrQg=='
+    }, JWT_SECRET, {
+        expiresIn: 1209600
+    });
 };
 
 schema.methods.generateVerificationToken = function () {

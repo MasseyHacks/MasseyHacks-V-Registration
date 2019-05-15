@@ -1597,4 +1597,20 @@ UserController.hideStatus = function (adminUser, userID, callback) {
         return callback(err, user);
     })
 };
+
+UserController.loginWithSaml = function (nameid, sessionid, callback, ip){
+    User.findOne({"saml.name_id":nameid}, function (err, user){
+        if(err || !user){
+            console.log("saml error")
+            return callback(err ? err : {error: 'SAML nameid not bound to a user.', code: 400})
+        }
+
+        logger.logAction(user._id, user._id, 'Logged in with password.', 'IP: ' + ip);
+
+        var token = user.generateSamlAuthToken(sessionid);
+
+        return callback(null, User.filterSensitive(user), token);
+    });
+}
+
 module.exports = UserController;

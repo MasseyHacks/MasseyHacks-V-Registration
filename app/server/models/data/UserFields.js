@@ -380,6 +380,16 @@ var userType = {
     }
 };
 
+var saml = {
+    sessions : {
+        type: [String]
+    },
+
+    name_id: {
+        type: String
+    }
+}
+
 var permissions = {
     verified : {
         type: Boolean,
@@ -531,6 +541,8 @@ var schema = {
         permission: ADMIN,
         caption: "Emails Flushed from Queue"
     },
+
+    saml: saml,
 
     numVotes : {
         type: Number,

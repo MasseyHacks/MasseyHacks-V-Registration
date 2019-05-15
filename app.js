@@ -72,6 +72,10 @@ Raven.context(function() {
         require('./app/server/routes/auth')(authRouter);
         app.use('/auth', authRouter);
 
+        var samlRouter = express.Router();
+        require('./app/server/routes/saml')(samlRouter);
+        app.use('/saml', samlRouter);
+
         require('./app/server/routes')(app);
 
         app.listen(port, function () {
