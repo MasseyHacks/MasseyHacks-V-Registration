@@ -1641,4 +1641,40 @@ UserController.samlLogout = function (nameid, sessionid, callback) {
         });
 };
 
+UserController.samlLogoutAll = function(userID, callback){
+    User.updateOne({"_id": userID}, {
+        $set: {
+            "saml.sessions": []
+        }
+    }, function(err){
+        if(err){
+            return callback(err)
+        }
+        return callback(null, {code: 200, message: "Cleared all SAML sessions"})
+    })
+};
+
+UserController.bindSaml = function(userID, nameid, callback, ip){
+    User.findOne({"saml.name_id": nameid}, function(err, user){
+        if(err || user){
+            if(err){
+                return callback(err);
+            }
+            return callback({"error": "NameID is already bound to a user."})
+        }
+        User.findOneAndUpdate({"_id": userID}, {
+            $set: {
+                "saml.name_id": nameid
+            }
+        }, {new: true},function (err, user){
+            if(err){
+                return callback(err)
+            }
+            logger.logAction(user._id, user._id, 'Bound SAML nameID to user.', 'IP: ' + ip);
+            return callback(null, {message: "Successfully bound SAML nameID to user."})
+        })
+    });
+
+};
+
 module.exports = UserController;

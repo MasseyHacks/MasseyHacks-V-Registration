@@ -61,6 +61,12 @@ module.exports = function(router) {
         });
     });
 
+    router.post('/bind', permissions.isVerified, function(req, res) {
+        var userID = req.body.userID;
+        var nameID = req.body.nameID;
+        UserController.bindSaml(userID, nameID, logger.defaultResponse(req, res), getIp(req));
+    });
+
     // Assert endpoint for when login completes
     router.post("/acs", encodedParser, function(req, res) {
         var options = {request_body: req.body};
@@ -91,10 +97,10 @@ module.exports = function(router) {
 
                 UserController.loginWithSaml(name_id, session_index, function(err, user, token){
                     if (err || !user) {
-                       // console.log(err);
+                        // console.log(err);
                         return res.status(401).json(err);
                     }
-                    //console.log(token);
+                    // Set the token and forward to login page to handle the rest
                     return res.send(`
                     <HTML>
                     <HEAD>
@@ -110,10 +116,6 @@ module.exports = function(router) {
                     <noscript>Please enable JavaScript to continue.</noscript>
                     </BODY>
                     </HTML>`);
-                    return res.json({
-                        token: token,
-                        user: user
-                    });
                 }, getIp(req));
             }
         });

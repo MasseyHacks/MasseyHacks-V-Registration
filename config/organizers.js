@@ -48,7 +48,8 @@ function makeOrganizer(email, firstName, lastName,  permission) {
                     'status.admittedBy': 'MasseyHacks Internal Authority',
                     'verified': true,
                     'QRCode': data_url,
-                    'authSecret': authSecret.base32
+                    'authSecret': authSecret.base32,
+                    'saml.name_id': email
                 }, function (err, userNew) {
 
                     if (err) throw err;
