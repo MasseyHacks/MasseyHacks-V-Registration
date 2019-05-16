@@ -4,3 +4,4 @@ app/client/dist
 .idea
 .DS_Store
 db
+certs/sp-key.key

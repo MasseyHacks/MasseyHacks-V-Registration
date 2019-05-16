@@ -382,7 +382,8 @@ var userType = {
 
 var saml = {
     sessions : {
-        type: [String]
+        type: [String],
+        permission: INTERNAL
     },
 
     name_id: {

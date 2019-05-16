@@ -685,7 +685,7 @@ UserController.loginWithToken = function (token, callback, ip) {
         return callback({error: 'Invalid arguments'});
     }
 
-    User.getByToken(token, function (err, user) {
+    User.getByToken(token, function (err, user, sessionId) {
         if (!user || err) {
 
             if (!!user && user.permissions.checkin) {
@@ -702,7 +702,13 @@ UserController.loginWithToken = function (token, callback, ip) {
             })
         }
 
-        var token = user.generateAuthToken();
+        var token;
+        if(sessionId){
+            token = user.generateSamlAuthToken(sessionId);
+        }
+        else {
+            token = user.generateAuthToken();
+        }
 
         logger.logAction(user._id, user._id, 'Logged in with token.', 'IP: ' + ip);
 
@@ -1605,12 +1611,34 @@ UserController.loginWithSaml = function (nameid, sessionid, callback, ip){
             return callback(err ? err : {error: 'SAML nameid not bound to a user.', code: 400})
         }
 
-        logger.logAction(user._id, user._id, 'Logged in with password.', 'IP: ' + ip);
+        User.updateOne({_id: user._id}, {$push: {"saml.sessions": sessionid}}, function(err){
+            if(err){
+                return callback(err);
+            }
+            logger.logAction(user._id, user._id, 'Logged in with SAML.', 'IP: ' + ip);
 
-        var token = user.generateSamlAuthToken(sessionid);
+            var token = user.generateSamlAuthToken(sessionid);
 
-        return callback(null, User.filterSensitive(user), token);
+            return callback(null, User.filterSensitive(user), token);
+        });
+
+
     });
-}
+};
+
+UserController.samlLogout = function (nameid, sessionid, callback) {
+  User.updateOne({"saml.name_id": nameid}, {
+      $pull: {
+          "saml.sessions": sessionid}
+          },
+      function(err){
+            if(err){
+                return callback(err);
+            }
+            else{
+                return callback(null, {code: 200, message: "Logged out"});
+            }
+        });
+};
 
 module.exports = UserController;

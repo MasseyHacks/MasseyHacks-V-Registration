@@ -323,10 +323,17 @@ const router = new VueRouter({
                    confirmButtonText: 'Logout'
                }).then(result => {
                    if (result.value) {
-                       AuthService.logout(null, 'You have been logged out')
+                       window.location.replace("/saml/logout?token="+localStorage.token);
                        //next('/login?message=You have been logged out')
                    }
                })
+           }
+       },
+       {
+           path: '/finishLogout',
+           beforeEnter (to, from, next) {
+               AuthService.logout(null, 'You have been logged out');
+               window.location.replace("/login?message=You have been logged out")
            }
        },
        {

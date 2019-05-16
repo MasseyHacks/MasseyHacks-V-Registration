@@ -308,24 +308,46 @@ schema.statics.getByToken = function (token, callback) {
             });
         }
 
-        this.findOne({_id: payload.id}, function (err, user) {
+        if(payload.session){
+            this.findOne({$and: [{_id: payload.id}, {"saml.sessions": payload.session}]}, function (err, user) {
 
-            if (err || !user) {
-                return callback(err ? err : {
-                    error: 'Invalid Token',
-                    code: 401
-                });
-            }
+                if (err || !user) {
+                    return callback(err ? err : {
+                        error: 'Invalid Token',
+                        code: 401
+                    });
+                }
 
-            if (payload.iat * 1000 < user.passwordLastUpdated) {
-                return callback({
-                    error: 'Invalid Token',
-                    code: 401
-                });
-            }
+                if (payload.iat * 1000 < user.passwordLastUpdated) {
+                    return callback({
+                        error: 'Invalid Token',
+                        code: 401
+                    });
+                }
+                return callback(err, user, payload.session);
+            });
+        }
+        else{
+            this.findOne({_id: payload.id}, function (err, user) {
 
-            return callback(err, user);
-        });
+                if (err || !user) {
+                    return callback(err ? err : {
+                        error: 'Invalid Token',
+                        code: 401
+                    });
+                }
+
+                if (payload.iat * 1000 < user.passwordLastUpdated) {
+                    return callback({
+                        error: 'Invalid Token',
+                        code: 401
+                    });
+                }
+                return callback(err, user);
+            });
+        }
+
+
     }.bind(this));
 };
 

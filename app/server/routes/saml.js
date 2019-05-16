@@ -56,7 +56,7 @@ module.exports = function(router) {
         sp.create_login_request_url(idp, {}, function(err, login_url, request_id) {
             if (err != null)
                 return res.send(500);
-            console.log(login_url)
+            //console.log(login_url)
             res.redirect(login_url);
         });
     });
@@ -64,114 +64,98 @@ module.exports = function(router) {
     // Assert endpoint for when login completes
     router.post("/acs", encodedParser, function(req, res) {
         var options = {request_body: req.body};
-        console.log(options);
+        //console.log(options);
         sp.post_assert(idp, options, function(err, saml_response) {
             if (err != null)
                 return res.send(500);
 
             if(saml_response.type == 'logout_request'){
+                var name_id = saml_response.user.name_id;
+                var session_index = saml_response.user.session_index;
+
+               // console.log("remote slo logout!");
+                UserController.samlLogout(name_id, session_index, function(err, message){
+                    if (err)
+                        return res.send(500);
+                    return res.send(message)
+                })
+            }
+            else if(saml_response.type == 'logout_response'){
+                res.redirect("/finishLogout");
+            }
+            else{
+                // Save name_id and session_index for logout
+                // Note:  In practice these should be saved in the user session, not globally.
                 name_id = saml_response.user.name_id;
                 session_index = saml_response.user.session_index;
 
-                //TODO: perform the logout here
-            }
-            else if(saml_response.type == 'logout_response'){
-                sp.create_login_request_url(idp, {}, function(err, login_url, request_id) {
-                    if (err != null)
-                        return res.send(500);
-                    console.log(login_url)
-                    res.redirect(login_url);
-                });
-            }
-            else{
-                sp.post_assert(idp, options, function(err, saml_response) {
-                    console.log(saml_response)
-                    if (err != null)
-                        return res.send(500);
-
-                    // Save name_id and session_index for logout
-                    // Note:  In practice these should be saved in the user session, not globally.
-                    //TODO: LOGIN USER
-                    name_id = saml_response.user.name_id;
-                    session_index = saml_response.user.session_index;
-
-                    UserController.loginWithSaml(name_id, session_index, function(err, user, token){
-                        if (err || !user) {
-                            console.log(err);
-                            return res.status(401).json(err);
-                        }
-                        console.log(token)
-                        return res.json({
-                            token: token,
-                            user: user
-                        });
-                    }, getIp(req));
-                });
+                UserController.loginWithSaml(name_id, session_index, function(err, user, token){
+                    if (err || !user) {
+                       // console.log(err);
+                        return res.status(401).json(err);
+                    }
+                    //console.log(token);
+                    return res.send(`
+                    <HTML>
+                    <HEAD>
+                        <TITLE>MasseyHacks SAML Redirect</TITLE>
+                    </HEAD>
+                    <script>
+                    localStorage.token="${token}";
+                    localStorage.user=\`${JSON.stringify(user)}\`;
+                    localStorage.userID = "${user._id}";
+                    window.location.replace("/login");
+</script>
+                    <BODY>
+                    <noscript>Please enable JavaScript to continue.</noscript>
+                    </BODY>
+                    </HTML>`);
+                    return res.json({
+                        token: token,
+                        user: user
+                    });
+                }, getIp(req));
             }
         });
 
 
     });
 
+    // Logout endpoint
+    router.get("/logout", function(req, res) {
+        var userToken = req.query.token;
+        User.getByToken(userToken, function (err, user, sessionId){
+            if(err || !user){
+                res.redirect("/login");
+            }
+            if(sessionId){
+                //SAML Logout, destroy session
+                UserController.samlLogout(user.saml.name_id, sessionId, function(err){
+                    if(err){
+                        res.redirect("/login")
+                    }
+                    var options = {
+                        name_id: user.saml.name_id,
+                        session_index: sessionId
+                    };
+                    //console.log(options);
 
-    // Login and issue token
-    router.post('/login', function (req, res) {
-        var email = req.body.email;
-        var password = req.body.password;
+                    sp.create_logout_request_url(idp, options, function(err, logout_url) {
+                        if (err != null)
+                            return res.send(500);
+                        res.redirect(logout_url);
+                    });
+                })
 
-        console.log(req.body.email + ' attempting to login.');
-
-        UserController.loginWithPassword(email, password, function (err, user, token) {
-
-            if (err || !user) {
-                console.log(err);
-                return res.status(401).json(err);
+            }
+            else{
+                // plain old user, just log them out
+                res.redirect("/finishLogout");
             }
 
-            return res.json({
-                token: token,
-                user: user
-            });
-
-        }, getIp(req));
+        });
 
     });
 
 
-    // Register user
-    router.post('/dsflogin', function (req, res) {
-        var email = req.body.email;
-        var password = req.body.password;
-        var firstName = req.body.firstName;
-        var lastName = req.body.lastName;
-
-        if (!email) {
-            return res.status(400).json({error: 'No email provided'});
-        }
-
-        if (!password) {
-            return res.status(400).json({error: 'No password provided'});
-        }
-
-        if (!firstName) {
-            return res.status(400).json({error: 'No first name provided'});
-        }
-
-        if (!lastName) {
-            return res.status(400).json({error: 'No last name provided'});
-        }
-
-        UserController.createUser(email, firstName, lastName, password, function (err, token, user) {
-            if (err || !user) {
-                return res.status(500).json(err ? err : {error: 'Unable to process request'});
-            }
-
-            console.log(req.body.email + ' registered.');
-
-            return res.json({
-                token: token,
-                user: user
-            });
-        }, getIp(req))
-    });
 };
