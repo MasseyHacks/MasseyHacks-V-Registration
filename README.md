@@ -2,7 +2,7 @@
 
 [![Travis-CI badge](https://travis-ci.org/MasseyHacks/MasseyHacks-V-Registration.svg?branch=master)](https://travis-ci.com)
 
-Registration system for MasseyHacks V. Goose is currently being developed and is extremely unstable at the current state. Please use with caution.
+Registration system for MasseyHacks V.
 
 **Setup**
 
