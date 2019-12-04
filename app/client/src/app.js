@@ -324,7 +324,7 @@ const router = new VueRouter({
                }).then(result => {
                    if (result.value) {
                        //window.location.replace("/saml/logout?token="+localStorage.token);
-                       next('/finishLogouts')
+                       next('/finishLogout')
                    }
                })
            }
