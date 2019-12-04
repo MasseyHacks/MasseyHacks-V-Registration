@@ -4,6 +4,8 @@
 
 Registration system for MasseyHacks V.
 
+## Notice: Please be aware that the packages haven't been updated in over a year. 
+
 [Video Demo](https://www.youtube.com/watch?v=LehQZwspwKM)
 
 **Setup**
