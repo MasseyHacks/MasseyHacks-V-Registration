@@ -20,13 +20,14 @@ const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
 const mailer             = require('../services/email');
 const stats              = require('../services/stats');
+const bodyParser = require('body-parser');
 
 require('dotenv').load();
 
 JWT_SECRET             = process.env.JWT_SECRET;
 
 module.exports = function(router) {
-    router.use(express.json());
+    router.use(bodyParser.json());
 
 	// Owner
 	// Get queue size

@@ -58,7 +58,7 @@ var schema = new mongoose.Schema({
 	emailQueueLastFlushed: emailQueueLastFlushed,
     pendingSchools : {
         type: [String],
-        required: true
+        required: false
     },
     schools: {
         type: [String],

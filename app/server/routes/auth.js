@@ -9,11 +9,12 @@ const UserController     = require('../controllers/UserController');
 
 const permissions        = require('../services/permissions');
 const logger             = require('../services/logger');
+const bodyParser = require('body-parser');
 
 JWT_SECRET = process.env.JWT_SECRET;
 
 module.exports = function(router) {
-    router.use(express.json());
+    router.use(bodyParser.json());
 
     function getIp(req) {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;

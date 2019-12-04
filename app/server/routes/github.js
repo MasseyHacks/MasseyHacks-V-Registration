@@ -5,13 +5,14 @@ const request = require('request');
 const spawn = require('child_process').spawn;
 const crypto = require('crypto');
 const logger = require('../services/logger');
+const bodyParser = require('body-parser');
 require('dotenv').load();
 
 GITHUB_SECRET = process.env.GITHUB_SECRET;
 console.log(GITHUB_SECRET);
 
 module.exports = function (router) {
-    router.use(express.json());
+    router.use(bodyParser.json());
 
     router.post('/pull', function (req, res) {
         let sig = "sha1=" + crypto.createHmac('sha1', GITHUB_SECRET).update(JSON.stringify(req.body)).digest('hex');

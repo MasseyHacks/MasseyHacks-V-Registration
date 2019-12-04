@@ -1,9 +1,13 @@
 require('dotenv').load();
-const express         = require('express');
-const cors            = require('cors');
-const fs              = require('fs');
+var http = require('http'),
+    fs = require('fs'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    ejs = require('ejs');
+json = require('json');
 
-const bodyParser      = require('body-parser');
+const cors            = require('cors');
+
 const methodOverride  = require('method-override');
 const morgan          = require('morgan');
 const cookieParser    = require('cookie-parser');
@@ -58,6 +62,7 @@ Raven.context(function() {
         console.log(`Worker ${process.pid} started`);
 
         // Start routers
+        app.use(bodyParser());
         app.use(express.static('app/client/'));
 
         let githubRouter = express.Router();
@@ -72,9 +77,9 @@ Raven.context(function() {
         require('./app/server/routes/auth')(authRouter);
         app.use('/auth', authRouter);
 
-        var samlRouter = express.Router();
+        /*var samlRouter = express.Router();
         require('./app/server/routes/saml')(samlRouter);
-        app.use('/saml', samlRouter);
+        app.use('/saml', samlRouter);*/
 
         require('./app/server/routes')(app);
 

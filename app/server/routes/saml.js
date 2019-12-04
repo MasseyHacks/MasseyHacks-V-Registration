@@ -23,9 +23,9 @@ const encodedParser = bodyParser.urlencoded({
 // Create service provider
 var sp_options = {
     entity_id: process.env.ROOT_URL+"/saml/metadata.xml",
-    private_key: fs.readFileSync(process.env.SAML_SP_KEYPATH).toString(),
-    certificate: fs.readFileSync(process.env.SAML_SP_CERTPATH).toString(),
-    assert_endpoint: process.env.ROOT_URL+"/saml/acs",
+    //private_key: fs.readFileSync(process.env.SAML_SP_KEYPATH).toString(),
+    //certificate: fs.readFileSync(process.env.SAML_SP_CERTPATH).toString(),
+    //assert_endpoint: process.env.ROOT_URL+"/saml/acs",
     sign_get_request: true,
     allow_unencrypted_assertion: true,
 };
@@ -35,13 +35,13 @@ var sp = new saml2.ServiceProvider(sp_options);
 var idp_options = {
     sso_login_url: process.env.SAML_IDP_SSOURL,
     sso_logout_url: process.env.SAML_IDP_SLOURL,
-    certificates: [fs.readFileSync(process.env.SAML_IDP_CERTPATH).toString()]
+    //certificates: [fs.readFileSync(process.env.SAML_IDP_CERTPATH).toString()]
 };
 var idp = new saml2.IdentityProvider(idp_options);
 
 
 module.exports = function(router) {
-    router.use(express.json());
+    router.use(bodyParser.json());
 
     function getIp(req) {
         return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
