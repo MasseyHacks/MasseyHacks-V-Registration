@@ -4,6 +4,8 @@
 
 Registration system for MasseyHacks V.
 
+[Video Demo](https://www.youtube.com/watch?v=LehQZwspwKM)
+
 **Setup**
 
 Start off with making the db directory and running mongodb
