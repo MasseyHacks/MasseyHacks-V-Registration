@@ -48,7 +48,7 @@
     "express-rate-limit": "^2.12.2",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-saver": "^1.3.8",
-    "forever": "^0.15.3",
+    "forever": "^2.0.0",
     "formidable": "^1.2.1",
     "gridfs-stream": "^1.1.1",
     "gulp-babel": "^7.0.1",
@@ -101,8 +101,8 @@
     "vue-template-compiler": "2.5.17",
     "vueify": "9.4.1",
     "vuejs-paginator": "2.0.2",
-    "webpack": "^1.15.0",
+    "webpack": "^2.2.0",
     "webpack-dev-server": "1.12.0",
-    "webpack-stream": "2.3.0"
+    "webpack-stream": "4.0.0"
   }
 }
