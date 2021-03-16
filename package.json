@@ -79,7 +79,7 @@
     "raven": "^2.1.0",
     "raven-js": "^3.26.4",
     "request": "^2.87.0",
-    "saml2-js": "^2.0.3",
+    "saml2-js": "^3.0.0",
     "sass-loader": "^7.1.0",
     "speakeasy": "^2.0.0",
     "style-loader": "^0.21.0",
